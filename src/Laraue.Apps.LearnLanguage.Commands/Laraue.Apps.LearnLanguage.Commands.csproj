@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="Telegram.Bot" Version="18.0.0" />
+    <PackageReference Include="Laraue.Core.DataAccess.EFCore" Version="6.0.4" />
+    <PackageReference Include="Laraue.Core.DataAccess.Linq2DB" Version="6.0.4" />
+    <PackageReference Include="Laraue.Telegram.NET.DataAccess" Version="0.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Laraue.Apps.LearnLanguage.Common\Laraue.Apps.LearnLanguage.Common.csproj" />
+    <ProjectReference Include="..\Laraue.Apps.LearnLanguage.DataAccess\Laraue.Apps.LearnLanguage.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>
