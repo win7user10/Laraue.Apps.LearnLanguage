@@ -20,7 +20,7 @@ public class LanguageController : TelegramController
         _mediator = mediator;
     }
 
-    [TelegramCallbackRoute(TelegramRoutes.Groups)]
+    [TelegramCallbackRoute(TelegramRoutes.Groups + "*")]
     public Task SendGroupsAsync(TelegramRequestContext requestContext)
     {
         var parameters = requestContext.Update.CallbackQuery!.Data.ParseQueryParts();
@@ -33,7 +33,7 @@ public class LanguageController : TelegramController
         });
     }
     
-    [TelegramCallbackRoute(TelegramRoutes.Group)]
+    [TelegramCallbackRoute(TelegramRoutes.Group + "*")]
     public Task SendGroupAsync(TelegramRequestContext requestContext)
     {
         var parameters = requestContext.Update.CallbackQuery!.Data.ParseQueryParts();
@@ -47,7 +47,7 @@ public class LanguageController : TelegramController
             ToggleRevertTranslations = parameters.GetValueOrDefault<bool>(RenderWordsViewCommand.ParameterNames.RevertTranslations),
             ToggleShowTranslations = parameters.GetValueOrDefault<bool>(RenderWordsViewCommand.ParameterNames.ToggleTranslations),
             ShowMode = parameters.GetValueOrDefault<ShowWordsMode?>(RenderWordsViewCommand.ParameterNames.ShowMode),
-            OpenedWordSerialNumber = parameters.GetValueOrDefault<long?>(RenderWordsViewCommand.ParameterNames.OpenedWord),
+            OpenedWordIndex = parameters.GetValueOrDefault<int?>(RenderWordsViewCommand.ParameterNames.OpenedWordIndex),
             LearnState = parameters.GetValueOrDefault<LearnState?>(RenderWordsViewCommand.ParameterNames.LearnState),
             CurrentlyOpenedWords = parameters.GetValueOrDefault<long[]?>(RenderWordsViewCommand.ParameterNames.OpenedWords)
         });

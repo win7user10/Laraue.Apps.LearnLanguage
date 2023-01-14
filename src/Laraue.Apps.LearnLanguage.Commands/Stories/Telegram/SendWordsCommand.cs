@@ -19,7 +19,7 @@ public record SendWordGroupWordsCommand : BaseCommand<CallbackQuery>
     
     public ShowWordsMode? ShowMode { get; init; }
 
-    public long? OpenedWordSerialNumber { get; init; }
+    public int? OpenedWordIndex { get; init; }
 
     public LearnState? LearnState { get; init; }
 
@@ -57,13 +57,17 @@ public class SendWordGroupWordsCommandHandler : IRequestHandler<SendWordGroupWor
                 new ChangeShowWordsModeCommand(request.UserId, request.ShowMode.GetValueOrDefault()),
                 cancellationToken);
         }
+
+        long? openedWordSerialNumber = request.CurrentlyOpenedWords is not null && request.OpenedWordIndex is not null
+            ? request.CurrentlyOpenedWords[request.OpenedWordIndex.Value]
+            : null;
         
-        if (request.LearnState is not null)
+        if (request.LearnState is not null && openedWordSerialNumber is not null)
         {
             await _mediator.Send(
                 new ChangeWordLearnStateCommand(
                     request.UserId,
-                    request.OpenedWordSerialNumber.GetValueOrDefault(),
+                    openedWordSerialNumber.Value,
                     request.LearnState.GetValueOrDefault()),
                 cancellationToken);
         }
@@ -110,7 +114,7 @@ public class SendWordGroupWordsCommandHandler : IRequestHandler<SendWordGroupWor
             request.GroupId,
             request.Data.Message.Chat.Id,
             request.Data.Message.MessageId,
-            request.OpenedWordSerialNumber,
+            openedWordSerialNumber,
             request.Data.Id),
             cancellationToken);
 

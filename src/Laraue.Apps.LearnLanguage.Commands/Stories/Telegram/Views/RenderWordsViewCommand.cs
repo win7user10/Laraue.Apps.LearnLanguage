@@ -4,6 +4,7 @@ using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Telegram.NET.Core.Utils;
+using Laraue.Telegram.NET.DataAccess;
 using Laraue.Telegram.NET.DataAccess.Extensions;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -22,7 +23,7 @@ public record RenderWordsViewCommand(
 {
     public static class ParameterNames
     {
-        public const string OpenedWord = "o";
+        public const string OpenedWordIndex = "o";
         public const string OpenedWords = "w";
         public const string ToggleTranslations = "t";
         public const string RevertTranslations = "r";
@@ -162,7 +163,8 @@ public class RenderWordsViewCommandHandler : RenderViewCommandHandler<RenderWord
 
         var openedWord = request.Data
             .Data
-            .FirstOrDefault(x => x.SerialNumber == request.OpenedWordSerialNumber);
+            .Select((x, i) => new { Word = x, Index = i })
+            .FirstOrDefault(x => x.Word.SerialNumber == request.OpenedWordSerialNumber);
 
         if (openedWord is null)
         {
@@ -171,30 +173,30 @@ public class RenderWordsViewCommandHandler : RenderViewCommandHandler<RenderWord
         else
         {
             telegramMessageBuilder.AppendRow("Opened word:")
-                .AppendRow(GetTextBuilder(openedWord, false, false).ToString());
+                .AppendRow(GetTextBuilder(openedWord.Word, false, false).ToString());
         }
 
         telegramMessageBuilder
             .AddInlineKeyboardButtons(request.Data, (x, i) => InlineKeyboardButton.WithCallbackData(
                 x.SerialNumber.ToString(),
                 groupRoute.BuildFor(y => y
-                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWord, x.SerialNumber))));
+                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWordIndex, i))));
 
         if (openedWord is not null)
         {
-            var isLearned = openedWord.LearnState.HasFlag(LearnState.Learned);
+            var isLearned = openedWord.Word.LearnState.HasFlag(LearnState.Learned);
             var switchLearnStateButton = InlineKeyboardButton.WithCallbackData(
                 isLearned ? "Not learned ❌" : "Learned ✅",
                 groupRoute.BuildFor(x => x
                     .WithQueryParameter(RenderWordsViewCommand.ParameterNames.LearnState, LearnState.Learned)
-                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWord, openedWord.SerialNumber)));
+                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWordIndex, openedWord.Index)));
         
-            var isHard = openedWord.LearnState.HasFlag(LearnState.Hard);
+            var isHard = openedWord.Word.LearnState.HasFlag(LearnState.Hard);
             var switchIsHardButton = InlineKeyboardButton.WithCallbackData(
                 isHard ? "Easy " : "Hard 🧠",
                 groupRoute.BuildFor(x => x
                     .WithQueryParameter(RenderWordsViewCommand.ParameterNames.LearnState, LearnState.Hard)
-                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWord, openedWord.SerialNumber)));
+                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWordIndex, openedWord.Index)));
 
             telegramMessageBuilder.AddInlineKeyboardButtons(new[] {switchLearnStateButton, switchIsHardButton});
         }

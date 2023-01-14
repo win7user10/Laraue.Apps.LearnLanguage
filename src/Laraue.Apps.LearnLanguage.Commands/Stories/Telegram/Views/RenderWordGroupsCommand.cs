@@ -3,6 +3,7 @@ using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.Common.Extensions;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Telegram.NET.Core.Utils;
+using Laraue.Telegram.NET.DataAccess;
 using Laraue.Telegram.NET.DataAccess.Extensions;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -35,8 +36,9 @@ public class RenderWordGroupsCommandHandler : RenderViewCommandHandler<RenderWor
             .AppendRow("Open group: ")
             .AddInlineKeyboardButtons(request.Data, (x, i) => InlineKeyboardButton.WithCallbackData(
                 x.SerialNumber.ToString(),
-                groupRoute.WithQueryParameter(RenderWordsViewCommand.ParameterNames.GroupId, x.SerialNumber)))
-            .AddControlButtons(request.Data, TelegramRoutes.Groups)
+                groupRoute
+                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.GroupId, x.SerialNumber)))
+            .AddControlButtons(request.Data, new RoutePathBuilder(TelegramRoutes.Groups))
             .AddMainMenuButton();
     }
 }
