@@ -10,6 +10,9 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
+using Hangfire;
+using Hangfire.PostgreSql;
+using Laraue.Apps.LearnLanguage.Commands.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +34,14 @@ builder.Services
     })
     .AddLinq2Db();
 
+builder.Services
+    .AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Postgre")))
+    .AddHangfireServer();
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandleMiddleware>();
@@ -42,6 +53,12 @@ using (var scope = app.Services.CreateScope())
 {
     await using var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
     await db.Database.MigrateAsync();
+
+    var jobClient = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+    jobClient.AddOrUpdate<CalculateDailyStatJob>(
+        nameof(CalculateDailyStatJob),
+        x => x.ExecuteAsync(),
+        Cron.Daily);
 }
 
 app.Run();

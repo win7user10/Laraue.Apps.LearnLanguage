@@ -40,9 +40,16 @@ public abstract class RenderViewCommandHandler<TCommand, TData> : IRequestHandle
             // Source does not modified.
         }
 
-        await _client.AnswerCallbackQueryAsync(
-            request.CallbackQueryId,
-            cancellationToken: cancellationToken);
+        try
+        {
+            await _client.AnswerCallbackQueryAsync(
+                request.CallbackQueryId,
+                cancellationToken: cancellationToken);
+        }
+        catch (ApiRequestException)
+        {
+            // Callback query is expired.
+        }
         
         return Unit.Value;
     }

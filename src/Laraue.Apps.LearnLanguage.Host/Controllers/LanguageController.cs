@@ -23,12 +23,12 @@ public class LanguageController : TelegramController
     [TelegramCallbackRoute(TelegramRoutes.Groups)]
     public Task SendGroupsAsync(TelegramRequestContext requestContext)
     {
-        var parameters = requestContext.Update.CallbackQuery?.Data.ParseQueryParts();
+        var parameters = requestContext.Update.CallbackQuery!.Data.ParseQueryParts();
         
         return _mediator.Send(new SendWordGroupsCommand
         {
-            Page = parameters!.GetPage(),
-            Data = requestContext.Update.CallbackQuery!,
+            Page = parameters.GetPage(),
+            Data = requestContext.Update.CallbackQuery,
             UserId = requestContext.UserId!,
         });
     }

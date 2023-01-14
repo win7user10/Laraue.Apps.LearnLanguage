@@ -8,4 +8,6 @@ public class User : TelegramIdentityUser
     public WordsTemplateMode WordsTemplateMode { get; set; }
     
     public ShowWordsMode ShowWordsMode { get; set; }
+    
+    public IList<WordGroup> WordGroups { get; set; }
 }
