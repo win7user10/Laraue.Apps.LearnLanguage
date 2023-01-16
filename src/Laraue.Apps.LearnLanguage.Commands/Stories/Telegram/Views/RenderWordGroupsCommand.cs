@@ -5,15 +5,16 @@ using Laraue.Core.DataAccess.Contracts;
 using Laraue.Telegram.NET.Core.Utils;
 using Laraue.Telegram.NET.DataAccess;
 using Laraue.Telegram.NET.DataAccess.Extensions;
+using Laraue.Telegram.NET.MediatR;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Stories.Telegram.Views;
 
 public record RenderWordGroupsCommand(IPaginatedResult<GroupDto> Data, long ChatId, int MessageId, string CallbackQueryId)
-    : RenderViewCommand<IPaginatedResult<GroupDto>>(Data, ChatId, MessageId, CallbackQueryId);
+    : BaseEditMessageCommand<IPaginatedResult<GroupDto>>(Data, ChatId, MessageId, CallbackQueryId);
 
-public class RenderWordGroupsCommandHandler : RenderViewCommandHandler<RenderWordGroupsCommand, IPaginatedResult<GroupDto>>
+public class RenderWordGroupsCommandHandler : BaseEditMessageCommandHandler<RenderWordGroupsCommand, IPaginatedResult<GroupDto>>
 {
     public RenderWordGroupsCommandHandler(ITelegramBotClient client) : base(client)
     {

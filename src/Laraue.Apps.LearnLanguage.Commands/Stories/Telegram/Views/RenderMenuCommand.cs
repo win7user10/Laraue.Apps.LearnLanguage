@@ -1,4 +1,5 @@
 using Laraue.Telegram.NET.Core.Utils;
+using Laraue.Telegram.NET.MediatR;
 using MediatR;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -6,9 +7,9 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace Laraue.Apps.LearnLanguage.Commands.Stories.Telegram.Views;
 
 public record RenderMenuCommand(Unit Data, long ChatId, int MessageId, string CallbackQueryId)
-    : RenderViewCommand<Unit>(Data, ChatId, MessageId, CallbackQueryId);
+    : BaseEditMessageCommand<Unit>(Data, ChatId, MessageId, CallbackQueryId);
 
-public class RenderMenuCommandHandler : RenderViewCommandHandler<RenderMenuCommand, Unit>
+public class RenderMenuCommandHandler : BaseEditMessageCommandHandler<RenderMenuCommand, Unit>
 {
     public RenderMenuCommandHandler(ITelegramBotClient client) : base(client)
     {

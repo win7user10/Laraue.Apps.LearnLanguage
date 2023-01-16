@@ -1,3 +1,4 @@
+using Laraue.Apps.LearnLanguage.Common.Services;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using LinqToDB.EntityFrameworkCore;
 using Telegram.Bot;
@@ -8,26 +9,33 @@ public class CalculateDailyStatJob
 {
     private readonly DatabaseContext _dbContext;
     private readonly ITelegramBotClient _telegramBotClient;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public CalculateDailyStatJob(DatabaseContext dbContext, ITelegramBotClient telegramBotClient)
+    public CalculateDailyStatJob(
+        DatabaseContext dbContext,
+        ITelegramBotClient telegramBotClient,
+        IDateTimeProvider dateTimeProvider)
     {
         _dbContext = dbContext;
         _telegramBotClient = telegramBotClient;
+        _dateTimeProvider = dateTimeProvider;
     }
     
     public async Task ExecuteAsync()
     {
+        var yesterdayDate = _dateTimeProvider.UtcNow.AddDays(-1).Date;
+        
         var learnedStat = await _dbContext
             .Users
             .Where(x => x.WordGroups.SelectMany(y => y.WordGroupWordTranslations)
                 .Any(y => y.LearnedAt.HasValue
-                    && y.LearnedAt.Value.Date == DateTime.UtcNow.Date))
+                    && y.LearnedAt.Value.Date == yesterdayDate))
             .Select(x => new
             {
                 x.TelegramId,
                 Count = x.WordGroups.SelectMany(y => y.WordGroupWordTranslations)
                     .Count(y => y.LearnedAt.HasValue
-                        && y.LearnedAt.Value.Date == DateTime.UtcNow.Date)
+                        && y.LearnedAt.Value.Date == yesterdayDate)
             })
             .ToListAsyncLinqToDB();
 

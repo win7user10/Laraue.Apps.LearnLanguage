@@ -6,6 +6,7 @@ using Laraue.Core.DataAccess.Contracts;
 using Laraue.Telegram.NET.Core.Utils;
 using Laraue.Telegram.NET.DataAccess;
 using Laraue.Telegram.NET.DataAccess.Extensions;
+using Laraue.Telegram.NET.MediatR;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -19,7 +20,7 @@ public record RenderWordsViewCommand(
         int MessageId,
         long? OpenedWordSerialNumber,
         string CallbackQueryId)
-    : RenderViewCommand<IPaginatedResult<LearningItem>>(Data, ChatId, MessageId, CallbackQueryId)
+    : BaseEditMessageCommand<IPaginatedResult<LearningItem>>(Data, ChatId, MessageId, CallbackQueryId)
 {
     public static class ParameterNames
     {
@@ -33,7 +34,7 @@ public record RenderWordsViewCommand(
     }
 }
 
-public class RenderWordsViewCommandHandler : RenderViewCommandHandler<RenderWordsViewCommand, IPaginatedResult<LearningItem>>
+public class RenderWordsViewCommandHandler : BaseEditMessageCommandHandler<RenderWordsViewCommand, IPaginatedResult<LearningItem>>
 {
     public RenderWordsViewCommandHandler(ITelegramBotClient client) : base(client)
     {

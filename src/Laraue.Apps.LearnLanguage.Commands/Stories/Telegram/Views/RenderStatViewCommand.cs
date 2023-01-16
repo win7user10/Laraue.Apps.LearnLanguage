@@ -1,14 +1,15 @@
 ﻿using Laraue.Apps.LearnLanguage.Commands.Queries;
 using Laraue.Apps.LearnLanguage.Common.Extensions;
 using Laraue.Telegram.NET.Core.Utils;
+using Laraue.Telegram.NET.MediatR;
 using Telegram.Bot;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Stories.Telegram.Views;
 
 public record RenderStatViewCommand(GetLearnStateQueryResponse Data, long ChatId, int MessageId, string CallbackQueryId)
-    : RenderViewCommand<GetLearnStateQueryResponse>(Data, ChatId, MessageId, CallbackQueryId);
+    : BaseEditMessageCommand<GetLearnStateQueryResponse>(Data, ChatId, MessageId, CallbackQueryId);
     
-public class RenderStatViewCommandCommandHandler : RenderViewCommandHandler<RenderStatViewCommand, GetLearnStateQueryResponse>
+public class RenderStatViewCommandCommandHandler : BaseEditMessageCommandHandler<RenderStatViewCommand, GetLearnStateQueryResponse>
 {
     public RenderStatViewCommandCommandHandler(ITelegramBotClient client) : base(client)
     {

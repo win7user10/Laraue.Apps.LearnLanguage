@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="Telegram.Bot" Version="18.0.0" />
     <PackageReference Include="Laraue.Core.DataAccess.EFCore" Version="6.0.4" />
     <PackageReference Include="Laraue.Core.DataAccess.Linq2DB" Version="6.0.4" />
-    <PackageReference Include="Laraue.Telegram.NET.DataAccess" Version="0.0.9" />
+    <PackageReference Include="Laraue.Telegram.NET.DataAccess" Version="1.0.0" />
+    <PackageReference Include="Laraue.Telegram.NET.MediatR" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
