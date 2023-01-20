@@ -1,5 +1,6 @@
 using Laraue.Apps.LearnLanguage.Common.Services;
 using Laraue.Apps.LearnLanguage.DataAccess;
+using Laraue.Telegram.NET.Core.Utils;
 using LinqToDB.EntityFrameworkCore;
 using Telegram.Bot;
 
@@ -41,9 +42,14 @@ public class CalculateDailyStatJob
 
         foreach (var userLearnedStat in learnedStat)
         {
+            var messageBuilder = new TelegramMessageBuilder()
+                .AppendRow($"Today you have been learned {userLearnedStat.Count} words!")
+                .AddDeleteMessageButton("Okay");
+            
             await _telegramBotClient.SendTextMessageAsync(
                 userLearnedStat.TelegramId!,
-                $"Today you have been learned {userLearnedStat.Count} words!");
+                messageBuilder.Text,
+                replyMarkup: messageBuilder.InlineKeyboard);
         }
     }
 }
