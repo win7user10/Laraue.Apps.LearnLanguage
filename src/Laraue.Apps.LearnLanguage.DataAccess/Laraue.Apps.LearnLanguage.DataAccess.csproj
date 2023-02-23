@@ -10,11 +10,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.7" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.5" />
-    <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="1.0.0" />
+    <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="en_ru_words.json">
+    <None Update="translations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

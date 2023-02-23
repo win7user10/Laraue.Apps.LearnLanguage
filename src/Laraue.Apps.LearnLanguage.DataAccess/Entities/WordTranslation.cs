@@ -10,5 +10,5 @@ public class WordTranslation : BaseEntity
     
     public long LanguageId { get; set; }
 
-    public Language Language { get; set; }
+    public TranslationLanguage Language { get; set; }
 }

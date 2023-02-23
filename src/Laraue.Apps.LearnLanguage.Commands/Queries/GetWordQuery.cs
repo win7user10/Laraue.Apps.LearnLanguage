@@ -30,14 +30,14 @@ public class GetWordQueryHandler : IRequestHandler<GetWordQuery, WordData>
 
     public Task<WordData> Handle(GetWordQuery request, CancellationToken cancellationToken)
     {
-        return _databaseContext.WordGroupWordTranslations
+        return _databaseContext.WordGroupWords
             .Where(x => x.SerialNumber == request.SerialNumber
                 && x.WordGroup.UserId == request.UserId)
             .Select(x => new WordData(
                 x.WordTranslation.Word.Name,
                 x.WordTranslation.Translation,
                 x.WordGroup.SerialNumber,
-                x.LearnState,
+                x.WordTranslationState.LearnState,
                 request.SerialNumber))
             .FirstAsync(cancellationToken);
     }

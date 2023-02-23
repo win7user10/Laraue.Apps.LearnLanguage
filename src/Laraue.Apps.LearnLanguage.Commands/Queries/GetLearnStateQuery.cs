@@ -24,18 +24,18 @@ public class GetLearnStateQueryHandler : IRequestHandler<GetLearnStateQuery, Get
 
     public async Task<GetLearnStateQueryResponse> Handle(GetLearnStateQuery request, CancellationToken cancellationToken)
     {
-        var getUserWordsQuery = _context.WordGroupWordTranslations
+        var getUserWordsQuery = _context.WordGroupWords
             .Where(x => x.WordGroup.UserId == request.UserId);
         
         var wordsCount = await getUserWordsQuery.CountAsyncEF(cancellationToken);
         
         var learnedCount = await getUserWordsQuery
-            .Where(x => x.LearnState.HasFlag(LearnState.Learned))
+            .Where(x => x.WordTranslationState.LearnState.HasFlag(LearnState.Learned))
             .CountAsyncEF(cancellationToken);
 
         var firstLearnedAt = await getUserWordsQuery
-            .OrderBy(x => x.LearnedAt)
-            .Select(x => x.LearnedAt)
+            .OrderBy(x => x.WordTranslationState.LearnedAt)
+            .Select(x => x.WordTranslationState.LearnedAt)
             .FirstOrDefaultAsyncEF(cancellationToken);
 
         double? learnSpeed = null;
@@ -52,8 +52,8 @@ public class GetLearnStateQueryHandler : IRequestHandler<GetLearnStateQuery, Get
         var totalStat = new TotalStat(learnedCount, wordsCount, learnSpeed, approximateLearnWordsDate);
 
         var daysStat = await getUserWordsQuery
-            .Where(x => x.LearnedAt != null)
-            .GroupBy(x => x.LearnedAt.Value.Date)
+            .Where(x => x.WordTranslationState.LearnedAt != null)
+            .GroupBy(x => x.WordTranslationState.LearnedAt!.Value.Date)
             .OrderByDescending(x => x.Key)
             .Select(x => new DayLearnState(x.Key, x.Count()))
             .Take(10)

@@ -64,6 +64,7 @@ public class SendWordGroupWordsCommandHandler : IRequestHandler<SendWordGroupWor
         
         if (request.LearnState is not null && openedWordSerialNumber is not null)
         {
+            // TODO - send id instead of serial number
             await _mediator.Send(
                 new ChangeWordLearnStateCommand(
                     request.UserId,
@@ -94,6 +95,7 @@ public class SendWordGroupWordsCommandHandler : IRequestHandler<SendWordGroupWor
         // Update view stat for the words 
         if (idsForStatUpdate.Length > 0)
         {
+            // TODO - send id instead of serial number
             await _mediator.Send(
                 new UpdateWordsStatCommand(
                     idsForStatUpdate,

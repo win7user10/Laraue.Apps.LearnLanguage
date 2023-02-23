@@ -3,7 +3,6 @@ using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using Laraue.Core.Exceptions;
-using Laraue.LearnLanguage.DataAccess;
 using Laraue.Telegram.NET.Authentication.Extensions;
 using Laraue.Telegram.NET.Core.Extensions;
 using MediatR;

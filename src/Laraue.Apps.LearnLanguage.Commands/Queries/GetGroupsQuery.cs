@@ -29,12 +29,13 @@ public class GetGroupsQueryHandler : IRequestHandler<GetGroupsQuery, IPaginatedR
             .OrderBy(x => x.Id)
             .Select(x => new GroupDto(
                 x.SerialNumber,
-                x.WordGroupWordTranslations
+                x.WordGroupWords
                     .Select(x => x.WordTranslation.Word.Name)
                     .OrderBy(x => x)
                     .First(),
-                x.WordGroupWordTranslations.Count(y => y.LearnState.HasFlag(LearnState.Learned)),
-                x.WordGroupWordTranslations.Count))
+                x.WordGroupWords.Count(
+                    y => y.WordTranslationState.LearnState.HasFlag(LearnState.Learned)),
+                x.WordGroupWords.Count))
             .PaginateAsync(request, cancellationToken);
     }
 }

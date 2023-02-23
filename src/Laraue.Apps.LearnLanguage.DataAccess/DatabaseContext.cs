@@ -12,7 +12,7 @@ public class DatabaseContext : DbContext
     {
     }
     
-    public DbSet<Language> Languages { get; init; }
+    public DbSet<TranslationLanguage> Languages { get; init; }
     
     public DbSet<Word> Words { get; init; }
     
@@ -22,7 +22,9 @@ public class DatabaseContext : DbContext
     
     public DbSet<User> Users { get; init; }
     
-    public DbSet<WordGroupWords> WordGroupWordTranslations { get; init; }
+    public DbSet<WordGroupWord> WordGroupWords { get; init; }
+    
+    public DbSet<WordTranslationState> WordTranslationStates { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -34,44 +36,53 @@ public class DatabaseContext : DbContext
         modelBuilder.Entity<WordGroup>()
             .HasIndex(x => x.UserId);
         
-        modelBuilder.Entity<WordGroupWords>()
-            .HasIndex(x => x.LearnState);
-        
-        modelBuilder.Entity<WordGroupWords>()
+        modelBuilder.Entity<WordGroupWord>()
             .HasIndex(x => x.SerialNumber);
-        
-        modelBuilder.Entity<Language>()
-            .HasData(
-                new () { Id = 1, Code = "en" },
-                new () { Id = 2, Code = "ru" });
-        
-        using var fileStream = File.OpenRead(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "en_ru_words.json"));
 
-        var translations = JsonSerializer.Deserialize<string[][]>(fileStream)!
-            .Select(x => new OneWord(x[0], x[1]))
-            .GroupBy(x => x.Word)
-            .Select(x => new OneWord(x.Key, string.Join(", ", x.Select(y => y.Translation))))
-            .ToArray();
+        var languages = new TranslationLanguage[]
+        {
+            new () { Id = 1, Code = "ru" }
+        };
 
-        for (var i = 0; i < translations.Length; i++)
+        var languagesDictionary = languages
+            .ToDictionary(
+                x => x.Code,
+                x => x.Id );
+        
+        modelBuilder.Entity<TranslationLanguage>().HasData(languages);
+        
+        using var fileStream = File.OpenRead(
+            Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
+                "translations.json"));
+
+        var words = JsonSerializer.Deserialize<ImportingWord[]>(
+            fileStream,
+            new JsonSerializerOptions(JsonSerializerDefaults.Web))!;
+        
+        foreach (var word in words)
         {
             modelBuilder.Entity<Word>()
                 .HasData(new Word
                 {
-                    Id = i + 1,
-                    Name = translations[i].Word
+                    Id = word.Id,
+                    Name = word.Word,
                 });
-            
-            modelBuilder.Entity<WordTranslation>()
-                .HasData(new WordTranslation
-                {
-                    Id = i + 1,
-                    Translation = translations[i].Translation,
-                    LanguageId = 1,
-                    WordId = i + 1,
-                });
+
+            foreach (var translation in word.Translations)
+            {
+                modelBuilder.Entity<WordTranslation>()
+                    .HasData(new WordTranslation
+                    {
+                        Id = translation.Id,
+                        Translation = string.Join(" | ", translation.Translations),
+                        LanguageId = languagesDictionary[translation.Language],
+                        WordId = word.Id,
+                    });
+            }
         }
     }
 
-    private record struct OneWord(string Word, string Translation);
+    private record struct ImportingWord(int Id, string Word, ImportingTranslation[] Translations);
+    private record struct ImportingTranslation(int Id, string Language, string[] Translations);
 }

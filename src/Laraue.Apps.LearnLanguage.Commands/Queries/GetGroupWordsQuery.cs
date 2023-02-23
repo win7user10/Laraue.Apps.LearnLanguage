@@ -31,18 +31,18 @@ public class GetLearningBatchRequestHandler : IRequestHandler<GetGroupWordsQuery
     
     public Task<IPaginatedResult<LearningItem>> Handle(GetGroupWordsQuery query, CancellationToken cancellationToken)
     {
-        var dbQuery = _context.WordGroupWordTranslations
+        var dbQuery = _context.WordGroupWords
             .Where(x => x.WordGroup.SerialNumber == query.Id)
             .Where(x => x.WordGroup.UserId == query.UserId);
 
         if (query.ShowWordsMode.HasFlag(ShowWordsMode.Hard))
         {
-            dbQuery = dbQuery.Where(x => x.LearnState.HasFlag(LearnState.Hard));
+            dbQuery = dbQuery.Where(x => x.WordTranslationState.LearnState.HasFlag(LearnState.Hard));
         }
 
         if (query.ShowWordsMode.HasFlag(ShowWordsMode.NotLearned))
         {
-            dbQuery = dbQuery.Where(x => !x.LearnState.HasFlag(LearnState.Learned));
+            dbQuery = dbQuery.Where(x => !x.WordTranslationState.LearnState.HasFlag(LearnState.Learned));
         }
 
         return dbQuery
@@ -51,8 +51,8 @@ public class GetLearningBatchRequestHandler : IRequestHandler<GetGroupWordsQuery
                 x.WordTranslation.Word.Name,
                 x.WordTranslation.Translation,
                 x.SerialNumber,
-                x.LearnState,
-                x.ViewCount))
+                x.WordTranslationState.LearnState,
+                x.WordTranslationState.ViewCount))
             .PaginateAsync(query, cancellationToken);
     }
 }

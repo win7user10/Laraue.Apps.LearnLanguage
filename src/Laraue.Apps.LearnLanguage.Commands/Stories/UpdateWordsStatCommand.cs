@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Stories;
 
-public record UpdateWordsStatCommand(long[] SerialNumbers, string UserId) : IRequest;
+public record UpdateWordsStatCommand(long[] WordTranslationIds, string UserId) : IRequest;
 
 public class UpdateWordsStatCommandHandler : IRequestHandler<UpdateWordsStatCommand>
 {
@@ -18,10 +18,10 @@ public class UpdateWordsStatCommandHandler : IRequestHandler<UpdateWordsStatComm
 
     public async Task<Unit> Handle(UpdateWordsStatCommand request, CancellationToken cancellationToken)
     {
-        await _context.WordGroupWordTranslations.Where(x => 
-                request.SerialNumbers.Contains(x.SerialNumber)
-                && request.UserId == x.WordGroup.UserId)
-            .UpdateAsync(x => new WordGroupWords
+        await _context.WordTranslationStates.Where(x => 
+            request.WordTranslationIds.Contains(x.WordTranslationId)
+                && request.UserId == x.UserId)
+            .UpdateAsync(x => new WordTranslationState
             {
                 ViewCount = x.ViewCount + 1
             }, cancellationToken);

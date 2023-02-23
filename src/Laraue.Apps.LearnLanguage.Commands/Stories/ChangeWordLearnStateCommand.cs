@@ -8,7 +8,7 @@ namespace Laraue.Apps.LearnLanguage.Commands.Stories;
 
 public record ChangeWordLearnStateCommand(
     string UserId,
-    long SerialNumber,
+    long WordTranslationId,
     LearnState FlagToChange)
     : IRequest<int>;
 
@@ -23,9 +23,10 @@ public class ChangeWordIsLearningStateCommandHandler : IRequestHandler<ChangeWor
 
     public Task<int> Handle(ChangeWordLearnStateCommand request, CancellationToken cancellationToken)
     {
-        return _context.WordGroupWordTranslations.Where(x => x.WordGroup.UserId == request.UserId
-            && x.SerialNumber == request.SerialNumber)
-            .UpdateAsync(x => new WordGroupWords
+        return _context.WordTranslationStates.Where(x => 
+            x.UserId == request.UserId
+            && x.WordTranslationId == request.WordTranslationId)
+            .UpdateAsync(x => new WordTranslationState
             {
                 LearnState = x.LearnState ^ request.FlagToChange,
                 LearnedAt = request.FlagToChange == LearnState.Learned
