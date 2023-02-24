@@ -15,17 +15,17 @@ namespace Laraue.Apps.LearnLanguage.Commands.Stories.Telegram.Views;
 public record RenderWordsViewCommand(
         IPaginatedResult<LearningItem> Data,
         UserSettings UserSettings,
+        long GroupId,
         long GroupSerialNumber,
         long ChatId,
         int MessageId,
-        long? OpenedWordSerialNumber,
+        long? OpenedWordTranslationId,
         string CallbackQueryId)
     : BaseEditMessageCommand<IPaginatedResult<LearningItem>>(Data, ChatId, MessageId, CallbackQueryId)
 {
     public static class ParameterNames
     {
-        public const string OpenedWordIndex = "o";
-        public const string OpenedWords = "w";
+        public const string OpenedWordId = "o";
         public const string ToggleTranslations = "t";
         public const string RevertTranslations = "r";
         public const string ShowMode = "m";
@@ -40,7 +40,10 @@ public class RenderWordsViewCommandHandler : BaseEditMessageCommandHandler<Rende
     {
     }
 
-    private StringBuilder GetTextBuilder(LearningItem item, bool areTranslationsReverted, bool areTranslationHidden)
+    private static StringBuilder GetTextBuilder(
+        LearningItem item,
+        bool areTranslationsReverted,
+        bool areTranslationHidden)
     {
         (string, string?) textParts = new ()
         {
@@ -88,11 +91,8 @@ public class RenderWordsViewCommandHandler : BaseEditMessageCommandHandler<Rende
             .HasFlag(WordsTemplateMode.RevertWordAndTranslation);
 
         var groupRoute = new RoutePathBuilder(TelegramRoutes.Group)
-            .WithQueryParameter(RenderWordsViewCommand.ParameterNames.GroupId, request.GroupSerialNumber)
-            .WithQueryParameter(ParameterNames.Page, request.Data.Page)
-            .WithQueryParameter(
-                RenderWordsViewCommand.ParameterNames.OpenedWords,
-                 request.Data.Data.Select(x => x.SerialNumber));
+            .WithQueryParameter(RenderWordsViewCommand.ParameterNames.GroupId, request.GroupId)
+            .WithQueryParameter(ParameterNames.Page, request.Data.Page);
         
         // TODO - add current route property
         var toggleTranslationsButton = InlineKeyboardButton.WithCallbackData(
@@ -138,7 +138,7 @@ public class RenderWordsViewCommandHandler : BaseEditMessageCommandHandler<Rende
 
         telegramMessageBuilder
             .AppendRow(
-                $"<b>Words of group {request.GroupSerialNumber}. Page {request.Data.Page}/{request.Data.LastPage}</b>")
+                $"<b>Words of group {request.GroupId}. Page {request.Data.Page}/{request.Data.LastPage}</b>")
             .AppendRow("")
             .AppendDataRows(request.Data, (x, i) =>
             {
@@ -164,8 +164,7 @@ public class RenderWordsViewCommandHandler : BaseEditMessageCommandHandler<Rende
 
         var openedWord = request.Data
             .Data
-            .Select((x, i) => new { Word = x, Index = i })
-            .FirstOrDefault(x => x.Word.SerialNumber == request.OpenedWordSerialNumber);
+            .FirstOrDefault(x => x.TranslationId == request.OpenedWordTranslationId);
 
         if (openedWord is null)
         {
@@ -174,37 +173,37 @@ public class RenderWordsViewCommandHandler : BaseEditMessageCommandHandler<Rende
         else
         {
             telegramMessageBuilder.AppendRow("Opened word:")
-                .AppendRow(GetTextBuilder(openedWord.Word, false, false).ToString());
+                .AppendRow(GetTextBuilder(openedWord, false, false).ToString());
         }
 
         telegramMessageBuilder
             .AddInlineKeyboardButtons(request.Data, (x, i) => InlineKeyboardButton.WithCallbackData(
                 x.SerialNumber.ToString(),
                 groupRoute.BuildFor(y => y
-                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWordIndex, i))));
+                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWordId, x.TranslationId))));
 
         if (openedWord is not null)
         {
-            var isLearned = openedWord.Word.LearnState.HasFlag(LearnState.Learned);
+            var isLearned = openedWord.LearnState.HasFlag(LearnState.Learned);
             var switchLearnStateButton = InlineKeyboardButton.WithCallbackData(
                 isLearned ? "Not learned ❌" : "Learned ✅",
                 groupRoute.BuildFor(x => x
                     .WithQueryParameter(RenderWordsViewCommand.ParameterNames.LearnState, LearnState.Learned)
-                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWordIndex, openedWord.Index)));
+                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWordId, openedWord.TranslationId)));
         
-            var isHard = openedWord.Word.LearnState.HasFlag(LearnState.Hard);
+            var isHard = openedWord.LearnState.HasFlag(LearnState.Hard);
             var switchIsHardButton = InlineKeyboardButton.WithCallbackData(
                 isHard ? "Easy " : "Hard 🧠",
                 groupRoute.BuildFor(x => x
                     .WithQueryParameter(RenderWordsViewCommand.ParameterNames.LearnState, LearnState.Hard)
-                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWordIndex, openedWord.Index)));
+                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.OpenedWordId, openedWord.TranslationId)));
 
             telegramMessageBuilder.AddInlineKeyboardButtons(new[] {switchLearnStateButton, switchIsHardButton});
         }
         
         telegramMessageBuilder
             .AddControlButtons(request.Data, routeBuilder.WithQueryParameter(
-                RenderWordsViewCommand.ParameterNames.GroupId, request.GroupSerialNumber))
+                RenderWordsViewCommand.ParameterNames.GroupId, request.GroupId))
             .AddInlineKeyboardButtons(new []{ toggleTranslationsButton, reverseTranslationsButton })
             .AddInlineKeyboardButtons(changeShowWordsModeButtons)
             .AddInlineKeyboardButtons(new []{ returnBackButton });

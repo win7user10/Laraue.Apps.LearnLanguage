@@ -12,14 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Laraue.LearnLanguage.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20230223091421_Initial9")]
-    partial class Initial9
+    [Migration("20230224164003_Initial10")]
+    partial class Initial10
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.7")
+                .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
@@ -77,6 +78,10 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean")
                         .HasColumnName("email_confirmed");
+
+                    b.Property<long[]>("LastOpenedTranslationIds")
+                        .HasColumnType("bigint[]")
+                        .HasColumnName("last_opened_translation_ids");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean")
@@ -23609,10 +23614,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("word_translation_id");
 
-                    b.Property<long>("WordTranslationStateId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("word_translation_state_id");
-
                     b.HasKey("Id")
                         .HasName("pk_word_group_words");
 
@@ -23624,9 +23625,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
 
                     b.HasIndex("WordTranslationId")
                         .HasDatabaseName("ix_word_group_words_word_translation_id");
-
-                    b.HasIndex("WordTranslationStateId")
-                        .HasDatabaseName("ix_word_group_words_word_translation_state_id");
 
                     b.ToTable("word_group_words", (string)null);
                 });
@@ -23649,10 +23647,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                         .HasColumnType("text")
                         .HasColumnName("translation");
 
-                    b.Property<long?>("WordGroupId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("word_group_id");
-
                     b.Property<long>("WordId")
                         .HasColumnType("bigint")
                         .HasColumnName("word_id");
@@ -23662,9 +23656,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
 
                     b.HasIndex("LanguageId")
                         .HasDatabaseName("ix_word_translations_language_id");
-
-                    b.HasIndex("WordGroupId")
-                        .HasDatabaseName("ix_word_translations_word_group_id");
 
                     b.HasIndex("WordId")
                         .HasDatabaseName("ix_word_translations_word_id");
@@ -56504,18 +56495,9 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_word_group_words_word_translations_word_translation_id");
 
-                    b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.WordTranslationState", "WordTranslationState")
-                        .WithMany()
-                        .HasForeignKey("WordTranslationStateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_word_group_words_word_translation_states_word_translation_sta");
-
                     b.Navigation("WordGroup");
 
                     b.Navigation("WordTranslation");
-
-                    b.Navigation("WordTranslationState");
                 });
 
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.WordTranslation", b =>
@@ -56526,11 +56508,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_word_translations_languages_language_id");
-
-                    b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.WordGroup", null)
-                        .WithMany("WordTranslations")
-                        .HasForeignKey("WordGroupId")
-                        .HasConstraintName("fk_word_translations_word_groups_word_group_id");
 
                     b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.Word", "Word")
                         .WithMany()
@@ -56575,8 +56552,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.WordGroup", b =>
                 {
                     b.Navigation("WordGroupWords");
-
-                    b.Navigation("WordTranslations");
                 });
 #pragma warning restore 612, 618
         }

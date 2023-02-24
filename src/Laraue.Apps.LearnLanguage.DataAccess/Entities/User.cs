@@ -21,4 +21,9 @@ public class User : TelegramIdentityUser
     public ICollection<WordGroup> WordGroups { get; set; }
     
     public ICollection<WordTranslationState> WordTranslationStates { get; set; }
+
+    /// <summary>
+    /// Last opened translation identifiers.
+    /// </summary>
+    public long[]? LastOpenedTranslationIds { get; set; }
 }

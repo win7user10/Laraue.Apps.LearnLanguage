@@ -26,6 +26,4 @@ public class WordGroupWord : BaseEntity
     /// Link to the <see cref="WordTranslation"/>.
     /// </summary>
     public WordTranslation WordTranslation { get; set; } = default!;
-
-    public WordTranslationState WordTranslationState { get; set; }
 }

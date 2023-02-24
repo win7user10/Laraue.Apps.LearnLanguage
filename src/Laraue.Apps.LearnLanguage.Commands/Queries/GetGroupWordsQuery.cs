@@ -1,7 +1,8 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess;
+﻿using Laraue.Apps.LearnLanguage.Commands.Extensions;
+using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Core.DataAccess.Contracts;
-using Laraue.Core.DataAccess.EFCore.Extensions;
+using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using MediatR;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Queries;
@@ -9,7 +10,6 @@ namespace Laraue.Apps.LearnLanguage.Commands.Queries;
 public class GetGroupWordsQuery : PaginatedRequest, IRequest<IPaginatedResult<LearningItem>>
 {
     public long Id { get; init; }
-    public string UserId { get; init; }
     public ShowWordsMode ShowWordsMode { get; init; }
 }
 
@@ -18,41 +18,50 @@ public record LearningItem(
     string Translation,
     long SerialNumber,
     LearnState LearnState,
-    int ViewCount);
+    int ViewCount,
+    long TranslationId);
 
-public class GetLearningBatchRequestHandler : IRequestHandler<GetGroupWordsQuery, IPaginatedResult<LearningItem>>
+public class GetGroupWordsQueryHandler : IRequestHandler<GetGroupWordsQuery, IPaginatedResult<LearningItem>>
 {
     private readonly DatabaseContext _context;
 
-    public GetLearningBatchRequestHandler(DatabaseContext context)
+    public GetGroupWordsQueryHandler(DatabaseContext context)
     {
         _context = context;
     }
     
-    public Task<IPaginatedResult<LearningItem>> Handle(GetGroupWordsQuery query, CancellationToken cancellationToken)
+    public async Task<IPaginatedResult<LearningItem>> Handle(GetGroupWordsQuery query, CancellationToken cancellationToken)
     {
         var dbQuery = _context.WordGroupWords
-            .Where(x => x.WordGroup.SerialNumber == query.Id)
-            .Where(x => x.WordGroup.UserId == query.UserId);
+            .Where(x => x.WordGroup.Id == query.Id)
+            .OrderBy(x => x.SerialNumber)
+            .QueryGroupWordsWithStates(
+                _context,
+                (word, state) => new
+                {
+                    Item = new LearningItem(
+                        word.WordTranslation.Word.Name,
+                        word.WordTranslation.Translation,
+                        word.SerialNumber,
+                        state.LearnState,
+                        state.ViewCount,
+                        word.WordTranslation.Id
+                    ),
+                    State = state,
+                });
 
         if (query.ShowWordsMode.HasFlag(ShowWordsMode.Hard))
         {
-            dbQuery = dbQuery.Where(x => x.WordTranslationState.LearnState.HasFlag(LearnState.Hard));
+            dbQuery = dbQuery.Where(x => x.State.LearnState.HasFlag(LearnState.Hard));
         }
 
         if (query.ShowWordsMode.HasFlag(ShowWordsMode.NotLearned))
         {
-            dbQuery = dbQuery.Where(x => !x.WordTranslationState.LearnState.HasFlag(LearnState.Learned));
+            dbQuery = dbQuery.Where(x => !x.State.LearnState.HasFlag(LearnState.Learned));
         }
-
-        return dbQuery
-            .OrderBy(x => x.SerialNumber)
-            .Select(x => new LearningItem(
-                x.WordTranslation.Word.Name,
-                x.WordTranslation.Translation,
-                x.SerialNumber,
-                x.WordTranslationState.LearnState,
-                x.WordTranslationState.ViewCount))
+        
+        return await dbQuery
+            .Select(x => x.Item)
             .PaginateAsync(query, cancellationToken);
     }
 }

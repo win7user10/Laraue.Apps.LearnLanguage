@@ -37,7 +37,7 @@ public class RenderWordGroupsCommandHandler : BaseEditMessageCommandHandler<Rend
             .AddInlineKeyboardButtons(request.Data, (x, i) => InlineKeyboardButton.WithCallbackData(
                 x.SerialNumber.ToString(),
                 groupRoute
-                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.GroupId, x.SerialNumber)))
+                    .WithQueryParameter(RenderWordsViewCommand.ParameterNames.GroupId, x.Id)))
             .AddControlButtons(request.Data, new RoutePathBuilder(TelegramRoutes.Groups))
             .AddMainMenuButton();
     }

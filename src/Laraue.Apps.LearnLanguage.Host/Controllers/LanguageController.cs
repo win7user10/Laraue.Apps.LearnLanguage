@@ -47,9 +47,8 @@ public class LanguageController : TelegramController
             ToggleRevertTranslations = parameters.GetValueOrDefault<bool>(RenderWordsViewCommand.ParameterNames.RevertTranslations),
             ToggleShowTranslations = parameters.GetValueOrDefault<bool>(RenderWordsViewCommand.ParameterNames.ToggleTranslations),
             ShowMode = parameters.GetValueOrDefault<ShowWordsMode?>(RenderWordsViewCommand.ParameterNames.ShowMode),
-            OpenedWordIndex = parameters.GetValueOrDefault<int?>(RenderWordsViewCommand.ParameterNames.OpenedWordIndex),
-            LearnState = parameters.GetValueOrDefault<LearnState?>(RenderWordsViewCommand.ParameterNames.LearnState),
-            CurrentlyOpenedWords = parameters.GetValueOrDefault<long[]?>(RenderWordsViewCommand.ParameterNames.OpenedWords)
+            OpenedWordTranslationId = parameters.GetValueOrDefault<int?>(RenderWordsViewCommand.ParameterNames.OpenedWordId),
+            LearnState = parameters.GetValueOrDefault<LearnState?>(RenderWordsViewCommand.ParameterNames.LearnState)
         });
     }
 }

@@ -19,11 +19,9 @@ public record SendWordGroupWordsCommand : BaseCommand<CallbackQuery>
     
     public ShowWordsMode? ShowMode { get; init; }
 
-    public int? OpenedWordIndex { get; init; }
+    public long? OpenedWordTranslationId { get; init; }
 
     public LearnState? LearnState { get; init; }
-
-    public long[]? CurrentlyOpenedWords { get; init; }
 }
 
 public class SendWordGroupWordsCommandHandler : IRequestHandler<SendWordGroupWordsCommand, object?>
@@ -57,18 +55,13 @@ public class SendWordGroupWordsCommandHandler : IRequestHandler<SendWordGroupWor
                 new ChangeShowWordsModeCommand(request.UserId, request.ShowMode.GetValueOrDefault()),
                 cancellationToken);
         }
-
-        long? openedWordSerialNumber = request.CurrentlyOpenedWords is not null && request.OpenedWordIndex is not null
-            ? request.CurrentlyOpenedWords[request.OpenedWordIndex.Value]
-            : null;
         
-        if (request.LearnState is not null && openedWordSerialNumber is not null)
+        if (request.LearnState is not null && request.OpenedWordTranslationId is not null)
         {
-            // TODO - send id instead of serial number
             await _mediator.Send(
                 new ChangeWordLearnStateCommand(
                     request.UserId,
-                    openedWordSerialNumber.Value,
+                    request.OpenedWordTranslationId.GetValueOrDefault(),
                     request.LearnState.GetValueOrDefault()),
                 cancellationToken);
         }
@@ -82,27 +75,25 @@ public class SendWordGroupWordsCommandHandler : IRequestHandler<SendWordGroupWor
             {
                 Page = request.Page,
                 PerPage = Constants.PaginationCount,
-                UserId = request.UserId,
                 Id = request.GroupId,
                 ShowWordsMode = userSettings.ShowWordsMode
             },
             cancellationToken);
 
-        var idsForStatUpdate = result.Data.Select(x => x.SerialNumber)
-            .Except(request.CurrentlyOpenedWords ?? Enumerable.Empty<long>())
+        var idsForStatUpdate = result.Data.Select(x => x.TranslationId)
+            .Except(userSettings.LastOpenedWordTranslationIds ?? Enumerable.Empty<long>())
             .ToArray();
         
         // Update view stat for the words 
         if (idsForStatUpdate.Length > 0)
         {
-            // TODO - send id instead of serial number
             await _mediator.Send(
                 new UpdateWordsStatCommand(
                     idsForStatUpdate,
                     request.UserId),
                 cancellationToken);
 
-            result = result.MapTo(x => idsForStatUpdate.Contains(x.SerialNumber)
+            result = result.MapTo(x => idsForStatUpdate.Contains(x.TranslationId)
                 ? x with
                 {
                     ViewCount = x.ViewCount + 1
@@ -110,14 +101,28 @@ public class SendWordGroupWordsCommandHandler : IRequestHandler<SendWordGroupWor
                 : x);
         }
 
+        var groupSerialNumber = await _mediator.Send(
+            new GetGroupSerialNumberQuery
+            {
+                Id = request.GroupId,
+            },
+            cancellationToken);
+        
         await _mediator.Send(new RenderWordsViewCommand(
             result,
             userSettings,
             request.GroupId,
-            request.Data.Message.Chat.Id,
+            groupSerialNumber,
+            request.Data.Message!.Chat.Id,
             request.Data.Message.MessageId,
-            openedWordSerialNumber,
+            request.OpenedWordTranslationId,
             request.Data.Id),
+            cancellationToken);
+
+        await _mediator.Send(
+            new UpdateLastViewedTranslationsCommand(
+                result.Data.Select(x => x.TranslationId).ToArray(), 
+                request.UserId),
             cancellationToken);
 
         return null;

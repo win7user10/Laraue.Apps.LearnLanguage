@@ -15,18 +15,39 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                 keyColumn: "id",
                 keyValue: 2L);
 
-            migrationBuilder.AddColumn<long>(
-                name: "word_group_id",
-                table: "word_translations",
-                type: "bigint",
-                nullable: true);
-
             migrationBuilder.AddColumn<DateTime>(
                 name: "created_at",
                 table: "users",
                 type: "timestamp with time zone",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
+            migrationBuilder.CreateTable(
+                name: "word_group_words",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    serial_number = table.Column<long>(type: "bigint", nullable: false),
+                    word_group_id = table.Column<long>(type: "bigint", nullable: false),
+                    word_translation_id = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_word_group_words", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_word_group_words_word_groups_word_group_id",
+                        column: x => x.word_group_id,
+                        principalTable: "word_groups",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_word_group_words_word_translations_word_translation_id",
+                        column: x => x.word_translation_id,
+                        principalTable: "word_translations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateTable(
                 name: "word_translation_states",
@@ -51,40 +72,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_word_translation_states_word_translations_word_translation_",
-                        column: x => x.word_translation_id,
-                        principalTable: "word_translations",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "word_group_words",
-                columns: table => new
-                {
-                    id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    serial_number = table.Column<long>(type: "bigint", nullable: false),
-                    word_group_id = table.Column<long>(type: "bigint", nullable: false),
-                    word_translation_id = table.Column<long>(type: "bigint", nullable: false),
-                    word_translation_state_id = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_word_group_words", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_word_group_words_word_groups_word_group_id",
-                        column: x => x.word_group_id,
-                        principalTable: "word_groups",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_word_group_words_word_translation_states_word_translation_sta",
-                        column: x => x.word_translation_state_id,
-                        principalTable: "word_translation_states",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_word_group_words_word_translations_word_translation_id",
                         column: x => x.word_translation_id,
                         principalTable: "word_translations",
                         principalColumn: "id",
@@ -2192,11 +2179,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                 value: "muslim");
 
             migrationBuilder.CreateIndex(
-                name: "ix_word_translations_word_group_id",
-                table: "word_translations",
-                column: "word_group_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_word_group_words_serial_number",
                 table: "word_group_words",
                 column: "serial_number");
@@ -2212,11 +2194,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                 column: "word_translation_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_word_group_words_word_translation_state_id",
-                table: "word_group_words",
-                column: "word_translation_state_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_word_translation_states_user_id",
                 table: "word_translation_states",
                 column: "user_id");
@@ -2225,34 +2202,29 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                 name: "ix_word_translation_states_word_translation_id",
                 table: "word_translation_states",
                 column: "word_translation_id");
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_word_translations_word_groups_word_group_id",
-                table: "word_translations",
-                column: "word_group_id",
-                principalTable: "word_groups",
-                principalColumn: "id");
+            
+            migrationBuilder.Sql(@"
+insert into word_translation_states (learn_state, view_count, learned_at, word_translation_id, user_id)
+select learn_state, view_count, learned_at, word_translation_id, user_id
+from word_group_word_translations
+inner join word_groups wg on wg.id = word_group_word_translations.word_group_id");
+            
+            migrationBuilder.Sql(@"
+insert into word_group_words (serial_number, word_group_id, word_translation_id)
+select serial_number, word_group_id, word_translation_id
+from word_group_word_translations");
+            
+            migrationBuilder.DropTable(
+                name: "word_group_word_translations");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "fk_word_translations_word_groups_word_group_id",
-                table: "word_translations");
-
             migrationBuilder.DropTable(
                 name: "word_group_words");
 
             migrationBuilder.DropTable(
                 name: "word_translation_states");
-
-            migrationBuilder.DropIndex(
-                name: "ix_word_translations_word_group_id",
-                table: "word_translations");
-
-            migrationBuilder.DropColumn(
-                name: "word_group_id",
-                table: "word_translations");
 
             migrationBuilder.DropColumn(
                 name: "created_at",
@@ -2267,7 +2239,7 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                     word_group_id = table.Column<long>(type: "bigint", nullable: false),
                     word_translation_id = table.Column<long>(type: "bigint", nullable: false),
                     learn_state = table.Column<byte>(type: "smallint", nullable: false),
-                    learned_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    learned_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     serial_number = table.Column<long>(type: "bigint", nullable: false),
                     view_count = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -4412,20 +4384,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                 name: "ix_word_group_word_translations_word_translation_id",
                 table: "word_group_word_translations",
                 column: "word_translation_id");
-
-            migrationBuilder.Sql(@"
-insert into word_translation_states
-select learn_state, word_translation_id, user_id, learned_at
-from word_group_word_translations
-inner join word_groups wg on wg.id = word_group_word_translations.word_group_id");
-            
-            migrationBuilder.Sql(@"
-insert into word_group_words
-select serial_number, word_group_id, word_translation_id
-from word_group_word_translations");
-            
-            migrationBuilder.DropTable(
-                name: "word_group_word_translations");
         }
     }
 }

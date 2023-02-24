@@ -7,7 +7,10 @@ namespace Laraue.Apps.LearnLanguage.Commands.Queries;
 
 public record GetUserSettingsQuery(string UserId) : IRequest<UserSettings>;
 
-public record UserSettings(WordsTemplateMode WordsTemplateMode, ShowWordsMode ShowWordsMode);
+public record UserSettings(
+    WordsTemplateMode WordsTemplateMode,
+    ShowWordsMode ShowWordsMode,
+    long[]? LastOpenedWordTranslationIds);
 
 public class GetUserSettingsQueryHandler : IRequestHandler<GetUserSettingsQuery, UserSettings>
 {
@@ -22,7 +25,7 @@ public class GetUserSettingsQueryHandler : IRequestHandler<GetUserSettingsQuery,
     {
         return _context.Users
             .Where(x => x.Id == request.UserId)
-            .Select(x => new UserSettings(x.WordsTemplateMode, x.ShowWordsMode))
+            .Select(x => new UserSettings(x.WordsTemplateMode, x.ShowWordsMode, x.LastOpenedTranslationIds))
             .FirstAsyncLinqToDB(cancellationToken);
     }
 }
