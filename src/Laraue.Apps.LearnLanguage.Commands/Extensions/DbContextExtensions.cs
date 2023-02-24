@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using LinqToDB;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Extensions;
 
@@ -11,10 +12,11 @@ public static class DbContextExtensions
         DatabaseContext dbContext,
         Expression<Func<WordGroupWord, WordTranslationState, T>> selector)
     {
-        return queryable.Join(
-            dbContext.WordTranslationStates,
-            wg => new { wg.WordTranslationId, wg.WordGroup.UserId },
-            wts => new { wts.WordTranslationId, wts.UserId },
+        return queryable.LeftJoin(
+            dbContext.WordTranslationStates.AsQueryable(),
+            (wg, wts) =>
+                wg.WordTranslationId == wts.WordTranslationId
+                && wg.WordGroup.UserId == wts.UserId,
             selector);
     }
 }

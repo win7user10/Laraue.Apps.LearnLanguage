@@ -1,6 +1,8 @@
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using LinqToDB;
+using LinqToDB.Data;
+using LinqToDB.EntityFrameworkCore;
 using MediatR;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Stories;
@@ -18,14 +20,39 @@ public class UpdateWordsStatCommandHandler : IRequestHandler<UpdateWordsStatComm
 
     public async Task<Unit> Handle(UpdateWordsStatCommand request, CancellationToken cancellationToken)
     {
-        await _context.WordTranslationStates.Where(x => 
-            request.WordTranslationIds.Contains(x.WordTranslationId)
-                && request.UserId == x.UserId)
+        var updatedCount = await _context.WordTranslationStates
+            .Where(x => 
+                request.WordTranslationIds.Contains(x.WordTranslationId)
+                    && request.UserId == x.UserId)
             .UpdateAsync(x => new WordTranslationState
             {
                 ViewCount = x.ViewCount + 1
             }, cancellationToken);
+
+        if (updatedCount == request.WordTranslationIds.Length)
+        {
+            return Unit.Value;
+        }
         
+        var existsStates = await _context.WordTranslationStates
+            .Where(x =>
+                request.WordTranslationIds.Contains(x.WordTranslationId)
+                && request.UserId == x.UserId)
+            .Select(x => x.WordTranslationId)
+            .ToListAsync(cancellationToken);
+
+        foreach (var wordTranslationId in request.WordTranslationIds.Except(existsStates))
+        {
+            _context.WordTranslationStates.Add(new WordTranslationState
+            {
+                ViewCount = 1,
+                WordTranslationId = wordTranslationId,
+                UserId = request.UserId,
+            });
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+
         return Unit.Value;
     }
 }

@@ -38,6 +38,10 @@ public class DatabaseContext : DbContext
         
         modelBuilder.Entity<WordGroupWord>()
             .HasIndex(x => x.SerialNumber);
+        
+        modelBuilder.Entity<WordTranslationState>()
+            .HasIndex(x => new { x.WordTranslationId, x.UserId })
+            .IsUnique();
 
         var languages = new TranslationLanguage[]
         {

@@ -1,6 +1,7 @@
 ﻿using Laraue.Apps.LearnLanguage.Commands.Extensions;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
+using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 using MediatR;
 
@@ -33,11 +34,11 @@ public class GetLearnStateQueryHandler : IRequestHandler<GetLearnStateQuery, Get
                 state.LearnedAt,
             });
         
-        var wordsCount = await getUserWordsQuery.CountAsyncEF(cancellationToken);
+        var wordsCount = await getUserWordsQuery.CountAsync(cancellationToken);
         
         var learnedCount = await getUserWordsQuery
             .Where(x => x.LearnState.HasFlag(LearnState.Learned))
-            .CountAsyncEF(cancellationToken);
+            .CountAsync(cancellationToken);
 
         var firstLearnedAt = await getUserWordsQuery
             .OrderBy(x => x.LearnedAt)
@@ -63,7 +64,7 @@ public class GetLearnStateQueryHandler : IRequestHandler<GetLearnStateQuery, Get
             .OrderByDescending(x => x.Key)
             .Select(x => new DayLearnState(x.Key, x.Count()))
             .Take(10)
-            .ToListAsyncEF(cancellationToken);
+            .ToListAsync(cancellationToken);
 
         return new GetLearnStateQueryResponse(totalStat, daysStat);
     }
