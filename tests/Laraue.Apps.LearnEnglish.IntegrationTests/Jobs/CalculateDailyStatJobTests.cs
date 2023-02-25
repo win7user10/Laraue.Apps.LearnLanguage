@@ -43,11 +43,13 @@ public class CalculateDailyStatJobTests : TestWithDatabase
             {
                 LearnedAt = new DateTimeOffset(new DateTime(2022, 01, 02), TimeSpan.Zero),
                 WordTranslationId = 1,
+                UserId = Users.User1.Id,
             },
             new()
             {
                 LearnedAt = new DateTimeOffset(new DateTime(2022, 01, 01), TimeSpan.Zero),
                 WordTranslationId = 2,
+                UserId = Users.User1.Id
             }
         };
         

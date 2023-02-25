@@ -1,6 +1,7 @@
 ﻿using Laraue.Telegram.NET.Core.Extensions;
 using MediatR;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Stories.Telegram;
@@ -18,10 +19,20 @@ public class DeleteLastMessageCommandHandler : IRequestHandler<DeleteLastMessage
 
     public async Task<object?> Handle(DeleteLastMessageCommand request, CancellationToken cancellationToken)
     {
-        await _telegramBotClient.DeleteMessageAsync(
-            request.Data.GetUser().GetId(),
-            request.Data.Message!.MessageId,
-            cancellationToken);
+        try
+        {
+            await _telegramBotClient.DeleteMessageAsync(
+                request.Data.GetUser().GetId(),
+                request.Data.Message!.MessageId,
+                cancellationToken);
+            
+            await _telegramBotClient.AnswerCallbackQueryAsync(
+                request.Data.Id,
+                cancellationToken: cancellationToken);
+        }
+        catch (ApiRequestException)
+        {
+        }
         
         return null;
     }
