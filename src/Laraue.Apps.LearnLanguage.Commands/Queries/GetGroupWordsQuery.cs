@@ -52,12 +52,12 @@ public class GetGroupWordsQueryHandler : IRequestHandler<GetGroupWordsQuery, IPa
 
         if (query.ShowWordsMode.HasFlag(ShowWordsMode.Hard))
         {
-            dbQuery = dbQuery.Where(x => x.State.LearnState.HasFlag(LearnState.Hard));
+            dbQuery = dbQuery.Where(x => (x.State.LearnState & LearnState.Hard) != 0);
         }
 
         if (query.ShowWordsMode.HasFlag(ShowWordsMode.NotLearned))
         {
-            dbQuery = dbQuery.Where(x => !x.State.LearnState.HasFlag(LearnState.Learned));
+            dbQuery = dbQuery.Where(x => (x.State.LearnState & LearnState.Learned) == 0);
         }
         
         return await dbQuery

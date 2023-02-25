@@ -49,9 +49,9 @@ public class GetGroupsQueryHandler : IRequestHandler<GetGroupsQuery, IPaginatedR
             .DisableGuard()
             .ToDictionaryAsyncLinqToDB(
                 x => x.Key,
-                x => x.Count(y => y.state
+                x => x.Count(y => y.state?
                     .LearnState
-                    .HasFlag(LearnState.Learned)),
+                    .HasFlag(LearnState.Learned) ?? false),
                 cancellationToken);
 
         return res.MapTo(x => new GroupDto(

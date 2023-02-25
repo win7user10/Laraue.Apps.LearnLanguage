@@ -37,13 +37,13 @@ public class GetLearnStateQueryHandler : IRequestHandler<GetLearnStateQuery, Get
         var wordsCount = await getUserWordsQuery.CountAsync(cancellationToken);
         
         var learnedCount = await getUserWordsQuery
-            .Where(x => x.LearnState.HasFlag(LearnState.Learned))
+            .Where(x => (x.LearnState & LearnState.Learned) != 0)
             .CountAsync(cancellationToken);
 
         var firstLearnedAt = await getUserWordsQuery
             .OrderBy(x => x.LearnedAt)
             .Select(x => x.LearnedAt)
-            .FirstOrDefaultAsyncEF(cancellationToken);
+            .FirstAsync(cancellationToken);
 
         double? learnSpeed = null;
         DateOnly? approximateLearnWordsDate = null;
