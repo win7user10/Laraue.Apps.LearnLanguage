@@ -2,13 +2,14 @@
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using LinqToDB;
+using LinqToDB.EntityFrameworkCore;
 using MediatR;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Stories;
 
 public record ChangeWordLearnStateCommand(
     string UserId,
-    long SerialNumber,
+    long WordTranslationId,
     LearnState FlagToChange)
     : IRequest<int>;
 
@@ -23,16 +24,32 @@ public class ChangeWordIsLearningStateCommandHandler : IRequestHandler<ChangeWor
 
     public Task<int> Handle(ChangeWordLearnStateCommand request, CancellationToken cancellationToken)
     {
-        return _context.WordGroupWordTranslations.Where(x => x.WordGroup.UserId == request.UserId
-            && x.SerialNumber == request.SerialNumber)
-            .UpdateAsync(x => new WordGroupWords
-            {
-                LearnState = x.LearnState ^ request.FlagToChange,
-                LearnedAt = request.FlagToChange == LearnState.Learned
-                    ? (x.LearnState & LearnState.Learned) == 0
+        return _context.WordTranslationStates
+            .ToLinqToDBTable()
+            .InsertOrUpdateAsync(
+                () => new WordTranslationState
+                {
+                    WordTranslationId = request.WordTranslationId,
+                    UserId = request.UserId,
+                    LearnState = LearnState.None ^ request.FlagToChange,
+                    LearnedAt = request.FlagToChange == LearnState.Learned
                         ? DateTimeOffset.UtcNow
-                        : null
-                    : x.LearnedAt
-            }, cancellationToken);
+                        : null,
+                    ViewCount = 1,
+                }, x => new WordTranslationState
+                {
+                    LearnState = x.LearnState ^ request.FlagToChange,
+                    LearnedAt = request.FlagToChange == LearnState.Learned
+                        ? (x.LearnState & LearnState.Learned) == 0
+                            ? DateTimeOffset.UtcNow
+                            : null
+                        : x.LearnedAt
+                },
+                () => new WordTranslationState
+                {
+                    UserId = request.UserId,
+                    WordTranslationId = request.WordTranslationId,
+                },
+                cancellationToken);
     }
 }

@@ -1,6 +1,12 @@
 ﻿namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
 
+/// <summary>
+/// Represents all words in the system in english
+/// </summary>
 public class Word : BaseEntity
 {
-    public string Name { get; set; }
+    /// <summary>
+    /// The word, e.g. cat, dog etc.
+    /// </summary>
+    public string Name { get; set; } = default!;
 }

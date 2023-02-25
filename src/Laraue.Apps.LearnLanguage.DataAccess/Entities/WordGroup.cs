@@ -23,5 +23,5 @@ public class WordGroup : BaseEntity
     /// <summary>
     /// Relation with words in this words group.
     /// </summary>
-    public ICollection<WordGroupWords> WordGroupWordTranslations { get; set; }
+    public ICollection<WordGroupWord> WordGroupWords { get; set; }
 }

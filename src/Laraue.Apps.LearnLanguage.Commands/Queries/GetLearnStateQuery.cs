@@ -1,5 +1,7 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess;
+﻿using Laraue.Apps.LearnLanguage.Commands.Extensions;
+using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
+using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 using MediatR;
 
@@ -24,19 +26,24 @@ public class GetLearnStateQueryHandler : IRequestHandler<GetLearnStateQuery, Get
 
     public async Task<GetLearnStateQueryResponse> Handle(GetLearnStateQuery request, CancellationToken cancellationToken)
     {
-        var getUserWordsQuery = _context.WordGroupWordTranslations
-            .Where(x => x.WordGroup.UserId == request.UserId);
+        var getUserWordsQuery = _context.WordGroupWords
+            .Where(x => x.WordGroup.UserId == request.UserId)
+            .QueryGroupWordsWithStates(_context, (word, state) => new
+            {
+                state.LearnState,
+                state.LearnedAt,
+            });
         
-        var wordsCount = await getUserWordsQuery.CountAsyncEF(cancellationToken);
+        var wordsCount = await getUserWordsQuery.CountAsync(cancellationToken);
         
         var learnedCount = await getUserWordsQuery
-            .Where(x => x.LearnState.HasFlag(LearnState.Learned))
-            .CountAsyncEF(cancellationToken);
+            .Where(x => (x.LearnState & LearnState.Learned) != 0)
+            .CountAsync(cancellationToken);
 
         var firstLearnedAt = await getUserWordsQuery
             .OrderBy(x => x.LearnedAt)
             .Select(x => x.LearnedAt)
-            .FirstOrDefaultAsyncEF(cancellationToken);
+            .FirstAsync(cancellationToken);
 
         double? learnSpeed = null;
         DateOnly? approximateLearnWordsDate = null;
@@ -53,11 +60,11 @@ public class GetLearnStateQueryHandler : IRequestHandler<GetLearnStateQuery, Get
 
         var daysStat = await getUserWordsQuery
             .Where(x => x.LearnedAt != null)
-            .GroupBy(x => x.LearnedAt.Value.Date)
+            .GroupBy(x => x.LearnedAt!.Value.Date)
             .OrderByDescending(x => x.Key)
             .Select(x => new DayLearnState(x.Key, x.Count()))
             .Take(10)
-            .ToListAsyncEF(cancellationToken);
+            .ToListAsync(cancellationToken);
 
         return new GetLearnStateQueryResponse(totalStat, daysStat);
     }

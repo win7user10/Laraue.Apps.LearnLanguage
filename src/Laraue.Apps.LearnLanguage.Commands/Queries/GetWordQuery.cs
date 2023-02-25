@@ -1,3 +1,4 @@
+using Laraue.Apps.LearnLanguage.Commands.Extensions;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using LinqToDB;
@@ -30,14 +31,14 @@ public class GetWordQueryHandler : IRequestHandler<GetWordQuery, WordData>
 
     public Task<WordData> Handle(GetWordQuery request, CancellationToken cancellationToken)
     {
-        return _databaseContext.WordGroupWordTranslations
+        return _databaseContext.WordGroupWords
             .Where(x => x.SerialNumber == request.SerialNumber
                 && x.WordGroup.UserId == request.UserId)
-            .Select(x => new WordData(
-                x.WordTranslation.Word.Name,
-                x.WordTranslation.Translation,
-                x.WordGroup.SerialNumber,
-                x.LearnState,
+            .QueryGroupWordsWithStates(_databaseContext, (word, state) => new WordData(
+                word.WordTranslation.Word.Name,
+                word.WordTranslation.Translation,
+                word.SerialNumber,
+                state.LearnState,
                 request.SerialNumber))
             .FirstAsync(cancellationToken);
     }

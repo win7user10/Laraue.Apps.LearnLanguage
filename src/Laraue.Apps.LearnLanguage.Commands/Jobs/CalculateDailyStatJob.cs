@@ -28,13 +28,13 @@ public class CalculateDailyStatJob
         
         var learnedStat = await _dbContext
             .Users
-            .Where(x => x.WordGroups.SelectMany(y => y.WordGroupWordTranslations)
+            .Where(x => x.WordTranslationStates
                 .Any(y => y.LearnedAt.HasValue
                     && y.LearnedAt.Value.Date == yesterdayDate))
             .Select(x => new
             {
                 x.TelegramId,
-                Count = x.WordGroups.SelectMany(y => y.WordGroupWordTranslations)
+                Count = x.WordTranslationStates
                     .Count(y => y.LearnedAt.HasValue
                         && y.LearnedAt.Value.Date == yesterdayDate)
             })

@@ -33,8 +33,8 @@ public class FormNewLearningBatchCommandHandler : IRequestHandler<GenerateGroups
             .Select((group, wi) => new WordGroup
             {
                 UserId = request.UserId,
-                WordGroupWordTranslations = group
-                    .Select((x, ti) => new WordGroupWords
+                WordGroupWords = group
+                    .Select((x, ti) => new WordGroupWord
                     {
                         WordTranslationId = x,
                         SerialNumber = wi * Constants.WordGroupSize + ti + 1,

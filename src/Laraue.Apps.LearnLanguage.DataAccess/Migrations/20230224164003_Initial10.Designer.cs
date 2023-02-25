@@ -3,6 +3,7 @@ using System;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Laraue.LearnLanguage.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230224164003_Initial10")]
+    partial class Initial10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56458,9 +56461,8 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_word_translation_states_user_id");
 
-                    b.HasIndex("WordTranslationId", "UserId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_word_translation_states_word_translation_id_user_id");
+                    b.HasIndex("WordTranslationId")
+                        .HasDatabaseName("ix_word_translation_states_word_translation_id");
 
                     b.ToTable("word_translation_states", (string)null);
                 });
