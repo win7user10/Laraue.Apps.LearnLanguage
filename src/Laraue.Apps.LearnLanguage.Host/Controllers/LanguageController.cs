@@ -3,7 +3,7 @@ using Laraue.Apps.LearnLanguage.Commands.Stories.Telegram;
 using Laraue.Apps.LearnLanguage.Commands.Stories.Telegram.Views;
 using Laraue.Apps.LearnLanguage.Common.Extensions;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
-using Laraue.Telegram.NET.Abstractions;
+using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Routing.Attributes;
@@ -21,7 +21,7 @@ public class LanguageController : TelegramController
     }
 
     [TelegramCallbackRoute(TelegramRoutes.Groups + "*")]
-    public Task SendGroupsAsync(TelegramRequestContext requestContext)
+    public Task SendGroupsAsync(RequestContext requestContext)
     {
         var parameters = requestContext.Update.CallbackQuery!.Data.ParseQueryParts();
         
@@ -29,12 +29,12 @@ public class LanguageController : TelegramController
         {
             Page = parameters.GetPage(),
             Data = requestContext.Update.CallbackQuery,
-            UserId = requestContext.UserId!,
+            UserId = requestContext.UserId,
         });
     }
     
     [TelegramCallbackRoute(TelegramRoutes.Group + "*")]
-    public Task SendGroupAsync(TelegramRequestContext requestContext)
+    public Task SendGroupAsync(RequestContext requestContext)
     {
         var parameters = requestContext.Update.CallbackQuery!.Data.ParseQueryParts();
         
@@ -42,7 +42,7 @@ public class LanguageController : TelegramController
         {
             Page = parameters.GetPage(),
             Data = requestContext.Update.CallbackQuery!,
-            UserId = requestContext.UserId!,
+            UserId = requestContext.UserId,
             GroupId = parameters.GetValueOrDefault<long>(RenderWordsViewCommand.ParameterNames.GroupId),
             ToggleRevertTranslations = parameters.GetValueOrDefault<bool>(RenderWordsViewCommand.ParameterNames.RevertTranslations),
             ToggleShowTranslations = parameters.GetValueOrDefault<bool>(RenderWordsViewCommand.ParameterNames.ToggleTranslations),

@@ -23,7 +23,7 @@ public class WordTranslationState : BaseEntity
 
     public WordTranslation WordTranslation { get; set; }
 
-    public string UserId { get; set; }
+    public Guid UserId { get; set; }
 
     public User User { get; set; }
 }

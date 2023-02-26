@@ -33,9 +33,6 @@ public class DatabaseContext : DbContext
         modelBuilder.Entity<WordGroup>()
             .HasIndex(x => x.SerialNumber);
         
-        modelBuilder.Entity<WordGroup>()
-            .HasIndex(x => x.UserId);
-        
         modelBuilder.Entity<WordGroupWord>()
             .HasIndex(x => x.SerialNumber);
         

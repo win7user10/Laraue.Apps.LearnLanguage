@@ -7,7 +7,7 @@ using User = Laraue.Apps.LearnLanguage.DataAccess.Entities.User;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Stories;
 
-public record ChangeShowWordsModeCommand(string UserId, ShowWordsMode NewMode) : IRequest<int>;
+public record ChangeShowWordsModeCommand(Guid UserId, ShowWordsMode NewMode) : IRequest<int>;
 
 public class ChangeShowWordsModeCommandHandler : IRequestHandler<ChangeShowWordsModeCommand, int>
 {

@@ -8,7 +8,7 @@ using MediatR;
 namespace Laraue.Apps.LearnLanguage.Commands.Stories;
 
 public record ChangeWordLearnStateCommand(
-    string UserId,
+    Guid UserId,
     long WordTranslationId,
     LearnState FlagToChange)
     : IRequest<int>;

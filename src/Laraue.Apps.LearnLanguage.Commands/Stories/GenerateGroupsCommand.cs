@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Stories;
 
-public record GenerateGroupsCommand(string UserId, bool ShuffleWords) : IRequest;
+public record GenerateGroupsCommand(Guid UserId, bool ShuffleWords) : IRequest;
 
 public class FormNewLearningBatchCommandHandler : IRequestHandler<GenerateGroupsCommand>
 {

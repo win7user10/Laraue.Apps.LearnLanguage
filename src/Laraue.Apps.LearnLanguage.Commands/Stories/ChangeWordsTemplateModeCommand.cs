@@ -7,7 +7,7 @@ using User = Laraue.Apps.LearnLanguage.DataAccess.Entities.User;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Stories;
 
-public record ChangeWordsTemplateModeCommand(string UserId, WordsTemplateMode FlagToChange) : IRequest<WordsTemplateMode>;
+public record ChangeWordsTemplateModeCommand(Guid UserId, WordsTemplateMode FlagToChange) : IRequest<WordsTemplateMode>;
 
 public class ChangeWordsTemplateModeCommandHandler : IRequestHandler<ChangeWordsTemplateModeCommand, WordsTemplateMode>
 {

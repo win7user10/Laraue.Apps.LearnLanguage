@@ -13,6 +13,7 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using Laraue.Apps.LearnLanguage.Commands.Jobs;
 using Laraue.Apps.LearnLanguage.Common.Services;
+using Laraue.Apps.LearnLanguage.Host;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,7 @@ builder.Services
     .AddSingleton<ExceptionHandleMiddleware>()
     .AddMediatR(typeof(GetGroupWordsQuery))
     .AddTelegramCore(new TelegramBotClientOptions(builder.Configuration["Telegram:Token"]))
-    .AddTelegramAuthentication<User>()
+    .AddTelegramAuthentication<User, Guid, RequestContext>()
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();
 

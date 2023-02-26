@@ -10,8 +10,8 @@
     <PackageReference Include="Telegram.Bot" Version="18.0.0" />
     <PackageReference Include="Laraue.Core.DataAccess.EFCore" Version="7.0.1" />
     <PackageReference Include="Laraue.Core.DataAccess.Linq2DB" Version="7.0.1" />
-    <PackageReference Include="Laraue.Telegram.NET.DataAccess" Version="1.0.1" />
-    <PackageReference Include="Laraue.Telegram.NET.MediatR" Version="1.0.1" />
+    <PackageReference Include="Laraue.Telegram.NET.DataAccess" Version="1.1.0-alpha3" />
+    <PackageReference Include="Laraue.Telegram.NET.MediatR" Version="1.1.0-alpha3" />
   </ItemGroup>
 
   <ItemGroup>

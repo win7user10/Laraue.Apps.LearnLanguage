@@ -2,12 +2,11 @@
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using LinqToDB;
-using LinqToDB.EntityFrameworkCore;
 using MediatR;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Queries;
 
-public record GetLearnStateQuery(string UserId) : IRequest<GetLearnStateQueryResponse>;
+public record GetLearnStateQuery(Guid UserId) : IRequest<GetLearnStateQueryResponse>;
 
 public record GetLearnStateQueryResponse(TotalStat TotalStat, ICollection<DayLearnState> DaysStat);
 

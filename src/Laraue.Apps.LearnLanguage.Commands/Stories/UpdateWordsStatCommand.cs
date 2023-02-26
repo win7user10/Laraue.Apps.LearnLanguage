@@ -1,13 +1,11 @@
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using LinqToDB;
-using LinqToDB.Data;
-using LinqToDB.EntityFrameworkCore;
 using MediatR;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Stories;
 
-public record UpdateWordsStatCommand(long[] WordTranslationIds, string UserId) : IRequest;
+public record UpdateWordsStatCommand(long[] WordTranslationIds, Guid UserId) : IRequest;
 
 public class UpdateWordsStatCommandHandler : IRequestHandler<UpdateWordsStatCommand>
 {

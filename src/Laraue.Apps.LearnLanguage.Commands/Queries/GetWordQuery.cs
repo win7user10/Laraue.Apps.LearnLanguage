@@ -8,7 +8,7 @@ namespace Laraue.Apps.LearnLanguage.Commands.Queries;
 
 public class GetWordQuery : IRequest<WordData>
 {
-    public string UserId { get; init; }
+    public Guid UserId { get; init; }
 
     public long SerialNumber { get; init; }
 }

@@ -55,6 +55,6 @@ public abstract class TestWithDatabase
     protected record UsersData(User User1, User User2);
 
     protected UsersData Users { get; } = new(
-        new User() { Id = Guid.NewGuid().ToString(), TelegramId = 1 },
-        new User() { Id = Guid.NewGuid().ToString(), TelegramId = 2 });
+        new User() { Id = Guid.NewGuid(), TelegramId = 1 },
+        new User() { Id = Guid.NewGuid(), TelegramId = 2 });
 }

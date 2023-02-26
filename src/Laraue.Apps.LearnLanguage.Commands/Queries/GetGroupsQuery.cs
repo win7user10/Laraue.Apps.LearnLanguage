@@ -12,7 +12,7 @@ namespace Laraue.Apps.LearnLanguage.Commands.Queries;
 
 public class GetGroupsQuery : PaginatedRequest, IRequest<IPaginatedResult<GroupDto>>
 {
-    public string UserId { get; init; }
+    public Guid UserId { get; init; }
 }
 
 public record GroupDto(long Id, long SerialNumber, string FirstWord, int LearnedCount, int TotalCount);

@@ -6,7 +6,7 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
 /// <summary>
 /// Application user.
 /// </summary>
-public class User : TelegramIdentityUser
+public class User : TelegramIdentityUser<Guid>
 {
     /// <summary>
     /// How to show word translations for this user. 

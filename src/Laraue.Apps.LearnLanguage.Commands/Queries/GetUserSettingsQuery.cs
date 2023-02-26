@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Queries;
 
-public record GetUserSettingsQuery(string UserId) : IRequest<UserSettings>;
+public record GetUserSettingsQuery(Guid UserId) : IRequest<UserSettings>;
 
 public record UserSettings(
     WordsTemplateMode WordsTemplateMode,

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Queries;
 
-public record GetCurrentStateQuery(string UserId) : IRequest<CurrentState>;
+public record GetCurrentStateQuery(Guid UserId) : IRequest<CurrentState>;
 
 public record CurrentState(bool AreGroupsFormed);
 

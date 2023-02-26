@@ -13,7 +13,7 @@ public class WordGroup : BaseEntity
     /// <summary>
     /// User identifier.
     /// </summary>
-    public string UserId { get; set; }
+    public Guid UserId { get; set; }
 
     /// <summary>
     /// Relation to the user.

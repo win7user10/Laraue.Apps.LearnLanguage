@@ -1,7 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.Commands.Extensions;
-using Laraue.Apps.LearnLanguage.DataAccess;
-using Laraue.Apps.LearnLanguage.DataAccess.Enums;
-using Laraue.Core.DataAccess.Contracts;
+﻿using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using MediatR;
 

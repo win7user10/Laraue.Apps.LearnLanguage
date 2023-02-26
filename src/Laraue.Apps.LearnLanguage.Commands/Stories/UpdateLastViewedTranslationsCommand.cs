@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Laraue.Apps.LearnLanguage.Commands.Stories;
 
-public record UpdateLastViewedTranslationsCommand(long[] WordTranslationIds, string UserId) : IRequest;
+public record UpdateLastViewedTranslationsCommand(long[] WordTranslationIds, Guid UserId) : IRequest;
 
 public class UpdateLastViewedTranslationsCommandHandler : IRequestHandler<UpdateLastViewedTranslationsCommand>
 {

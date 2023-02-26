@@ -1,6 +1,6 @@
 ﻿using Laraue.Apps.LearnLanguage.Commands;
 using Laraue.Apps.LearnLanguage.Commands.Stories.Telegram;
-using Laraue.Telegram.NET.Abstractions;
+using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Routing.Attributes;
 using MediatR;
@@ -17,7 +17,7 @@ public class StartController : TelegramController
     }
     
     [TelegramMessageRoute(TelegramRoutes.Start)]
-    public Task StartAsync(TelegramRequestContext requestContext)
+    public Task StartAsync(RequestContext requestContext)
     {
         return _mediator.Send(new SendStartMessageCommand
         {
