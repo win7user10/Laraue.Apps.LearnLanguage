@@ -29,12 +29,18 @@ public class SendWordGroupsCommandHandler : IRequestHandler<SendWordGroupsComman
                 UserId = request.UserId,
             },
             cancellationToken);
-
+        
         await _mediator.Send(new RenderWordGroupsCommand(
             result,
             request.Data.Message.Chat.Id,
             request.Data.Message.MessageId,
             request.Data.Id),
+            cancellationToken);
+
+        await _mediator.Send(
+            new UpdateLastViewedTranslationsCommand(
+                Array.Empty<long>(), 
+                request.UserId),
             cancellationToken);
 
         return null;

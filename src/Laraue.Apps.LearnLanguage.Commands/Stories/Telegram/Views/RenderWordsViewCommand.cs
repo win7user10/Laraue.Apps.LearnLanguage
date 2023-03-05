@@ -138,7 +138,7 @@ public class RenderWordsViewCommandHandler : BaseEditMessageCommandHandler<Rende
 
         telegramMessageBuilder
             .AppendRow(
-                $"<b>Words of group {request.GroupId}. Page {request.Data.Page}/{request.Data.LastPage}</b>")
+                $"<b>Words of group {request.GroupSerialNumber}. Page {request.Data.Page}/{request.Data.LastPage}</b>")
             .AppendRow("")
             .AppendDataRows(request.Data, (x, i) =>
             {
