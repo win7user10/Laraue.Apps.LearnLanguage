@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Laraue.Apps.LearnLanguage.Commands.Jobs;
 using Laraue.Apps.LearnLanguage.Common.Services;
@@ -52,15 +54,45 @@ public class CalculateDailyStatJobTests : TestWithDatabase
                 UserId = Users.User1.Id
             }
         };
+
+        var wordGroup = new WordGroup
+        {
+            UserId = Users.User1.Id,
+            SerialNumber = 1,
+            WordGroupWords = new List<WordGroupWord>
+            {
+                new()
+                {
+                    WordTranslationId = 1,
+                    SerialNumber = 1
+                },
+                new()
+                {
+                    WordTranslationId = 2,
+                    SerialNumber = 2
+                },
+                new()
+                {
+                    WordTranslationId = 3,
+                    SerialNumber = 3
+                }
+            }
+        };
         
         DbContext.WordTranslationStates.AddRange(translationStates);
+        DbContext.WordGroups.Add(wordGroup);
         await DbContext.SaveChangesAsync();
         
         await _job.ExecuteAsync();
         
-        _telegramBotClientMock.Verify(
-            x => x.MakeRequestAsync(
-                It.Is<SendMessageRequest>(y => y.ChatId == Users.User1.TelegramId),
-                default));
+        var sendMessageRequest = _telegramBotClientMock.Invocations
+            .First(x => x.Method.Name == nameof(ITelegramBotClient.MakeRequestAsync))
+            .Arguments[0] as SendMessageRequest;
+            
+        Assert.Equal(Users.User1.TelegramId, sendMessageRequest!.ChatId);
+        
+        const string exceptedText = "Yesterday you have been learned 1 words!\n" +
+                                    "Total stat is 2 / 3 (+33.33%)";
+        Assert.Equal(exceptedText, sendMessageRequest.Text);
     }
 }
