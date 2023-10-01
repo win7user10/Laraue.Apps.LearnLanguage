@@ -21,7 +21,7 @@ public class SendDailyStatMessageCommandHandler : IRequestHandler<SendDailyStatM
         _telegramBotClient = telegramBotClient;
     }
 
-    public async Task<Unit> Handle(SendDailyStatMessageCommand request, CancellationToken cancellationToken)
+    public async Task Handle(SendDailyStatMessageCommand request, CancellationToken cancellationToken)
     {
         var learnedStat = await _mediator.Send(
             new GetYesterdayUsersLearnStateQuery(),
@@ -43,7 +43,5 @@ public class SendDailyStatMessageCommandHandler : IRequestHandler<SendDailyStatM
                 replyMarkup: messageBuilder.InlineKeyboard,
                 cancellationToken: cancellationToken);
         }
-        
-        return Unit.Value;
     }
 }

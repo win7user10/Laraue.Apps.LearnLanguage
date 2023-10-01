@@ -16,7 +16,7 @@ public class UpdateWordsStatCommandHandler : IRequestHandler<UpdateWordsStatComm
         _context = context;
     }
 
-    public async Task<Unit> Handle(UpdateWordsStatCommand request, CancellationToken cancellationToken)
+    public async Task Handle(UpdateWordsStatCommand request, CancellationToken cancellationToken)
     {
         var updatedCount = await _context.WordTranslationStates
             .Where(x => 
@@ -29,7 +29,7 @@ public class UpdateWordsStatCommandHandler : IRequestHandler<UpdateWordsStatComm
 
         if (updatedCount == request.WordTranslationIds.Length)
         {
-            return Unit.Value;
+            return;
         }
         
         var existsStates = await _context.WordTranslationStates
@@ -50,7 +50,5 @@ public class UpdateWordsStatCommandHandler : IRequestHandler<UpdateWordsStatComm
         }
 
         await _context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

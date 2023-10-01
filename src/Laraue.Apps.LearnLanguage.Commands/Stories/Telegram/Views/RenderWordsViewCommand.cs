@@ -15,6 +15,7 @@ namespace Laraue.Apps.LearnLanguage.Commands.Stories.Telegram.Views;
 public record RenderWordsViewCommand(
         IPaginatedResult<LearningItem> Data,
         UserSettings UserSettings,
+        ClosestUnlearnedGroups ClosestUnlearnedGroups,
         long GroupId,
         long GroupSerialNumber,
         long ChatId,
@@ -200,10 +201,33 @@ public class RenderWordsViewCommandHandler : BaseEditMessageCommandHandler<Rende
 
             telegramMessageBuilder.AddInlineKeyboardButtons(new[] {switchLearnStateButton, switchIsHardButton});
         }
+
+        InlineKeyboardButton? previousGroupButton = null;
+        InlineKeyboardButton? nextGroupButton = null;
+        
+        if (request.ClosestUnlearnedGroups.PreviousGroupId is not null)
+        {
+            previousGroupButton = InlineKeyboardButton.WithCallbackData(
+                "Previous group ⬅",
+                routeBuilder.BuildFor(x => x.WithQueryParameter(
+                    RenderWordsViewCommand.ParameterNames.GroupId, request.ClosestUnlearnedGroups.PreviousGroupId)));
+        }
+        
+        if (!request.Data.HasNextPage && request.ClosestUnlearnedGroups.NextGroupId is not null)
+        {
+            nextGroupButton = InlineKeyboardButton.WithCallbackData(
+                "Next group ➡",
+                routeBuilder.BuildFor(x => x.WithQueryParameter(
+                    RenderWordsViewCommand.ParameterNames.GroupId, request.ClosestUnlearnedGroups.NextGroupId)));
+        }
+
+        telegramMessageBuilder
+            .AddControlButtons(
+                request.Data,
+                routeBuilder.WithQueryParameter(RenderWordsViewCommand.ParameterNames.GroupId, request.GroupId),
+                new ControlButtons(previousGroupButton, nextGroupButton));
         
         telegramMessageBuilder
-            .AddControlButtons(request.Data, routeBuilder.WithQueryParameter(
-                RenderWordsViewCommand.ParameterNames.GroupId, request.GroupId))
             .AddInlineKeyboardButtons(new []{ toggleTranslationsButton, reverseTranslationsButton })
             .AddInlineKeyboardButtons(changeShowWordsModeButtons)
             .AddInlineKeyboardButtons(new []{ returnBackButton });

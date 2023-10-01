@@ -80,6 +80,9 @@ public class SendWordGroupWordsCommandHandler : IRequestHandler<SendWordGroupWor
             },
             cancellationToken);
 
+        var closestGroups = await _mediator
+            .Send(new GetClosestUnlearnedGroupsQuery(request.GroupId), cancellationToken);
+
         var idsForStatUpdate = result.Data.Select(x => x.TranslationId)
             .Except(userSettings.LastOpenedWordTranslationIds ?? Enumerable.Empty<long>())
             .ToArray();
@@ -94,10 +97,7 @@ public class SendWordGroupWordsCommandHandler : IRequestHandler<SendWordGroupWor
                 cancellationToken);
 
             result = result.MapTo(x => idsForStatUpdate.Contains(x.TranslationId)
-                ? x with
-                {
-                    ViewCount = x.ViewCount + 1
-                }
+                ? x with { ViewCount = x.ViewCount + 1 }
                 : x);
         }
 
@@ -111,6 +111,7 @@ public class SendWordGroupWordsCommandHandler : IRequestHandler<SendWordGroupWor
         await _mediator.Send(new RenderWordsViewCommand(
             result,
             userSettings,
+            closestGroups,
             request.GroupId,
             groupSerialNumber,
             request.Data.Message!.Chat.Id,

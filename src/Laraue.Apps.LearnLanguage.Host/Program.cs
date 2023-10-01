@@ -5,22 +5,25 @@ using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using Laraue.Core.Exceptions;
 using Laraue.Telegram.NET.Authentication.Extensions;
 using Laraue.Telegram.NET.Core.Extensions;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Laraue.Apps.LearnLanguage.Commands.Jobs;
-using Laraue.Apps.LearnLanguage.Common.Services;
 using Laraue.Apps.LearnLanguage.Host;
+using Laraue.Core.DateTime.Services.Abstractions;
+using Laraue.Core.DateTime.Services.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddSingleton<IDateTimeProvider, DateTimeProvider>()
     .AddSingleton<ExceptionHandleMiddleware>()
-    .AddMediatR(typeof(GetGroupWordsQuery))
+    .AddMediatR(configuration =>
+    {
+        configuration.RegisterServicesFromAssemblyContaining<GetGroupWordsQuery>();
+    })
     .AddTelegramCore(new TelegramBotClientOptions(builder.Configuration["Telegram:Token"]))
     .AddTelegramAuthentication<User, Guid, RequestContext>()
     .AddEntityFrameworkStores<DatabaseContext>()

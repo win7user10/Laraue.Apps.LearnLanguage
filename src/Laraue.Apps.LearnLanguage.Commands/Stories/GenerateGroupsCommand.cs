@@ -16,7 +16,7 @@ public class FormNewLearningBatchCommandHandler : IRequestHandler<GenerateGroups
         _context = context;
     }
 
-    public async Task<Unit> Handle(GenerateGroupsCommand request, CancellationToken cancellationToken)
+    public async Task Handle(GenerateGroupsCommand request, CancellationToken cancellationToken)
     {
         await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
@@ -47,7 +47,5 @@ public class FormNewLearningBatchCommandHandler : IRequestHandler<GenerateGroups
 
         await _context.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        
-        return Unit.Value;
     }
 }

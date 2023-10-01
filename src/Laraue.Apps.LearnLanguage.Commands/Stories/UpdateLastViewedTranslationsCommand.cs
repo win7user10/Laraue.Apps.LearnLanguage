@@ -16,14 +16,12 @@ public class UpdateLastViewedTranslationsCommandHandler : IRequestHandler<Update
         _context = context;
     }
 
-    public async Task<Unit> Handle(UpdateLastViewedTranslationsCommand request, CancellationToken cancellationToken)
+    public async Task Handle(UpdateLastViewedTranslationsCommand request, CancellationToken cancellationToken)
     {
         await _context.Users.Where(x => x.Id == request.UserId)
             .UpdateAsync(x => new User
             {
                 LastOpenedTranslationIds = request.WordTranslationIds
             }, cancellationToken);
-        
-        return Unit.Value;
     }
 }
