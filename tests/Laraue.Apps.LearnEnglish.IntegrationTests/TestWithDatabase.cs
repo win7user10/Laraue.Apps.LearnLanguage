@@ -1,11 +1,9 @@
 ﻿using System;
-using Laraue.Apps.LearnLanguage.Commands.Queries;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -44,7 +42,6 @@ public abstract class TestWithDatabase
         get
         {
             var sc = new ServiceCollection()
-                .AddMediatR(typeof(GetGroupWordsQuery))
                 .AddScoped<DatabaseContext>(_ => DbContext)
                 .AddLinq2Db();
 

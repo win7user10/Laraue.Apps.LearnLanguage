@@ -1,4 +1,3 @@
-using Laraue.Apps.LearnLanguage.Commands.Queries;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
@@ -10,8 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Hangfire;
 using Hangfire.PostgreSql;
-using Laraue.Apps.LearnLanguage.Commands.Jobs;
-using Laraue.Apps.LearnLanguage.Host;
+using Laraue.Apps.LearnLanguage.Services;
+using Laraue.Apps.LearnLanguage.Services.Jobs;
+using Laraue.Apps.LearnLanguage.Services.Repositories;
+using Laraue.Apps.LearnLanguage.Services.Services;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 
@@ -20,14 +21,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddSingleton<IDateTimeProvider, DateTimeProvider>()
     .AddSingleton<ExceptionHandleMiddleware>()
-    .AddMediatR(configuration =>
-    {
-        configuration.RegisterServicesFromAssemblyContaining<GetGroupWordsQuery>();
-    })
     .AddTelegramCore(new TelegramBotClientOptions(builder.Configuration["Telegram:Token"]))
     .AddTelegramAuthentication<User, Guid, RequestContext>()
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IStatsService, StatsService>()
+    .AddScoped<IWordsService, WordsService>()
+    .AddScoped<IUserRepository, UserRepository>()
+    .AddScoped<IStatsRepository, StatsRepository>()
+    .AddScoped<IWordsRepository, WordsRepository>();
 
 builder.Services.AddControllers();
 
@@ -49,7 +52,6 @@ builder.Services
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandleMiddleware>();
 app.Services.UseLinq2Db();
 
 app.MapTelegramRequests(builder.Configuration["Telegram:WebhookUrl"]);

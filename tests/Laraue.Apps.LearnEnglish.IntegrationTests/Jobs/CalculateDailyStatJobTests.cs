@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Laraue.Apps.LearnLanguage.Commands.Jobs;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using Laraue.Apps.LearnLanguage.Services.Jobs;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;

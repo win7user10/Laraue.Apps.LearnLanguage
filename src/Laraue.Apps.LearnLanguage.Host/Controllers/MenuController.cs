@@ -1,27 +1,22 @@
-using Laraue.Apps.LearnLanguage.Commands;
-using Laraue.Apps.LearnLanguage.Commands.Stories.Telegram;
+using Laraue.Apps.LearnLanguage.Services;
+using Laraue.Apps.LearnLanguage.Services.Services;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Routing.Attributes;
-using MediatR;
 
 namespace Laraue.Apps.LearnLanguage.Host.Controllers;
 
 public class MenuController : TelegramController
 {
-    private readonly IMediator _mediator;
+    private readonly IStatsService _statsService;
 
-    public MenuController(IMediator mediator)
+    public MenuController(IStatsService statsService)
     {
-        _mediator = mediator;
+        _statsService = statsService;
     }
     
     [TelegramCallbackRoute(TelegramRoutes.Menu)]
-    public Task SendMenuAsync(RequestContext requestContext)
+    public Task SendMenuAsync(RequestContext request, CancellationToken ct)
     {
-        return _mediator.Send(new SendMenuCommand
-        {
-            Data = requestContext.Update.CallbackQuery!,
-            UserId = requestContext.UserId!,
-        });
+        return _statsService.SendMenuAsync(ReplyData.FromRequest(request), ct);
     }
 }

@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.LearnLanguage.DataAccess", "src\Laraue.Apps.LearnLanguage.DataAccess\Laraue.Apps.LearnLanguage.DataAccess.csproj", "{DE4E1175-C15C-4A86-B8F3-4BFD427BCEE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.LearnLanguage.Commands", "src\Laraue.Apps.LearnLanguage.Commands\Laraue.Apps.LearnLanguage.Commands.csproj", "{09D2D59B-2C39-4566-9FEF-8E59743149C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.LearnLanguage.Services", "src\Laraue.Apps.LearnLanguage.Services\Laraue.Apps.LearnLanguage.Services.csproj", "{09D2D59B-2C39-4566-9FEF-8E59743149C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0CC97684-89E5-4340-B9C5-13643784106F}"
 EndProject

@@ -1,27 +1,26 @@
-﻿using Laraue.Apps.LearnLanguage.Commands;
-using Laraue.Apps.LearnLanguage.Commands.Stories.Telegram;
+﻿using Laraue.Apps.LearnLanguage.Services;
+using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Routing.Attributes;
-using MediatR;
+using Telegram.Bot;
 
 namespace Laraue.Apps.LearnLanguage.Host.Controllers;
 
 public class CommonMessageController : TelegramController
 {
-    private readonly IMediator _mediator;
+    private readonly ITelegramBotClient _client;
 
-    public CommonMessageController(IMediator mediator)
+    public CommonMessageController(ITelegramBotClient client)
     {
-        _mediator = mediator;
+        _client = client;
     }
-    
+
     [TelegramCallbackRoute(TelegramRoutes.DropMessage)]
-    public Task DropLastMessageAsync(RequestContext requestContext)
+    public Task DropLastMessageAsync(RequestContext request, CancellationToken ct)
     {
-        return _mediator.Send(new DeleteLastMessageCommand
-        {
-            Data = requestContext.Update.CallbackQuery!,
-            UserId = requestContext.UserId!,
-        });
+        return _client.DeleteMessageAsync(
+            request.Update.GetUserId(),
+            request.Update.Message!.MessageId,
+            ct);
     }
 }
