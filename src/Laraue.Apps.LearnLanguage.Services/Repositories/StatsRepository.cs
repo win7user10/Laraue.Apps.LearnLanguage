@@ -3,6 +3,7 @@ using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+using Laraue.Core.DateTime.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,7 +67,7 @@ public class StatsRepository : IStatsRepository
 
     public async Task<IList<UserDailyStats>> GetYesterdayAllUsersStatsAsync(CancellationToken ct = default)
     {
-        var yesterdayDate = _dateTimeProvider.UtcNow.AddDays(-1).Date;
+        var yesterdayDate = _dateTimeProvider.UtcNow.AddDays(-1).Date.UseKind(DateTimeKind.Unspecified);
         
         return await _context
             .Users
