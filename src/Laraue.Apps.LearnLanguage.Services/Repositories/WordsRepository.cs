@@ -80,15 +80,17 @@ public class WordsRepository : IWordsRepository
             .FullPaginateEFAsync(request, ct);
 
         var groupIds = res.Data.Select(x => x.Id);
-        var learnStat = (await _context.WordGroupWords
+        var learnStat = await _context.WordGroupWords
             .QueryGroupWordsWithStates(_context, (word, state) => new { word.WordGroupId, state })
             .Where(x => groupIds.Contains(x.WordGroupId))
             .GroupBy(x => x.WordGroupId)
-            .Select(x => new {x.Key, Value = x.Count(y => y.state
-                .LearnState
-                .HasFlag(LearnState.Learned)) })
-            .ToListAsync(ct))
-            .ToDictionary(x => x.Key, x => x.Value);
+            .DisableGuard()
+            .ToDictionaryAsyncLinqToDB(
+                x => x.Key,
+                x => x.Count(y => y.state?
+                    .LearnState
+                    .HasFlag(LearnState.Learned) ?? false),
+                ct);
 
         return res.MapTo(x => new Group(
             x.Id,

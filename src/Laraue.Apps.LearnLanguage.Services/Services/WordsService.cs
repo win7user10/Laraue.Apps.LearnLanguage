@@ -48,7 +48,7 @@ public class WordsService : IWordsService
         var groupRoute = new RoutePathBuilder(TelegramRoutes.Group);
 
         var tmb = new TelegramMessageBuilder()
-            .AppendRow($"<b>Word groups. Page {result.Page}/{result.LastPage}.</b>")
+            .AppendRow($"<b>Word groups. Page {result.Page + 1}/{result.LastPage + 1}.</b>")
             .AppendRow($"Learned words: {learnedCount}/{totalCount} ({completedPercent:F}%)")
             .AppendRow("")
             .AppendDataRows(result, (x, _) => $"{x.SerialNumber}) {x.FirstWord}-* {x.LearnedCount}/{x.TotalCount}")
@@ -134,8 +134,8 @@ public class WordsService : IWordsService
 
         var groupSerialNumber = await _wordsRepository.GetGroupSerialNumberAsync(groupId, ct);
         
-        var shouldNumberBeAdded = groupSerialNumber % Constants.PaginationCount != 0;
-        var pageNumber = groupSerialNumber / Constants.PaginationCount + (shouldNumberBeAdded ? 1 : 0);
+        var shouldNumberBeSubtracted = groupSerialNumber % Constants.PaginationCount == 0;
+        var pageNumber = groupSerialNumber / Constants.PaginationCount - (shouldNumberBeSubtracted ? 1 : 0);
         
         var returnBackButton = InlineKeyboardButton.WithCallbackData(
             "Return to the groups list 🔙",
