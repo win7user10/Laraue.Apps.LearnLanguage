@@ -15,6 +15,11 @@ public interface IStatsService
     Task SendStatsAsync(ReplyData replyData, CancellationToken ct = default);
     
     /// <summary>
+    /// Send admin stats to the user.
+    /// </summary>
+    Task SendAdminStatsAsync(ChatId telegramId, CancellationToken ct = default);
+    
+    /// <summary>
     /// Send bot menu to the user.
     /// </summary>
     Task SendMenuAsync(ReplyData replyData, CancellationToken ct = default);

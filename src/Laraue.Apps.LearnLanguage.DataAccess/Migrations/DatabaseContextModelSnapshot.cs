@@ -17,7 +17,7 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
@@ -56435,7 +56435,7 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                         .HasColumnType("smallint")
                         .HasColumnName("learn_state");
 
-                    b.Property<DateTimeOffset?>("LearnedAt")
+                    b.Property<DateTime?>("LearnedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("learned_at");
 

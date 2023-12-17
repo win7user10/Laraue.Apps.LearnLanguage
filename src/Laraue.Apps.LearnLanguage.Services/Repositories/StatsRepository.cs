@@ -67,7 +67,7 @@ public class StatsRepository : IStatsRepository
 
     public async Task<IList<UserDailyStats>> GetYesterdayAllUsersStatsAsync(CancellationToken ct = default)
     {
-        var yesterdayDate = _dateTimeProvider.UtcNow.AddDays(-1).Date.UseKind(DateTimeKind.Unspecified);
+        var yesterdayDate = _dateTimeProvider.Yesterday();
         
         return await _context
             .Users

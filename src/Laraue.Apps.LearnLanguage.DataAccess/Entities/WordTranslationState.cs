@@ -17,7 +17,7 @@ public class WordTranslationState : BaseEntity
     /// <summary>
     /// UTC date time when the word has been learned.
     /// </summary>
-    public DateTimeOffset? LearnedAt { get; set; }
+    public DateTime? LearnedAt { get; set; }
     
     public long WordTranslationId { get; set; }
 

@@ -166,7 +166,7 @@ public class WordsRepository : IWordsRepository
                     UserId = userId,
                     LearnState = LearnState.None ^ flagToChange,
                     LearnedAt = flagToChange == LearnState.Learned
-                        ? DateTimeOffset.UtcNow
+                        ? DateTime.UtcNow
                         : null,
                     ViewCount = 1,
                 }, x => new WordTranslationState
@@ -174,7 +174,7 @@ public class WordsRepository : IWordsRepository
                     LearnState = x.LearnState ^ flagToChange,
                     LearnedAt = flagToChange == LearnState.Learned
                         ? (x.LearnState & LearnState.Learned) == 0
-                            ? DateTimeOffset.UtcNow
+                            ? DateTime.UtcNow
                             : null
                         : x.LearnedAt
                 },

@@ -11,21 +11,21 @@ namespace Laraue.Apps.LearnLanguage.Services.Services;
 
 public class StatsService : IStatsService
 {
-    private readonly IUserRepository _userRepository;
     private readonly IWordsRepository _wordsRepository;
     private readonly IStatsRepository _statsRepository;
+    private readonly IAdminRepository _adminRepository;
     private readonly ITelegramBotClient _client;
 
     public StatsService(
-        IUserRepository userRepository,
         ITelegramBotClient client,
         IWordsRepository wordsRepository,
-        IStatsRepository statsRepository)
+        IStatsRepository statsRepository,
+        IAdminRepository adminRepository)
     {
-        _userRepository = userRepository;
         _client = client;
         _wordsRepository = wordsRepository;
         _statsRepository = statsRepository;
+        _adminRepository = adminRepository;
     }
 
     public async Task SendDailyStatMessages(CancellationToken ct = default)
@@ -88,6 +88,29 @@ public class StatsService : IStatsService
         }
 
         tmb.AddMainMenuButton();
+    }
+
+    public async Task SendAdminStatsAsync(ChatId telegramId, CancellationToken ct = default)
+    {
+        var stats = await _adminRepository.GetStatsAsync(ct);
+        
+        var tmb = new TelegramMessageBuilder();
+        tmb.AppendRow("<b>Admin stats for yesterday</b>");
+        tmb.AppendRow();
+        
+        tmb.AppendRow($"Total learned words: <b>{stats.LearnedCount}</b>");
+        tmb.AppendRow();
+        
+        tmb.AppendRow($"Total users: <b>{stats.TotalUsersCount} (+{stats.RegisteredUsersCount})</b>");
+        tmb.AppendRow();
+
+        tmb.AppendRow($"<b>Active users:</b>");
+        foreach (var activeUser in stats.ActiveUsers)
+        {
+            tmb.AppendRow($"{activeUser.Id} - {activeUser.LearnedCount} learned");
+        }
+        
+        await _client.SendTextMessageAsync(telegramId, tmb, parseMode: ParseMode.Html, cancellationToken: ct);
     }
 
     public Task SendMenuAsync(ReplyData replyData, CancellationToken ct = default)

@@ -15,6 +15,7 @@ using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Services;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
+using Laraue.Telegram.NET.Authentication.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,11 +27,16 @@ builder.Services
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddOptions<RoleUsers>();
+builder.Services.Configure<RoleUsers>(builder.Configuration.GetSection("Telegram:Roles"));
+builder.Services.UseUserRolesProvider<StaticUserRoleProvider>();
+
 builder.Services.AddScoped<IStatsService, StatsService>()
     .AddScoped<IWordsService, WordsService>()
     .AddScoped<IUserRepository, UserRepository>()
     .AddScoped<IStatsRepository, StatsRepository>()
-    .AddScoped<IWordsRepository, WordsRepository>();
+    .AddScoped<IWordsRepository, WordsRepository>()
+    .AddScoped<IAdminRepository, AdminRepository>();
 
 builder.Services.AddControllers();
 
