@@ -20,7 +20,7 @@ public class CommonMessageController : TelegramController
     {
         return _client.DeleteMessageAsync(
             request.Update.GetUserId(),
-            request.Update.Message!.MessageId,
+            request.Update.CallbackQuery!.Message!.MessageId,
             ct);
     }
 }

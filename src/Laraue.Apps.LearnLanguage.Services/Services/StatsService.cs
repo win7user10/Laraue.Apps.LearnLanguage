@@ -58,7 +58,7 @@ public class StatsService : IStatsService
 
         var tmb = new TelegramMessageBuilder();
         tmb.AppendRow("<b>Learn stat</b>")
-            .AppendRow("")
+            .AppendRow()
             .AppendRow($"Total learned {totalStat.LearnedCount}/{totalStat.TotalCount} ({learnPercent:F}%)");
             
         var learnSpeed = totalStat.LearnSpeed is not null 
@@ -71,10 +71,10 @@ public class StatsService : IStatsService
 
         tmb
             .AppendRow($"Learn speed: {learnSpeed} words/day")
-            .AppendRow("")
+            .AppendRow()
             .AppendRow($"Approximate finish learning date: {finishLearnDate}")
-            .AppendRow("")
-            .AppendRow("Words learned in past 10 days");
+            .AppendRow()
+            .AppendRow("Words learned in the past 10 days");
 
         if (learnStats.DaysStat.Count == 0)
         {
@@ -88,6 +88,8 @@ public class StatsService : IStatsService
         }
 
         tmb.AddMainMenuButton();
+
+        await _client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
 
     public async Task SendAdminStatsAsync(ChatId telegramId, CancellationToken ct = default)

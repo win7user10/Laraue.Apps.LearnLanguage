@@ -5,6 +5,7 @@ using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DateTime.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
+using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories;
@@ -30,16 +31,16 @@ public class StatsRepository : IStatsRepository
                 state.LearnedAt,
             });
         
-        var wordsCount = await getUserWordsQuery.CountAsync(ct);
+        var wordsCount = await getUserWordsQuery.CountAsyncLinqToDB(ct);
         
         var learnedCount = await getUserWordsQuery
             .Where(x => (x.LearnState & LearnState.Learned) != 0)
-            .CountAsync(ct);
+            .CountAsyncLinqToDB(ct);
 
         var firstLearnedAt = await getUserWordsQuery
             .OrderBy(x => x.LearnedAt)
             .Select(x => x.LearnedAt)
-            .FirstAsync(ct);
+            .FirstAsyncLinqToDB(ct);
 
         double? learnSpeed = null;
         DateOnly? approximateLearnWordsDate = null;
@@ -60,7 +61,7 @@ public class StatsRepository : IStatsRepository
             .OrderByDescending(x => x.Key)
             .Select(x => new DayLearnStats(x.Key, x.Count()))
             .Take(10)
-            .ToListAsync(ct);
+            .ToListAsyncLinqToDB(ct);
 
         return new LearnStats(totalStat, daysStat);
     }
