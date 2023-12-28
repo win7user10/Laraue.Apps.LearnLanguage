@@ -22,11 +22,16 @@ public class RepeatModeRepository(DatabaseContext context) : IRepeatModeReposito
             .FirstOrDefaultAsyncEF(ct);
     }
 
-    public Task<NextRepeatWordTranslation> GetNextRepeatWordAsync(
+    public async Task<NextRepeatWordTranslation> GetNextRepeatWordAsync(
         long sessionId,
         NextWordPreference wordPreference,
         CancellationToken ct = default)
     {
+        var userId = await context.RepeatSessions
+            .Where(x => x.Id == sessionId)
+            .Select(x => x.UserId)
+            .FirstAsyncLinqToDB(ct);
+        
         var query = context.WordTranslations
             .Where(x => !context.RepeatSessionWords
                 .Where(y => y.RepeatSessionId == sessionId)
@@ -34,7 +39,7 @@ public class RepeatModeRepository(DatabaseContext context) : IRepeatModeReposito
                 .Contains(x.Id))
             .LeftJoin(
                 context.WordTranslationStates.AsQueryable(),
-                (wt, wts) => wt.Id == wts!.WordTranslationId /*&& wts.UserId == userId*/,
+                (wt, wts) => wt.Id == wts!.WordTranslationId && wts.UserId == userId,
                 (wt, wts) => new { wt, wts })
             .Select(x => new NextRepeatWordTranslation
             {
@@ -61,7 +66,7 @@ public class RepeatModeRepository(DatabaseContext context) : IRepeatModeReposito
                 break;
         }
 
-        return query.FirstAsyncLinqToDB(ct);
+        return await query.FirstAsyncLinqToDB(ct);
     }
 
     public Task<NextRepeatWordTranslation> GetRepeatWordAsync(
