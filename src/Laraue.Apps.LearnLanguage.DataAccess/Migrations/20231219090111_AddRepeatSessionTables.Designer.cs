@@ -3,6 +3,7 @@ using System;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Laraue.LearnLanguage.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20231219090111_AddRepeatSessionTables")]
+    partial class AddRepeatSessionTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,14 +35,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime?>("FinishedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("finished_at");
-
-                    b.Property<DateTime>("StartedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("started_at");
-
                     b.Property<int>("State")
                         .HasColumnType("integer")
                         .HasColumnName("state");
@@ -52,42 +47,30 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                         .HasName("pk_repeat_sessions");
 
                     b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_repeat_sessions_user_id")
-                        .HasFilter("state <> 2");
+                        .HasDatabaseName("ix_repeat_sessions_user_id");
 
                     b.ToTable("repeat_sessions", (string)null);
                 });
 
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.RepeatSessionWordTranslation", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<long>("WordTranslationId")
                         .HasColumnType("bigint")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                        .HasColumnName("word_translation_id");
 
                     b.Property<long>("RepeatSessionId")
                         .HasColumnType("bigint")
                         .HasColumnName("repeat_session_id");
 
-                    b.Property<int>("RepeatSessionWordState")
+                    b.Property<int>("ViewCount")
                         .HasColumnType("integer")
-                        .HasColumnName("repeat_session_word_state");
+                        .HasColumnName("view_count");
 
-                    b.Property<long>("WordTranslationId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("word_translation_id");
-
-                    b.HasKey("Id")
+                    b.HasKey("WordTranslationId", "RepeatSessionId")
                         .HasName("pk_repeat_session_words");
 
                     b.HasIndex("RepeatSessionId")
                         .HasDatabaseName("ix_repeat_session_words_repeat_session_id");
-
-                    b.HasIndex("WordTranslationId", "RepeatSessionId")
-                        .HasDatabaseName("ix_repeat_session_words_word_translation_id_repeat_session_id");
 
                     b.ToTable("repeat_session_words", (string)null);
                 });
@@ -56500,10 +56483,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("LearnAttempts")
-                        .HasColumnType("integer")
-                        .HasColumnName("learn_attempts");
-
                     b.Property<byte>("LearnState")
                         .HasColumnType("smallint")
                         .HasColumnName("learn_state");
@@ -56519,6 +56498,10 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
+
+                    b.Property<int>("ViewCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("view_count");
 
                     b.Property<long>("WordTranslationId")
                         .HasColumnType("bigint")
@@ -56552,7 +56535,7 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.RepeatSessionWordTranslation", b =>
                 {
                     b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.RepeatSession", "RepeatSession")
-                        .WithMany("Words")
+                        .WithMany()
                         .HasForeignKey("RepeatSessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -56643,11 +56626,6 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                     b.Navigation("User");
 
                     b.Navigation("WordTranslation");
-                });
-
-            modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.RepeatSession", b =>
-                {
-                    b.Navigation("Words");
                 });
 
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.User", b =>

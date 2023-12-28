@@ -32,10 +32,14 @@ builder.Services.Configure<RoleUsers>(builder.Configuration.GetSection("Telegram
 builder.Services.UseUserRolesProvider<StaticUserRoleProvider>();
 
 builder.Services.AddScoped<IStatsService, StatsService>()
-    .AddScoped<IWordsService, WordsService>()
+    .AddScoped<ISequentialModeService, SequentialModeService>()
+    .AddScoped<IRepeatModeService, RepeatModeService>()
+    .AddScoped<IRepeatModeRepository, RepeatModeRepository>()
+    .AddScoped<IWordsRepository, WordsRepository>()
+    .AddScoped<IWordsWindowFactory, WordsWindowFactory>()
     .AddScoped<IUserRepository, UserRepository>()
     .AddScoped<IStatsRepository, StatsRepository>()
-    .AddScoped<IWordsRepository, WordsRepository>()
+    .AddScoped<ISequentialModeRepository, SequentialModeRepository>()
     .AddScoped<IAdminRepository, AdminRepository>();
 
 builder.Services.AddControllers();

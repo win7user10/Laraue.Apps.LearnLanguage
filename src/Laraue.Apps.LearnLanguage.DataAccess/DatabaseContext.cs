@@ -22,6 +22,10 @@ public class DatabaseContext : DbContext
     
     public DbSet<User> Users { get; init; }
     
+    public DbSet<RepeatSession> RepeatSessions { get; init; }
+    
+    public DbSet<RepeatSessionWordTranslation> RepeatSessionWords { get; init; }
+    
     public DbSet<WordGroupWord> WordGroupWords { get; init; }
     
     public DbSet<WordTranslationState> WordTranslationStates { get; init; }
@@ -38,6 +42,14 @@ public class DatabaseContext : DbContext
         
         modelBuilder.Entity<WordTranslationState>()
             .HasIndex(x => new { x.WordTranslationId, x.UserId })
+            .IsUnique();
+        
+        modelBuilder.Entity<RepeatSessionWordTranslation>()
+            .HasIndex(x => new { x.WordTranslationId, x.RepeatSessionId });
+
+        modelBuilder.Entity<RepeatSession>()
+            .HasIndex(x => new { x.UserId })
+            .HasFilter($"state <> {RepeatState.Finished:D}")
             .IsUnique();
 
         var languages = new TranslationLanguage[]

@@ -15,7 +15,7 @@ public static class DbContextExtensions
         return queryable.LeftJoin(
             dbContext.WordTranslationStates.AsQueryable(),
             (wg, wts) =>
-                wg.WordTranslationId == wts.WordTranslationId
+                wg.WordTranslationId == wts!.WordTranslationId
                 && wg.WordGroup.UserId == wts.UserId,
             selector);
     }

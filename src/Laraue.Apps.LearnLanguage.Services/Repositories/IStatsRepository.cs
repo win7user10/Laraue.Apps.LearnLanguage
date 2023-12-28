@@ -13,9 +13,4 @@ public interface IStatsRepository
     /// Return daily statistics for all users.
     /// </summary>
     Task<IList<UserDailyStats>> GetYesterdayAllUsersStatsAsync(CancellationToken ct = default);
-
-    /// <summary>
-    /// Increment seen counter for the passed translations.
-    /// </summary>
-    Task IncrementSeenCountAsync(Guid userId, long[] wordTranslationIds, CancellationToken ct = default);
 }

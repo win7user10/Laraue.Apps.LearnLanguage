@@ -8,4 +8,5 @@ public record LearningItem(
     long SerialNumber,
     LearnState LearnState,
     int ViewCount,
-    long TranslationId);
+    long TranslationId,
+    DateTime? LearnedAt);

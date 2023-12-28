@@ -25,6 +25,33 @@ public class UserRepository : IUserRepository
             .FirstAsyncEF(ct);
     }
 
+    public async Task UpdateViewSettings(Guid userId, ChangeUserSettings request, CancellationToken ct = default)
+    {
+        if (request.ToggleShowTranslations)
+        {
+            await ToggleWordsTemplateModeAsync(
+                userId,
+                WordsTemplateMode.HideTranslations,
+                ct);
+        }
+        
+        if (request.ToggleRevertTranslations)
+        {
+            await ToggleWordsTemplateModeAsync(
+                userId,
+                WordsTemplateMode.RevertWordAndTranslation,
+                ct);
+        }
+
+        if (request.ShowMode is not null)
+        {
+            await SetShowWordsModeAsync(
+                userId,
+                request.ShowMode.GetValueOrDefault(),
+                ct);
+        }
+    }
+
     public Task UpdateLastViewedTranslationsAsync(
         Guid userId,
         long[] wordTranslationIds,
@@ -36,7 +63,7 @@ public class UserRepository : IUserRepository
                 .SetProperty(x => x.LastOpenedTranslationIds, wordTranslationIds), ct);
     }
 
-    public Task ToggleWordsTemplateModeAsync(
+    private Task ToggleWordsTemplateModeAsync(
         Guid userId,
         WordsTemplateMode flagToChange,
         CancellationToken ct = default)
@@ -49,7 +76,7 @@ public class UserRepository : IUserRepository
             }, ct);
     }
 
-    public Task SetShowWordsModeAsync(Guid userId, ShowWordsMode value, CancellationToken ct = default)
+    private Task SetShowWordsModeAsync(Guid userId, ShowWordsMode value, CancellationToken ct = default)
     {
         return _context.Users
             .Where(x => x.Id == userId)

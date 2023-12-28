@@ -1,9 +1,7 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess;
-using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
-using Laraue.Core.DateTime.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -86,39 +84,5 @@ public class StatsRepository : IStatsRepository
                 x.WordGroups.Sum(y => y.WordGroupWords.Count)
             ))
             .ToListAsync(ct);
-    }
-
-    public async Task IncrementSeenCountAsync(Guid userId, long[] wordTranslationIds, CancellationToken ct = default)
-    {
-        var updatedCount = await _context.WordTranslationStates
-            .Where(x =>
-                wordTranslationIds.Contains(x.WordTranslationId)
-                && userId == x.UserId)
-            .ExecuteUpdateAsync(u =>
-                u.SetProperty(x => x.ViewCount, x => x.ViewCount + 1), ct);
-
-        if (updatedCount == wordTranslationIds.Length)
-        {
-            return;
-        }
-        
-        var existsStates = await _context.WordTranslationStates
-            .Where(x =>
-                wordTranslationIds.Contains(x.WordTranslationId)
-                && userId == x.UserId)
-            .Select(x => x.WordTranslationId)
-            .ToListAsync(ct);
-
-        foreach (var wordTranslationId in wordTranslationIds.Except(existsStates))
-        {
-            _context.WordTranslationStates.Add(new WordTranslationState
-            {
-                ViewCount = 1,
-                WordTranslationId = wordTranslationId,
-                UserId = userId,
-            });
-        }
-
-        await _context.SaveChangesAsync(ct);
     }
 }

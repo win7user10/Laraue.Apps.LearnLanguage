@@ -1,5 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess.Enums;
-using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+﻿using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories;
 
@@ -16,12 +15,7 @@ public interface IUserRepository
     Task UpdateLastViewedTranslationsAsync(Guid userId, long[] wordTranslationIds, CancellationToken ct = default);
 
     /// <summary>
-    /// Toggle WordsTemplateMode value to the opposite state.
+    /// Update passed set of settings.
     /// </summary>
-    Task ToggleWordsTemplateModeAsync(Guid userId, WordsTemplateMode flagToChange, CancellationToken ct = default);
-    
-    /// <summary>
-    /// Update ShowWordsMode for the user.
-    /// </summary>
-    Task SetShowWordsModeAsync(Guid userId, ShowWordsMode value, CancellationToken ct = default);
+    Task UpdateViewSettings(Guid userId, ChangeUserSettings request, CancellationToken ct = default);
 }

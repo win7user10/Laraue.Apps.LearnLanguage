@@ -11,19 +11,19 @@ namespace Laraue.Apps.LearnLanguage.Services.Services;
 
 public class StatsService : IStatsService
 {
-    private readonly IWordsRepository _wordsRepository;
+    private readonly ISequentialModeRepository _sequentialModeRepository;
     private readonly IStatsRepository _statsRepository;
     private readonly IAdminRepository _adminRepository;
     private readonly ITelegramBotClient _client;
 
     public StatsService(
         ITelegramBotClient client,
-        IWordsRepository wordsRepository,
+        ISequentialModeRepository sequentialModeRepository,
         IStatsRepository statsRepository,
         IAdminRepository adminRepository)
     {
         _client = client;
-        _wordsRepository = wordsRepository;
+        _sequentialModeRepository = sequentialModeRepository;
         _statsRepository = statsRepository;
         _adminRepository = adminRepository;
     }
@@ -119,21 +119,25 @@ public class StatsService : IStatsService
     {
         var tmb = new TelegramMessageBuilder()
             .AppendRow("Please select the action")
+            .AppendRow()
+            .AppendRow("<b>Sequential mode</b> allows to learn words alphabetically from A to Z")
+            .AppendRow("<b>Random mode</b> allows to learn words in random order")
             .AddInlineKeyboardButtons(new[]
             {
-                InlineKeyboardButton.WithCallbackData("Learn words", TelegramRoutes.Groups)
+                InlineKeyboardButton.WithCallbackData("Sequential learning", TelegramRoutes.Groups),
+                InlineKeyboardButton.WithCallbackData("Random learning", TelegramRoutes.RepeatWindow),
             })
             .AddInlineKeyboardButtons(new[]
             {
                 InlineKeyboardButton.WithCallbackData("See stat", TelegramRoutes.Stat)
             });
 
-        return _client.EditMessageTextAsync(replyData, tmb, cancellationToken: ct);
+        return _client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
 
     public async Task SendStartAsync(Guid userId, ChatId telegramId, CancellationToken ct = default)
     {
-        var areGroupsCreated = await _wordsRepository
+        var areGroupsCreated = await _sequentialModeRepository
             .AreGroupsCreatedAsync(userId, ct);
         
         int? messageId = null;
@@ -146,24 +150,18 @@ public class StatsService : IStatsService
 
             messageId = message.MessageId;
 
-            await _wordsRepository.GenerateGroupsAsync(userId, false, ct);
+            await _sequentialModeRepository.GenerateGroupsAsync(userId, false, ct);
         }
 
-        const string text = "Welcome to learn english channel. To start learning words, please press the button below.";
-        var replyMarkup = new InlineKeyboardMarkup(
-            new[]
-            {
-                InlineKeyboardButton.WithCallbackData(
-                    "Start learning",
-                    TelegramRoutes.Groups)
-            });
+        var tmb = new TelegramMessageBuilder()
+            .AppendRow("Welcome to learn english channel. To start learning words, please press the button below.")
+            .AddMainMenuButton();
 
         if (messageId is null)
         {
             await _client.SendTextMessageAsync(
                 telegramId,
-                text,
-                replyMarkup: replyMarkup,
+                tmb,
                 cancellationToken: ct);
         }
         else
@@ -171,9 +169,8 @@ public class StatsService : IStatsService
             await _client.EditMessageTextAsync(
                 telegramId,
                 messageId.Value,
-                text,
+                tmb,
                 ParseMode.Html,
-                replyMarkup: replyMarkup,
                 cancellationToken: ct);
         }
     }

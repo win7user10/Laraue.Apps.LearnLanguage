@@ -10,14 +10,16 @@ public class WordTranslationState : BaseEntity
     public LearnState LearnState { get; set; }
     
     /// <summary>
-    /// How many times user viewed this word.
+    /// How many times user seen this word before it was learned.
     /// </summary>
-    public int ViewCount { get; set; }
+    public int LearnAttempts { get; set; }
     
     /// <summary>
     /// UTC date time when the word has been learned.
     /// </summary>
     public DateTime? LearnedAt { get; set; }
+    
+    public DateTime? RepeatedAt { get; set; }
     
     public long WordTranslationId { get; set; }
 
