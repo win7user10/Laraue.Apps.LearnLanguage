@@ -162,7 +162,8 @@ public class RepeatModeRepository(DatabaseContext context) : IRepeatModeReposito
             await UpdateRepeatDateAsync(info.UserId, translationId, ct);
         }
 
-        if (info.WordsCount + 1 != Constants.RepeatModeGroupSize)
+        var newAddedWordsCount = isRemembered ? info.WordsCount : info.WordsCount + 1;
+        if (newAddedWordsCount != Constants.RepeatModeGroupSize)
         {
             await t.CommitAsync(ct);
             return info.State;

@@ -240,6 +240,11 @@ public class WordsWindow(
                 .Append(textParts.Item2);
         }
 
+        if (item.LearnedAt is not null)
+        {
+            msgBuilder.AppendLine($"Learned at: {item.LearnedAt:d}");
+        }
+
         return msgBuilder;
     }
 }

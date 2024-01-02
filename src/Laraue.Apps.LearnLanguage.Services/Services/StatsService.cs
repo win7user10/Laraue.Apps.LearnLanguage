@@ -109,7 +109,7 @@ public class StatsService : IStatsService
         tmb.AppendRow($"<b>Active users:</b>");
         foreach (var activeUser in stats.ActiveUsers)
         {
-            tmb.AppendRow($"{activeUser.Id} - {activeUser.LearnedCount} learned");
+            tmb.AppendRow($"{activeUser.UserName} - {activeUser.LearnedCount} word(s)");
         }
         
         await _client.SendTextMessageAsync(telegramId, tmb, parseMode: ParseMode.Html, cancellationToken: ct);

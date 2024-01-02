@@ -19,23 +19,23 @@ public class AdminRepository : IAdminRepository
 
     public async Task<AdminStats> GetStatsAsync(CancellationToken ct = default)
     {
-        var yesterdayDate = _dateTimeProvider.Yesterday();
+        var yesterdayDate = _dateTimeProvider.UtcNow.AddDays(-1);
 
         var registeredUsersCount = await _context.Users
-            .Where(x => x.CreatedAt.Date == yesterdayDate)
+            .Where(x => x.CreatedAt >= yesterdayDate)
             .CountAsyncEF(ct);
         
         var totalUserCount = await _context.Users
             .CountAsyncEF(ct);
 
         var learnedCount = await _context.WordTranslationStates
-            .Where(x => x.LearnedAt.HasValue && x.LearnedAt.Value.Date == yesterdayDate)
+            .Where(x => x.LearnedAt.HasValue && x.LearnedAt.Value >= yesterdayDate)
             .CountAsyncEF(ct);
 
         var activeUsers = await _context.WordTranslationStates
-            .Where(x => x.LearnedAt.HasValue && x.LearnedAt.Value.Date == yesterdayDate)
-            .GroupBy(x => x.UserId)
-            .Select(x => new ActiveUser(x.Key, x.Count()))
+            .Where(x => x.LearnedAt.HasValue && x.LearnedAt.Value >= yesterdayDate)
+            .GroupBy(x => x.User.UserName)
+            .Select(x => new ActiveUser(x.Key!, x.Count()))
             .ToListAsyncEF(ct);
 
         return new AdminStats(

@@ -6,4 +6,4 @@ public sealed record AdminStats(
     int LearnedCount,
     IList<ActiveUser> ActiveUsers);
 
-public sealed record ActiveUser(Guid Id, int LearnedCount);
+public sealed record ActiveUser(string UserName, int LearnedCount);
