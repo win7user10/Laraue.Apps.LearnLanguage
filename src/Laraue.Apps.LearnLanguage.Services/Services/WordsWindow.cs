@@ -169,6 +169,11 @@ public class WordsWindow(
         {
             tmb.AppendRow("Opened word:")
                 .AppendRow(GetTextBuilder(_openedTranslation, false, false).ToString());
+
+            if (_openedTranslation.LearnedAt is not null)
+            {
+                tmb.AppendRow($"Learned at {_openedTranslation.LearnedAt:d}");
+            }
         }
         
         tmb
@@ -238,11 +243,6 @@ public class WordsWindow(
         {
             msgBuilder.Append('-')
                 .Append(textParts.Item2);
-        }
-
-        if (item.LearnedAt is not null)
-        {
-            msgBuilder.AppendLine($"Learned at: {item.LearnedAt:d}");
         }
 
         return msgBuilder;
