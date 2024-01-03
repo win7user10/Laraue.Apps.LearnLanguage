@@ -243,6 +243,8 @@ public class RepeatModeRepository(DatabaseContext context) : IRepeatModeReposito
 
     private Task UpdateRepeatDateAsync(Guid userId, long translationId, CancellationToken ct)
     {
+        var now = DateTime.UtcNow;
+        
         return context.WordTranslationStates
             .ToLinqToDBTable()
             .InsertOrUpdateAsync(
@@ -251,16 +253,16 @@ public class RepeatModeRepository(DatabaseContext context) : IRepeatModeReposito
                     WordTranslationId = translationId,
                     UserId = userId,
                     LearnState = LearnState.Learned,
-                    LearnedAt = DateTime.UtcNow,
+                    LearnedAt = now,
                     LearnAttempts = 1,
-                    RepeatedAt = DateTime.UtcNow
+                    RepeatedAt = now
                 }, x => new WordTranslationState
                 {
                     LearnState = x.LearnState | LearnState.Learned,
-                    LearnedAt = (x.LearnState & LearnState.Learned) == 0
+                    LearnedAt = (x.LearnState & LearnState.Learned) != 0
                         ? x.LearnedAt
-                        : DateTime.UtcNow,
-                    RepeatedAt = DateTime.UtcNow
+                        : now,
+                    RepeatedAt = now
                 },
                 () => new WordTranslationState
                 {

@@ -172,7 +172,9 @@ public class WordsWindow(
 
             if (_openedTranslation.LearnedAt is not null)
             {
-                tmb.AppendRow($"Learned at {_openedTranslation.LearnedAt:d}");
+                var daysLearnedAgo = (DateTime.UtcNow - _openedTranslation.LearnedAt.Value).TotalDays;
+                tmb.AppendRow()
+                    .AppendRow($"Learned {daysLearnedAgo:N0} day(s) ago");
             }
         }
         
