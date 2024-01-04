@@ -2,6 +2,7 @@
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -11,17 +12,26 @@ namespace Laraue.Apps.LearnLanguage.Services.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly DatabaseContext _context;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    
+    private readonly TimeSpan _maxTimeToNotCountOpenedTranslationsTwice = new(1, 0, 0);
 
-    public UserRepository(DatabaseContext context)
+    public UserRepository(DatabaseContext context, IDateTimeProvider dateTimeProvider)
     {
         _context = context;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public Task<UserSettings> GetSettingsAsync(Guid userId, CancellationToken ct = default)
     {
         return _context.Users
             .Where(x => x.Id == userId)
-            .Select(x => new UserSettings(x.WordsTemplateMode, x.ShowWordsMode, x.LastOpenedTranslationIds))
+            .Select(x => new UserSettings(
+                x.WordsTemplateMode,
+                x.ShowWordsMode,
+                _dateTimeProvider.UtcNow - x.LastTranslationsOpenAt > _maxTimeToNotCountOpenedTranslationsTwice
+                    ? null 
+                    : x.LastOpenedTranslationIds))
             .FirstAsyncEF(ct);
     }
 
@@ -60,7 +70,8 @@ public class UserRepository : IUserRepository
         return _context.Users
             .Where(x => x.Id == userId)
             .ExecuteUpdateAsync(u => u
-                .SetProperty(x => x.LastOpenedTranslationIds, wordTranslationIds), ct);
+                .SetProperty(x => x.LastOpenedTranslationIds, wordTranslationIds)
+                .SetProperty(x => x.LastTranslationsOpenAt, _dateTimeProvider.UtcNow), ct);
     }
 
     private Task ToggleWordsTemplateModeAsync(

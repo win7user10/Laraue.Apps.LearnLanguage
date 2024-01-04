@@ -26,4 +26,9 @@ public class User : TelegramIdentityUser<Guid>
     /// Last opened translation identifiers.
     /// </summary>
     public long[]? LastOpenedTranslationIds { get; set; }
+
+    /// <summary>
+    /// When translations have been opened last time.
+    /// </summary>
+    public DateTime? LastTranslationsOpenAt { get; set; }
 }

@@ -72,10 +72,16 @@ using (var scope = app.Services.CreateScope())
     await db.Database.MigrateAsync();
 
     var jobClient = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+    
     jobClient.AddOrUpdate<CalculateDailyStatJob>(
         nameof(CalculateDailyStatJob),
         x => x.ExecuteAsync(),
         Cron.Daily);
+    
+    jobClient.AddOrUpdate<UpdateTranslationsComplexityJob>(
+        nameof(UpdateTranslationsComplexityJob),
+        x => x.ExecuteAsync(),
+        Cron.Hourly);
 }
 
 app.Run();

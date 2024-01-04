@@ -159,7 +159,7 @@ public class WordsWindow(
 
                 return msgBuilder.ToString();
             })
-            .AppendRow("");
+            .AppendRow();
         
         if (_openedTranslation is null)
         {
