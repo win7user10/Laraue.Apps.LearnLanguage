@@ -5,7 +5,6 @@ using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using LinqToDB;
-using LinqToDB.DataProvider.PostgreSQL;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -235,7 +234,7 @@ public class RepeatModeRepository(DatabaseContext context) : IRepeatModeReposito
                 x.relation.WordTranslation.Translation,
                 i + 1,
                 x.state.LearnState,
-                x.state.LearnAttempts,
+                x.relation.WordTranslation.Difficulty,
                 x.relation.WordTranslationId,
                 x.state.LearnedAt))
             .FullPaginateLinq2DbAsync(request, ct);

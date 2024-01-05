@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess.Enums;
+﻿using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 
@@ -7,6 +8,6 @@ public record LearningItem(
     string Translation,
     long SerialNumber,
     LearnState LearnState,
-    int ViewCount,
+    WordTranslationDifficulty? Difficulty,
     long TranslationId,
     DateTime? LearnedAt);

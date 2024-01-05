@@ -110,7 +110,7 @@ public class SequentialModeRepository(DatabaseContext context) : ISequentialMode
                         word.WordTranslation.Translation,
                         word.SerialNumber,
                         state.LearnState,
-                        state.LearnAttempts,
+                        word.WordTranslation.Difficulty,
                         word.WordTranslation.Id,
                         state.LearnedAt
                     ),

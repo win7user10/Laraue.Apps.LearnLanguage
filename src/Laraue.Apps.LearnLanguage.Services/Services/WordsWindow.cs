@@ -1,10 +1,10 @@
 ﻿using System.Text;
 using Laraue.Apps.LearnLanguage.Common;
+using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
-using Laraue.Core.DataAccess.Extensions;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Utils;
@@ -86,10 +86,6 @@ public class WordsWindow(
                 replyData.UserId,
                 idsForStatUpdate,
                 ct);
-
-            words = words.MapTo(x => idsForStatUpdate.Contains(x.TranslationId)
-                ? x with { ViewCount = x.ViewCount + 1 }
-                : x);
         }
 
         var areTranslationHidden = userSettings
@@ -145,7 +141,11 @@ public class WordsWindow(
                 msgBuilder.Insert(0, ") ")
                     .Insert(0, x.SerialNumber);
 
-                msgBuilder.Append($" (seen: {x.ViewCount}) ");
+                if (x.Difficulty is not null)
+                {
+                    msgBuilder
+                        .Append($" <b>({GetDifficultyString(x.Difficulty.Value)})</b> ");
+                }
                 
                 if (x.LearnState.HasFlag(LearnState.Learned))
                 {
@@ -170,11 +170,20 @@ public class WordsWindow(
             tmb.AppendRow("Opened word:")
                 .AppendRow(GetTextBuilder(_openedTranslation, false, false).ToString());
 
-            if (_openedTranslation.LearnedAt is not null)
+            if (_openedTranslation.Difficulty is not null || _openedTranslation.LearnedAt is not null)
             {
-                var daysLearnedAgo = (DateTime.UtcNow - _openedTranslation.LearnedAt.Value).TotalDays;
-                tmb.AppendRow()
-                    .AppendRow($"Learned {daysLearnedAgo:N0} day(s) ago");
+                tmb.AppendRow();
+
+                if (_openedTranslation.Difficulty is not null)
+                {
+                    tmb.AppendRow($"Difficulty: {GetDifficultyString(_openedTranslation.Difficulty.Value)}");
+                }
+                
+                if (_openedTranslation.LearnedAt is not null)
+                {
+                    var daysLearnedAgo = (DateTime.UtcNow - _openedTranslation.LearnedAt.Value).TotalDays;
+                    tmb.AppendRow($"Learned: {daysLearnedAgo:N0} day(s) ago");
+                }
             }
         }
         
@@ -248,5 +257,17 @@ public class WordsWindow(
         }
 
         return msgBuilder;
+    }
+
+    private string GetDifficultyString(WordTranslationDifficulty difficulty)
+    {
+        return difficulty switch
+        {
+            WordTranslationDifficulty.Easy => "easy",
+            WordTranslationDifficulty.Medium => "medium",
+            WordTranslationDifficulty.Hard => "hard",
+            WordTranslationDifficulty.ExtraHard => "very hard",
+            _ => "impossible",
+        };
     }
 }
