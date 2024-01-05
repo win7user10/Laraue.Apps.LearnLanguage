@@ -44,10 +44,12 @@ builder.Services.AddScoped<IStatsService, StatsService>()
 
 builder.Services.AddControllers();
 
+var connection = builder.Configuration.GetConnectionString("Postgre");
+
 builder.Services
     .AddDbContext<DatabaseContext>(opt =>
     {
-        opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgre"))
+        opt.UseNpgsql(connection)
             .UseSnakeCaseNamingConvention();
     })
     .AddLinq2Db();
@@ -57,7 +59,7 @@ builder.Services
     .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
-    .UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Postgre")))
+    .UsePostgreSqlStorage(o => o.UseNpgsqlConnection(connection)))
     .AddHangfireServer();
 
 var app = builder.Build();
