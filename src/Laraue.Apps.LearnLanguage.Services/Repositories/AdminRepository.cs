@@ -1,6 +1,7 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
+using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories;
@@ -18,29 +19,30 @@ public class AdminRepository : IAdminRepository
 
     public async Task<AdminStats> GetStatsAsync(CancellationToken ct = default)
     {
-        var yesterdayDate = _dateTimeProvider.UtcNow.AddDays(-1);
+        var weekBeforeDate = _dateTimeProvider.UtcNow.AddDays(-7);
 
-        var registeredUsersCount = await _context.Users
-            .Where(x => x.CreatedAt >= yesterdayDate)
-            .CountAsyncEF(ct);
+        var registeredUsers = await _context.Users
+            .Where(x => x.CreatedAt >= weekBeforeDate)
+            .GroupBy(x => x.CreatedAt.Date)
+            .Select(x => new RegisteredUsers(x.Key, x.Count()))
+            .ToListAsyncEF(ct);
         
         var totalUserCount = await _context.Users
             .CountAsyncEF(ct);
-
-        var learnedCount = await _context.WordTranslationStates
-            .Where(x => x.LearnedAt.HasValue && x.LearnedAt.Value >= yesterdayDate)
-            .CountAsyncEF(ct);
-
+        
         var activeUsers = await _context.WordTranslationStates
-            .Where(x => x.LearnedAt.HasValue && x.LearnedAt.Value >= yesterdayDate)
-            .GroupBy(x => x.User.UserName)
-            .Select(x => new ActiveUser(x.Key!, x.Count()))
+            .Where(x => (x.LearnedAt.HasValue && x.LearnedAt.Value >= weekBeforeDate)
+                || (x.RepeatedAt.HasValue && x.RepeatedAt.Value >= weekBeforeDate))
+            .GroupBy(x => x.User.TelegramId)
+            .Select(x => new ActiveUser(
+                x.Key.GetValueOrDefault(),
+                x.Count(y => y.LearnedAt >= weekBeforeDate),
+                x.Count(y => y.RepeatedAt >= weekBeforeDate)))
             .ToListAsyncEF(ct);
 
         return new AdminStats(
             totalUserCount,
-            registeredUsersCount,
-            learnedCount,
+            registeredUsers,
             activeUsers);
     }
 }

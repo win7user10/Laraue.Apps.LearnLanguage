@@ -96,19 +96,23 @@ public class StatsService(
         var stats = await adminRepository.GetStatsAsync(ct);
         
         var tmb = new TelegramMessageBuilder();
-        tmb.AppendRow("<b>Admin stats for yesterday</b>");
+        tmb.AppendRow("<b>Admin stats for the last 7 days</b>");
         tmb.AppendRow();
         
-        tmb.AppendRow($"Total learned words: <b>{stats.LearnedCount}</b>");
-        tmb.AppendRow();
+        tmb.AppendRow($"Total users: <b>{stats.TotalUsersCount}</b>");
+
+        foreach (var registeredUsers in stats.RegisteredUsers)
+        {
+            tmb.AppendRow($"{registeredUsers.Date} (+{registeredUsers.Count})");
+        }
         
-        tmb.AppendRow($"Total users: <b>{stats.TotalUsersCount} (+{stats.RegisteredUsersCount})</b>");
         tmb.AppendRow();
 
         tmb.AppendRow($"<b>Active users:</b>");
         foreach (var activeUser in stats.ActiveUsers)
         {
-            tmb.AppendRow($"{activeUser.UserName} - {activeUser.LearnedCount} word(s)");
+            tmb.Append($"{activeUser.TelegramId} - learned: {activeUser.LearnedCount}, ")
+                .AppendRow($"repeated: {activeUser.RepeatedCount} word(s)");
         }
         
         await client.SendTextMessageAsync(telegramId, tmb, parseMode: ParseMode.Html, cancellationToken: ct);

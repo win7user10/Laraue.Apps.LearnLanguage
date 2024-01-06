@@ -2,8 +2,8 @@
 
 public sealed record AdminStats(
     int TotalUsersCount,
-    int RegisteredUsersCount,
-    int LearnedCount,
+    IList<RegisteredUsers> RegisteredUsers,
     IList<ActiveUser> ActiveUsers);
 
-public sealed record ActiveUser(string UserName, int LearnedCount);
+public sealed record RegisteredUsers(DateTime Date, int Count);
+public sealed record ActiveUser(long TelegramId, int LearnedCount, int RepeatedCount);
