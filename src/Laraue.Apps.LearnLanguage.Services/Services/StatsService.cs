@@ -99,20 +99,24 @@ public class StatsService(
         tmb.AppendRow("<b>Admin stats for the last 7 days</b>");
         tmb.AppendRow();
         
-        tmb.AppendRow($"Total users: <b>{stats.TotalUsersCount}</b>");
+        tmb.AppendRow($"<b>Total users: {stats.TotalUsersCount}</b>");
 
-        foreach (var registeredUsers in stats.RegisteredUsers)
+        if (stats.RegisteredUsers.Count > 0)
         {
-            tmb.AppendRow($"{registeredUsers.Date} (+{registeredUsers.Count})");
+            tmb.AppendRow();
+            foreach (var registeredUsers in stats.RegisteredUsers)
+            {
+                tmb.AppendRow($"{registeredUsers.Date:d} (+{registeredUsers.Count})");
+            }
         }
         
         tmb.AppendRow();
 
-        tmb.AppendRow($"<b>Active users:</b>");
+        tmb.AppendRow($"<b>Active users: {stats.ActiveUsers.Count}</b>");
         foreach (var activeUser in stats.ActiveUsers)
         {
             tmb.Append($"{activeUser.TelegramId} - learned: {activeUser.LearnedCount}, ")
-                .AppendRow($"repeated: {activeUser.RepeatedCount} word(s)");
+                .AppendRow($"repeated: {activeUser.RepeatedCount}");
         }
         
         await client.SendTextMessageAsync(telegramId, tmb, parseMode: ParseMode.Html, cancellationToken: ct);
