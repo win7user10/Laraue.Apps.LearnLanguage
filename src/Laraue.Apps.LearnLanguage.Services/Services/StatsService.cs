@@ -100,19 +100,13 @@ public class StatsService(
         tmb.AppendRow();
         
         tmb.AppendRow($"<b>Total users: {stats.TotalUsersCount}</b>");
-
-        if (stats.RegisteredUsers.Count > 0)
+        foreach (var registeredUsers in stats.RegisteredUsers)
         {
-            tmb.AppendRow();
-            foreach (var registeredUsers in stats.RegisteredUsers)
-            {
-                tmb.AppendRow($"{registeredUsers.Date:d} (+{registeredUsers.Count})");
-            }
+            tmb.AppendRow($"{registeredUsers.Date:d} (+{registeredUsers.Count})");
         }
         
         tmb.AppendRow();
-
-        tmb.AppendRow($"<b>Active users: {stats.ActiveUsers.Count}</b>");
+        tmb.AppendRow($"<b>Active users: {stats.ActiveUsersCount}</b>");
         foreach (var activeUsers in stats.ActiveUsers)
         {
             tmb.AppendRow($"{activeUsers.Date:d} - {activeUsers.Count} user(s)");

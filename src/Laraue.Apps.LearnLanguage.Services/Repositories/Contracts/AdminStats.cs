@@ -2,6 +2,7 @@
 
 public sealed record AdminStats(
     int TotalUsersCount,
+    int ActiveUsersCount,
     IList<RegisteredUsers> RegisteredUsers,
     IList<ActiveUsers> ActiveUsers);
 
