@@ -113,10 +113,9 @@ public class StatsService(
         tmb.AppendRow();
 
         tmb.AppendRow($"<b>Active users: {stats.ActiveUsers.Count}</b>");
-        foreach (var activeUser in stats.ActiveUsers)
+        foreach (var activeUsers in stats.ActiveUsers)
         {
-            tmb.Append($"{activeUser.TelegramId} - learned: {activeUser.LearnedCount}, ")
-                .AppendRow($"repeated: {activeUser.RepeatedCount}");
+            tmb.AppendRow($"{activeUsers.Date:d} - {activeUsers.Count} user(s)");
         }
         
         await client.SendTextMessageAsync(telegramId, tmb, parseMode: ParseMode.Html, cancellationToken: ct);

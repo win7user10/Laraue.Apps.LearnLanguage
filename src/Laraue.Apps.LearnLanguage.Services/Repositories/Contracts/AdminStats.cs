@@ -3,7 +3,7 @@
 public sealed record AdminStats(
     int TotalUsersCount,
     IList<RegisteredUsers> RegisteredUsers,
-    IList<ActiveUser> ActiveUsers);
+    IList<ActiveUsers> ActiveUsers);
 
 public sealed record RegisteredUsers(DateTime Date, int Count);
-public sealed record ActiveUser(long TelegramId, int LearnedCount, int RepeatedCount);
+public sealed record ActiveUsers(DateTime Date, int Count);

@@ -10,4 +10,7 @@ public record LearningItem(
     LearnState LearnState,
     WordTranslationDifficulty? Difficulty,
     long TranslationId,
-    DateTime? LearnedAt);
+    string? CefrLevel,
+    string? Topic,
+    DateTime? LearnedAt,
+    DateTime? RepeatedAt);

@@ -1,7 +1,6 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
-using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories;
@@ -21,11 +20,12 @@ public class AdminRepository : IAdminRepository
     {
         var weekBeforeDate = _dateTimeProvider.UtcNow.AddDays(-7);
 
-        var registeredUsers = await _context.Users
+        var registeredUsers = (await _context.Users
             .Where(x => x.CreatedAt >= weekBeforeDate)
             .GroupBy(x => x.CreatedAt.Date)
+            .OrderBy(x => x.Key)
             .Select(x => new RegisteredUsers(x.Key, x.Count()))
-            .ToListAsyncEF(ct);
+            .ToListAsyncEF(ct));
         
         var totalUserCount = await _context.Users
             .CountAsyncEF(ct);
@@ -33,11 +33,17 @@ public class AdminRepository : IAdminRepository
         var activeUsers = await _context.WordTranslationStates
             .Where(x => (x.LearnedAt.HasValue && x.LearnedAt.Value >= weekBeforeDate)
                 || (x.RepeatedAt.HasValue && x.RepeatedAt.Value >= weekBeforeDate))
-            .GroupBy(x => x.User.TelegramId)
-            .Select(x => new ActiveUser(
-                x.Key.GetValueOrDefault(),
-                x.Count(y => y.LearnedAt >= weekBeforeDate),
-                x.Count(y => y.RepeatedAt >= weekBeforeDate)))
+            .Select(x => new
+            {
+                (x.LearnedAt ?? x.RepeatedAt)!.Value.Date,
+                x.UserId
+            })
+            .Distinct()
+            .GroupBy(x => x.Date)
+            .OrderBy(x => x.Key)
+            .Select(x => new ActiveUsers(
+                x.Key,
+                x.Count()))
             .ToListAsyncEF(ct);
 
         return new AdminStats(

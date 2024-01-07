@@ -96,7 +96,9 @@ public class WordsWindow(
             .WordsTemplateMode
             .HasFlag(WordsTemplateMode.RevertWordAndTranslation);
 
-        viewRoute.Freeze();
+        viewRoute = viewRoute
+            .WithQueryParameter(ParameterNames.Page, words.Page)
+            .Freeze();
         
         var toggleTranslationsButton = viewRoute
             .WithQueryParameter(ParameterNames.ToggleTranslations, true)
@@ -141,10 +143,10 @@ public class WordsWindow(
                 msgBuilder.Insert(0, ") ")
                     .Insert(0, x.SerialNumber);
 
-                if (x.Difficulty is not null)
+                var difficultyString = GetDifficultyString(x.Difficulty, x.CefrLevel);
+                if (difficultyString is not null)
                 {
-                    msgBuilder
-                        .Append($" <b>({GetDifficultyString(x.Difficulty.Value)})</b> ");
+                    msgBuilder.Append($" <b>({difficultyString})</b> ");
                 }
                 
                 if (x.LearnState.HasFlag(LearnState.Learned))
@@ -170,20 +172,28 @@ public class WordsWindow(
             tmb.AppendRow("Opened word:")
                 .AppendRow(GetTextBuilder(_openedTranslation, false, false).ToString());
 
-            if (_openedTranslation.Difficulty is not null || _openedTranslation.LearnedAt is not null)
+            tmb.AppendRow();
+            
+            if (_openedTranslation.Topic is not null)
             {
-                tmb.AppendRow();
+                tmb.AppendRow($"Topic: {_openedTranslation.Topic}");
+            }
 
-                if (_openedTranslation.Difficulty is not null)
-                {
-                    tmb.AppendRow($"Difficulty: {GetDifficultyString(_openedTranslation.Difficulty.Value)}");
-                }
+            if (_openedTranslation.Difficulty is not null || _openedTranslation.CefrLevel is not null)
+            {
+                tmb.AppendRow($"Difficulty: {GetDifficultyString(_openedTranslation.Difficulty, _openedTranslation.CefrLevel)}");
+            }
                 
-                if (_openedTranslation.LearnedAt is not null)
-                {
-                    var daysLearnedAgo = (DateTime.UtcNow - _openedTranslation.LearnedAt.Value).TotalDays;
-                    tmb.AppendRow($"Learned: {daysLearnedAgo:N0} day(s) ago");
-                }
+            if (_openedTranslation.LearnedAt is not null)
+            {
+                var daysLearnedAgo = (DateTime.UtcNow - _openedTranslation.LearnedAt.Value).TotalDays;
+                tmb.AppendRow($"Learned: {daysLearnedAgo:N0} day(s) ago");
+            }
+                
+            if (_openedTranslation.RepeatedAt is not null)
+            {
+                var daysRepeatedAgo = (DateTime.UtcNow - _openedTranslation.RepeatedAt.Value).TotalDays;
+                tmb.AppendRow($"Repeated: {daysRepeatedAgo:N0} day(s) ago");
             }
         }
         
@@ -258,11 +268,25 @@ public class WordsWindow(
 
         return msgBuilder;
     }
+    
+    private static string? GetDifficultyString(WordTranslationDifficulty? difficulty, string? cefrLevel)
+    {
+        if (difficulty is null && cefrLevel is null)
+        {
+            return null;
+        }
+        
+        var nonEmptyStrings = new [] { cefrLevel, GetDifficultyString(difficulty) }
+            .Where(s => s != null);
+                    
+        return string.Join(", ", nonEmptyStrings);
+    }
 
-    private string GetDifficultyString(WordTranslationDifficulty difficulty)
+    private static string? GetDifficultyString(WordTranslationDifficulty? difficulty)
     {
         return difficulty switch
         {
+            null => null,
             WordTranslationDifficulty.Easy => "easy",
             WordTranslationDifficulty.Medium => "medium",
             WordTranslationDifficulty.Hard => "hard",

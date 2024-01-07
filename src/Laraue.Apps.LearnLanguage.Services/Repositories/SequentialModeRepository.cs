@@ -112,7 +112,10 @@ public class SequentialModeRepository(DatabaseContext context) : ISequentialMode
                         state.LearnState,
                         word.WordTranslation.Difficulty,
                         word.WordTranslation.Id,
-                        state.LearnedAt
+                        word.WordTranslation.Word.WordCefrLevel!.Name,
+                        word.WordTranslation.Word.WordTopic!.Name,
+                        state.LearnedAt,
+                        state.RepeatedAt
                     ),
                     State = state,
                 });

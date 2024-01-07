@@ -1,0 +1,86 @@
+[
+  {
+    "name": "animals",
+    "id": 1
+  },
+  {
+    "name": "clothes",
+    "id": 2
+  },
+  {
+    "name": "communication",
+    "id": 3
+  },
+  {
+    "name": "describing things",
+    "id": 4
+  },
+  {
+    "name": "work",
+    "id": 5
+  },
+  {
+    "name": "homes and buildings",
+    "id": 6
+  },
+  {
+    "name": "natural world",
+    "id": 7
+  },
+  {
+    "name": "arts and media",
+    "id": 8
+  },
+  {
+    "name": "money",
+    "id": 9
+  },
+  {
+    "name": "people: actions",
+    "id": 10
+  },
+  {
+    "name": "relationships",
+    "id": 11
+  },
+  {
+    "name": "travel",
+    "id": 12
+  },
+  {
+    "name": "people: appearance",
+    "id": 13
+  },
+  {
+    "name": "people: personality",
+    "id": 14
+  },
+  {
+    "name": "shopping",
+    "id": 15
+  },
+  {
+    "name": "technology",
+    "id": 16
+  },
+  {
+    "name": "food and drink",
+    "id": 17
+  },
+  {
+    "name": "education",
+    "id": 18
+  },
+  {
+    "name": "politics",
+    "id": 19
+  },
+  {
+    "name": "body and health",
+    "id": 20
+  },
+  {
+    "name": "crime",
+    "id": 21
+  }
+]
