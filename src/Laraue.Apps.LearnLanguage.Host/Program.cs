@@ -16,6 +16,7 @@ using Laraue.Apps.LearnLanguage.Services.Services;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Telegram.NET.Authentication.Services;
+using Laraue.Telegram.NET.Core.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services
     .AddSingleton<IDateTimeProvider, DateTimeProvider>()
     .AddSingleton<ExceptionHandleMiddleware>()
     .AddTelegramCore(new TelegramBotClientOptions(builder.Configuration["Telegram:Token"]))
+    .AddTelegramMiddleware<AutoCallbackResponseMiddleware>()
     .AddTelegramAuthentication<User, Guid, RequestContext>()
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();

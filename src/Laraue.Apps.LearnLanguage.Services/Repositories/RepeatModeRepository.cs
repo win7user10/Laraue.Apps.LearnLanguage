@@ -238,8 +238,8 @@ public class RepeatModeRepository(DatabaseContext context) : IRepeatModeReposito
                 x.relation.WordTranslationId,
                 x.relation.WordTranslation.Word.WordCefrLevel!.Name,
                 x.relation.WordTranslation.Word.WordTopic!.Name,
-                x.state.RepeatedAt,
-                x.state.LearnedAt))
+                x.state.LearnedAt,
+                x.state.RepeatedAt))
             .FullPaginateLinq2DbAsync(request, ct);
     }
 
