@@ -18,7 +18,7 @@ public class AdminRepository : IAdminRepository
 
     public async Task<AdminStats> GetStatsAsync(CancellationToken ct = default)
     {
-        var weekBeforeDate = _dateTimeProvider.UtcNow.AddDays(-7);
+        var weekBeforeDate = _dateTimeProvider.UtcNow.AddDays(-6);
 
         var registeredUsers = (await _context.Users
             .Where(x => x.CreatedAt >= weekBeforeDate)

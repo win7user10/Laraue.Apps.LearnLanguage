@@ -106,7 +106,7 @@ public class StatsService(
         }
         
         tmb.AppendRow();
-        tmb.AppendRow($"<b>Active users: {stats.ActiveUsersCount}</b>");
+        tmb.AppendRow($"<b>Active users: {stats.ActiveUsersCount / (double)stats.ActiveUsers.Count:F} per day</b>");
         foreach (var activeUsers in stats.ActiveUsers)
         {
             tmb.AppendRow($"{activeUsers.Date:d} - {activeUsers.Count} user(s)");
