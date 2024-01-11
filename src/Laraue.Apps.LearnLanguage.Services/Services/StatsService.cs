@@ -50,40 +50,37 @@ public class StatsService(
 
     public async Task SendStatsAsync(ReplyData replyData, CancellationToken ct = default)
     {
-        var learnStats = await statsRepository.GetLearnStatsAsync(replyData.UserId, ct);
-        
-        var totalStat = learnStats.TotalStat;
+        var (totalStat, dayLearnStatsCollection) = await statsRepository.GetLearnStatsAsync(replyData.UserId, ct);
+
         var learnPercent = totalStat.LearnedCount.DivideAndReturnPercent(totalStat.TotalCount);
 
         var tmb = new TelegramMessageBuilder();
         tmb.AppendRow("<b>Learn stat</b>")
             .AppendRow()
-            .AppendRow($"Total learned {totalStat.LearnedCount}/{totalStat.TotalCount} ({learnPercent:F}%)");
-            
-        var learnSpeed = totalStat.LearnSpeed is not null 
-            ? $"{totalStat.LearnSpeed:F}"
-            : "N/A";
-        
-        var finishLearnDate = totalStat.ApproximateLearnDate is not null
-            ? $"{totalStat.ApproximateLearnDate.Value.ToShortDateString()}"
-            : "N/A";
+            .AppendRow($"Total learned {totalStat.LearnedCount}/{totalStat.TotalCount} ({learnPercent:F}%)")
+            .AppendRow()
+            .AppendRow("Learned by CEFR level:");
+
+        foreach (var cefrLevelStat in totalStat.ByCefrLevel)
+        {
+            var learnCefrPercent = cefrLevelStat.LearnedCount.DivideAndReturnPercent(cefrLevelStat.TotalCount);
+            tmb.AppendRow($"{cefrLevelStat.Level} - {cefrLevelStat.LearnedCount}/{cefrLevelStat.TotalCount} ({learnCefrPercent:F}%)");
+        }
 
         tmb
-            .AppendRow($"Learn speed: {learnSpeed} words/day")
             .AppendRow()
-            .AppendRow($"Approximate finish learning date: {finishLearnDate}")
-            .AppendRow()
-            .AppendRow("Words learned in the past 10 days");
+            .AppendRow("Last activity:");
 
-        if (learnStats.DaysStat.Count == 0)
+        if (dayLearnStatsCollection.Count == 0)
         {
             tmb.AppendRow("N/A");
         }
         
-        foreach (var dayStat in learnStats.DaysStat)
+        foreach (var dayStat in dayLearnStatsCollection)
         {
             var dayLearnPercent = dayStat.LearnedCount.DivideAndReturnPercent(totalStat.TotalCount);
-            tmb.AppendRow($"{dayStat.Date.ToShortDateString()} - {dayStat.LearnedCount} word(s) - {dayLearnPercent:F}%");
+            tmb.Append($"{dayStat.Date.ToShortDateString()} - learned: {dayStat.LearnedCount}")
+                .AppendRow($", repeated: {dayStat.RepeatedCount} word(s) - {dayLearnPercent:F}%");
         }
 
         tmb.AddMainMenuButton();

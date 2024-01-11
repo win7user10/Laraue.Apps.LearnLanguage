@@ -4,7 +4,6 @@ using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories;
 
@@ -21,45 +20,38 @@ public class StatsRepository : IStatsRepository
 
     public async Task<LearnStats> GetLearnStatsAsync(Guid userId, CancellationToken ct = default)
     {
-        var getUserWordsQuery = _context.WordGroupWords
-            .Where(x => x.WordGroup.UserId == userId)
-            .QueryGroupWordsWithStates(_context, (word, state) => new
-            {
-                state.LearnState,
-                state.LearnedAt,
-            });
+        var wordsCount = await _context.Words.CountAsyncLinqToDB(ct);
         
-        var wordsCount = await getUserWordsQuery.CountAsyncLinqToDB(ct);
-        
-        var learnedCount = await getUserWordsQuery
+        var learnedCount = await _context.WordTranslationStates
+            .Where(x => x.UserId == userId)
             .Where(x => (x.LearnState & LearnState.Learned) != 0)
             .CountAsyncLinqToDB(ct);
 
-        var firstLearnedAt = await getUserWordsQuery
-            .OrderBy(x => x.LearnedAt)
-            .Select(x => x.LearnedAt)
-            .FirstAsyncLinqToDB(ct);
+        var statByCefrLevel = await _context.WordTranslations
+            .GroupBy(x => x.Word.WordCefrLevelId)
+            .OrderBy(x => x.Key)
+            .Select(x => new CefrLevelStat(
+                _context.WordCefrLevels
+                    .Where(y => y.Id == x.Key)
+                    .Select(y => y.Name)
+                    .FirstOrDefault() ?? "Undefined",
+                _context.WordTranslationStates
+                    .Count(y => y.UserId == userId && y.WordTranslation.Word.WordCefrLevelId == x.Key),
+                x.Count()))
+            .ToListAsyncEF(ct);
 
-        double? learnSpeed = null;
-        DateOnly? approximateLearnWordsDate = null;
-        if (firstLearnedAt is not null)
-        {
-            var learnDays = (DateTimeOffset.UtcNow - firstLearnedAt).Value.TotalDays;
-            learnSpeed = learnedCount / learnDays;
+        var totalStat = new TotalStat(learnedCount, wordsCount, statByCefrLevel);
 
-            var daysToLearn = (int)Math.Ceiling((wordsCount - learnedCount) / learnSpeed.Value);
-            approximateLearnWordsDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(daysToLearn));
-        }
-
-        var totalStat = new TotalStat(learnedCount, wordsCount, learnSpeed, approximateLearnWordsDate);
-
-        var daysStat = await getUserWordsQuery
-            .Where(x => x.LearnedAt != null)
-            .GroupBy(x => x.LearnedAt!.Value.Date)
+        var daysStat = await _context.WordTranslationStates
+            .Where(x => x.LearnedAt != null || x.RepeatedAt != null)
+            .GroupBy(x => (x.RepeatedAt ?? x.LearnedAt)!.Value.Date)
             .OrderByDescending(x => x.Key)
-            .Select(x => new DayLearnStats(x.Key, x.Count()))
+            .Select(x => new DayLearnStats(
+                x.Key,
+                x.Count(y => y.LearnedAt != null),
+                x.Count(y => y.RepeatedAt != null)))
             .Take(10)
-            .ToListAsyncLinqToDB(ct);
+            .ToListAsyncEF(ct);
 
         return new LearnStats(totalStat, daysStat);
     }
@@ -83,6 +75,6 @@ public class StatsRepository : IStatsRepository
                     .Count(y => y.LearnedAt.HasValue),
                 x.WordGroups.Sum(y => y.WordGroupWords.Count)
             ))
-            .ToListAsync(ct);
+            .ToListAsyncEF(ct);
     }
 }

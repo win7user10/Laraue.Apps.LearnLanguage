@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Laraue.Apps.LearnLanguage.Common;
-using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
@@ -143,7 +142,7 @@ public class WordsWindow(
                 msgBuilder.Insert(0, ") ")
                     .Insert(0, x.SerialNumber);
 
-                var difficultyString = GetDifficultyString(x.Difficulty, x.CefrLevel);
+                var difficultyString = CommonStrings.GetDifficultyString(x.Difficulty, x.CefrLevel);
                 if (difficultyString is not null)
                 {
                     msgBuilder.Append($" <b>({difficultyString})</b> ");
@@ -181,7 +180,7 @@ public class WordsWindow(
 
             if (_openedTranslation.Difficulty is not null || _openedTranslation.CefrLevel is not null)
             {
-                tmb.AppendRow($"Difficulty: {GetDifficultyString(_openedTranslation.Difficulty, _openedTranslation.CefrLevel)}");
+                tmb.AppendRow($"Difficulty: {CommonStrings.GetDifficultyString(_openedTranslation.Difficulty, _openedTranslation.CefrLevel)}");
             }
                 
             if (_openedTranslation.LearnedAt is not null)
@@ -267,31 +266,5 @@ public class WordsWindow(
         }
 
         return msgBuilder;
-    }
-    
-    private static string? GetDifficultyString(WordTranslationDifficulty? difficulty, string? cefrLevel)
-    {
-        if (difficulty is null && cefrLevel is null)
-        {
-            return null;
-        }
-        
-        var nonEmptyStrings = new [] { cefrLevel, GetDifficultyString(difficulty) }
-            .Where(s => s != null);
-                    
-        return string.Join(", ", nonEmptyStrings);
-    }
-
-    private static string? GetDifficultyString(WordTranslationDifficulty? difficulty)
-    {
-        return difficulty switch
-        {
-            null => null,
-            WordTranslationDifficulty.Easy => "easy",
-            WordTranslationDifficulty.Medium => "medium",
-            WordTranslationDifficulty.Hard => "hard",
-            WordTranslationDifficulty.ExtraHard => "very hard",
-            _ => "impossible",
-        };
     }
 }

@@ -40,15 +40,16 @@ public class RepeatModeRepository(DatabaseContext context) : IRepeatModeReposito
                 context.WordTranslationStates.AsQueryable(),
                 (wt, wts) => wt.Id == wts!.WordTranslationId && wts.UserId == userId,
                 (wt, wts) => new { wt, wts })
-            .Select(x => new NextRepeatWordTranslation
-            {
-                Id = x.wt.Id,
-                RepeatedAt = x.wts.RepeatedAt,
-                LearnedAt = x.wts.LearnedAt,
-                Name = x.wt.Word.Name,
-                Translation = x.wt.Translation,
-                LearnAttempts = x.wts.LearnAttempts
-            })
+            .Select(x => new NextRepeatWordTranslation(
+                x.wt.Id,
+                x.wt.Word.Name,
+                x.wt.Translation,
+                x.wts.LearnedAt,
+                x.wts.RepeatedAt,
+                x.wts.LearnAttempts,
+                x.wt.Word.WordCefrLevel!.Name,
+                x.wt.Word.WordTopic!.Name,
+                x.wt.Difficulty))
             .OrderBy(x => x.LearnedAt.HasValue)
             .ThenByDescending(x => x.RepeatedAt);
 
@@ -79,15 +80,16 @@ public class RepeatModeRepository(DatabaseContext context) : IRepeatModeReposito
                 context.WordTranslationStates.AsQueryable(),
                 (wt, wts) => wt.Id == wts!.WordTranslationId && wts.UserId == userId,
                 (wt, wts) => new { wt, wts })
-            .Select(x => new NextRepeatWordTranslation
-            {
-                Id = x.wt.Id,
-                RepeatedAt = x.wts.RepeatedAt,
-                LearnedAt = x.wts.LearnedAt,
-                Name = x.wt.Word.Name,
-                Translation = x.wt.Translation,
-                LearnAttempts = x.wts.LearnAttempts
-            })
+            .Select(x => new NextRepeatWordTranslation(
+                x.wt.Id,
+                x.wt.Word.Name,
+                x.wt.Translation,
+                x.wts.LearnedAt,
+                x.wts.RepeatedAt,
+                x.wts.LearnAttempts,
+                x.wt.Word.WordCefrLevel!.Name,
+                x.wt.Word.WordTopic!.Name,
+                x.wt.Difficulty))
             .FirstAsyncLinqToDB(ct);
     }
 

@@ -1,4 +1,5 @@
 ﻿using Laraue.Apps.LearnLanguage.Common;
+using Laraue.Apps.LearnLanguage.Common.Extensions;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
@@ -140,7 +141,8 @@ public class RepeatModeService(
             .AppendRow("<b>Repeat session finished</b>")
             .AppendRow()
             .AppendRow($"<b>{info.WordsAddedToRepeatCount}</b> words remembered")
-            .AppendRow($"For <b>{(info.FinishedAt - info.StartedAt).GetValueOrDefault()}</b>");
+            .AppendRow()
+            .AppendRow($"Time spent: {(info.FinishedAt - info.StartedAt).GetValueOrDefault().ToReadableString()}");
 
         tmb.AddInlineKeyboardButtons(new[]
         {
@@ -188,13 +190,29 @@ public class RepeatModeService(
         }
         
         tmb.AppendRow()
-            .AppendRow(word.LearnedAt is not null
-                ? $"Do your steel remember the word <b>{word.Name}</b>?"
-                : $"Do your know the word <b>{word.Name}</b>?");
+            .Append(word.LearnedAt is not null
+                ? $"Do your steel remember the word"
+                : $"Do your know the word");
+
+        tmb.Append($" <b>{word.Name}");
+        
+        var difficultyString = CommonStrings.GetDifficultyString(word.Difficulty, word.CefrLevel);
+        if (difficultyString is not null)
+        {
+            tmb.Append($" ({difficultyString})");
+        }
+
+        tmb.AppendRow("</b>?");
 
         if (showTranslation)
         {
             tmb.AppendRow($"{word.Name} - {word.Translation}");
+            if (word.Topic is not null)
+            {
+                tmb
+                    .AppendRow()
+                    .AppendRow($"Topic: {word.Topic}");
+            }
         }
         else
         {
