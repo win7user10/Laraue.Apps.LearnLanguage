@@ -43,6 +43,7 @@ public class StatsRepository : IStatsRepository
         var totalStat = new TotalStat(learnedCount, wordsCount, statByCefrLevel);
 
         var daysStat = await _context.WordTranslationStates
+            .Where(x => x.UserId == userId)
             .Where(x => x.LearnedAt != null || x.RepeatedAt != null)
             .GroupBy(x => (x.RepeatedAt ?? x.LearnedAt)!.Value.Date)
             .OrderByDescending(x => x.Key)
