@@ -11,14 +11,14 @@ using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Laraue.Apps.LearnLanguage.Services.Services;
+namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 
-public class RepeatModeService(
-    IRepeatModeRepository repository,
+public class LearnRandomWordsService(
+    ILearnRandomWordsRepository repository,
     ITelegramBotClient client,
     IUserRepository userRepository,
     IWordsWindowFactory wordsWindowFactory)
-    : IRepeatModeService
+    : ILearnRandomWordsService
 {
     public async Task SendRepeatingWindowAsync(ReplyData replyData, CancellationToken ct = default)
     {

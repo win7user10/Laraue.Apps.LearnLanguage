@@ -13,6 +13,11 @@ using Laraue.Apps.LearnLanguage.Services;
 using Laraue.Apps.LearnLanguage.Services.Jobs;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Services;
+using Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
+using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.CefrLevel;
+using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.FirstLetter;
+using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.Topic;
+using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Telegram.NET.Authentication.Services;
@@ -34,15 +39,21 @@ builder.Services.Configure<RoleUsers>(builder.Configuration.GetSection("Telegram
 builder.Services.UseUserRolesProvider<StaticUserRoleProvider>();
 
 builder.Services.AddScoped<IStatsService, StatsService>()
-    .AddScoped<ISequentialModeService, SequentialModeService>()
-    .AddScoped<IRepeatModeService, RepeatModeService>()
-    .AddScoped<IRepeatModeRepository, RepeatModeRepository>()
     .AddScoped<IWordsRepository, WordsRepository>()
     .AddScoped<IWordsWindowFactory, WordsWindowFactory>()
     .AddScoped<IUserRepository, UserRepository>()
     .AddScoped<IStatsRepository, StatsRepository>()
-    .AddScoped<ISequentialModeRepository, SequentialModeRepository>()
-    .AddScoped<IAdminRepository, AdminRepository>();
+    .AddScoped<IAdminRepository, AdminRepository>()
+    
+    .AddScoped<ILearnRandomWordsService, LearnRandomWordsService>()
+    .AddScoped<ILearnRandomWordsRepository, LearnRandomWordsRepository>()
+    
+    .AddScoped<ILearnByCefrLevelService, LearnByCefrLevelService>()
+    .AddScoped<ILearnByFirstLetterService, LearnByFirstLetterService>()
+    .AddScoped<ILearnByTopicService, LearnByTopicService>()
+    .AddScoped<ILearnByCefrLevelRepository, LearnByCefrLevelRepository>()
+    .AddScoped<ILearnByTopicRepository, LearnByTopicRepository>()
+    .AddScoped<ILearnByFirstLetterRepository, LearnByFirstLetterRepository>();
 
 builder.Services.AddControllers();
 

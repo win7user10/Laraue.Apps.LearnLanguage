@@ -2,9 +2,9 @@
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 
-namespace Laraue.Apps.LearnLanguage.Services.Repositories;
+namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 
-public interface IRepeatModeRepository
+public interface ILearnRandomWordsRepository
 {
     /// <summary>
     /// Returns active repeat session for the user if it is exists.

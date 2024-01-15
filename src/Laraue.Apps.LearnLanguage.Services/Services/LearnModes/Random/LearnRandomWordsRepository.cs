@@ -1,6 +1,8 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess;
+﻿using Laraue.Apps.LearnLanguage.Common;
+using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
+using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
@@ -8,9 +10,9 @@ using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Laraue.Apps.LearnLanguage.Services.Repositories;
+namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 
-public class RepeatModeRepository(DatabaseContext context) : IRepeatModeRepository
+public class LearnRandomWordsRepository(DatabaseContext context) : ILearnRandomWordsRepository
 {
     public Task<RepeatSessionState?> GetRepeatSessionStateAsync(Guid userId, CancellationToken ct = default)
     {
@@ -234,7 +236,7 @@ public class RepeatModeRepository(DatabaseContext context) : IRepeatModeReposito
             .Select((x, i) => new LearningItem(
                 x.relation.WordTranslation.Word.Name,
                 x.relation.WordTranslation.Translation,
-                i + 1,
+                request.Page * request.PerPage + i + 1,
                 x.state.LearnState,
                 x.relation.WordTranslation.Difficulty,
                 x.relation.WordTranslationId,

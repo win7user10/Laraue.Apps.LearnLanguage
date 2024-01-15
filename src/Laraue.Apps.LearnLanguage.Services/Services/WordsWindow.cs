@@ -7,6 +7,7 @@ using Laraue.Core.DataAccess.Contracts;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Utils;
+using Laraue.Telegram.NET.DataAccess;
 using Laraue.Telegram.NET.DataAccess.Extensions;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
@@ -96,7 +97,7 @@ public class WordsWindow(
             .HasFlag(WordsTemplateMode.RevertWordAndTranslation);
 
         viewRoute = viewRoute
-            .WithQueryParameter(ParameterNames.Page, words.Page)
+            .WithQueryParameter(Defaults.PageParameterName, words.Page)
             .Freeze();
         
         var toggleTranslationsButton = viewRoute
