@@ -6,13 +6,15 @@ using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
+using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 
-public class LearnRandomWordsRepository(DatabaseContext context) : ILearnRandomWordsRepository
+public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvider dateTimeProvider)
+    : ILearnRandomWordsRepository
 {
     public Task<RepeatSessionState?> GetRepeatSessionStateAsync(Guid userId, CancellationToken ct = default)
     {
@@ -162,7 +164,7 @@ public class LearnRandomWordsRepository(DatabaseContext context) : ILearnRandomW
 
         if (isRemembered)
         {
-            await UpdateRepeatDateAsync(info.UserId, translationId, ct);
+            await UpsertTranslationStateWithRepeatedStateAsync(info.UserId, translationId, ct);
         }
 
         var newAddedWordsCount = isRemembered ? info.WordsCount : info.WordsCount + 1;
@@ -176,7 +178,7 @@ public class LearnRandomWordsRepository(DatabaseContext context) : ILearnRandomW
             .Where(x => x.Id == sessionId)
             .ExecuteUpdateAsync(u => u
                 .SetProperty(x => x.State, RepeatState.Active)
-                .SetProperty(x => x.StartedAt, DateTime.UtcNow), ct);
+                .SetProperty(x => x.StartedAt, dateTimeProvider.UtcNow), ct);
         
         await t.CommitAsync(ct);
 
@@ -198,7 +200,7 @@ public class LearnRandomWordsRepository(DatabaseContext context) : ILearnRandomW
             .Select(x => x.UserId)
             .FirstOrDefaultAsyncEF(ct);
 
-        await UpdateRepeatDateAsync(userId, translationId, ct);
+        await UpsertTranslationStateWithRepeatedStateAsync(userId, translationId, ct);
 
         var hasUnlearned = await context.RepeatSessionWords
             .Where(x => x.RepeatSessionId == sessionId)
@@ -213,7 +215,7 @@ public class LearnRandomWordsRepository(DatabaseContext context) : ILearnRandomW
         await context.RepeatSessions
             .ExecuteUpdateAsync(u => u
                 .SetProperty(x => x.State, RepeatState.Finished)
-                .SetProperty(x => x.FinishedAt, DateTime.UtcNow), ct);
+                .SetProperty(x => x.FinishedAt, dateTimeProvider.UtcNow), ct);
 
         return true;
     }
@@ -247,9 +249,9 @@ public class LearnRandomWordsRepository(DatabaseContext context) : ILearnRandomW
             .FullPaginateLinq2DbAsync(request, ct);
     }
 
-    private Task UpdateRepeatDateAsync(Guid userId, long translationId, CancellationToken ct)
+    private Task UpsertTranslationStateWithRepeatedStateAsync(Guid userId, long translationId, CancellationToken ct)
     {
-        var now = DateTime.UtcNow;
+        var now = dateTimeProvider.UtcNow;
         
         return context.WordTranslationStates
             .ToLinqToDBTable()
@@ -261,14 +263,11 @@ public class LearnRandomWordsRepository(DatabaseContext context) : ILearnRandomW
                     LearnState = LearnState.Learned,
                     LearnedAt = now,
                     LearnAttempts = 1,
-                    RepeatedAt = now
                 }, x => new WordTranslationState
                 {
                     LearnState = x.LearnState | LearnState.Learned,
-                    LearnedAt = (x.LearnState & LearnState.Learned) != 0
-                        ? x.LearnedAt
-                        : now,
-                    RepeatedAt = now
+                    LearnedAt = x.LearnedAt ?? now,
+                    RepeatedAt = x.LearnedAt != null ? now : null
                 },
                 () => new WordTranslationState
                 {

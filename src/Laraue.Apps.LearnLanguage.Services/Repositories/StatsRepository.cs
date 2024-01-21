@@ -74,7 +74,7 @@ public class StatsRepository : IStatsRepository
                                 && y.LearnedAt.Value.Date == yesterdayDate),
                 x.WordTranslationStates
                     .Count(y => y.LearnedAt.HasValue),
-                x.WordGroups.Sum(y => y.WordGroupWords.Count)
+                _context.Words.Count()
             ))
             .ToListAsyncEF(ct);
     }

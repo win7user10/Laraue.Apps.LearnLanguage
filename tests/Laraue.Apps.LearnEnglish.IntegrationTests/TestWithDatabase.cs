@@ -6,35 +6,39 @@ using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 
 namespace Laraue.Apps.LearnEnglish.IntegrationTests;
 
+[Collection("DatabaseTests")]
 public abstract class TestWithDatabase
 {
-    protected readonly DatabaseContext DbContext;
-    
     protected TestWithDatabase()
     {
-        DbContext = new DatabaseContext(new DbContextOptionsBuilder()
+        LinqToDBForEFTools.Initialize();
+        GetDbContext().Database.Migrate();
+        ClearDb();
+        SeedDb();
+    }
+    
+    protected DatabaseContext GetDbContext()
+    {
+        return new(new DbContextOptionsBuilder()
             .UseNpgsql("User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=test_learn_language;Command Timeout=0")
             .UseSnakeCaseNamingConvention()
             .Options);
-        
-        LinqToDBForEFTools.Initialize();
-        DbContext.Database.Migrate();
-        ClearDb();
-        SeedDb();
     }
 
     private void ClearDb()
     {
-        DbContext.Users.Delete();
+        GetDbContext().Users.Delete();
     }
     
     private void SeedDb()
     {
-        DbContext.Users.AddRange(Users.User1, Users.User2);
-        DbContext.SaveChanges();
+        var dbContext = GetDbContext();
+        dbContext.Users.AddRange(Users.User1, Users.User2);
+        dbContext.SaveChanges();
     }
 
     protected IServiceCollection ServiceCollection
@@ -42,7 +46,7 @@ public abstract class TestWithDatabase
         get
         {
             var sc = new ServiceCollection()
-                .AddScoped<DatabaseContext>(_ => DbContext)
+                .AddScoped<DatabaseContext>(_ => GetDbContext())
                 .AddLinq2Db();
 
             return sc;

@@ -23,15 +23,11 @@ public class DatabaseContext : DbContext
     
     public DbSet<WordTranslation> WordTranslations { get; init; }
     
-    public DbSet<WordGroup> WordGroups { get; init; }
-    
     public DbSet<User> Users { get; init; }
     
     public DbSet<RepeatSession> RepeatSessions { get; init; }
     
     public DbSet<RepeatSessionWordTranslation> RepeatSessionWords { get; init; }
-    
-    public DbSet<WordGroupWord> WordGroupWords { get; init; }
     
     public DbSet<WordTranslationState> WordTranslationStates { get; init; }
 
@@ -39,12 +35,6 @@ public class DatabaseContext : DbContext
     {
         modelBuilder.HasPostgresExtension("uuid-ossp");
 
-        modelBuilder.Entity<WordGroup>()
-            .HasIndex(x => x.SerialNumber);
-        
-        modelBuilder.Entity<WordGroupWord>()
-            .HasIndex(x => x.SerialNumber);
-        
         modelBuilder.Entity<WordTranslationState>()
             .HasIndex(x => new { x.WordTranslationId, x.UserId })
             .IsUnique();

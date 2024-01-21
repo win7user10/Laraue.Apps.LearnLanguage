@@ -17,8 +17,6 @@ public class User : TelegramIdentityUser<Guid>
     /// Which words should be shown to the user.
     /// </summary>
     public ShowWordsMode ShowWordsMode { get; set; }
-
-    public ICollection<WordGroup> WordGroups { get; set; }
     
     public ICollection<WordTranslationState> WordTranslationStates { get; set; }
 
