@@ -4,5 +4,4 @@ namespace Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 
 public record UserSettings(
     WordsTemplateMode WordsTemplateMode,
-    ShowWordsMode ShowWordsMode,
-    long[]? LastOpenedWordTranslationIds);
+    ShowWordsMode ShowWordsMode);

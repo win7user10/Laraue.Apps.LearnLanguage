@@ -132,6 +132,5 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         tmb.AddMainMenuButton();
 
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
-        await userRepository.UpdateLastViewedTranslationsAsync(replyData.UserId, Array.Empty<long>(), ct);
     }
 }

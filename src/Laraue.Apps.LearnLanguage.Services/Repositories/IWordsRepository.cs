@@ -17,5 +17,5 @@ public interface IWordsRepository
     /// <summary>
     /// Increment seen counter for the passed translations.
     /// </summary>
-    Task IncrementLearnAttemptsAsync(Guid userId, long[] wordTranslationIds, CancellationToken ct = default);
+    Task IncrementLearnAttemptsIfRequiredAsync(Guid userId, long[] wordTranslationIds, CancellationToken ct = default);
 }

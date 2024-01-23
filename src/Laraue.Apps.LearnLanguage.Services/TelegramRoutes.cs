@@ -2,8 +2,6 @@
 
 public static class TelegramRoutes
 {
-    public const string Groups = "grs";
-    public const string Group = "gr";
     public const string RepeatWindow = "rw";
     public const string RepeatWindowWordsView = "rww";
     public const string HandleSuggestion = "hs";

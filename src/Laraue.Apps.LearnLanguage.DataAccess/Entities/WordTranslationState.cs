@@ -28,4 +28,6 @@ public class WordTranslationState : BaseEntity
     public Guid UserId { get; set; }
 
     public User User { get; set; }
+
+    public DateTime LastOpenedAt { get; set; } = DateTime.MinValue;
 }

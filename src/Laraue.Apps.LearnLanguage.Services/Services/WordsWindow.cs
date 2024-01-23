@@ -76,18 +76,6 @@ public class WordsWindow(
 
     public async Task SendAsync(ReplyData replyData, CancellationToken ct = default)
     {
-        var idsForStatUpdate = words.Data.Select(x => x.TranslationId)
-            .Except(userSettings.LastOpenedWordTranslationIds ?? Enumerable.Empty<long>())
-            .ToArray();
-        
-        if (idsForStatUpdate.Length > 0)
-        {
-            await wordsRepository.IncrementLearnAttemptsAsync(
-                replyData.UserId,
-                idsForStatUpdate,
-                ct);
-        }
-
         var areTranslationHidden = userSettings
             .WordsTemplateMode
             .HasFlag(WordsTemplateMode.HideTranslations);
@@ -230,10 +218,12 @@ public class WordsWindow(
             tmb,
             ParseMode.Html,
             cancellationToken: ct);
-
-        await userRepository.UpdateLastViewedTranslationsAsync(
+        
+        await wordsRepository.IncrementLearnAttemptsIfRequiredAsync(
             replyData.UserId,
-            words.Data.Select(x => x.TranslationId).ToArray(),
+            words.Data
+                .Select(x => x.TranslationId)
+                .ToArray(),
             ct);
     }
 

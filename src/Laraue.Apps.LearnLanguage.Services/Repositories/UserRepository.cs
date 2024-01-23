@@ -9,29 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository(DatabaseContext context) : IUserRepository
 {
-    private readonly DatabaseContext _context;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    
-    private readonly TimeSpan _maxTimeToNotCountOpenedTranslationsTwice = new(1, 0, 0);
-
-    public UserRepository(DatabaseContext context, IDateTimeProvider dateTimeProvider)
-    {
-        _context = context;
-        _dateTimeProvider = dateTimeProvider;
-    }
-
     public Task<UserSettings> GetSettingsAsync(Guid userId, CancellationToken ct = default)
     {
-        return _context.Users
+        return context.Users
             .Where(x => x.Id == userId)
             .Select(x => new UserSettings(
                 x.WordsTemplateMode,
-                x.ShowWordsMode,
-                _dateTimeProvider.UtcNow - x.LastTranslationsOpenAt > _maxTimeToNotCountOpenedTranslationsTwice
-                    ? null 
-                    : x.LastOpenedTranslationIds))
+                x.ShowWordsMode))
             .FirstAsyncEF(ct);
     }
 
@@ -62,24 +48,12 @@ public class UserRepository : IUserRepository
         }
     }
 
-    public Task UpdateLastViewedTranslationsAsync(
-        Guid userId,
-        long[] wordTranslationIds,
-        CancellationToken ct = default)
-    {
-        return _context.Users
-            .Where(x => x.Id == userId)
-            .ExecuteUpdateAsync(u => u
-                .SetProperty(x => x.LastOpenedTranslationIds, wordTranslationIds)
-                .SetProperty(x => x.LastTranslationsOpenAt, _dateTimeProvider.UtcNow), ct);
-    }
-
     private Task ToggleWordsTemplateModeAsync(
         Guid userId,
         WordsTemplateMode flagToChange,
         CancellationToken ct = default)
     {
-        return _context.Users
+        return context.Users
             .Where(x => x.Id == userId)
             .UpdateAsync(x => new User
             {
@@ -89,7 +63,7 @@ public class UserRepository : IUserRepository
 
     private Task SetShowWordsModeAsync(Guid userId, ShowWordsMode value, CancellationToken ct = default)
     {
-        return _context.Users
+        return context.Users
             .Where(x => x.Id == userId)
             .ExecuteUpdateAsync(u => u
                 .SetProperty(x => x.ShowWordsMode, value), ct);

@@ -19,14 +19,4 @@ public class User : TelegramIdentityUser<Guid>
     public ShowWordsMode ShowWordsMode { get; set; }
     
     public ICollection<WordTranslationState> WordTranslationStates { get; set; }
-
-    /// <summary>
-    /// Last opened translation identifiers.
-    /// </summary>
-    public long[]? LastOpenedTranslationIds { get; set; }
-
-    /// <summary>
-    /// When translations have been opened last time.
-    /// </summary>
-    public DateTime? LastTranslationsOpenAt { get; set; }
 }

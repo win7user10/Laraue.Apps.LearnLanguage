@@ -1,14 +1,17 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
+using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories;
 
-public class WordsRepository(DatabaseContext context) : IWordsRepository
+public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTimeProvider)
+    : IWordsRepository
 {
+    private readonly TimeSpan _learnAttemptTime = new(1, 0, 0);
+    
     public Task ChangeWordLearnStateAsync(
         Guid userId,
         long wordTranslationId,
@@ -24,7 +27,7 @@ public class WordsRepository(DatabaseContext context) : IWordsRepository
                     UserId = userId,
                     LearnState = LearnState.None ^ flagToChange,
                     LearnedAt = flagToChange == LearnState.Learned
-                        ? DateTime.UtcNow
+                        ? dateTimeProvider.UtcNow
                         : null,
                     LearnAttempts = 1,
                 }, x => new WordTranslationState
@@ -32,7 +35,7 @@ public class WordsRepository(DatabaseContext context) : IWordsRepository
                     LearnState = x.LearnState ^ flagToChange,
                     LearnedAt = flagToChange == LearnState.Learned
                         ? (x.LearnState & LearnState.Learned) == 0
-                            ? DateTime.UtcNow
+                            ? dateTimeProvider.UtcNow
                             : null
                         : x.LearnedAt,
                 },
@@ -44,35 +47,44 @@ public class WordsRepository(DatabaseContext context) : IWordsRepository
                 ct);
     }
 
-    public async Task IncrementLearnAttemptsAsync(Guid userId, long[] wordTranslationIds, CancellationToken ct = default)
+    public Task IncrementLearnAttemptsIfRequiredAsync(Guid userId, long[] wordTranslationIds, CancellationToken ct = default)
     {
-        await using var transaction = await context.Database.BeginTransactionAsync(ct);
-        
-        var commonQuery = context.WordTranslationStates
-            .Where(x =>
-                wordTranslationIds.Contains(x.WordTranslationId)
-                && userId == x.UserId);
-
-        var existsStateIds = await commonQuery
-            .Select(x => x.WordTranslationId)
-            .ToListAsyncEF(ct);
-        
-        foreach (var wordTranslationId in wordTranslationIds.Except(existsStateIds))
+        if (wordTranslationIds.Length == 0)
         {
-            context.WordTranslationStates.Add(new WordTranslationState
-            {
-                LearnAttempts = 1,
-                WordTranslationId = wordTranslationId,
-                UserId = userId,
-            });
+            return Task.CompletedTask;
         }
         
-        await commonQuery
-            .Where(x => !x.LearnState.HasFlag(LearnState.Learned))
-            .ExecuteUpdateAsync(u =>
-                u.SetProperty(x => x.LearnAttempts, x => x.LearnAttempts + 1), ct);
-
-        await context.SaveChangesAsync(ct);
-        await transaction.CommitAsync(ct);
+        var now = dateTimeProvider.UtcNow;
+        
+        return context.WordTranslationStates
+            .ToLinqToDBTable()
+            .Merge()
+            .Using(wordTranslationIds
+                .Select(id => new
+                {
+                    UserId = userId,
+                    WordTranslationId = id
+                }))
+            .On(
+                x => new { x.UserId, x.WordTranslationId },
+                x => new { x.UserId, x.WordTranslationId })
+            .UpdateWhenMatched((o, n) => new WordTranslationState
+            {
+                LearnAttempts = o.LastOpenedAt - now >= _learnAttemptTime && (o.LearnState & LearnState.Learned) == 0
+                    ? o.LearnAttempts + 1
+                    : o.LearnAttempts,
+                LastOpenedAt = o.LastOpenedAt - now >= _learnAttemptTime && (o.LearnState & LearnState.Learned) == 0
+                    ? now
+                    : o.LastOpenedAt,
+            })
+            .InsertWhenNotMatched(e => new WordTranslationState
+            {
+                UserId = userId,
+                LearnAttempts = 1,
+                LastOpenedAt = dateTimeProvider.UtcNow,
+                WordTranslationId = e.WordTranslationId,
+                LearnState = LearnState.None
+            })
+            .MergeAsync(ct);
     }
 }
