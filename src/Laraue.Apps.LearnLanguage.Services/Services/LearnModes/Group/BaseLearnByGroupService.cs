@@ -1,6 +1,5 @@
 ﻿using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.Common.Extensions;
-using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Telegram.NET.Core.Extensions;
@@ -37,12 +36,13 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
     public async Task HandleDetailViewAsync(ReplyData replyData, TRequest request, CancellationToken ct = default)
     {
         await userRepository.UpdateViewSettings(replyData.UserId, request, ct);
-        if (request.LearnState is not null && request.OpenedWordTranslationId is not null)
+        if (request.OpenedWordTranslationId is not null)
         {
             await wordsRepository.ChangeWordLearnStateAsync(
                 replyData.UserId,
-                request.OpenedWordTranslationId.GetValueOrDefault(),
-                request.LearnState.GetValueOrDefault(),
+                request.OpenedWordTranslationId.Value,
+                request.IsLearned,
+                request.IsMarked,
                 ct);
         }
         
@@ -76,17 +76,15 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         if (words.TryGetOpenedWord(request.OpenedWordTranslationId, out var openedWord))
         {
             wordsWindow.SetOpenedTranslation(openedWord);
-            var isLearned = openedWord.LearnState.HasFlag(LearnState.Learned);
             var switchLearnStateButton = viewRoute
-                .WithQueryParameter(ParameterNames.LearnState, LearnState.Learned)
+                .WithQueryParameter(ParameterNames.LearnState, openedWord.LearnedAt is null)
                 .WithQueryParameter(ParameterNames.OpenedTranslationId, openedWord.TranslationId)
-                .ToInlineKeyboardButton(isLearned ? "Not learned ❌" : "Learned ✅");
+                .ToInlineKeyboardButton(openedWord.LearnedAt is not null ? "Not learned ❌" : "Learned ✅");
         
-            var isHard = openedWord.LearnState.HasFlag(LearnState.Hard);
             var switchIsHardButton = viewRoute
-                .WithQueryParameter(ParameterNames.LearnState, LearnState.Hard)
+                .WithQueryParameter(ParameterNames.MarkState, !openedWord.IsMarked)
                 .WithQueryParameter(ParameterNames.OpenedTranslationId, openedWord.TranslationId)
-                .ToInlineKeyboardButton(isHard ? "Easy " : "Hard 🧠");
+                .ToInlineKeyboardButton(openedWord.IsMarked ? "Drop mark" : "Add mark");
 
             wordsWindow.SetActionButtons(new[] { switchLearnStateButton, switchIsHardButton });
         }

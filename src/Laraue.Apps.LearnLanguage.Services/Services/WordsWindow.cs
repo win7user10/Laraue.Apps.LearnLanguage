@@ -94,7 +94,7 @@ public class WordsWindow(
         
         var reverseTranslationsButton = viewRoute
             .WithQueryParameter(ParameterNames.RevertTranslations, true)
-            .ToInlineKeyboardButton(areTranslationsReverted ? "W -> T" : "T -> W");
+            .ToInlineKeyboardButton(areTranslationsReverted ? "Word -> Translation" : "Translation -> Word");
 
         List<InlineKeyboardButton>? changeShowWordsModeButtons = null; 
         if (_useFilters)
@@ -104,7 +104,7 @@ public class WordsWindow(
             {
                 changeShowWordsModeButtons.Add(viewRoute
                     .WithQueryParameter(ParameterNames.ShowMode, ShowWordsMode.Hard)
-                    .ToInlineKeyboardButton("Filter: Hard 🔍"));
+                    .ToInlineKeyboardButton("Filter: Marked 🔍"));
             }
         
             if (userSettings.ShowWordsMode != ShowWordsMode.NotLearned)
@@ -137,12 +137,12 @@ public class WordsWindow(
                     msgBuilder.Append($" <b>({difficultyString})</b> ");
                 }
                 
-                if (x.LearnState.HasFlag(LearnState.Learned))
+                if (x.LearnedAt != null)
                 {
                     msgBuilder.Append('✅');
                 }
 
-                if (x.LearnState.HasFlag(LearnState.Hard))
+                if (x.IsMarked)
                 {
                     msgBuilder.Append("🧠");
                 }

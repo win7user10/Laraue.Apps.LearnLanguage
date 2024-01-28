@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
-using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 using Laraue.Core.DateTime.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
@@ -62,7 +61,6 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
         
         Assert.Equal(learnedAt, state.LearnedAt);
         Assert.Equal(_now, state.RepeatedAt);
-        Assert.Equal(LearnState.Learned, state.LearnState);
     }
     
     [Fact]
@@ -98,7 +96,6 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
         
         Assert.Equal(_now, state.LearnedAt);
         Assert.Null(state.RepeatedAt);
-        Assert.Equal(LearnState.Learned, state.LearnState);
     }
     
     [Fact]

@@ -1,5 +1,6 @@
 ﻿using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.Common.Extensions;
+using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
@@ -17,7 +18,9 @@ public class LearnRandomWordsService(
     ILearnRandomWordsRepository repository,
     ITelegramBotClient client,
     IUserRepository userRepository,
-    IWordsWindowFactory wordsWindowFactory)
+    IWordsRepository wordsRepository,
+    IWordsWindowFactory wordsWindowFactory,
+    DatabaseContext context)
     : ILearnRandomWordsService
 {
     public async Task SendRepeatingWindowAsync(ReplyData replyData, CancellationToken ct = default)
@@ -34,13 +37,17 @@ public class LearnRandomWordsService(
 
     public async Task HandleSuggestedWordAsync(ReplyData replyData, HandleWordRequest request, CancellationToken ct = default)
     {
+        // User pressed yes or no in suggested words window
         if (request.IsRemembered.HasValue)
         {
+            // After the word has been added, session may be started
             var repeatState = await repository.AddWordToSessionAsync(
                 request.SessionId, request.TranslationId, request.IsRemembered.Value, ct);
 
+            // Send the repeat mode window in the current mode state
             await SendRepeatingWindowAsync(replyData, repeatState, request.SessionId, ct);
         }
+        // User pressed show translation in suggested words window
         else if (request.ShowTranslation ?? false)
         {
             await SendWordWithTranslationAsync(
@@ -57,11 +64,7 @@ public class LearnRandomWordsService(
             case RepeatState.Active:
                 return HandleRepeatingWindowWordsViewAsync(
                     replyData,
-                    sessionId,
-                    new ChangeUserSettings(),
-                    default,
-                    default,
-                    default, 
+                    new LearnRequest { SessionId = sessionId },
                     ct);
         }
 
@@ -70,42 +73,59 @@ public class LearnRandomWordsService(
 
     private async Task SendSuggestedWordAsync(ReplyData replyData, long sessionId, CancellationToken ct = default)
     {
+        await using var transaction = await context.Database.BeginTransactionAsync(ct);
+
         var word = await repository.GetNextRepeatWordAsync(sessionId, NextWordPreference.Random, ct);
+        await wordsRepository.IncrementLearnAttemptsIfRequiredAsync(replyData.UserId, [word.Id], ct);
+        
+        await transaction.CommitAsync(ct);
+        
         await SendSuggestedWordAsync(word, replyData, sessionId, false, ct);
     }
     
     public async Task HandleRepeatingWindowWordsViewAsync(
         ReplyData replyData,
-        long sessionId,
-        ChangeUserSettings request,
-        int page,
-        long? openedTranslationId,
-        bool rememberState,
+        LearnRequest request,
         CancellationToken ct = default)
     {
         await userRepository.UpdateViewSettings(replyData.UserId, request, ct);
-        if (rememberState && openedTranslationId is not null)
+
+        if (request is { OpenedWordTranslationId: not null })
         {
-            await repository.LearnWordAsync(
-                sessionId,
-                openedTranslationId.GetValueOrDefault(),
+            await using var transaction = await context.Database.BeginTransactionAsync(ct);
+            
+            await wordsRepository.ChangeWordLearnStateAsync(
+                replyData.UserId,
+                request.OpenedWordTranslationId.Value,
+                request.IsLearned,
+                request.IsMarked,
                 ct);
+            
+            if (request is { IsLearned: true })
+            {
+                await repository.LearnWordAsync(
+                    request.SessionId,
+                    request.OpenedWordTranslationId.GetValueOrDefault(),
+                    ct);
+            }
+
+            await transaction.CommitAsync(ct);
         }
         
         var words = await repository.GetUnlearnedSessionWordsAsync(
-            sessionId,
-            new PaginatedRequest(page, Constants.PaginationCount),
+            request.SessionId,
+            new PaginatedRequest(request.Page, Constants.PaginationCount),
             ct);
         
         if (words.Data.Count == 0)
         {
-            await SendFinishSessionWindowAsync(replyData, sessionId, ct);
+            await SendFinishSessionWindowAsync(replyData, request.SessionId, ct);
             return;
         }
         
         var userSettings = await userRepository.GetSettingsAsync(replyData.UserId, ct);
         var currentRoute = new RoutePathBuilder(TelegramRoutes.RepeatWindowWordsView)
-            .WithQueryParameter(ParameterNames.SessionId, sessionId)
+            .WithQueryParameter(ParameterNames.SessionId, request.SessionId)
             .Freeze();
         
         var wordsWindow = wordsWindowFactory
@@ -116,7 +136,7 @@ public class LearnRandomWordsService(
             .SetWindowTitle("Repeat mode")
             .SetBackButton(MessageBuilderExtensions.MainMenuButton);
         
-        if (words.TryGetOpenedWord(openedTranslationId, out var openedWord))
+        if (words.TryGetOpenedWord(request.OpenedWordTranslationId, out var openedWord))
         {
             wordsWindow.SetOpenedTranslation(openedWord);
             var switchLearnStateButton = currentRoute

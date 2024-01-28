@@ -1,5 +1,4 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess;
-using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
@@ -24,7 +23,7 @@ public class StatsRepository : IStatsRepository
         
         var learnedCount = await _context.WordTranslationStates
             .Where(x => x.UserId == userId)
-            .Where(x => (x.LearnState & LearnState.Learned) != 0)
+            .Where(x => x.LearnedAt != null)
             .CountAsyncLinqToDB(ct);
 
         var statByCefrLevel = await _context.WordTranslations

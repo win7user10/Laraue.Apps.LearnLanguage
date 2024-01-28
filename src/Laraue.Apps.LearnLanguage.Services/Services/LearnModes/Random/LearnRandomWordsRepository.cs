@@ -1,7 +1,6 @@
 ﻿using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
-using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
@@ -239,7 +238,7 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
                 x.relation.WordTranslation.Word.Name,
                 x.relation.WordTranslation.Translation,
                 request.Page * request.PerPage + i + 1,
-                x.state.LearnState,
+                x.state.IsMarked,
                 x.relation.WordTranslation.Difficulty,
                 x.relation.WordTranslationId,
                 x.relation.WordTranslation.Word.WordCefrLevel!.Name,
@@ -260,12 +259,10 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
                 {
                     WordTranslationId = translationId,
                     UserId = userId,
-                    LearnState = LearnState.Learned,
                     LearnedAt = now,
                     LearnAttempts = 1,
                 }, x => new WordTranslationState
                 {
-                    LearnState = x.LearnState | LearnState.Learned,
                     LearnedAt = x.LearnedAt ?? now,
                     RepeatedAt = x.LearnedAt != null ? now : null
                 },

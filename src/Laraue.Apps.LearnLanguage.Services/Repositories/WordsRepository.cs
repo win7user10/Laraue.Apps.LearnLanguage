@@ -1,6 +1,5 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
-using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
@@ -15,9 +14,15 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
     public Task ChangeWordLearnStateAsync(
         Guid userId,
         long wordTranslationId,
-        LearnState flagToChange,
+        bool? isLearned,
+        bool? isMarked,
         CancellationToken ct = default)
     {
+        if (!isLearned.HasValue && !isMarked.HasValue)
+        {
+            return Task.CompletedTask;
+        }
+        
         return context.WordTranslationStates
             .ToLinqToDBTable()
             .InsertOrUpdateAsync(
@@ -25,19 +30,19 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                 {
                     WordTranslationId = wordTranslationId,
                     UserId = userId,
-                    LearnState = LearnState.None ^ flagToChange,
-                    LearnedAt = flagToChange == LearnState.Learned
+                    LearnedAt = isLearned.GetValueOrDefault()
                         ? dateTimeProvider.UtcNow
                         : null,
+                    IsMarked = isMarked.GetValueOrDefault(),
                     LearnAttempts = 1,
                 }, x => new WordTranslationState
                 {
-                    LearnState = x.LearnState ^ flagToChange,
-                    LearnedAt = flagToChange == LearnState.Learned
-                        ? (x.LearnState & LearnState.Learned) == 0
-                            ? dateTimeProvider.UtcNow
+                    LearnedAt = isLearned.HasValue
+                        ? isLearned.Value
+                            ? x.LearnedAt ?? dateTimeProvider.UtcNow
                             : null
                         : x.LearnedAt,
+                    IsMarked = isMarked ?? x.IsMarked
                 },
                 () => new WordTranslationState
                 {
@@ -70,10 +75,10 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                 x => new { x.UserId, x.WordTranslationId })
             .UpdateWhenMatched((o, n) => new WordTranslationState
             {
-                LearnAttempts = o.LastOpenedAt - now >= _learnAttemptTime && (o.LearnState & LearnState.Learned) == 0
+                LearnAttempts = o.LastOpenedAt - now >= _learnAttemptTime && o.LearnedAt == null
                     ? o.LearnAttempts + 1
                     : o.LearnAttempts,
-                LastOpenedAt = o.LastOpenedAt - now >= _learnAttemptTime && (o.LearnState & LearnState.Learned) == 0
+                LastOpenedAt = o.LastOpenedAt - now >= _learnAttemptTime
                     ? now
                     : o.LastOpenedAt,
             })
@@ -83,7 +88,6 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                 LearnAttempts = 1,
                 LastOpenedAt = dateTimeProvider.UtcNow,
                 WordTranslationId = e.WordTranslationId,
-                LearnState = LearnState.None
             })
             .MergeAsync(ct);
     }

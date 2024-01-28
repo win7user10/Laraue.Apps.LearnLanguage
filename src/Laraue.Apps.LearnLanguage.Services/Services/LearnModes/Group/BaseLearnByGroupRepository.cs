@@ -30,13 +30,13 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         if (filter.HasFlag(ShowWordsMode.Hard))
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-            dbQuery = dbQuery.Where(x => x.state == null || (x.state.LearnState & LearnState.Hard) != 0);
+            dbQuery = dbQuery.Where(x => x.state.IsMarked);
         }
 
         if (filter.HasFlag(ShowWordsMode.NotLearned))
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-            dbQuery = dbQuery.Where(x => x.state == null || (x.state.LearnState & LearnState.Learned) == 0);
+            dbQuery = dbQuery.Where(x => x.state == null || x.state.LearnedAt == null);
         }
         
         return dbQuery
@@ -44,7 +44,7 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
                 x.translation.Word.Name,
                 x.translation.Translation,
                 request.Page * request.PerPage + i + 1,
-                x.state.LearnState,
+                x.state.IsMarked,
                 x.translation.Difficulty,
                 x.translation.Id,
                 x.translation.Word.WordCefrLevel!.Name,

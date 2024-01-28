@@ -1,6 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess.Enums;
-
-namespace Laraue.Apps.LearnLanguage.Services.Repositories;
+﻿namespace Laraue.Apps.LearnLanguage.Services.Repositories;
 
 public interface IWordsRepository
 {
@@ -11,7 +9,8 @@ public interface IWordsRepository
     Task ChangeWordLearnStateAsync(
         Guid userId,
         long wordTranslationId,
-        LearnState flagToChange,
+        bool? isLearned,
+        bool? isMarked,
         CancellationToken ct = default);
     
     /// <summary>

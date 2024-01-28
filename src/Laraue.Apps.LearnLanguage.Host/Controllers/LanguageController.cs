@@ -1,7 +1,4 @@
-using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.Services;
-using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
-using Laraue.Apps.LearnLanguage.Services.Services;
 using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 using Laraue.Telegram.NET.Abstractions.Request;
 using Laraue.Telegram.NET.Core.Routing;
@@ -29,20 +26,12 @@ public class LanguageController(ILearnRandomWordsService learnRandomWordsService
     [TelegramCallbackRoute(TelegramRoutes.RepeatWindowWordsView)]
     public Task SendRepeatingWindowsWordsAsync(
         RequestContext context,
-        [FromQuery] ChangeUserSettings request,
-        [FromQuery(ParameterNames.Page)] int page,
-        [FromQuery(ParameterNames.SessionId)] long sessionId,
-        [FromQuery(ParameterNames.OpenedTranslationId)] long? openedTranslationId,
-        [FromQuery(ParameterNames.RememberState)] bool rememberState,
+        [FromQuery] LearnRequest request,
         CancellationToken ct)
     {
         return learnRandomWordsService.HandleRepeatingWindowWordsViewAsync(
             ReplyData.FromRequest(context),
-            sessionId,
             request,
-            page,
-            openedTranslationId,
-            rememberState,
             ct);
     }
 }

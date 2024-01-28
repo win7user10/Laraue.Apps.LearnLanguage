@@ -1,6 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
-
-namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
+﻿namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 
 public interface ILearnRandomWordsService
 {
@@ -8,11 +6,7 @@ public interface ILearnRandomWordsService
     Task HandleSuggestedWordAsync(ReplyData replyData, HandleWordRequest request, CancellationToken ct = default);
     Task HandleRepeatingWindowWordsViewAsync(
         ReplyData replyData,
-        long sessionId,
-        ChangeUserSettings request,
-        int page,
-        long? openedTranslationId,
-        bool rememberState,
+        LearnRequest request,
         CancellationToken ct = default);
 }
 

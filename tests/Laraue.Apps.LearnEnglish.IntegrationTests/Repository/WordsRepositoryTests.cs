@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
-using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Core.DateTime.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
@@ -58,7 +57,6 @@ public class WordsRepositoryTests : TestWithDatabase
                 WordTranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeUpdated,
-                LearnState = LearnState.None
             });
             
             dbContext.WordTranslationStates.Add(new WordTranslationState
@@ -66,7 +64,7 @@ public class WordsRepositoryTests : TestWithDatabase
                 WordTranslationId = 2,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeUpdated,
-                LearnState = LearnState.Learned
+                LearnedAt = _now.AddHours(-1)
             });
 
             dbContext.WordTranslationStates.Add(new WordTranslationState
@@ -74,7 +72,6 @@ public class WordsRepositoryTests : TestWithDatabase
                 WordTranslationId = 3,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeNotUpdated,
-                LearnState = LearnState.None
             });
             
             dbContext.WordTranslationStates.Add(new WordTranslationState
@@ -82,7 +79,7 @@ public class WordsRepositoryTests : TestWithDatabase
                 WordTranslationId = 4,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeNotUpdated,
-                LearnState = LearnState.Learned
+                LearnedAt = _now.AddHours(-1)
             });
         
             await dbContext.SaveChangesAsync();
@@ -100,7 +97,7 @@ public class WordsRepositoryTests : TestWithDatabase
         Assert.Equal(1, states[0].LearnAttempts);
         Assert.Equal(_now, states[0].LastOpenedAt);
         Assert.Equal(0, states[1].LearnAttempts);
-        Assert.Equal(dateShouldBeUpdated, states[1].LastOpenedAt);
+        Assert.Equal(_now, states[1].LastOpenedAt);
         Assert.Equal(0, states[2].LearnAttempts);
         Assert.Equal(dateShouldBeNotUpdated, states[2].LastOpenedAt);
         Assert.Equal(0, states[3].LearnAttempts);
@@ -114,7 +111,7 @@ public class WordsRepositoryTests : TestWithDatabase
         await using var dbContext = GetDbContext();
         {
             // Act
-            await _repository.ChangeWordLearnStateAsync(Users.User1.Id, 1, LearnState.Learned);
+            await _repository.ChangeWordLearnStateAsync(Users.User1.Id, 1, true, null);
         }
         
         // Assert
@@ -124,7 +121,7 @@ public class WordsRepositoryTests : TestWithDatabase
         Assert.Equal(DateTime.MinValue, state.LastOpenedAt);
         Assert.Equal(Users.User1.Id, state.UserId);
         Assert.Equal(1, state.WordTranslationId);
-        Assert.Equal(LearnState.Learned, state.LearnState);
+        Assert.Equal(_now, state.LearnedAt);
     }
     
     [Fact]
@@ -137,14 +134,13 @@ public class WordsRepositoryTests : TestWithDatabase
             {
                 WordTranslationId = 1,
                 UserId = Users.User1.Id,
-                LearnState = LearnState.None,
                 LastOpenedAt = _now
             });
             
             await dbContext.SaveChangesAsync();
             
             // Act
-            await _repository.ChangeWordLearnStateAsync(Users.User1.Id, 1, LearnState.Learned);
+            await _repository.ChangeWordLearnStateAsync(Users.User1.Id, 1, true, null);
         }
         
         // Assert
@@ -152,6 +148,6 @@ public class WordsRepositoryTests : TestWithDatabase
         
         Assert.Equal(0, state.LearnAttempts);
         Assert.Equal(_now, state.LastOpenedAt);
-        Assert.Equal(LearnState.Learned, state.LearnState);
+        Assert.Equal(_now, state.LearnedAt);
     }
 }

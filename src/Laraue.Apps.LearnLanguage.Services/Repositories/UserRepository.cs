@@ -2,7 +2,6 @@
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
-using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +20,7 @@ public class UserRepository(DatabaseContext context) : IUserRepository
             .FirstAsyncEF(ct);
     }
 
-    public async Task UpdateViewSettings(Guid userId, ChangeUserSettings request, CancellationToken ct = default)
+    public async Task UpdateViewSettings(Guid userId, IChangeUserSettingsRequest request, CancellationToken ct = default)
     {
         if (request.ToggleShowTranslations)
         {

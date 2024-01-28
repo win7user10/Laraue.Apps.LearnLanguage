@@ -12,5 +12,5 @@ public interface IUserRepository
     /// <summary>
     /// Update passed set of settings.
     /// </summary>
-    Task UpdateViewSettings(Guid userId, ChangeUserSettings request, CancellationToken ct = default);
+    Task UpdateViewSettings(Guid userId, IChangeUserSettingsRequest request, CancellationToken ct = default);
 }
