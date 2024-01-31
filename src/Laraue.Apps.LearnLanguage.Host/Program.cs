@@ -1,3 +1,4 @@
+using System.Globalization;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Hangfire;
 using Hangfire.PostgreSql;
+using Laraue.Apps.LearnLanguage.Host;
 using Laraue.Apps.LearnLanguage.Services;
 using Laraue.Apps.LearnLanguage.Services.Jobs;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
@@ -21,6 +23,8 @@ using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Core.Middleware;
+using Laraue.Telegram.NET.Localization;
+using Laraue.Telegram.NET.Localization.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +33,12 @@ builder.Services
     .AddSingleton<ExceptionHandleMiddleware>()
     .AddTelegramCore(new TelegramBotClientOptions(builder.Configuration["Telegram:Token"]))
     .AddTelegramMiddleware<AutoCallbackResponseMiddleware>()
+    .AddTelegramRequestLocalization()
+    .Configure<TelegramRequestLocalizationOptions>(opt =>
+    {
+        opt.AvailableLanguages = [ "en", "ru" ];
+        opt.DefaultLanguage = "en";
+    })
     .AddTelegramAuthentication<User, Guid, RequestContext>()
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();

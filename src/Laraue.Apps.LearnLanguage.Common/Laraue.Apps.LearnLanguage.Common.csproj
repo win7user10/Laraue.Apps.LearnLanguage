@@ -7,8 +7,32 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Laraue.Telegram.NET.Core" Version="2.1.3" />
+    <PackageReference Include="Laraue.Telegram.NET.Core" Version="2.2.0" />
     <PackageReference Include="Laraue.Core.DateTime" Version="8.0.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\TimeSpanExtensions.ru.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TimeSpanExtensions.ru.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\TimeSpanExtensions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TimeSpanExtensions.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="Resources\TimeSpanExtensions.ru.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TimeSpanExtensions.ru.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\TimeSpanExtensions.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TimeSpanExtensions.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

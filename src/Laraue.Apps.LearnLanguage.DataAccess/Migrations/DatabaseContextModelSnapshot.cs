@@ -186,6 +186,10 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("telegram_id");
 
+                    b.Property<string>("TelegramLanguageCode")
+                        .HasColumnType("text")
+                        .HasColumnName("telegram_language_code");
+
                     b.Property<string>("TelegramUserName")
                         .HasColumnType("text")
                         .HasColumnName("telegram_user_name");
