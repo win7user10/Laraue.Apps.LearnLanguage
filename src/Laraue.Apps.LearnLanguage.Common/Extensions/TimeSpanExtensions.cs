@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 namespace Laraue.Apps.LearnLanguage.Common.Extensions;
 
@@ -11,7 +12,7 @@ public static class TimeSpanExtensions
         if (timeSpan.Days > 0)
         {
             sb.Append(timeSpan.Days)
-                .Append(" day(s) ");
+                .Append($" {Resources.TimeSpanExtensions.day_s_} ");
         }
         
         sb.Append(timeSpan.Hours)
