@@ -5,8 +5,8 @@ namespace Laraue.Apps.LearnLanguage.Services;
 
 public static class MessageBuilderExtensions
 {
-    public static readonly InlineKeyboardButton MainMenuButton =
-        InlineKeyboardButton.WithCallbackData("Menu", TelegramRoutes.Menu);
+    public static InlineKeyboardButton MainMenuButton =>
+        InlineKeyboardButton.WithCallbackData(Resources.Buttons.Menu, TelegramRoutes.Menu);
     
     public static TelegramMessageBuilder AddMainMenuButton(this TelegramMessageBuilder messageBuilder)
     {

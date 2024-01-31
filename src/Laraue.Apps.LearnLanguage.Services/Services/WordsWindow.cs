@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Laraue.Apps.LearnLanguage.Common;
-using Laraue.Apps.LearnLanguage.Common.Extensions;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
@@ -175,8 +174,8 @@ public class WordsWindow(
                 
             if (_openedTranslation.LearnedAt is not null)
             {
-                var daysLearnedAgo = (DateTime.UtcNow - _openedTranslation.LearnedAt.Value).ToReadableString();
-                tmb.AppendRow($"Learned: {daysLearnedAgo} day(s) ago");
+                var daysLearnedAgo = (DateTime.UtcNow - _openedTranslation.LearnedAt.Value);
+                tmb.AppendRow($"Learned: {daysLearnedAgo:N0} day(s) ago");
             }
                 
             if (_openedTranslation.RepeatedAt is not null)

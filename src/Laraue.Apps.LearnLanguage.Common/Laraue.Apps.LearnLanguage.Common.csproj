@@ -15,6 +15,7 @@
     <EmbeddedResource Update="Resources\TimeSpanExtensions.ru.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>TimeSpanExtensions.ru.Designer.cs</LastGenOutput>
+      <DependentUpon>TimeSpanExtensions.resx</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\TimeSpanExtensions.resx">
       <Generator>ResXFileCodeGenerator</Generator>

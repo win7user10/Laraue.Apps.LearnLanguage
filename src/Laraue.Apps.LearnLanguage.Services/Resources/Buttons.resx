@@ -18,16 +18,22 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="days" xml:space="preserve">
-        <value>day(s)</value>
+    <data name="Menu" xml:space="preserve">
+        <value>Menu</value>
     </data>
-    <data name="hours" xml:space="preserve">
-        <value>hour(s)</value>
+    <data name="Stat" xml:space="preserve">
+        <value>Open stat</value>
     </data>
-    <data name="minutes" xml:space="preserve">
-        <value>minute(s)</value>
+    <data name="Mode_Random" xml:space="preserve">
+        <value>Random learning</value>
     </data>
-    <data name="seconds" xml:space="preserve">
-        <value>second(s)</value>
+    <data name="Mode_CefrLevel" xml:space="preserve">
+        <value>CEFR level</value>
+    </data>
+    <data name="Mode_Topic" xml:space="preserve">
+        <value>By topic</value>
+    </data>
+    <data name="Mode_Sequential" xml:space="preserve">
+        <value>Sequential learning</value>
     </data>
 </root>

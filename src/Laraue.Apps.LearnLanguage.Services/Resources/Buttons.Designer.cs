@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Laraue.Apps.LearnLanguage.Common.Resources {
+namespace Laraue.Apps.LearnLanguage.Services.Resources {
     using System;
     
     
@@ -21,14 +21,14 @@ namespace Laraue.Apps.LearnLanguage.Common.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class TimeSpanExtensions_ru {
+    internal class Buttons {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal TimeSpanExtensions_ru() {
+        internal Buttons() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace Laraue.Apps.LearnLanguage.Common.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Common.Resources.TimeSpanExtensions.ru", typeof(TimeSpanExtensions_ru).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.Buttons", typeof(Buttons).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,38 +60,56 @@ namespace Laraue.Apps.LearnLanguage.Common.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to день/дня(ей).
+        ///   Looks up a localized string similar to Menu.
         /// </summary>
-        internal static string days {
+        internal static string Menu {
             get {
-                return ResourceManager.GetString("days", resourceCulture);
+                return ResourceManager.GetString("Menu", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to часа(ов).
+        ///   Looks up a localized string similar to CEFR level.
         /// </summary>
-        internal static string hours {
+        internal static string Mode_CefrLevel {
             get {
-                return ResourceManager.GetString("hours", resourceCulture);
+                return ResourceManager.GetString("Mode_CefrLevel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to минут(ы).
+        ///   Looks up a localized string similar to Random learning.
         /// </summary>
-        internal static string minutes {
+        internal static string Mode_Random {
             get {
-                return ResourceManager.GetString("minutes", resourceCulture);
+                return ResourceManager.GetString("Mode_Random", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to секунд(ы).
+        ///   Looks up a localized string similar to Sequential learning.
         /// </summary>
-        internal static string seconds {
+        internal static string Mode_Sequential {
             get {
-                return ResourceManager.GetString("seconds", resourceCulture);
+                return ResourceManager.GetString("Mode_Sequential", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By topic.
+        /// </summary>
+        internal static string Mode_Topic {
+            get {
+                return ResourceManager.GetString("Mode_Topic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open stat.
+        /// </summary>
+        internal static string Stat {
+            get {
+                return ResourceManager.GetString("Stat", resourceCulture);
             }
         }
     }

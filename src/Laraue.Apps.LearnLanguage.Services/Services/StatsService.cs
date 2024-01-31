@@ -1,5 +1,6 @@
 ﻿using Laraue.Apps.LearnLanguage.Common.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
+using Laraue.Apps.LearnLanguage.Services.Resources;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Utils;
 using Microsoft.Extensions.Logging;
@@ -114,34 +115,33 @@ public class StatsService(
     public Task SendMenuAsync(ReplyData replyData, CancellationToken ct = default)
     {
         var tmb = new TelegramMessageBuilder()
-            .AppendRow("Please select the action")
+            .AppendRow(Phrases.SelectMode)
             .AppendRow()
-            .AppendRow("<b>Random learning</b> allows to learn words in random order")
+            .AppendRow($"<b>{Buttons.Mode_Random}</b> - {Phrases.Mode_Random_Description}")
             .AppendRow()
-            .Append("<b>Learning by CEFR level</b> allows to learn words by Common European Framework")
-            .AppendRow(" of Reference for Languages, e.g. A1, A2 etc.")
+            .AppendRow($"<b>{Buttons.Mode_CefrLevel}</b> - {Phrases.Mode_CefrLevel_Description}")
             .AppendRow()
-            .AppendRow("<b>Sequential learning</b> allows to learn words alphabetically from A to Z")
+            .AppendRow($"<b>{Buttons.Mode_Sequential}</b> - {Phrases.Mode_Sequential_Description}")
             .AppendRow()
-            .AppendRow("<b>Learning by topic</b> allows to learn words by the specified category: family, body etc.")
+            .AppendRow($"<b>{Buttons.Mode_Topic}</b> - {Phrases.Mode_Topic_Description}")
             .AddInlineKeyboardButtons(new[]
             {
                 InlineKeyboardButton.WithCallbackData(
-                    "Random learning", TelegramRoutes.RepeatWindow),
+                    Buttons.Mode_Random, TelegramRoutes.RepeatWindow),
             })
             .AddInlineKeyboardButtons(new[]
             {
                 InlineKeyboardButton.WithCallbackData(
-                    "By CEFR level", TelegramRoutes.ListGroupsByCefrLevel),
+                    Buttons.Mode_CefrLevel, TelegramRoutes.ListGroupsByCefrLevel),
                 InlineKeyboardButton.WithCallbackData(
-                    "By topic", TelegramRoutes.ListGroupsByTopic),
+                    Buttons.Mode_Topic, TelegramRoutes.ListGroupsByTopic),
                 InlineKeyboardButton.WithCallbackData(
-                    "Sequential learning", TelegramRoutes.ListGroupsByFirstLetter),
+                    Buttons.Mode_Sequential, TelegramRoutes.ListGroupsByFirstLetter),
             })
             .AddInlineKeyboardButtons(new[]
             {
                 InlineKeyboardButton.WithCallbackData(
-                    "See stat", TelegramRoutes.Stat)
+                    Buttons.Stat, TelegramRoutes.Stat)
             });
 
         return client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);

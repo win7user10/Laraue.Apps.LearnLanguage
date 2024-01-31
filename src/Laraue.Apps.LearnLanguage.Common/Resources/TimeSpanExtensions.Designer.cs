@@ -62,9 +62,36 @@ namespace Laraue.Apps.LearnLanguage.Common.Resources {
         /// <summary>
         ///   Looks up a localized string similar to day(s).
         /// </summary>
-        internal static string day_s_ {
+        internal static string days {
             get {
-                return ResourceManager.GetString("day(s)", resourceCulture);
+                return ResourceManager.GetString("days", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to hour(s).
+        /// </summary>
+        internal static string hours {
+            get {
+                return ResourceManager.GetString("hours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to minute(s).
+        /// </summary>
+        internal static string minutes {
+            get {
+                return ResourceManager.GetString("minutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to second(s).
+        /// </summary>
+        internal static string seconds {
+            get {
+                return ResourceManager.GetString("seconds", resourceCulture);
             }
         }
     }
