@@ -115,24 +115,24 @@ public class StatsService(
     public Task SendMenuAsync(ReplyData replyData, CancellationToken ct = default)
     {
         var tmb = new TelegramMessageBuilder()
-            .AppendRow(Phrases.SelectMode)
+            .AppendRow(Mode.SelectMode)
             .AppendRow()
-            .AppendRow($"<b>{Buttons.Mode_Random}</b> - {Phrases.Mode_Random_Description}")
+            .AppendRow($"<b>{RandomMode.ButtonName}</b> - {RandomMode.Description}")
             .AppendRow()
-            .AppendRow($"<b>{Buttons.Mode_CefrLevel}</b> - {Phrases.Mode_CefrLevel_Description}")
+            .AppendRow($"<b>{GroupMode.CefrLevel_ButtonName}</b> - {GroupMode.CefrLevel_Description}")
             .AppendRow()
-            .AppendRow($"<b>{Buttons.Mode_Sequential}</b> - {Phrases.Mode_Sequential_Description}")
+            .AppendRow($"<b>{Buttons.Mode_Sequential}</b> - {GroupMode.Sequential_Description}")
             .AppendRow()
-            .AppendRow($"<b>{Buttons.Mode_Topic}</b> - {Phrases.Mode_Topic_Description}")
+            .AppendRow($"<b>{Buttons.Mode_Topic}</b> - {GroupMode.Topics_Description}")
             .AddInlineKeyboardButtons(new[]
             {
                 InlineKeyboardButton.WithCallbackData(
-                    Buttons.Mode_Random, TelegramRoutes.RepeatWindow),
+                    RandomMode.ButtonName, TelegramRoutes.RepeatWindow),
             })
             .AddInlineKeyboardButtons(new[]
             {
                 InlineKeyboardButton.WithCallbackData(
-                    Buttons.Mode_CefrLevel, TelegramRoutes.ListGroupsByCefrLevel),
+                    GroupMode.CefrLevel_ButtonName, TelegramRoutes.ListGroupsByCefrLevel),
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.Mode_Topic, TelegramRoutes.ListGroupsByTopic),
                 InlineKeyboardButton.WithCallbackData(

@@ -18,19 +18,19 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="SelectMode" xml:space="preserve">
-        <value>Please select the mode</value>
+    <data name="CefrLevel_Title" xml:space="preserve">
+        <value>Mode: By CEFR Level</value>
     </data>
-    <data name="Mode_Random_Description" xml:space="preserve">
-        <value>learn words in random order</value>
+    <data name="CefrLevel_ButtonName" xml:space="preserve">
+        <value>CEFR level</value>
     </data>
-    <data name="Mode_Sequential_Description" xml:space="preserve">
+    <data name="CefrLevel_Description" xml:space="preserve">
+        <value>learn words by Common European Framework of Reference for Languages, e.g. A1, A2, B1 etc.</value>
+    </data>
+    <data name="Sequential_Description" xml:space="preserve">
         <value>learn words alphabetically from A to Z</value>
     </data>
-    <data name="Mode_Topic_Description" xml:space="preserve">
+    <data name="Topics_Description" xml:space="preserve">
         <value>learn words by the specified category: family, body etc.</value>
-    </data>
-    <data name="Mode_CefrLevel_Description" xml:space="preserve">
-        <value>learn words by Common European Framework of Reference for Languages, e.g. A1, A2, B1 etc.</value>
     </data>
 </root>

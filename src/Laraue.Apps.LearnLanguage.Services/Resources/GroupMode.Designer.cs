@@ -21,14 +21,14 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Phrases {
+    internal class GroupMode {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Phrases() {
+        internal GroupMode() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.Phrases", typeof(Phrases).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.GroupMode", typeof(GroupMode).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,47 +60,47 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to learn words by Common European Framework of Reference for Languages, e.g. A1, A2, B1 etc..
+        ///   Looks up a localized string similar to CEFR level.
         /// </summary>
-        internal static string Mode_CefrLevel_Description {
+        internal static string CefrLevel_ButtonName {
             get {
-                return ResourceManager.GetString("Mode_CefrLevel_Description", resourceCulture);
+                return ResourceManager.GetString("CefrLevel_ButtonName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to learn words in random order.
+        ///   Looks up a localized string similar to learn words by Common European Framework of Reference for Languages, e.g. A1, A2, B1 etc..
         /// </summary>
-        internal static string Mode_Random_Description {
+        internal static string CefrLevel_Description {
             get {
-                return ResourceManager.GetString("Mode_Random_Description", resourceCulture);
+                return ResourceManager.GetString("CefrLevel_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mode: By CEFR Level.
+        /// </summary>
+        internal static string CefrLevel_Title {
+            get {
+                return ResourceManager.GetString("CefrLevel_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to learn words alphabetically from A to Z.
         /// </summary>
-        internal static string Mode_Sequential_Description {
+        internal static string Sequential_Description {
             get {
-                return ResourceManager.GetString("Mode_Sequential_Description", resourceCulture);
+                return ResourceManager.GetString("Sequential_Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to learn words by the specified category: family, body etc..
         /// </summary>
-        internal static string Mode_Topic_Description {
+        internal static string Topics_Description {
             get {
-                return ResourceManager.GetString("Mode_Topic_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Please select the mode.
-        /// </summary>
-        internal static string SelectMode {
-            get {
-                return ResourceManager.GetString("SelectMode", resourceCulture);
+                return ResourceManager.GetString("Topics_Description", resourceCulture);
             }
         }
     }

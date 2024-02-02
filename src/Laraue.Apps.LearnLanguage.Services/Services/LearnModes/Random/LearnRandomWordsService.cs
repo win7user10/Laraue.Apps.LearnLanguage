@@ -5,6 +5,7 @@ using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+using Laraue.Apps.LearnLanguage.Services.Resources;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Utils;
@@ -133,7 +134,7 @@ public class LearnRandomWordsService(
                 words: words,
                 userSettings: userSettings,
                 viewRoute: currentRoute)
-            .SetWindowTitle("Repeat mode")
+            .SetWindowTitle(RandomMode.Title)
             .SetBackButton(MessageBuilderExtensions.MainMenuButton);
         
         if (words.TryGetOpenedWord(request.OpenedWordTranslationId, out var openedWord))
@@ -158,15 +159,18 @@ public class LearnRandomWordsService(
         var info = await repository.GetSessionInfoAsync(sessionId, ct);
 
         var tmb = new TelegramMessageBuilder()
-            .AppendRow("<b>Repeat session finished</b>")
+            .AppendRow($"<b>{RandomMode.SessionFinished}</b>")
             .AppendRow()
-            .AppendRow($"<b>{info.WordsAddedToRepeatCount}</b> words remembered")
+            .AppendRow(string.Format(RandomMode.WordsRemembered, $"<b>{info.WordsAddedToRepeatCount}</b>") )
             .AppendRow()
-            .AppendRow($"Time spent: {(info.FinishedAt - info.StartedAt).GetValueOrDefault().ToReadableString()}");
+            .AppendRow(string
+                .Format(
+                    RandomMode.TimeSpent,
+                    (info.FinishedAt - info.StartedAt).GetValueOrDefault().ToReadableString()));
 
         tmb.AddInlineKeyboardButtons(new[]
         {
-            InlineKeyboardButton.WithCallbackData("Continue", TelegramRoutes.RepeatWindow),
+            InlineKeyboardButton.WithCallbackData(RandomMode.Continue, TelegramRoutes.RepeatWindow),
         });
         
         await client.EditMessageTextAsync(replyData, tmb, parseMode: ParseMode.Html, cancellationToken: ct);
@@ -197,24 +201,29 @@ public class LearnRandomWordsService(
             .WithQueryParameter(nameof(HandleWordRequest.TranslationId), word.Id);
         
         handleRoute.Freeze();
-        
+
         var tmb = new TelegramMessageBuilder()
-            .AppendRow("<b>Random learning mode</>")
+            .AppendRow($"<b>{RandomMode.Title}</b>")
             .AppendRow()
-            .AppendRow($"Collected <b>{session.WordsAddedToRepeatCount}/{Constants.RepeatModeGroupSize}</b>" +
-                       $" new or forgotten words to learn");
+            .AppendRow(string
+                .Format(
+                    RandomMode.CollectedWords,
+                    $"<b>{session.WordsAddedToRepeatCount}/{Constants.RepeatModeGroupSize}</b>"));
 
         if (session.WordsRememberedCount > 0)
         {
-            tmb.AppendRow($"Remembered words - <b>{session.WordsRememberedCount}/{sessionWordsCount}</b>");
+            tmb.AppendRow(
+                string.Format(
+                    RandomMode.RememberedWords,
+                    $"<b>{session.WordsRememberedCount}/{sessionWordsCount}</b>"));
         }
+
+        var doYouKnowPhrase = word.LearnedAt is not null
+            ? RandomMode.DoYouRememberWord
+            : RandomMode.DoYouKnowWord;
         
         tmb.AppendRow()
-            .Append(word.LearnedAt is not null
-                ? $"Do your steel remember the word"
-                : $"Do your know the word");
-
-        tmb.Append($" <b>{word.Name}");
+            .Append(string.Format(doYouKnowPhrase, $"<b>{word.Name}"));
         
         var difficultyString = CommonStrings.GetDifficultyString(word.Difficulty, word.CefrLevel);
         if (difficultyString is not null)
@@ -231,25 +240,25 @@ public class LearnRandomWordsService(
             {
                 tmb
                     .AppendRow()
-                    .AppendRow($"Topic: {word.Topic}");
+                    .AppendRow(string.Format(Mode.Topic, word.Topic));
             }
         }
         else
         {
             var showTranslationsButton = handleRoute
                 .WithQueryParameter(nameof(HandleWordRequest.ShowTranslation), true)
-                .ToInlineKeyboardButton("See translation 👁");
+                .ToInlineKeyboardButton(Buttons.SeeTranslation);
         
             tmb.AddInlineKeyboardButtons(new[] { showTranslationsButton });
         }
 
         var yesButton = handleRoute
             .WithQueryParameter(nameof(HandleWordRequest.IsRemembered), true)
-            .ToInlineKeyboardButton("Yes");
+            .ToInlineKeyboardButton(RandomMode.Yes);
         
         var noButton = handleRoute
             .WithQueryParameter(nameof(HandleWordRequest.IsRemembered), false)
-            .ToInlineKeyboardButton("No");
+            .ToInlineKeyboardButton(RandomMode.No);
         
         tmb.AddInlineKeyboardButtons(new[] { yesButton, noButton });
         tmb.AddMainMenuButton();

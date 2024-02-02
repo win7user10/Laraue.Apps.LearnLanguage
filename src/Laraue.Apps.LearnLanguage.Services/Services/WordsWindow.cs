@@ -3,6 +3,7 @@ using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+using Laraue.Apps.LearnLanguage.Services.Resources;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
@@ -90,7 +91,7 @@ public class WordsWindow(
         
         var toggleTranslationsButton = viewRoute
             .WithQueryParameter(ParameterNames.ToggleTranslations, true)
-            .ToInlineKeyboardButton(areTranslationHidden ? "Show translations 👁" : "Hide translations 🙈");
+            .ToInlineKeyboardButton(areTranslationHidden ? Mode.ShowTranslations : Mode.HideTranslations);
         
         var reverseTranslationsButton = viewRoute
             .WithQueryParameter(ParameterNames.RevertTranslations, true)
@@ -174,7 +175,7 @@ public class WordsWindow(
                 
             if (_openedTranslation.LearnedAt is not null)
             {
-                var daysLearnedAgo = (DateTime.UtcNow - _openedTranslation.LearnedAt.Value);
+                var daysLearnedAgo = (DateTime.UtcNow - _openedTranslation.LearnedAt.Value).TotalDays;
                 tmb.AppendRow($"Learned: {daysLearnedAgo:N0} day(s) ago");
             }
                 

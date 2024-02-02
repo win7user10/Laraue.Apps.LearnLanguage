@@ -11,19 +11,19 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="SelectMode" xml:space="preserve">
-        <value>Выберите режим</value>
+    <data name="CefrLevel_Title" xml:space="preserve">
+        <value>Режим: Уровень CEFR</value>
     </data>
-    <data name="Mode_Random_Description" xml:space="preserve">
-        <value>слова в случайном порядке</value>
+    <data name="CefrLevel_ButtonName" xml:space="preserve">
+        <value>Уровень CEFR</value>
     </data>
-    <data name="Mode_Sequential_Description" xml:space="preserve">
+    <data name="CefrLevel_Description" xml:space="preserve">
+        <value>слова по уровню: A1, A2, B1 и т.д.</value>
+    </data>
+    <data name="Sequential_Description" xml:space="preserve">
         <value>слова в алфавитном порядке</value>
     </data>
-    <data name="Mode_Topic_Description" xml:space="preserve">
+    <data name="Topics_Description" xml:space="preserve">
         <value>слова по определенной тематике: семья, тело и т.д.</value>
-    </data>
-    <data name="Mode_CefrLevel_Description" xml:space="preserve">
-        <value>слова по уровню: A1, A2, B1 и т.д.</value>
     </data>
 </root>

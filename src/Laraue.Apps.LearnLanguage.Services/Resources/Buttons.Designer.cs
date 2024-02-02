@@ -69,24 +69,6 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CEFR level.
-        /// </summary>
-        internal static string Mode_CefrLevel {
-            get {
-                return ResourceManager.GetString("Mode_CefrLevel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Random learning.
-        /// </summary>
-        internal static string Mode_Random {
-            get {
-                return ResourceManager.GetString("Mode_Random", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Sequential learning.
         /// </summary>
         internal static string Mode_Sequential {
@@ -101,6 +83,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         internal static string Mode_Topic {
             get {
                 return ResourceManager.GetString("Mode_Topic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to See translation 👁.
+        /// </summary>
+        internal static string SeeTranslation {
+            get {
+                return ResourceManager.GetString("SeeTranslation", resourceCulture);
             }
         }
         

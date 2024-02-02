@@ -17,16 +17,13 @@
     <data name="Stat" xml:space="preserve">
         <value>Статистика</value>
     </data>
-    <data name="Mode_Random" xml:space="preserve">
-        <value>Случайный</value>
-    </data>
-    <data name="Mode_CefrLevel" xml:space="preserve">
-        <value>Уровень CEFR</value>
-    </data>
     <data name="Mode_Topic" xml:space="preserve">
         <value>Топики</value>
     </data>
     <data name="Mode_Sequential" xml:space="preserve">
         <value>Алфавит</value>
+    </data>
+    <data name="SeeTranslation" xml:space="preserve">
+        <value>Показать перевод 👁</value>
     </data>
 </root>

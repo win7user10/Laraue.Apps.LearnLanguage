@@ -1,4 +1,5 @@
 ﻿using Laraue.Apps.LearnLanguage.Services.Repositories;
+using Laraue.Apps.LearnLanguage.Services.Resources;
 using Telegram.Bot;
 
 namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.CefrLevel;
@@ -19,5 +20,5 @@ public sealed class LearnByCefrLevelService(
 {
     protected override string ListRoute => TelegramRoutes.ListGroupsByCefrLevel;
     protected override string DetailRoute => TelegramRoutes.DetailGroupByCefrLevel;
-    protected override string ModeName => "By CEFR Level";
+    protected override string ModeName => GroupMode.CefrLevel_Title;
 }

@@ -24,16 +24,13 @@
     <data name="Stat" xml:space="preserve">
         <value>Open stat</value>
     </data>
-    <data name="Mode_Random" xml:space="preserve">
-        <value>Random learning</value>
-    </data>
-    <data name="Mode_CefrLevel" xml:space="preserve">
-        <value>CEFR level</value>
-    </data>
     <data name="Mode_Topic" xml:space="preserve">
         <value>By topic</value>
     </data>
     <data name="Mode_Sequential" xml:space="preserve">
         <value>Sequential learning</value>
+    </data>
+    <data name="SeeTranslation" xml:space="preserve">
+        <value>See translation 👁</value>
     </data>
 </root>

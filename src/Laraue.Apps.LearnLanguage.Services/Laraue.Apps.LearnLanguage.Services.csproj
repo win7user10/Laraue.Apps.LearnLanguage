@@ -23,9 +23,17 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MessageBuilderExtensions.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Phrases.resx">
+    <EmbeddedResource Update="Resources\Mode.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Phrases.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\RandomMode.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RandomMode.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\GroupMode.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CefrLevelMode.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
@@ -35,10 +43,20 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Buttons.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\Phrases.Designer.cs">
+    <Compile Update="Resources\Mode.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Phrases.resx</DependentUpon>
+      <DependentUpon>Mode.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\RandomMode.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RandomMode.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\GroupMode.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GroupMode.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
