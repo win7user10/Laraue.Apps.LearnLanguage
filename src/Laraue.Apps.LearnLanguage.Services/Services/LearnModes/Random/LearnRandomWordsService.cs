@@ -127,6 +127,7 @@ public class LearnRandomWordsService(
         var userSettings = await userRepository.GetSettingsAsync(replyData.UserId, ct);
         var currentRoute = new RoutePathBuilder(TelegramRoutes.RepeatWindowWordsView)
             .WithQueryParameter(ParameterNames.SessionId, request.SessionId)
+            .WithQueryParameter(ParameterNames.Page, request.Page)
             .Freeze();
         
         var wordsWindow = wordsWindowFactory
@@ -141,7 +142,7 @@ public class LearnRandomWordsService(
         {
             wordsWindow.SetOpenedTranslation(openedWord);
             var switchLearnStateButton = currentRoute
-                .WithQueryParameter(ParameterNames.RememberState, true)
+                .WithQueryParameter(ParameterNames.LearnState, true)
                 .WithQueryParameter(ParameterNames.OpenedTranslationId, openedWord.TranslationId)
                 .ToInlineKeyboardButton(openedWord.LearnedAt is null ? "Learned ✅" : "Remembered");
 
