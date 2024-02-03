@@ -27,9 +27,12 @@ public class StatsService(
                 .DivideAndReturnPercent(userLearnedStat.TotalWordsCount);
             
             var messageBuilder = new TelegramMessageBuilder()
-                .AppendRow($"Yesterday you have been learned {userLearnedStat.LearnedYesterdayCount} words!")
-                .AppendRow($"Total stat is {userLearnedStat.LearnedTotalCount} / {userLearnedStat.TotalWordsCount} (+{learnedYesterdayPercent:F}%)")
-                .AddDeleteMessageButton("Okay");
+                .AppendRow(string.Format(Stats.YesterdayWereLearned, userLearnedStat.LearnedYesterdayCount))
+                .AppendRow(
+                    string.Format(
+                        Stats.TotalStatIs,
+                        $"{userLearnedStat.LearnedTotalCount} / {userLearnedStat.TotalWordsCount} (+{learnedYesterdayPercent:F}%)"))
+                .AddDeleteMessageButton(Buttons.Okay);
 
             try
             {
@@ -55,11 +58,11 @@ public class StatsService(
         var learnPercent = totalStat.LearnedCount.DivideAndReturnPercent(totalStat.TotalCount);
 
         var tmb = new TelegramMessageBuilder();
-        tmb.AppendRow("<b>Learn stat</b>")
+        tmb.AppendRow($"<b>{Stats.Title}</b>")
             .AppendRow()
-            .AppendRow($"Total learned {totalStat.LearnedCount}/{totalStat.TotalCount} ({learnPercent:F}%)")
+            .AppendRow(string.Format(Stats.TotalLearned, $"{totalStat.LearnedCount}/{totalStat.TotalCount} ({learnPercent:F}%)"))
             .AppendRow()
-            .AppendRow("Learned by CEFR level:");
+            .AppendRow(Stats.LearnedByCefrLevel);
 
         foreach (var cefrLevelStat in totalStat.ByCefrLevel)
         {
@@ -69,18 +72,23 @@ public class StatsService(
 
         tmb
             .AppendRow()
-            .AppendRow("Last activity:");
+            .AppendRow(Stats.LastActivity);
 
         if (dayLearnStatsCollection.Count == 0)
         {
-            tmb.AppendRow("N/A");
+            tmb.AppendRow(Stats.NA);
         }
         
         foreach (var dayStat in dayLearnStatsCollection)
         {
             var dayLearnPercent = dayStat.LearnedCount.DivideAndReturnPercent(totalStat.TotalCount);
-            tmb.Append($"{dayStat.Date.ToShortDateString()} - learned: {dayStat.LearnedCount}")
-                .AppendRow($", repeated: {dayStat.RepeatedCount} word(s) - {dayLearnPercent:F}%");
+            tmb.AppendRow(
+                string.Format(
+                    Stats.LastActivityRow,
+                    dayStat.Date.ToShortDateString(),
+                    dayStat.LearnedCount,
+                    dayStat.RepeatedCount,
+                    $"{dayLearnPercent:F}"));
         }
 
         tmb.AddMainMenuButton();
@@ -93,20 +101,20 @@ public class StatsService(
         var stats = await adminRepository.GetStatsAsync(ct);
         
         var tmb = new TelegramMessageBuilder();
-        tmb.AppendRow("<b>Admin stats for the last 7 days</b>");
+        tmb.AppendRow($"<b>{Stats.AdminStats_Title}</b>");
         tmb.AppendRow();
         
-        tmb.AppendRow($"<b>Total users: {stats.TotalUsersCount}</b>");
+        tmb.AppendRow($"<b>{string.Format(Stats.AdminStats_TotalUsers, stats.TotalUsersCount)}</b>");
         foreach (var registeredUsers in stats.RegisteredUsers)
         {
             tmb.AppendRow($"{registeredUsers.Date:d} (+{registeredUsers.Count})");
         }
         
         tmb.AppendRow();
-        tmb.AppendRow($"<b>Active users: {stats.ActiveUsersCount / (double)stats.ActiveUsers.Count:F} per day</b>");
+        tmb.AppendRow($"<b>{string.Format(Stats.AdminStats_ActiveUsers, stats.ActiveUsersCount / (double)stats.ActiveUsers.Count)}</b>");
         foreach (var activeUsers in stats.ActiveUsers)
         {
-            tmb.AppendRow($"{activeUsers.Date:d} - {activeUsers.Count} user(s)");
+            tmb.AppendRow($"{activeUsers.Date:d} - {activeUsers.Count}");
         }
         
         await client.SendTextMessageAsync(telegramId, tmb, parseMode: ParseMode.Html, cancellationToken: ct);

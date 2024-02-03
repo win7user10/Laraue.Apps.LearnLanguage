@@ -21,7 +21,6 @@ public class WordsWindow(
     UserSettings userSettings,
     RoutePathBuilder viewRoute,
     ITelegramBotClient client,
-    IUserRepository userRepository,
     IWordsRepository wordsRepository)
     : IWordsWindow
 {

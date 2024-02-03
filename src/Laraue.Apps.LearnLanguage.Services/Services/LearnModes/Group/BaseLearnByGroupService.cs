@@ -2,6 +2,7 @@
 using Laraue.Apps.LearnLanguage.Common.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
+using Laraue.Apps.LearnLanguage.Services.Resources;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Utils;
@@ -104,7 +105,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
 
         var tmb = new TelegramMessageBuilder()
             .AppendRow($"<b>{ModeName}</b>")
-            .AppendRow($"Learned words: {learnedCount}/{totalCount} ({completedPercent:F}%)")
+            .AppendRow(string.Format(GroupMode.LearnedWords, $"{learnedCount}/{totalCount} ({completedPercent:F}%)"))
             .AppendRow();
 
         var groupsWithNumber = groups
@@ -117,7 +118,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
                    $" ({group.Group.LearnedCount.DivideAndReturnPercent(group.Group.TotalCount):F}%)"));
         
         tmb.AppendRow()
-            .AppendRow("Open: ");
+            .AppendRow(GroupMode.Open);
 
         foreach (var groupsChunk in groupsWithNumber.Chunk(Constants.PaginationCount))
         {

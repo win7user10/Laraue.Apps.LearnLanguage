@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Hangfire;
 using Hangfire.PostgreSql;
+using Laraue.Apps.LearnLanguage.Host;
 using Laraue.Apps.LearnLanguage.Services;
 using Laraue.Apps.LearnLanguage.Services.Jobs;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
@@ -28,8 +29,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddSingleton<IDateTimeProvider, DateTimeProvider>()
-    .AddSingleton<ExceptionHandleMiddleware>()
     .AddTelegramCore(new TelegramBotClientOptions(builder.Configuration["Telegram:Token"]))
+    .AddTelegramMiddleware<HandleExceptionsMiddleware>()
     .AddTelegramMiddleware<AutoCallbackResponseMiddleware>()
     .AddTelegramRequestLocalization()
     .Configure<TelegramRequestLocalizationOptions>(opt =>

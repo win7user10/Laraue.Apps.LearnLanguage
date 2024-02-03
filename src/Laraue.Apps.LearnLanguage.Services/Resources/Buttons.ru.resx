@@ -26,4 +26,7 @@
     <data name="SeeTranslation" xml:space="preserve">
         <value>Показать перевод 👁</value>
     </data>
+    <data name="Okay" xml:space="preserve">
+        <value>Хорошо</value>
+    </data>
 </root>

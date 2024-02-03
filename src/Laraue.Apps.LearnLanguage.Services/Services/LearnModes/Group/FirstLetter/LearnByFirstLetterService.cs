@@ -1,4 +1,5 @@
 ﻿using Laraue.Apps.LearnLanguage.Services.Repositories;
+using Laraue.Apps.LearnLanguage.Services.Resources;
 using Telegram.Bot;
 
 namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.FirstLetter;
@@ -19,5 +20,5 @@ public sealed class LearnByFirstLetterService(
 {
     protected override string ListRoute => TelegramRoutes.ListGroupsByFirstLetter;
     protected override string DetailRoute => TelegramRoutes.DetailGroupByFirstLetter;
-    protected override string ModeName => "By first letter";
+    protected override string ModeName => GroupMode.Sequential_Title;
 }

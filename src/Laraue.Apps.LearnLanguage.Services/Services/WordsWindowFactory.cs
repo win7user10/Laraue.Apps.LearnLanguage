@@ -8,11 +8,10 @@ namespace Laraue.Apps.LearnLanguage.Services.Services;
 
 public class WordsWindowFactory(
     ITelegramBotClient client,
-    IUserRepository userRepository,
     IWordsRepository wordsRepository) : IWordsWindowFactory
 {
     public IWordsWindow Create(IFullPaginatedResult<LearningItem> words, UserSettings userSettings, RoutePathBuilder viewRoute)
     {
-        return new WordsWindow(words, userSettings, viewRoute, client, userRepository, wordsRepository);
+        return new WordsWindow(words, userSettings, viewRoute, client, wordsRepository);
     }
 }

@@ -26,4 +26,13 @@
     <data name="Topics_Description" xml:space="preserve">
         <value>слова по определенной тематике: семья, тело и т.д.</value>
     </data>
+    <data name="LearnedWords" xml:space="preserve">
+        <value>Выучено слов: {0}</value>
+    </data>
+    <data name="Open" xml:space="preserve">
+        <value>Открыть:</value>
+    </data>
+    <data name="Sequential_Title" xml:space="preserve">
+        <value>Режим: Алфавитный порядок</value>
+    </data>
 </root>

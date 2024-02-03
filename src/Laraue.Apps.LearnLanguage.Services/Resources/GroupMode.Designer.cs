@@ -87,11 +87,38 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Learned words: {0}.
+        /// </summary>
+        internal static string LearnedWords {
+            get {
+                return ResourceManager.GetString("LearnedWords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open:.
+        /// </summary>
+        internal static string Open {
+            get {
+                return ResourceManager.GetString("Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to learn words alphabetically from A to Z.
         /// </summary>
         internal static string Sequential_Description {
             get {
                 return ResourceManager.GetString("Sequential_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mode: Alphabet.
+        /// </summary>
+        internal static string Sequential_Title {
+            get {
+                return ResourceManager.GetString("Sequential_Title", resourceCulture);
             }
         }
         

@@ -21,14 +21,14 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Buttons {
+    internal class Stats {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Buttons() {
+        internal Stats() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.Buttons", typeof(Buttons).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.Stats", typeof(Stats).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,56 +60,101 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Menu.
+        ///   Looks up a localized string similar to Active users: {0} per day.
         /// </summary>
-        internal static string Menu {
+        internal static string AdminStats_ActiveUsers {
             get {
-                return ResourceManager.GetString("Menu", resourceCulture);
+                return ResourceManager.GetString("AdminStats_ActiveUsers", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sequential learning.
+        ///   Looks up a localized string similar to Admin stats for the last 7 days.
         /// </summary>
-        internal static string Mode_Sequential {
+        internal static string AdminStats_Title {
             get {
-                return ResourceManager.GetString("Mode_Sequential", resourceCulture);
+                return ResourceManager.GetString("AdminStats_Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to By topic.
+        ///   Looks up a localized string similar to Total users: {0}.
         /// </summary>
-        internal static string Mode_Topic {
+        internal static string AdminStats_TotalUsers {
             get {
-                return ResourceManager.GetString("Mode_Topic", resourceCulture);
+                return ResourceManager.GetString("AdminStats_TotalUsers", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Okay.
+        ///   Looks up a localized string similar to Last activity:.
         /// </summary>
-        internal static string Okay {
+        internal static string LastActivity {
             get {
-                return ResourceManager.GetString("Okay", resourceCulture);
+                return ResourceManager.GetString("LastActivity", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to See translation 👁.
+        ///   Looks up a localized string similar to {0} - learned: {1}, repeated: {2} word(s) - {3}%.
         /// </summary>
-        internal static string SeeTranslation {
+        internal static string LastActivityRow {
             get {
-                return ResourceManager.GetString("SeeTranslation", resourceCulture);
+                return ResourceManager.GetString("LastActivityRow", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open stat.
+        ///   Looks up a localized string similar to Learned by CEFR level:.
         /// </summary>
-        internal static string Stat {
+        internal static string LearnedByCefrLevel {
             get {
-                return ResourceManager.GetString("Stat", resourceCulture);
+                return ResourceManager.GetString("LearnedByCefrLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to N/A.
+        /// </summary>
+        internal static string NA {
+            get {
+                return ResourceManager.GetString("NA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Learn stat.
+        /// </summary>
+        internal static string Title {
+            get {
+                return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total learned {0}.
+        /// </summary>
+        internal static string TotalLearned {
+            get {
+                return ResourceManager.GetString("TotalLearned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total stat is {0}.
+        /// </summary>
+        internal static string TotalStatIs {
+            get {
+                return ResourceManager.GetString("TotalStatIs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yesterday you have been learned {0} words!.
+        /// </summary>
+        internal static string YesterdayWereLearned {
+            get {
+                return ResourceManager.GetString("YesterdayWereLearned", resourceCulture);
             }
         }
     }
