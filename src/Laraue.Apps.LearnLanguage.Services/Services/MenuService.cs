@@ -40,6 +40,11 @@ public class MenuService(ITelegramBotClient client) : IMenuService
             {
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.Stat, TelegramRoutes.Stat)
+            })
+            .AddInlineKeyboardButtons(new[]
+            {
+                InlineKeyboardButton.WithCallbackData(
+                    Buttons.Settings, TelegramRoutes.Settings)
             });
 
         return client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);

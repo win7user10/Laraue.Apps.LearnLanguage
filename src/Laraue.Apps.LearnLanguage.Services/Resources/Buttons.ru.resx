@@ -23,4 +23,13 @@
     <data name="Okay" xml:space="preserve">
         <value>Хорошо</value>
     </data>
+    <data name="Settings" xml:space="preserve">
+        <value>Настройки</value>
+    </data>
+    <data name="Settings_Language" xml:space="preserve">
+        <value>Язык</value>
+    </data>
+    <data name="Settings_BackButton" xml:space="preserve">
+        <value>Настройки 🔙</value>
+    </data>
 </root>

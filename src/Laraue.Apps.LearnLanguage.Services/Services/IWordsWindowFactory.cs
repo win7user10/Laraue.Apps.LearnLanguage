@@ -8,6 +8,6 @@ public interface IWordsWindowFactory
 {
     IWordsWindow Create(
         IFullPaginatedResult<LearningItem> words,
-        UserSettings userSettings,
+        UserViewSettings userViewSettings,
         RoutePathBuilder viewRoute);
 }

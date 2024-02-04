@@ -47,7 +47,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
                 ct);
         }
         
-        var userSettings = await userRepository.GetSettingsAsync(replyData.UserId, ct);
+        var userSettings = await userRepository.GetViewSettingsAsync(replyData.UserId, ct);
         var words = await repository.GetGroupWordsAsync(
             request.GroupId,
             replyData.UserId,
@@ -68,7 +68,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         var wordsWindow = wordsWindowFactory
             .Create(
                 words: words,
-                userSettings: userSettings,
+                userViewSettings: userSettings,
                 viewRoute: viewRoute)
             .SetWindowTitle($"{ModeName} - {groupName}")
             .SetBackButton(returnBackButton)

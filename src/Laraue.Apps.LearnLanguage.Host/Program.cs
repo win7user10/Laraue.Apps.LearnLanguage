@@ -1,7 +1,6 @@
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
-using Laraue.Core.Exceptions;
 using Laraue.Telegram.NET.Authentication.Extensions;
 using Laraue.Telegram.NET.Core.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Hangfire;
 using Hangfire.PostgreSql;
+using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.Host;
 using Laraue.Apps.LearnLanguage.Services;
 using Laraue.Apps.LearnLanguage.Services.Jobs;
@@ -32,11 +32,11 @@ builder.Services
     .AddTelegramCore(new TelegramBotClientOptions(builder.Configuration["Telegram:Token"]))
     .AddTelegramMiddleware<HandleExceptionsMiddleware>()
     .AddTelegramMiddleware<AutoCallbackResponseMiddleware>()
-    .AddTelegramRequestLocalization()
+    .AddTelegramRequestLocalization<LocalizationProvider>()
     .Configure<TelegramRequestLocalizationOptions>(opt =>
     {
-        opt.AvailableLanguages = [ "en", "ru" ];
-        opt.DefaultLanguage = "en";
+        opt.AvailableLanguages = InterfaceLanguage.Available.Select(x => x.Code).ToArray();
+        opt.DefaultLanguage = InterfaceLanguage.Default.Code;
     })
     .AddTelegramAuthentication<User, Guid, RequestContext>()
     .AddEntityFrameworkStores<DatabaseContext>()
@@ -48,15 +48,20 @@ builder.Services.UseUserRolesProvider<StaticUserRoleProvider>();
 
 builder.Services
     .AddScoped<IMenuService, MenuService>()
-    .AddScoped<IStatsService, StatsService>()
+    
     .AddScoped<IWordsRepository, WordsRepository>()
     .AddScoped<IWordsWindowFactory, WordsWindowFactory>()
-    .AddScoped<IUserRepository, UserRepository>()
+    
     .AddScoped<IStatsRepository, StatsRepository>()
     .AddScoped<IAdminRepository, AdminRepository>()
     
+    .AddScoped<IUserSettingsService, UserSettingsService>()
+    .AddScoped<IUserRepository, UserRepository>()
+    
     .AddScoped<ILearnRandomWordsService, LearnRandomWordsService>()
     .AddScoped<ILearnRandomWordsRepository, LearnRandomWordsRepository>()
+    
+    .AddScoped<IStatsService, StatsService>()
     
     .AddScoped<ILearnByCefrLevelService, LearnByCefrLevelService>()
     .AddScoped<ILearnByFirstLetterService, LearnByFirstLetterService>()

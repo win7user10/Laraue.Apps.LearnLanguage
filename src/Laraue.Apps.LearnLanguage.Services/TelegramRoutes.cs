@@ -19,6 +19,9 @@ public static class TelegramRoutes
     public const string Menu = "m";
     public const string DropMessage = "d";
     
+    public const string Settings = "s";
+    public const string LanguageSettings = "s/l";
+    
     // Commands section
     public const string Start = "/start";
 }

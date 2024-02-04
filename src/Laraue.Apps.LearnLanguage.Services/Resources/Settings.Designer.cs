@@ -21,14 +21,14 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Buttons {
+    internal class Settings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Buttons() {
+        internal Settings() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.Buttons", typeof(Buttons).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.Settings", typeof(Settings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,65 +60,47 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Menu.
+        ///   Looks up a localized string similar to Current interface language is: {0}.
         /// </summary>
-        internal static string Menu {
+        internal static string CurrentLanguage {
             get {
-                return ResourceManager.GetString("Menu", resourceCulture);
+                return ResourceManager.GetString("CurrentLanguage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Okay.
+        ///   Looks up a localized string similar to Edit:.
         /// </summary>
-        internal static string Okay {
+        internal static string Edit {
             get {
-                return ResourceManager.GetString("Okay", resourceCulture);
+                return ResourceManager.GetString("Edit", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to See translation 👁.
+        ///   Looks up a localized string similar to Select the interface language.
         /// </summary>
-        internal static string SeeTranslation {
+        internal static string SelectLanguage {
             get {
-                return ResourceManager.GetString("SeeTranslation", resourceCulture);
+                return ResourceManager.GetString("SelectLanguage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Settings.
+        ///   Looks up a localized string similar to User settings.
         /// </summary>
-        internal static string Settings {
+        internal static string Title {
             get {
-                return ResourceManager.GetString("Settings", resourceCulture);
+                return ResourceManager.GetString("Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Settings 🔙.
+        ///   Looks up a localized string similar to Settings update.
         /// </summary>
-        internal static string Settings_BackButton {
+        internal static string UpdateTitle {
             get {
-                return ResourceManager.GetString("Settings_BackButton", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Language.
-        /// </summary>
-        internal static string Settings_Language {
-            get {
-                return ResourceManager.GetString("Settings_Language", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Open stat.
-        /// </summary>
-        internal static string Stat {
-            get {
-                return ResourceManager.GetString("Stat", resourceCulture);
+                return ResourceManager.GetString("UpdateTitle", resourceCulture);
             }
         }
     }

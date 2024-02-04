@@ -124,7 +124,7 @@ public class LearnRandomWordsService(
             return;
         }
         
-        var userSettings = await userRepository.GetSettingsAsync(replyData.UserId, ct);
+        var userSettings = await userRepository.GetViewSettingsAsync(replyData.UserId, ct);
         var currentRoute = new RoutePathBuilder(TelegramRoutes.RepeatWindowWordsView)
             .WithQueryParameter(ParameterNames.SessionId, request.SessionId)
             .WithQueryParameter(ParameterNames.Page, request.Page)
@@ -133,7 +133,7 @@ public class LearnRandomWordsService(
         var wordsWindow = wordsWindowFactory
             .Create(
                 words: words,
-                userSettings: userSettings,
+                userViewSettings: userSettings,
                 viewRoute: currentRoute)
             .SetWindowTitle(RandomMode.Title)
             .SetBackButton(MessageBuilderExtensions.MainMenuButton);

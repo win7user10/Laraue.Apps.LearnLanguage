@@ -10,11 +10,11 @@ namespace Laraue.Apps.LearnLanguage.Services.Repositories;
 
 public class UserRepository(DatabaseContext context) : IUserRepository
 {
-    public Task<UserSettings> GetSettingsAsync(Guid userId, CancellationToken ct = default)
+    public Task<UserViewSettings> GetViewSettingsAsync(Guid userId, CancellationToken ct = default)
     {
         return context.Users
             .Where(x => x.Id == userId)
-            .Select(x => new UserSettings(
+            .Select(x => new UserViewSettings(
                 x.WordsTemplateMode,
                 x.ShowWordsMode))
             .FirstAsyncEF(ct);
@@ -45,6 +45,22 @@ public class UserRepository(DatabaseContext context) : IUserRepository
                 request.ShowMode.GetValueOrDefault(),
                 ct);
         }
+    }
+
+    public Task<UserSettings> GetSettingsAsync(Guid userId, CancellationToken ct = default)
+    {
+        return context.Users.Where(x => x.Id == userId)
+            .Select(x => new UserSettings(x.TelegramLanguageCode))
+            .FirstAsyncEF(ct);
+    }
+
+    public Task SetLanguageCodeAsync(Guid userId, string code, CancellationToken ct = default)
+    {
+        return context.Users.Where(x => x.Id == userId)
+            .UpdateAsync(_ => new User
+            {
+                TelegramLanguageCode = code
+            }, ct);
     }
 
     private Task ToggleWordsTemplateModeAsync(

@@ -18,7 +18,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Services;
 
 public class WordsWindow(
     IFullPaginatedResult<LearningItem> words,
-    UserSettings userSettings,
+    UserViewSettings userViewSettings,
     RoutePathBuilder viewRoute,
     ITelegramBotClient client,
     IWordsRepository wordsRepository)
@@ -76,11 +76,11 @@ public class WordsWindow(
 
     public async Task SendAsync(ReplyData replyData, CancellationToken ct = default)
     {
-        var areTranslationHidden = userSettings
+        var areTranslationHidden = userViewSettings
             .WordsTemplateMode
             .HasFlag(WordsTemplateMode.HideTranslations);
         
-        var areTranslationsReverted = userSettings
+        var areTranslationsReverted = userViewSettings
             .WordsTemplateMode
             .HasFlag(WordsTemplateMode.RevertWordAndTranslation);
 
@@ -100,21 +100,21 @@ public class WordsWindow(
         if (_useFilters)
         {
             changeShowWordsModeButtons = new List<InlineKeyboardButton>();
-            if (userSettings.ShowWordsMode != ShowWordsMode.Hard)
+            if (userViewSettings.ShowWordsMode != ShowWordsMode.Hard)
             {
                 changeShowWordsModeButtons.Add(viewRoute
                     .WithQueryParameter(ParameterNames.ShowMode, ShowWordsMode.Hard)
                     .ToInlineKeyboardButton(Mode.Filter_Marked));
             }
         
-            if (userSettings.ShowWordsMode != ShowWordsMode.NotLearned)
+            if (userViewSettings.ShowWordsMode != ShowWordsMode.NotLearned)
             {
                 changeShowWordsModeButtons.Add(viewRoute
                     .WithQueryParameter(ParameterNames.ShowMode, ShowWordsMode.NotLearned)
                     .ToInlineKeyboardButton(Mode.Filter_NotLearned));
             }
         
-            if (userSettings.ShowWordsMode != ShowWordsMode.All)
+            if (userViewSettings.ShowWordsMode != ShowWordsMode.All)
             {
                 changeShowWordsModeButtons.Add(viewRoute
                     .WithQueryParameter(ParameterNames.ShowMode, ShowWordsMode.All)
