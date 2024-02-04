@@ -42,4 +42,16 @@
     <data name="Sequential_Title" xml:space="preserve">
         <value>Mode: Alphabet</value>
     </data>
+    <data name="Topics_Title" xml:space="preserve">
+        <value>Mode: Topics</value>
+    </data>
+    <data name="Topics_ButtonName" xml:space="preserve">
+        <value>By topic</value>
+    </data>
+    <data name="Sequential_ButtonName" xml:space="preserve">
+        <value>Sequential learning</value>
+    </data>
+    <data name="BackButton" xml:space="preserve">
+        <value>Return to the list 🔙</value>
+    </data>
 </root>

@@ -35,4 +35,16 @@
     <data name="Sequential_Title" xml:space="preserve">
         <value>Режим: Алфавитный порядок</value>
     </data>
+    <data name="Topics_ButtonName" xml:space="preserve">
+        <value>Топики</value>
+    </data>
+    <data name="Sequential_ButtonName" xml:space="preserve">
+        <value>Алфавит</value>
+    </data>
+    <data name="Topics_Title" xml:space="preserve">
+        <value>Режим: Топики</value>
+    </data>
+    <data name="BackButton" xml:space="preserve">
+        <value>Вернуться в список 🔙</value>
+    </data>
 </root>

@@ -94,7 +94,7 @@ public class WordsWindow(
         
         var reverseTranslationsButton = viewRoute
             .WithQueryParameter(ParameterNames.RevertTranslations, true)
-            .ToInlineKeyboardButton(areTranslationsReverted ? "Word -> Translation" : "Translation -> Word");
+            .ToInlineKeyboardButton(areTranslationsReverted ? Mode.ViewMode_WordToTranslation : Mode.ViewMode_TranslationToWord);
 
         List<InlineKeyboardButton>? changeShowWordsModeButtons = null; 
         if (_useFilters)
@@ -104,26 +104,26 @@ public class WordsWindow(
             {
                 changeShowWordsModeButtons.Add(viewRoute
                     .WithQueryParameter(ParameterNames.ShowMode, ShowWordsMode.Hard)
-                    .ToInlineKeyboardButton("Filter: Marked 🔍"));
+                    .ToInlineKeyboardButton(Mode.Filter_Marked));
             }
         
             if (userSettings.ShowWordsMode != ShowWordsMode.NotLearned)
             {
                 changeShowWordsModeButtons.Add(viewRoute
                     .WithQueryParameter(ParameterNames.ShowMode, ShowWordsMode.NotLearned)
-                    .ToInlineKeyboardButton("Filter: Not Learned 🔍"));
+                    .ToInlineKeyboardButton(Mode.Filter_NotLearned));
             }
         
             if (userSettings.ShowWordsMode != ShowWordsMode.All)
             {
                 changeShowWordsModeButtons.Add(viewRoute
                     .WithQueryParameter(ParameterNames.ShowMode, ShowWordsMode.All)
-                    .ToInlineKeyboardButton("Filter: None 🔍"));
+                    .ToInlineKeyboardButton(Mode.Filter_None));
             }
         }
         
         var tmb = new TelegramMessageBuilder()
-            .AppendRow($"<b>{_title}. Page {words.Page + 1}/{words.LastPage + 1}</b>")
+            .AppendRow($"<b>{_title}. {Mode.Page} {words.Page + 1}/{words.LastPage + 1}</b>")
             .AppendRow()
             .AppendDataRows(words, (x, i) =>
             {
@@ -153,35 +153,38 @@ public class WordsWindow(
         
         if (_openedTranslation is null)
         {
-            tmb.AppendRow("Open word:");
+            tmb.AppendRow(Mode.OpenWord);
         }
         else
         {
-            tmb.AppendRow("Opened word:")
+            tmb.AppendRow(Mode.OpenedWord)
                 .AppendRow(GetTextBuilder(_openedTranslation, false, false).ToString());
 
             tmb.AppendRow();
             
             if (_openedTranslation.Topic is not null)
             {
-                tmb.AppendRow($"Topic: {_openedTranslation.Topic}");
+                tmb.AppendRow(string.Format(Mode.Topic, _openedTranslation.Topic));
             }
 
             if (_openedTranslation.Difficulty is not null || _openedTranslation.CefrLevel is not null)
             {
-                tmb.AppendRow($"Difficulty: {CommonStrings.GetDifficultyString(_openedTranslation.Difficulty, _openedTranslation.CefrLevel)}");
+                tmb.AppendRow(
+                    string.Format(
+                        Mode.Difficulty,
+                        CommonStrings.GetDifficultyString(_openedTranslation.Difficulty, _openedTranslation.CefrLevel)));
             }
                 
             if (_openedTranslation.LearnedAt is not null)
             {
                 var daysLearnedAgo = (DateTime.UtcNow - _openedTranslation.LearnedAt.Value).TotalDays;
-                tmb.AppendRow($"Learned: {daysLearnedAgo:N0} day(s) ago");
+                tmb.AppendRow(string.Format(Mode.Learned, $"{daysLearnedAgo:N0}"));
             }
                 
             if (_openedTranslation.RepeatedAt is not null)
             {
                 var daysRepeatedAgo = (DateTime.UtcNow - _openedTranslation.RepeatedAt.Value).TotalDays;
-                tmb.AppendRow($"Repeated: {daysRepeatedAgo:N0} day(s) ago");
+                tmb.AppendRow(string.Format(Mode.Repeated, $"{daysRepeatedAgo:N0}"));
             }
         }
         
@@ -198,7 +201,9 @@ public class WordsWindow(
         tmb.AddPaginationButtons(
             words,
             _paginationRoute ?? viewRoute,
-            fallbackButtons: _fallbackPaginationButtons);
+            fallbackButtons: _fallbackPaginationButtons,
+            previousButtonText: Mode.Navigation_Previous,
+            nextButtonText: Mode.Navigation_Next);
         
         tmb
             .AddInlineKeyboardButtons(new []{ toggleTranslationsButton, reverseTranslationsButton });

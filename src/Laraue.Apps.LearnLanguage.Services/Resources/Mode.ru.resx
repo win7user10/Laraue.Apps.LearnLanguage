@@ -23,4 +23,58 @@
     <data name="Topic" xml:space="preserve">
         <value>Тема: {0}</value>
     </data>
+    <data name="Page" xml:space="preserve">
+        <value>Страница</value>
+    </data>
+    <data name="Filter_Marked" xml:space="preserve">
+        <value>Фильтр: Отмеченные 🔍</value>
+    </data>
+    <data name="Filter_NotLearned" xml:space="preserve">
+        <value>Фильтр: Невыученные 🔍</value>
+    </data>
+    <data name="Filter_None" xml:space="preserve">
+        <value>Выключить фильтр 🔍</value>
+    </data>
+    <data name="OpenWord" xml:space="preserve">
+        <value>Открыть слово:</value>
+    </data>
+    <data name="OpenedWord" xml:space="preserve">
+        <value>Открыто слово:</value>
+    </data>
+    <data name="Difficulty" xml:space="preserve">
+        <value>Сложность: {0}</value>
+    </data>
+    <data name="Learned" xml:space="preserve">
+        <value>Выучено: {0} дней назад</value>
+    </data>
+    <data name="Repeated" xml:space="preserve">
+        <value>Повторено: {0} дней назад</value>
+    </data>
+    <data name="Difficulty_Easy" xml:space="preserve">
+        <value>легкая</value>
+    </data>
+    <data name="Difficulty_Hard" xml:space="preserve">
+        <value>средняя</value>
+    </data>
+    <data name="Difficulty_Impossible" xml:space="preserve">
+        <value>сложная</value>
+    </data>
+    <data name="Difficulty_Medium" xml:space="preserve">
+        <value>очень сложная</value>
+    </data>
+    <data name="Difficulty_VeryHard" xml:space="preserve">
+        <value>невозможная</value>
+    </data>
+    <data name="ViewMode_TranslationToWord" xml:space="preserve">
+        <value>Перевод -&gt; Слово</value>
+    </data>
+    <data name="ViewMode_WordToTranslation" xml:space="preserve">
+        <value>Слово -&gt; Перевод</value>
+    </data>
+    <data name="Navigation_Next" xml:space="preserve">
+        <value>Следующая ➡</value>
+    </data>
+    <data name="Navigation_Previous" xml:space="preserve">
+        <value>Предыдущая ⬅</value>
+    </data>
 </root>

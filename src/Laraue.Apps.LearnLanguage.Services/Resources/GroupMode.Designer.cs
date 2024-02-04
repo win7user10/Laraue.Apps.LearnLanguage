@@ -60,6 +60,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Return to the list 🔙.
+        /// </summary>
+        internal static string BackButton {
+            get {
+                return ResourceManager.GetString("BackButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CEFR level.
         /// </summary>
         internal static string CefrLevel_ButtonName {
@@ -105,6 +114,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sequential learning.
+        /// </summary>
+        internal static string Sequential_ButtonName {
+            get {
+                return ResourceManager.GetString("Sequential_ButtonName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to learn words alphabetically from A to Z.
         /// </summary>
         internal static string Sequential_Description {
@@ -123,11 +141,29 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to By topic.
+        /// </summary>
+        internal static string Topics_ButtonName {
+            get {
+                return ResourceManager.GetString("Topics_ButtonName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to learn words by the specified category: family, body etc..
         /// </summary>
         internal static string Topics_Description {
             get {
                 return ResourceManager.GetString("Topics_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mode: Topics.
+        /// </summary>
+        internal static string Topics_Title {
+            get {
+                return ResourceManager.GetString("Topics_Title", resourceCulture);
             }
         }
     }

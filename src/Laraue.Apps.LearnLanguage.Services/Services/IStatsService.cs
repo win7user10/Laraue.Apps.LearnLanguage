@@ -18,14 +18,4 @@ public interface IStatsService
     /// Send admin stats to the user.
     /// </summary>
     Task SendAdminStatsAsync(ChatId telegramId, CancellationToken ct = default);
-    
-    /// <summary>
-    /// Send bot menu to the user.
-    /// </summary>
-    Task SendMenuAsync(ReplyData replyData, CancellationToken ct = default);
-
-    /// <summary>
-    /// Send start messages to the user.
-    /// </summary>
-    Task SendStartAsync(Guid userId, ChatId telegramId, CancellationToken ct = default);
 }

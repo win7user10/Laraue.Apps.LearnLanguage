@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Laraue.Apps.LearnLanguage.Services.Services;
 
@@ -118,52 +117,5 @@ public class StatsService(
         }
         
         await client.SendTextMessageAsync(telegramId, tmb, parseMode: ParseMode.Html, cancellationToken: ct);
-    }
-
-    public Task SendMenuAsync(ReplyData replyData, CancellationToken ct = default)
-    {
-        var tmb = new TelegramMessageBuilder()
-            .AppendRow(Mode.SelectMode)
-            .AppendRow()
-            .AppendRow($"<b>{RandomMode.ButtonName}</b> - {RandomMode.Description}")
-            .AppendRow()
-            .AppendRow($"<b>{GroupMode.CefrLevel_ButtonName}</b> - {GroupMode.CefrLevel_Description}")
-            .AppendRow()
-            .AppendRow($"<b>{Buttons.Mode_Sequential}</b> - {GroupMode.Sequential_Description}")
-            .AppendRow()
-            .AppendRow($"<b>{Buttons.Mode_Topic}</b> - {GroupMode.Topics_Description}")
-            .AddInlineKeyboardButtons(new[]
-            {
-                InlineKeyboardButton.WithCallbackData(
-                    RandomMode.ButtonName, TelegramRoutes.RepeatWindow),
-            })
-            .AddInlineKeyboardButtons(new[]
-            {
-                InlineKeyboardButton.WithCallbackData(
-                    GroupMode.CefrLevel_ButtonName, TelegramRoutes.ListGroupsByCefrLevel),
-                InlineKeyboardButton.WithCallbackData(
-                    Buttons.Mode_Topic, TelegramRoutes.ListGroupsByTopic),
-                InlineKeyboardButton.WithCallbackData(
-                    Buttons.Mode_Sequential, TelegramRoutes.ListGroupsByFirstLetter),
-            })
-            .AddInlineKeyboardButtons(new[]
-            {
-                InlineKeyboardButton.WithCallbackData(
-                    Buttons.Stat, TelegramRoutes.Stat)
-            });
-
-        return client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
-    }
-
-    public async Task SendStartAsync(Guid userId, ChatId telegramId, CancellationToken ct = default)
-    {
-        var tmb = new TelegramMessageBuilder()
-            .AppendRow("Welcome to learn english channel. To start learning words, please press the button below.")
-            .AddMainMenuButton();
-
-        await client.SendTextMessageAsync(
-            telegramId,
-            tmb,
-            cancellationToken: ct);
     }
 }

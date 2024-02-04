@@ -61,7 +61,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
             .Freeze();
         
         var returnBackButton = new RoutePathBuilder(ListRoute)
-            .ToInlineKeyboardButton("Return to the list 🔙");
+            .ToInlineKeyboardButton(GroupMode.BackButton);
 
         var groupName = await repository.GetGroupNameAsync(request.GroupId, ct);
         

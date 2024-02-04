@@ -1,4 +1,5 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using Laraue.Apps.LearnLanguage.Services.Resources;
 
 namespace Laraue.Apps.LearnLanguage.Services.Services;
 
@@ -22,11 +23,11 @@ public static class CommonStrings
         return difficulty switch
         {
             null => null,
-            WordTranslationDifficulty.Easy => "easy",
-            WordTranslationDifficulty.Medium => "medium",
-            WordTranslationDifficulty.Hard => "hard",
-            WordTranslationDifficulty.ExtraHard => "very hard",
-            _ => "impossible",
+            WordTranslationDifficulty.Easy => Mode.Difficulty_Easy,
+            WordTranslationDifficulty.Medium => Mode.Difficulty_Medium,
+            WordTranslationDifficulty.Hard => Mode.Difficulty_Hard,
+            WordTranslationDifficulty.ExtraHard => Mode.Difficulty_VeryHard,
+            _ => Mode.Difficulty_Impossible,
         };
     }
 }

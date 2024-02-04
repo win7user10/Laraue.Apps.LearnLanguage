@@ -6,19 +6,12 @@ using Laraue.Telegram.NET.Core.Routing.Attributes;
 
 namespace Laraue.Apps.LearnLanguage.Host.Controllers;
 
-public class StartController : TelegramController
+public class StartController(IMenuService service) : TelegramController
 {
-    private readonly IStatsService _statsService;
-
-    public StartController(IStatsService statsService)
-    {
-        _statsService = statsService;
-    }
-    
     [TelegramMessageRoute(TelegramRoutes.Start)]
     public Task StartAsync(RequestContext request)
     {
-        return _statsService.SendStartAsync(
+        return service.SendStartAsync(
             request.UserId,
             request.Update.GetUserId());
     }

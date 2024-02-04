@@ -46,7 +46,9 @@ builder.Services.AddOptions<RoleUsers>();
 builder.Services.Configure<RoleUsers>(builder.Configuration.GetSection("Telegram:Roles"));
 builder.Services.UseUserRolesProvider<StaticUserRoleProvider>();
 
-builder.Services.AddScoped<IStatsService, StatsService>()
+builder.Services
+    .AddScoped<IMenuService, MenuService>()
+    .AddScoped<IStatsService, StatsService>()
     .AddScoped<IWordsRepository, WordsRepository>()
     .AddScoped<IWordsWindowFactory, WordsWindowFactory>()
     .AddScoped<IUserRepository, UserRepository>()

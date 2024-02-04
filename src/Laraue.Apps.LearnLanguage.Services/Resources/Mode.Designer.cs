@@ -60,11 +60,155 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Difficulty: {0}.
+        /// </summary>
+        internal static string Difficulty {
+            get {
+                return ResourceManager.GetString("Difficulty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to easy.
+        /// </summary>
+        internal static string Difficulty_Easy {
+            get {
+                return ResourceManager.GetString("Difficulty_Easy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to medium.
+        /// </summary>
+        internal static string Difficulty_Hard {
+            get {
+                return ResourceManager.GetString("Difficulty_Hard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to hard.
+        /// </summary>
+        internal static string Difficulty_Impossible {
+            get {
+                return ResourceManager.GetString("Difficulty_Impossible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to very hard.
+        /// </summary>
+        internal static string Difficulty_Medium {
+            get {
+                return ResourceManager.GetString("Difficulty_Medium", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to impossible.
+        /// </summary>
+        internal static string Difficulty_VeryHard {
+            get {
+                return ResourceManager.GetString("Difficulty_VeryHard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter: Marked 🔍.
+        /// </summary>
+        internal static string Filter_Marked {
+            get {
+                return ResourceManager.GetString("Filter_Marked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter: None 🔍.
+        /// </summary>
+        internal static string Filter_None {
+            get {
+                return ResourceManager.GetString("Filter_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter: Not Learned 🔍.
+        /// </summary>
+        internal static string Filter_NotLearned {
+            get {
+                return ResourceManager.GetString("Filter_NotLearned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide translations 🙈.
         /// </summary>
         internal static string HideTranslations {
             get {
                 return ResourceManager.GetString("HideTranslations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Learned: {0} day(s) ago.
+        /// </summary>
+        internal static string Learned {
+            get {
+                return ResourceManager.GetString("Learned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next ➡.
+        /// </summary>
+        internal static string Navigation_Next {
+            get {
+                return ResourceManager.GetString("Navigation_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous ⬅.
+        /// </summary>
+        internal static string Navigation_Previous {
+            get {
+                return ResourceManager.GetString("Navigation_Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opened word:.
+        /// </summary>
+        internal static string OpenedWord {
+            get {
+                return ResourceManager.GetString("OpenedWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open word:.
+        /// </summary>
+        internal static string OpenWord {
+            get {
+                return ResourceManager.GetString("OpenWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Page.
+        /// </summary>
+        internal static string Page {
+            get {
+                return ResourceManager.GetString("Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repeated: {0} day(s) ago.
+        /// </summary>
+        internal static string Repeated {
+            get {
+                return ResourceManager.GetString("Repeated", resourceCulture);
             }
         }
         
@@ -92,6 +236,24 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         internal static string Topic {
             get {
                 return ResourceManager.GetString("Topic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translation -&gt; Word.
+        /// </summary>
+        internal static string ViewMode_TranslationToWord {
+            get {
+                return ResourceManager.GetString("ViewMode_TranslationToWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Word -&gt; Translation.
+        /// </summary>
+        internal static string ViewMode_WordToTranslation {
+            get {
+                return ResourceManager.GetString("ViewMode_WordToTranslation", resourceCulture);
             }
         }
     }
