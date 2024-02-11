@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.DataAccess;
@@ -51,7 +52,8 @@ public class DatabaseContext : DbContext
 
         var languages = new WordLanguage[]
         {
-            new () { Id = 1, Code = "ru" }
+            new () { Id = 1, Code = "en" },
+            new () { Id = 2, Code = "ru" },
         };
 
         var cefrLevels = new WordCefrLevel[]
