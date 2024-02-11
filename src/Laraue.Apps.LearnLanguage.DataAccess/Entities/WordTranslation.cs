@@ -1,19 +1,40 @@
-﻿namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 
-public class WordTranslation : BaseEntity
+namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
+
+public sealed class WordTranslation : BaseEntity
 {
-    public long WordId { get; set; }
-
-    public Word Word { get; set; }
-
-    public string Translation { get; set; }
-    
-    public long LanguageId { get; set; }
-
-    public TranslationLanguage Language { get; set; }
+    /// <summary>
+    /// The reference to <see cref="WordMeaning"/>.
+    /// </summary>
+    public long WordMeaningId { get; set; }
 
     /// <summary>
-    /// Average attempts required to learn this word.
+    /// The meaning of the translation.
+    /// </summary>
+    public WordMeaning Word { get; set; } = null!;
+
+    /// <summary>
+    /// Translation text.
+    /// </summary>
+    [MaxLength(100)]
+    public string Translation { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// The reference to <see cref="WordLanguage"/>.
+    /// </summary>
+    public long LanguageId { get; set; }
+
+    /// <summary>
+    /// The language of the translation.
+    /// </summary>
+    public WordLanguage Language { get; set; } = null!;
+
+    #region Computed Fields
+
+    /// <summary>
+    /// Average attempts required to learn this translation.
     /// </summary>
     public double? AverageAttempts { get; set; }
 
@@ -21,13 +42,6 @@ public class WordTranslation : BaseEntity
     /// Word translation learn difficulty based on <see cref="AverageAttempts"/>.
     /// </summary>
     public WordTranslationDifficulty? Difficulty { get; set; }
-}
 
-public enum WordTranslationDifficulty
-{
-    Easy,
-    Medium,
-    Hard,
-    ExtraHard,
-    Impossible,
+    #endregion
 }

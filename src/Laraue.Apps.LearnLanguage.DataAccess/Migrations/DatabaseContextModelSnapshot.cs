@@ -92,7 +92,7 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                     b.ToTable("repeat_session_words", (string)null);
                 });
 
-            modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.TranslationLanguage", b =>
+            modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.WordLanguage", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -61132,7 +61132,7 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
 
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.WordTranslation", b =>
                 {
-                    b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.TranslationLanguage", "Language")
+                    b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.WordLanguage", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade)

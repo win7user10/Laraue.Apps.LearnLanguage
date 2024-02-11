@@ -13,7 +13,7 @@ public class DatabaseContext : DbContext
     {
     }
     
-    public DbSet<TranslationLanguage> Languages { get; init; }
+    public DbSet<WordLanguage> Languages { get; init; }
     
     public DbSet<Word> Words { get; init; }
     
@@ -49,19 +49,20 @@ public class DatabaseContext : DbContext
 
         var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
 
-        var languages = new TranslationLanguage[]
+        var languages = new WordLanguage[]
         {
             new () { Id = 1, Code = "ru" }
         };
 
         var cefrLevels = new WordCefrLevel[]
         {
-            new () { Id = 1, Name = "A1" },
-            new () { Id = 2, Name = "A2" },
-            new () { Id = 3, Name = "B1" },
-            new () { Id = 4, Name = "B2" },
-            new () { Id = 5, Name = "C1" },
-            new () { Id = 6, Name = "C2" },
+            new () { Id = 1, Name = "A0" },
+            new () { Id = 2, Name = "A1" },
+            new () { Id = 3, Name = "A2" },
+            new () { Id = 4, Name = "B1" },
+            new () { Id = 5, Name = "B2" },
+            new () { Id = 6, Name = "C1" },
+            new () { Id = 7, Name = "C2" },
         };
 
         using var topicsStream = File.OpenRead(Path.Combine(assemblyDirectory, "topics.json"));
@@ -71,7 +72,7 @@ public class DatabaseContext : DbContext
         var cefrLevelsDict = cefrLevels.ToDictionary(x => x.Name, x => x.Id);
         var topicsDict = topics.ToDictionary(x => x.Name, x => x.Id);
         
-        modelBuilder.Entity<TranslationLanguage>().HasData(languages);
+        modelBuilder.Entity<WordLanguage>().HasData(languages);
         modelBuilder.Entity<WordCefrLevel>().HasData(cefrLevels);
         modelBuilder.Entity<WordTopic>().HasData(topics);
         
