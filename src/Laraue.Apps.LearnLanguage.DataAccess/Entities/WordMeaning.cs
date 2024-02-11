@@ -18,7 +18,7 @@ public sealed class WordMeaning : BaseEntity
     /// <summary>
     /// The word meaning on the language of the word.
     /// </summary>
-    public string Meaning { get; set; } = string.Empty;
+    public string? Meaning { get; set; }
     
     /// <summary>
     /// The reference to <see cref="WordCefrLevel"/>.
