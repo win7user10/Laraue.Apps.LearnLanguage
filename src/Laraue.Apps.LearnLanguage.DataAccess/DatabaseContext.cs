@@ -22,6 +22,10 @@ public class DatabaseContext : DbContext
     
     public DbSet<WordTopic> WordTopics { get; init; }
     
+    public DbSet<WordMeaning> WordMeanings { get; init; }
+    
+    public DbSet<WordMeaningTopic> WordMeaningTopics { get; init; }
+    
     public DbSet<WordTranslation> WordTranslations { get; init; }
     
     public DbSet<User> Users { get; init; }

@@ -1,6 +1,7 @@
 ﻿using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
@@ -45,13 +46,13 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
                 (wt, wts) => new { wt, wts })
             .Select(x => new NextRepeatWordTranslation(
                 x.wt.Id,
-                x.wt.Word.Name,
+                x.wt.WordMeaning.Word.Name,
                 x.wt.Translation,
                 x.wts.LearnedAt,
                 x.wts.RepeatedAt,
                 x.wts.LearnAttempts,
-                x.wt.Word.WordCefrLevel!.Name,
-                x.wt.Word.WordTopic!.Name,
+                x.wt.WordMeaning.WordCefrLevel!.Name,
+                x.wt.WordMeaning.Topics.Select(t => t.WordTopic.Name).ToArray(),
                 x.wt.Difficulty))
             .OrderBy(x => x.LearnedAt.HasValue)
             .ThenByDescending(x => x.RepeatedAt);
@@ -85,13 +86,13 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
                 (wt, wts) => new { wt, wts })
             .Select(x => new NextRepeatWordTranslation(
                 x.wt.Id,
-                x.wt.Word.Name,
+                x.wt.WordMeaning.Word.Name,
                 x.wt.Translation,
                 x.wts.LearnedAt,
                 x.wts.RepeatedAt,
                 x.wts.LearnAttempts,
-                x.wt.Word.WordCefrLevel!.Name,
-                x.wt.Word.WordTopic!.Name,
+                x.wt.WordMeaning.WordCefrLevel!.Name,
+                x.wt.WordMeaning.Topics.Select(t => t.WordTopic.Name).ToArray(),
                 x.wt.Difficulty))
             .FirstAsyncLinqToDB(ct);
     }
@@ -235,14 +236,15 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
             .Where(x => x.relation.RepeatSessionWordState == RepeatSessionWordState.NotRepeated)
             .OrderBy(x => x.relation.Id)
             .Select((x, i) => new LearningItem(
-                x.relation.WordTranslation.Word.Name,
+                x.relation.WordTranslation.WordMeaning.Word.Name,
                 x.relation.WordTranslation.Translation,
+                x.relation.WordTranslation.WordMeaning.Meaning,
                 request.Page * request.PerPage + i + 1,
                 x.state.IsMarked,
                 x.relation.WordTranslation.Difficulty,
                 x.relation.WordTranslationId,
-                x.relation.WordTranslation.Word.WordCefrLevel!.Name,
-                x.relation.WordTranslation.Word.WordTopic!.Name,
+                x.relation.WordTranslation.WordMeaning.WordCefrLevel!.Name,
+                x.relation.WordTranslation.WordMeaning.Topics.Select(t => t.WordTopic.Name).ToArray(),
                 x.state.LearnedAt,
                 x.state.RepeatedAt))
             .FullPaginateLinq2DbAsync(request, ct);

@@ -29,4 +29,9 @@ public sealed class WordMeaning : BaseEntity
     /// The meaning cefr level, e.g A1, A2, B1 etc.
     /// </summary>
     public WordCefrLevel? WordCefrLevel { get; init; }
+
+    /// <summary>
+    /// The table with <see cref="WordTopic"/> references.
+    /// </summary>
+    public ICollection<WordMeaningTopic> Topics { get; set; } = null!;
 }

@@ -14,13 +14,13 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
     public override async Task<IList<LearningItemGroup<char>>> GetGroupsAsync(Guid userId, CancellationToken ct = default)
     {
         return await _context.WordTranslations
-            .GroupBy(x => x.Word.Name.Substring(0, 1))
+            .GroupBy(x => x.WordMeaning.Word.Name.Substring(0, 1))
             .OrderBy(x => x.Key)
             .Select((x, i) => new LearningItemGroup<char>(
                 x.Key[0],
                 _context.WordTranslationStates
                     .Count(y => y.UserId == userId
-                                && y.WordTranslation.Word.Name.StartsWith(x.Key)),
+                                && y.WordTranslation.WordMeaning.Word.Name.StartsWith(x.Key)),
                 x.Count(),
                 x.Key.ToUpper()))
             .ToListAsyncLinqToDB(ct);
@@ -33,6 +33,6 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
 
     protected override Expression<Func<WordTranslation, bool>> GetGroupWordsFilter(char id)
     {
-        return translation => translation.Word.Name.StartsWith(id);
+        return translation => translation.WordMeaning.Word.Name.StartsWith(id);
     }
 }

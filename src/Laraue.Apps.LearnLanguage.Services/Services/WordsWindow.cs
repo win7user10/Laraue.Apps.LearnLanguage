@@ -162,9 +162,9 @@ public class WordsWindow(
 
             tmb.AppendRow();
             
-            if (_openedTranslation.Topic is not null)
+            if (_openedTranslation.Topics.Length != 0)
             {
-                tmb.AppendRow(string.Format(Mode.Topic, _openedTranslation.Topic));
+                tmb.AppendRow(string.Format(Mode.Topic, string.Join(", ", _openedTranslation.Topics)));
             }
 
             if (_openedTranslation.Difficulty is not null || _openedTranslation.CefrLevel is not null)

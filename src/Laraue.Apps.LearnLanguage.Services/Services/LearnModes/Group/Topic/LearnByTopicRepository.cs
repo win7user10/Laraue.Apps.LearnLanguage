@@ -13,17 +13,16 @@ public class LearnByTopicRepository(DatabaseContext context)
 
     public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(Guid userId, CancellationToken ct = default)
     {
-        return await _context.WordTranslations
-            .Where(x => x.Word.WordTopicId != null)
-            .GroupBy(x => new { x.Word.WordTopicId, x.Word.WordTopic!.Name })
-            .OrderBy(x => x.Key.Name)
-            .Select((x, i) => new LearningItemGroup<long>(
-                x.Key.WordTopicId.GetValueOrDefault(),
+        return await _context
+            .WordMeaningTopics
+            .GroupBy(x => new { x.WordTopicId, x.WordTopic.Name })
+            .Select(group => new LearningItemGroup<long>(
+                group.Key.WordTopicId,
                 _context.WordTranslationStates
                     .Count(y => y.UserId == userId
-                                && y.WordTranslation.Word.WordTopicId == x.Key.WordTopicId),
-                x.Count(),
-                x.Key.Name))
+                                && y.WordTranslation.WordMeaning.Topics.Any(t => t.Id == group.Key.WordTopicId)),
+                group.Count(),
+                group.Key.Name))
             .ToListAsyncLinqToDB(ct);
     }
 
@@ -37,6 +36,6 @@ public class LearnByTopicRepository(DatabaseContext context)
 
     protected override Expression<Func<WordTranslation, bool>> GetGroupWordsFilter(long id)
     {
-        return translation => translation.Word.WordTopicId == id;
+        return translation => translation.WordMeaning.Topics.Any(x => x.Id == id);
     }
 }

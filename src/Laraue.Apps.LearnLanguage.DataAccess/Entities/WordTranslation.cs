@@ -6,14 +6,14 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
 public sealed class WordTranslation : BaseEntity
 {
     /// <summary>
-    /// The reference to <see cref="WordMeaning"/>.
+    /// The reference to <see cref="Entities.WordMeaning"/>.
     /// </summary>
     public long WordMeaningId { get; set; }
 
     /// <summary>
     /// The meaning of the translation.
     /// </summary>
-    public WordMeaning Word { get; set; } = null!;
+    public WordMeaning WordMeaning { get; set; } = null!;
 
     /// <summary>
     /// Translation text.

@@ -2,6 +2,7 @@
 using Laraue.Apps.LearnLanguage.Common.Extensions;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
@@ -237,11 +238,11 @@ public class LearnRandomWordsService(
         if (showTranslation)
         {
             tmb.AppendRow($"{word.Name} - {word.Translation}");
-            if (word.Topic is not null)
+            if (word.Topics.Length != 0)
             {
                 tmb
                     .AppendRow()
-                    .AppendRow(string.Format(Mode.Topic, word.Topic));
+                    .AppendRow(string.Format(Mode.Topic, string.Join(", ", word.Topics)));
             }
         }
         else
