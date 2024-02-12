@@ -41,7 +41,7 @@ public class DatabaseContext : DbContext
         modelBuilder.HasPostgresExtension("uuid-ossp");
 
         modelBuilder.Entity<Word>()
-            .HasIndex(x => new { x.Name, x.Language })
+            .HasIndex(x => new { x.Name, x.LanguageId })
             .IsUnique();
         
         modelBuilder.Entity<WordTranslation>()
@@ -51,6 +51,9 @@ public class DatabaseContext : DbContext
         modelBuilder.Entity<WordTranslationState>()
             .HasIndex(x => new { x.WordTranslationId, x.UserId })
             .IsUnique();
+        
+        modelBuilder.Entity<WordMeaningTopic>()
+            .HasKey(x => new { x.WordMeaningId, x.WordTopicId });
         
         modelBuilder.Entity<RepeatSessionWordTranslation>()
             .HasIndex(x => new { x.WordTranslationId, x.RepeatSessionId })
@@ -117,6 +120,16 @@ public class DatabaseContext : DbContext
                         Meaning = meaning.Meaning,
                         WordId = word.Id,
                     });
+                
+                foreach (var topic in meaning.Topics)
+                {
+                    modelBuilder.Entity<WordMeaningTopic>()
+                        .HasData(new WordMeaningTopic
+                        {
+                            WordTopicId = topicsDict[topic],
+                            WordMeaningId = meaning.Id,
+                        });
+                }
 
                 foreach (var translation in meaning.Translations)
                 {

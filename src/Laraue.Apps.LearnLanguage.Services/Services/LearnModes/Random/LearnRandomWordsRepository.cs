@@ -44,6 +44,23 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
                 context.WordTranslationStates.AsQueryable(),
                 (wt, wts) => wt.Id == wts!.WordTranslationId && wts.UserId == userId,
                 (wt, wts) => new { wt, wts })
+            .OrderBy(x => x.wts.LearnedAt.HasValue)
+            .ThenByDescending(x => x.wts.RepeatedAt);
+
+        switch (wordPreference)
+        {
+            case NextWordPreference.MostSeen:
+                query = query.ThenByDescending(x => x.wts.LearnAttempts);
+                break;
+            case NextWordPreference.LeastSeen:
+                query = query.ThenBy(x => x.wts.LearnAttempts);
+                break;
+            case NextWordPreference.Random:
+                query = query.ThenBy(_ => Linq2db.NewGuid());
+                break;
+        }
+
+        return await query
             .Select(x => new NextRepeatWordTranslation(
                 x.wt.Id,
                 x.wt.WordMeaning.Word.Name,
@@ -54,23 +71,7 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
                 x.wt.WordMeaning.WordCefrLevel!.Name,
                 x.wt.WordMeaning.Topics.Select(t => t.WordTopic.Name).ToArray(),
                 x.wt.Difficulty))
-            .OrderBy(x => x.LearnedAt.HasValue)
-            .ThenByDescending(x => x.RepeatedAt);
-
-        switch (wordPreference)
-        {
-            case NextWordPreference.MostSeen:
-                query = query.ThenByDescending(x => x.LearnAttempts);
-                break;
-            case NextWordPreference.LeastSeen:
-                query = query.ThenBy(x => x.LearnAttempts);
-                break;
-            case NextWordPreference.Random:
-                query = query.ThenBy(_ => Linq2db.NewGuid());
-                break;
-        }
-
-        return await query.FirstAsyncLinqToDB(ct);
+            .FirstAsyncLinqToDB(ct);
     }
 
     public Task<NextRepeatWordTranslation> GetRepeatWordAsync(

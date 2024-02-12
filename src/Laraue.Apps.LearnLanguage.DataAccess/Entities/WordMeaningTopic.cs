@@ -3,7 +3,7 @@
 /// <summary>
 /// A relation between <see cref="WordMeaning"/> and <see cref="WordTopic"/>.
 /// </summary>
-public sealed class WordMeaningTopic : BaseEntity
+public sealed class WordMeaningTopic
 {
     /// <summary>
     /// <see cref="WordMeaning"/> reference.

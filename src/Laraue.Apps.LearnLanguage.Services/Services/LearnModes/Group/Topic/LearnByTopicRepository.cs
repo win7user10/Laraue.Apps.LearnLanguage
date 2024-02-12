@@ -20,7 +20,7 @@ public class LearnByTopicRepository(DatabaseContext context)
                 group.Key.WordTopicId,
                 _context.WordTranslationStates
                     .Count(y => y.UserId == userId
-                                && y.WordTranslation.WordMeaning.Topics.Any(t => t.Id == group.Key.WordTopicId)),
+                                && y.WordTranslation.WordMeaning.Topics.Any(t => t.WordTopicId == group.Key.WordTopicId)),
                 group.Count(),
                 group.Key.Name))
             .ToListAsyncLinqToDB(ct);
@@ -36,6 +36,6 @@ public class LearnByTopicRepository(DatabaseContext context)
 
     protected override Expression<Func<WordTranslation, bool>> GetGroupWordsFilter(long id)
     {
-        return translation => translation.WordMeaning.Topics.Any(x => x.Id == id);
+        return translation => translation.WordMeaning.Topics.Any(x => x.WordTopicId == id);
     }
 }

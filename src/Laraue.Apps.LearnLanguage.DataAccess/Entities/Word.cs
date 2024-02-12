@@ -21,7 +21,7 @@ public sealed class Word : BaseEntity
     public string? Transcription { get; init; }
     
     /// <summary>
-    /// The reference to <see cref="WordLanguage"/>.
+    /// The reference to <see cref="Entities.WordLanguage"/>.
     /// </summary>
     public long LanguageId { get; set; }
 
