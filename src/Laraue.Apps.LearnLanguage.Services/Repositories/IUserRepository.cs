@@ -16,4 +16,6 @@ public interface IUserRepository
     
     Task<UserSettings> GetSettingsAsync(Guid userId, CancellationToken ct = default);
     Task SetLanguageCodeAsync(Guid userId, string code, CancellationToken ct = default);
+    
+    Task<UserLearnLanguageSettings?> GetLanguageSettingsAsync(Guid userId, CancellationToken ct = default);
 }

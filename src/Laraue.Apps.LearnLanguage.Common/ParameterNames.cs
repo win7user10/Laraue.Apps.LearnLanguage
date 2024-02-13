@@ -10,8 +10,10 @@ public static class ParameterNames
     public const string ShowMode = "m";
     public const string LearnState = "ls";
     public const string MarkState = "ms";
-    public const string RememberState = "rs";
     public const string GroupId = "g";
+    
+    public const string LanguageToLearn = "lt";
+    public const string LanguageToLearnFrom = "lf";
     
     public const string SessionId = "s";
 }

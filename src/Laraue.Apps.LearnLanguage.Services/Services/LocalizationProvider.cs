@@ -31,7 +31,7 @@ public class LocalizationProvider : BaseCultureInfoProvider
         var settings = await _userRepository
             .GetSettingsAsync(_context.UserId, cancellationToken);
 
-        var language = InterfaceLanguage.ForCode(settings.LanguageCode);
+        var language = InterfaceLanguage.ForCode(settings.InterfaceLanguageCode);
 
         return new TelegramProviderCultureResult(
             new CultureInfo(language.Code),

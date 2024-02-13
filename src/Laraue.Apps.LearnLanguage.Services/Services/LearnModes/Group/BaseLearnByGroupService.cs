@@ -93,8 +93,67 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         await wordsWindow.SendAsync(replyData, ct);
     }
 
-    public async Task HandleListViewAsync(ReplyData replyData, CancellationToken ct = default)
+    public async Task HandleListViewAsync(
+        LearnListRequest learnListRequest,
+        ReplyData replyData,
+        CancellationToken ct = default)
     {
+        if (learnListRequest.LanguageToLearnId is not null && learnListRequest.LanguageToLearnFromId is not null)
+        {
+            await HandleListViewAsync(
+                learnListRequest,
+                replyData,
+                learnListRequest.LanguageToLearnId.Value,
+                learnListRequest.LanguageToLearnFromId.Value,
+                ct);
+            
+            return;
+        }
+        
+        var settings = await userRepository.GetLanguageSettingsAsync(replyData.UserId, ct);
+        if (settings is not null)
+        {
+            await HandleListViewAsync(
+                learnListRequest,
+                replyData,
+                settings.LanguageIdToLearn,
+                settings.LanguageIdToLearnFrom,
+                ct);
+            
+            return;
+        }
+
+        await HandleSelectLanguageViewAsync(replyData, ct);
+    }
+
+    private async Task HandleSelectLanguageViewAsync(ReplyData replyData, CancellationToken ct = default)
+    {
+        var availablePairs = await wordsRepository.GetAvailableLearningPairsAsync(ct);
+        
+        var listRoute = new RoutePathBuilder(ListRoute);
+        
+        var tmb = new TelegramMessageBuilder()
+            .AppendRow($"<b>{ModeName}</b>")
+            .AppendRow()
+            .AppendRow($"Select the language pair to learn");
+
+        tmb.AddInlineKeyboardButtons(availablePairs
+            .Select(p => listRoute
+                .WithQueryParameter(ParameterNames.LanguageToLearnFrom, p.LanguageToLearnFrom.Id)
+                .WithQueryParameter(ParameterNames.LanguageToLearn, p.LanguageToLearn.Id)
+                .ToInlineKeyboardButton($"{p.LanguageToLearnFrom.Code} -> {p.LanguageToLearn.Code}")));
+        
+        await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
+    }
+
+    private async Task HandleListViewAsync(
+        LearnListRequest learnListRequest,
+        ReplyData replyData,
+        long languageToLearnId,
+        long languageToLearnFromId,
+        CancellationToken ct = default)
+    {
+        // TODO - groups only for the specified language
         var groups = await repository.GetGroupsAsync(replyData.UserId, ct);
         
         var learnedCount = groups.Sum(x => x.LearnedCount);

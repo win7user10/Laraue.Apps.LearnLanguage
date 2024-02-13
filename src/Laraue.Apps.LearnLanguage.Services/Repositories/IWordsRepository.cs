@@ -1,4 +1,6 @@
-﻿namespace Laraue.Apps.LearnLanguage.Services.Repositories;
+﻿using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+
+namespace Laraue.Apps.LearnLanguage.Services.Repositories;
 
 public interface IWordsRepository
 {
@@ -17,4 +19,9 @@ public interface IWordsRepository
     /// Increment seen counter for the passed translations.
     /// </summary>
     Task IncrementLearnAttemptsIfRequiredAsync(Guid userId, long[] wordTranslationIds, CancellationToken ct = default);
+
+    /// <summary>
+    /// Returns available pairs for the learning.
+    /// </summary>
+    Task<List<LearningLanguagePair>> GetAvailableLearningPairsAsync(CancellationToken ct = default);
 }

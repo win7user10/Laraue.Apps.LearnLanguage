@@ -18,7 +18,7 @@ public class UserSettingsService(IUserRepository repository, ITelegramBotClient 
     public async Task HandleSettingsViewAsync(ReplyData replyData, CancellationToken ct = default)
     {
         var settings = await repository.GetSettingsAsync(replyData.UserId, ct);
-        var interfaceLanguage = InterfaceLanguage.ForCode(settings.LanguageCode); 
+        var interfaceLanguage = InterfaceLanguage.ForCode(settings.InterfaceLanguageCode); 
         
         var tmb = new TelegramMessageBuilder();
 

@@ -66,12 +66,6 @@ public class DatabaseContext : DbContext
 
         var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
 
-        var languages = new WordLanguage[]
-        {
-            new () { Id = 1, Code = "en" },
-            new () { Id = 2, Code = "ru" },
-        };
-
         var cefrLevels = new WordCefrLevel[]
         {
             new () { Id = 1, Name = "A0" },
@@ -82,6 +76,9 @@ public class DatabaseContext : DbContext
             new () { Id = 6, Name = "C1" },
             new () { Id = 7, Name = "C2" },
         };
+        
+        using var languagesStream = File.OpenRead(Path.Combine(assemblyDirectory, "languages.json"));
+        var languages = JsonSerializer.Deserialize<WordLanguage[]>(languagesStream, Constants.JsonWebOptions)!;
 
         using var topicsStream = File.OpenRead(Path.Combine(assemblyDirectory, "topics.json"));
         var topics = JsonSerializer.Deserialize<WordTopic[]>(topicsStream, Constants.JsonWebOptions)!;

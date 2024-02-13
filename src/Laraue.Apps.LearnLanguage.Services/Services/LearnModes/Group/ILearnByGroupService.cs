@@ -16,6 +16,7 @@ public interface ILearnByGroupService<TId, in TDetailRequest>
     /// Send all groups to the user.
     /// </summary>
     Task HandleListViewAsync(
+        LearnListRequest learnListRequest,
         ReplyData replyData,
         CancellationToken ct = default);
 }

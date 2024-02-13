@@ -18,6 +18,11 @@
             "id": 1,
             "language": "ru",
             "text": "оставить, забросить"
+          },
+          {
+            "id": 4681,
+            "language": "fr",
+            "text": "abandonner"
           }
         ]
       }
@@ -39,6 +44,11 @@
             "id": 2,
             "language": "ru",
             "text": "уменьшаться, ослабевать"
+          },
+          {
+            "id": 4682,
+            "language": "fr",
+            "text": "diminuer"
           }
         ]
       }

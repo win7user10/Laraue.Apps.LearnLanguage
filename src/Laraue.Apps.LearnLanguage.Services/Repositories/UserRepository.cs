@@ -63,6 +63,14 @@ public class UserRepository(DatabaseContext context) : IUserRepository
             }, ct);
     }
 
+    public Task<UserLearnLanguageSettings?> GetLanguageSettingsAsync(Guid userId, CancellationToken ct = default)
+    {
+        // TODO - drop hardcode
+        return context.Users.Where(x => x.Id == userId)
+            .Select(x => (UserLearnLanguageSettings?)null)
+            .FirstAsyncEF(ct);
+    }
+
     private Task ToggleWordsTemplateModeAsync(
         Guid userId,
         WordsTemplateMode flagToChange,

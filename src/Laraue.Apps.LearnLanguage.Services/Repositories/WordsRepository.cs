@@ -1,5 +1,6 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
@@ -90,5 +91,21 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                 WordTranslationId = e.WordTranslationId,
             })
             .MergeAsync(ct);
+    }
+
+    public Task<List<LearningLanguagePair>> GetAvailableLearningPairsAsync(CancellationToken ct = default)
+    {
+        return context.WordTranslations
+            .GroupBy(x => new
+            {
+                LanguageIdToLearn = x.WordMeaning.Word.LanguageId,
+                LanguageCodeToLearn = x.WordMeaning.Word.Language.Code,
+                LanguageIdToLearnFrom = x.LanguageId,
+                LanguageCodeToLearnFrom = x.Language.Code,
+            })
+            .Select(x => new LearningLanguagePair(
+                new LearningLanguagePairItem(x.Key.LanguageIdToLearn, x.Key.LanguageCodeToLearn),
+                new LearningLanguagePairItem(x.Key.LanguageIdToLearnFrom, x.Key.LanguageCodeToLearnFrom)))
+            .ToListAsyncLinqToDB(ct);
     }
 }
