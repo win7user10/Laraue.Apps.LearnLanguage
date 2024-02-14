@@ -22,6 +22,8 @@ public interface ILearnByGroupRepository<TId>
     /// </summary>
     Task<IList<LearningItemGroup<TId>>> GetGroupsAsync(
         Guid userId,
+        long languageIdToLearn,
+        long languageIdToLearnFrom,
         CancellationToken ct = default);
 
     /// <summary>

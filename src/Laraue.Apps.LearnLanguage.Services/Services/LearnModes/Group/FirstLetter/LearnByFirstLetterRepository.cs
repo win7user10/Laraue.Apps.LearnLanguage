@@ -11,9 +11,15 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
 {
     private readonly DatabaseContext _context = context;
 
-    public override async Task<IList<LearningItemGroup<char>>> GetGroupsAsync(Guid userId, CancellationToken ct = default)
+    public override async Task<IList<LearningItemGroup<char>>> GetGroupsAsync(
+        Guid userId,
+        long languageIdToLearn,
+        long languageIdToLearnFrom,
+        CancellationToken ct = default)
     {
         return await _context.WordTranslations
+            .Where(x => x.WordMeaning.Word.LanguageId == languageIdToLearn)
+            .Where(x => x.LanguageId == languageIdToLearnFrom)
             .GroupBy(x => x.WordMeaning.Word.Name.Substring(0, 1))
             .OrderBy(x => x.Key)
             .Select((x, i) => new LearningItemGroup<char>(

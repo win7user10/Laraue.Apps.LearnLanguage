@@ -56,7 +56,11 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
             .FullPaginateLinq2DbAsync(request, ct);;
     }
 
-    public abstract Task<IList<LearningItemGroup<TId>>> GetGroupsAsync(Guid userId, CancellationToken ct = default);
+    public abstract Task<IList<LearningItemGroup<TId>>> GetGroupsAsync(
+        Guid userId,
+        long languageIdToLearn,
+        long languageIdToLearnFrom,
+        CancellationToken ct = default);
 
     public abstract Task<string> GetGroupNameAsync(TId groupId, CancellationToken ct = default);
     

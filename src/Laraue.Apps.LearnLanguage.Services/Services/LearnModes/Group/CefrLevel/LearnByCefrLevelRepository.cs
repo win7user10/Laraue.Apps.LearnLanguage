@@ -11,9 +11,15 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
 {
     private readonly DatabaseContext _context = context;
 
-    public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(Guid userId, CancellationToken ct = default)
+    public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(
+        Guid userId,
+        long languageIdToLearn,
+        long languageIdToLearnFrom,
+        CancellationToken ct = default)
     {
         return await _context.WordTranslations
+            .Where(x => x.WordMeaning.Word.LanguageId == languageIdToLearn)
+            .Where(x => x.LanguageId == languageIdToLearnFrom)
             .Where(x => x.WordMeaning.WordCefrLevelId != null)
             .GroupBy(x => new { x.WordMeaning.WordCefrLevelId, x.WordMeaning.WordCefrLevel!.Name })
             .OrderBy(x => x.Key.WordCefrLevelId)

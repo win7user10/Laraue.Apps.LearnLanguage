@@ -34,4 +34,9 @@ public sealed class WordMeaning : BaseEntity
     /// The table with <see cref="WordTopic"/> references.
     /// </summary>
     public ICollection<WordMeaningTopic> Topics { get; set; } = null!;
+    
+    /// <summary>
+    /// List of <see cref="WordTranslation"/> related to the meaning. 
+    /// </summary>
+    public ICollection<WordTranslation> Translations { get; set; } = null!;
 }

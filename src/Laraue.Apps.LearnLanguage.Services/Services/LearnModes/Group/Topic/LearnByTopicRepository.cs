@@ -11,10 +11,15 @@ public class LearnByTopicRepository(DatabaseContext context)
 {
     private readonly DatabaseContext _context = context;
 
-    public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(Guid userId, CancellationToken ct = default)
+    public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(
+        Guid userId,
+        long languageIdToLearn,
+        long languageIdToLearnFrom,
+        CancellationToken ct = default)
     {
-        return await _context
-            .WordMeaningTopics
+        return await _context.WordMeaningTopics
+            .Where(x => x.WordMeaning.Word.LanguageId == languageIdToLearn)
+            .Where(x => x.WordMeaning.Translations.Any(t => t.Id == languageIdToLearnFrom))
             .GroupBy(x => new { x.WordTopicId, x.WordTopic.Name })
             .Select(group => new LearningItemGroup<long>(
                 group.Key.WordTopicId,

@@ -6,8 +6,8 @@ namespace Laraue.Apps.LearnLanguage.Services.Services;
 public sealed class LearnListRequest
 {
     [FromQuery(ParameterNames.LanguageToLearn)]
-    public long? LanguageToLearnId { get; init; }
+    public long? languageIdToLearn { get; init; }
     
     [FromQuery(ParameterNames.LanguageToLearnFrom)]
-    public long? LanguageToLearnFromId { get; init; }
+    public long? languageIdToLearnFrom { get; init; }
 }

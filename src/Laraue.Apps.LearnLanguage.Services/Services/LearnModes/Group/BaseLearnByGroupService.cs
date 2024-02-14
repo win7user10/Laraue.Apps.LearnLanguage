@@ -98,13 +98,12 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         ReplyData replyData,
         CancellationToken ct = default)
     {
-        if (learnListRequest.LanguageToLearnId is not null && learnListRequest.LanguageToLearnFromId is not null)
+        if (learnListRequest.languageIdToLearn is not null && learnListRequest.languageIdToLearnFrom is not null)
         {
             await HandleListViewAsync(
-                learnListRequest,
                 replyData,
-                learnListRequest.LanguageToLearnId.Value,
-                learnListRequest.LanguageToLearnFromId.Value,
+                learnListRequest.languageIdToLearn.Value,
+                learnListRequest.languageIdToLearnFrom.Value,
                 ct);
             
             return;
@@ -114,7 +113,6 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         if (settings is not null)
         {
             await HandleListViewAsync(
-                learnListRequest,
                 replyData,
                 settings.LanguageIdToLearn,
                 settings.LanguageIdToLearnFrom,
@@ -147,14 +145,13 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
     }
 
     private async Task HandleListViewAsync(
-        LearnListRequest learnListRequest,
         ReplyData replyData,
-        long languageToLearnId,
-        long languageToLearnFromId,
+        long languageIdToLearn,
+        long languageIdToLearnFrom,
         CancellationToken ct = default)
     {
-        // TODO - groups only for the specified language
-        var groups = await repository.GetGroupsAsync(replyData.UserId, ct);
+        var groups = await repository.GetGroupsAsync(
+            replyData.UserId, languageIdToLearn, languageIdToLearnFrom, ct);
         
         var learnedCount = groups.Sum(x => x.LearnedCount);
         var totalCount = groups.Sum(x => x.TotalCount);
