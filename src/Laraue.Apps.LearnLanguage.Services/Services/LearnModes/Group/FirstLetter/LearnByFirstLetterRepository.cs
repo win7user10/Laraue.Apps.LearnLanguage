@@ -18,15 +18,16 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
         CancellationToken ct = default)
     {
         return await _context.WordTranslations
-            .Where(x => x.WordMeaning.Word.LanguageId == languageIdToLearn)
-            .Where(x => x.LanguageId == languageIdToLearnFrom)
+            .Where(t => t.HasLanguage(languageIdToLearn, languageIdToLearnFrom))
             .GroupBy(x => x.WordMeaning.Word.Name.Substring(0, 1))
             .OrderBy(x => x.Key)
             .Select((x, i) => new LearningItemGroup<char>(
                 x.Key[0],
                 _context.WordTranslationStates
+                    .Learned()
                     .Count(y => y.UserId == userId
-                                && y.WordTranslation.WordMeaning.Word.Name.StartsWith(x.Key)),
+                        && y.WordTranslation.HasLanguage(languageIdToLearn, languageIdToLearnFrom)
+                        && y.WordTranslation.WordMeaning.Word.Name.StartsWith(x.Key)),
                 x.Count(),
                 x.Key.ToUpper()))
             .ToListAsyncLinqToDB(ct);
