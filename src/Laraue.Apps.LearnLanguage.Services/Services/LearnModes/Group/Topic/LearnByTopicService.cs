@@ -9,13 +9,15 @@ public sealed class LearnByTopicService(
     IWordsRepository wordsRepository,
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
-    ILearnByTopicRepository learnByTopicRepository) : 
-        BaseLearnByGroupService<long, DetailViewByTopic>(
+    ILearnByTopicRepository learnByTopicRepository,
+    ISelectLanguageService selectLanguageService) : 
+        BaseLearnByGroupService<long, DetailViewByTopicRequest>(
             userRepository,
             wordsRepository,
             wordsWindowFactory,
             client,
-            learnByTopicRepository),
+            learnByTopicRepository,
+            selectLanguageService),
         ILearnByTopicService
 {
     protected override string ListRoute => TelegramRoutes.ListGroupsByTopic;

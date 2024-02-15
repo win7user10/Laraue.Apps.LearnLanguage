@@ -3,6 +3,7 @@ using System;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Laraue.LearnLanguage.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240215193520_AddSessionTranslation")]
+    partial class AddSessionTranslation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,11 +39,19 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("finished_at");
 
-                    b.Property<long?>("LanguageToLearnFromId")
+                    b.Property<long?>("LanguageIdToLearn")
+                        .HasColumnType("bigint")
+                        .HasColumnName("language_id_to_learn");
+
+                    b.Property<long?>("LanguageIdToLearnFrom")
+                        .HasColumnType("bigint")
+                        .HasColumnName("language_id_to_learn_from");
+
+                    b.Property<long>("LanguageToLearnFromId")
                         .HasColumnType("bigint")
                         .HasColumnName("language_to_learn_from_id");
 
-                    b.Property<long?>("LanguageToLearnId")
+                    b.Property<long>("LanguageToLearnId")
                         .HasColumnType("bigint")
                         .HasColumnName("language_to_learn_id");
 
@@ -95910,11 +95921,15 @@ namespace Laraue.LearnLanguage.DataAccess.Migrations
                     b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.WordLanguage", "LanguageToLearnFrom")
                         .WithMany()
                         .HasForeignKey("LanguageToLearnFromId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_repeat_sessions_languages_language_to_learn_from_id");
 
                     b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.WordLanguage", "LanguageToLearn")
                         .WithMany()
                         .HasForeignKey("LanguageToLearnId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_repeat_sessions_languages_language_to_learn_id");
 
                     b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.User", "User")

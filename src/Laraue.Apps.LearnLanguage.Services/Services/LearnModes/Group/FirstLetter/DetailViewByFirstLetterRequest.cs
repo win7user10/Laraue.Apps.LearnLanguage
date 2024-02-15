@@ -1,5 +1,5 @@
 ﻿namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.FirstLetter;
 
-public sealed record DetailViewByFirstLetter : BaseDetailViewByGroup<char>
+public sealed record DetailViewByFirstLetterRequest : DetailViewByGroupRequest<char>
 {
 }

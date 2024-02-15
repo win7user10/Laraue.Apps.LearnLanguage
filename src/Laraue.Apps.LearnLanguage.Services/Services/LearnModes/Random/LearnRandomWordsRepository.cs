@@ -112,11 +112,16 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
             .FirstAsyncEF(ct);
     }
 
-    public async Task<long> CreateSessionAsync(Guid userId, CancellationToken ct = default)
+    public async Task<long> CreateSessionAsync(
+        Guid userId,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
     {
         var session = new RepeatSession
         {
-            UserId = userId
+            UserId = userId,
+            LanguageToLearnFromId = selectedTranslation.LanguageToLearnFromId,
+            LanguageToLearnId = selectedTranslation.LanguageToLearnId,
         };
 
         context.RepeatSessions.Add(session);

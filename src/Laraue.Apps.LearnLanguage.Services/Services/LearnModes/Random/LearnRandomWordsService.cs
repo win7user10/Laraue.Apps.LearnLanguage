@@ -1,7 +1,6 @@
 ﻿using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.Common.Extensions;
 using Laraue.Apps.LearnLanguage.DataAccess;
-using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
@@ -22,19 +21,39 @@ public class LearnRandomWordsService(
     IUserRepository userRepository,
     IWordsRepository wordsRepository,
     IWordsWindowFactory wordsWindowFactory,
-    DatabaseContext context)
+    DatabaseContext context,
+    ISelectLanguageService selectLanguageService)
     : ILearnRandomWordsService
 {
-    public async Task SendRepeatingWindowAsync(ReplyData replyData, CancellationToken ct = default)
+    public async Task SendRepeatingWindowAsync(
+        WithSelectedTranslationRequest request,
+        ReplyData replyData,
+        CancellationToken ct = default)
     {
         var state = await repository.GetRepeatSessionStateAsync(replyData.UserId, ct);
         if (state is null)
         {
-            var sessionId = await repository.CreateSessionAsync(replyData.UserId, ct);
-            state = new RepeatSessionState(sessionId, RepeatState.Filling);
+            await selectLanguageService.ShowLanguageWindowOrHandleRequestAsync(
+                request,
+                RandomMode.Title,
+                TelegramRoutes.RepeatWindow,
+                replyData,
+                StartNewSessionAsync,
+                ct);
         }
+        else
+        {
+            await SendRepeatingWindowAsync(replyData, state.State, state.Id, ct);
+        }
+    }
 
-        await SendRepeatingWindowAsync(replyData, state.State, state.Id, ct);
+    private async Task StartNewSessionAsync(
+        ReplyData replyData,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
+    {
+        var sessionId = await repository.CreateSessionAsync(replyData.UserId, selectedTranslation, ct);
+        await SendRepeatingWindowAsync(replyData, RepeatState.Filling, sessionId, ct);
     }
 
     public async Task HandleSuggestedWordAsync(ReplyData replyData, HandleWordRequest request, CancellationToken ct = default)

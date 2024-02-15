@@ -11,7 +11,7 @@ public static class RoutePathBuilderExtensions
         SelectedTranslation selectedTranslation)
     {
         return builder
-            .WithQueryParameter(ParameterNames.LanguageToLearnFrom, selectedTranslation.LanguageIdToLearnFrom)
-            .WithQueryParameter(ParameterNames.LanguageToLearn, selectedTranslation.LanguageIdToLearn);
+            .WithQueryParameter(ParameterNames.LanguageToLearnFrom, selectedTranslation.LanguageToLearnFromId)
+            .WithQueryParameter(ParameterNames.LanguageToLearn, selectedTranslation.LanguageToLearnId);
     }
 }

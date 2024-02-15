@@ -1,5 +1,6 @@
 ﻿using Laraue.Apps.LearnLanguage.Services;
 using Laraue.Apps.LearnLanguage.Services.Services;
+using Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
 using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.CefrLevel;
 using Laraue.Telegram.NET.Abstractions.Request;
 using Laraue.Telegram.NET.Core.Routing;
@@ -12,16 +13,16 @@ public class LearnByCefrLevelController(ILearnByCefrLevelService service) : Tele
     [TelegramCallbackRoute(TelegramRoutes.ListGroupsByCefrLevel)]
     public Task HandleListRequestAsync(
         RequestContext request,
-        [FromQuery] LearnList learnList,
+        [FromQuery] OpenModeRequest openModeRequest,
         CancellationToken ct)
     {
-        return service.HandleListViewAsync(learnList, ReplyData.FromRequest(request), ct);
+        return service.HandleListViewAsync(openModeRequest, ReplyData.FromRequest(request), ct);
     }
     
     [TelegramCallbackRoute(TelegramRoutes.DetailGroupByCefrLevel)]
     public Task HandleDetailRequestAsync(
         RequestContext context,
-        [FromQuery] DetailViewByCefrLevel detailViewByGroup,
+        [FromQuery] DetailViewByCefrLevelRequest detailViewByGroup,
         CancellationToken ct)
     {
         return service.HandleDetailViewAsync(

@@ -17,8 +17,6 @@ public sealed class User : TelegramIdentityUser<Guid>
     /// Which words should be shown to the user.
     /// </summary>
     public ShowWordsMode ShowWordsMode { get; set; }
-    
-    // TODO - store languageId -> languageId that user is learning
 
     /// <summary>
     /// All user's translation's states.

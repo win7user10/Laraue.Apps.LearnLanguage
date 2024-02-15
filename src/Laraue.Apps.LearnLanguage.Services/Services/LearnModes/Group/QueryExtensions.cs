@@ -26,19 +26,19 @@ public static class QueryExtensions
     public static Expression<Func<WordTranslation, SelectedTranslation, bool>> TranslationHasLanguage()
     {
         return (x, selectedTranslation)
-            => (selectedTranslation.LanguageIdToLearn == null ||
-                x.WordMeaning.Word.LanguageId == selectedTranslation.LanguageIdToLearn)
-               && (selectedTranslation.LanguageIdToLearnFrom == null ||
-                   x.LanguageId == selectedTranslation.LanguageIdToLearnFrom);
+            => (selectedTranslation.LanguageToLearnId == null ||
+                x.WordMeaning.Word.LanguageId == selectedTranslation.LanguageToLearnId)
+               && (selectedTranslation.LanguageToLearnFromId == null ||
+                   x.LanguageId == selectedTranslation.LanguageToLearnFromId);
     }
     
     public static Expression<Func<WordMeaningTopic, SelectedTranslation, bool>> TopicHasLanguage()
     {
         return (x, selectedTranslation)
-            => (selectedTranslation.LanguageIdToLearn == null ||
-                x.WordMeaning.Word.LanguageId == selectedTranslation.LanguageIdToLearn)
-               && (selectedTranslation.LanguageIdToLearnFrom == null ||
-                   x.WordMeaning.Translations.Any(t => t.Id == selectedTranslation.LanguageIdToLearnFrom));
+            => (selectedTranslation.LanguageToLearnId == null ||
+                x.WordMeaning.Word.LanguageId == selectedTranslation.LanguageToLearnId)
+               && (selectedTranslation.LanguageToLearnFromId == null ||
+                   x.WordMeaning.Translations.Any(t => t.Id == selectedTranslation.LanguageToLearnFromId));
     }
     
     public static IQueryable<WordTranslationState> Learned(

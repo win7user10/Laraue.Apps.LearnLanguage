@@ -9,13 +9,15 @@ public sealed class LearnByCefrLevelService(
     IWordsRepository wordsRepository,
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
-    ILearnByCefrLevelRepository learnByCefrLevelRepository) : 
-        BaseLearnByGroupService<long, DetailViewByCefrLevel>(
+    ILearnByCefrLevelRepository learnByCefrLevelRepository,
+    ISelectLanguageService selectLanguageService) : 
+        BaseLearnByGroupService<long, DetailViewByCefrLevelRequest>(
             userRepository,
             wordsRepository,
             wordsWindowFactory,
             client,
-            learnByCefrLevelRepository),
+            learnByCefrLevelRepository,
+            selectLanguageService),
         ILearnByCefrLevelService
 {
     protected override string ListRoute => TelegramRoutes.ListGroupsByCefrLevel;

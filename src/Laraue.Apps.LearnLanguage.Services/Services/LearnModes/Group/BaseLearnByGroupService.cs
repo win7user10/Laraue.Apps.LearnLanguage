@@ -17,9 +17,10 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
     IWordsRepository wordsRepository,
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
-    ILearnByGroupRepository<TId> repository)
+    ILearnByGroupRepository<TId> repository,
+    ISelectLanguageService selectLanguageService)
     : ILearnByGroupService<TId, TRequest>
-    where TRequest : BaseDetailViewByGroup<TId>
+    where TRequest : DetailViewByGroupRequest<TId>
     where TId : struct
 {
     /// <summary>
@@ -97,51 +98,18 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         await wordsWindow.SendAsync(replyData, ct);
     }
 
-    public async Task HandleListViewAsync(
-        LearnList learnList,
+    public Task HandleListViewAsync(
+        OpenModeRequest openModeRequest,
         ReplyData replyData,
         CancellationToken ct = default)
     {
-        if (learnList.LanguageIdToLearn is not null && learnList.LanguageIdToLearnFrom is not null)
-        {
-            await HandleListViewAsync(replyData, learnList, ct);
-            return;
-        }
-        
-        var settings = await userRepository.GetLanguageSettingsAsync(replyData.UserId, ct);
-        if (settings is not null)
-        {
-            await HandleListViewAsync(
-                replyData,
-                new SelectedTranslation(settings.LanguageIdToLearn, settings.LanguageIdToLearnFrom),
-                ct);
-            
-            return;
-        }
-
-        await HandleSelectLanguageViewAsync(replyData, ct);
-    }
-
-    private async Task HandleSelectLanguageViewAsync(TelegramMessageId replyData, CancellationToken ct = default)
-    {
-        var availablePairs = await wordsRepository.GetAvailableLearningPairsAsync(ct);
-        
-        var listRoute = new RoutePathBuilder(ListRoute);
-        
-        var tmb = new TelegramMessageBuilder()
-            .AppendRow($"<b>{ModeName}</b>")
-            .AppendRow()
-            .AppendRow($"Select the language pair to learn");
-
-        tmb.AddInlineKeyboardButtons(availablePairs
-            .Select(p => listRoute
-                .AddTranslationParameters(
-                    new SelectedTranslation(
-                        p.LanguageToLearn.Id,
-                        p.LanguageToLearnFrom.Id))
-                .ToInlineKeyboardButton($"{p.LanguageToLearnFrom.Code} -> {p.LanguageToLearn.Code}")));
-        
-        await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
+        return selectLanguageService.ShowLanguageWindowOrHandleRequestAsync(
+            request: openModeRequest,
+            languageWindowTitle: ModeName,
+            nextRoute: ListRoute,
+            replyData: replyData,
+            handleRequestAsync: HandleListViewAsync,
+            ct);
     }
 
     private async Task HandleListViewAsync(

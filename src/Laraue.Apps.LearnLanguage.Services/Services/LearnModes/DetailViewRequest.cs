@@ -4,9 +4,9 @@ using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Telegram.NET.Abstractions.Request;
 using Laraue.Telegram.NET.DataAccess;
 
-namespace Laraue.Apps.LearnLanguage.Services.Services;
+namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
 
-public abstract record BaseDetailView : BaseSelectedTranslation, IChangeUserSettingsRequest, IUpdateWordStateRequest
+public abstract record DetailViewRequest : WithSelectedTranslationRequest, IChangeUserSettingsRequest, IUpdateWordStateRequest
 {
     [FromQuery(ParameterNames.ToggleTranslations)]
     public bool ToggleShowTranslations { get; init; }

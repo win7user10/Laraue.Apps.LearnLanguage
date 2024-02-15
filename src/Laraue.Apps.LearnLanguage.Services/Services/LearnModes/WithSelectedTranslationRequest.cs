@@ -2,9 +2,9 @@
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Telegram.NET.Abstractions.Request;
 
-namespace Laraue.Apps.LearnLanguage.Services.Services;
+namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
 
-public abstract record BaseSelectedTranslation
+public abstract record WithSelectedTranslationRequest
 {
     [FromQuery(ParameterNames.LanguageToLearn)]
     public long? LanguageIdToLearn { get; init; }
@@ -12,12 +12,12 @@ public abstract record BaseSelectedTranslation
     [FromQuery(ParameterNames.LanguageToLearnFrom)]
     public long? LanguageIdToLearnFrom { get; init; }
 
-    public static implicit operator SelectedTranslation(BaseSelectedTranslation @this)
+    public static implicit operator SelectedTranslation(WithSelectedTranslationRequest @this)
     {
         return new SelectedTranslation
         {
-            LanguageIdToLearn = @this.LanguageIdToLearn,
-            LanguageIdToLearnFrom = @this.LanguageIdToLearnFrom
+            LanguageToLearnId = @this.LanguageIdToLearn,
+            LanguageToLearnFromId = @this.LanguageIdToLearnFrom
         };
     }
 }

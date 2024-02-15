@@ -1,5 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess.Entities;
-using Laraue.Apps.LearnLanguage.DataAccess.Enums;
+﻿using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 
@@ -27,7 +26,7 @@ public interface ILearnRandomWordsRepository
     
     Task<RepeatSessionInfo> GetSessionInfoAsync(long sessionId, CancellationToken ct = default);
 
-    Task<long> CreateSessionAsync(Guid userId, CancellationToken ct = default);
+    Task<long> CreateSessionAsync(Guid userId, SelectedTranslation selectedTranslation, CancellationToken ct = default);
 
     /// <summary>
     /// Create relation between translation and session.

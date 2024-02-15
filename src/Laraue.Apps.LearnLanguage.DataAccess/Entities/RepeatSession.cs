@@ -33,4 +33,24 @@ public sealed class RepeatSession : BaseEntity
     /// When the session has been finished.
     /// </summary>
     public DateTime? FinishedAt { get; set; }
+
+    /// <summary>
+    /// The <see cref="WordLanguage"/> reference.
+    /// </summary>
+    public long? LanguageToLearnId { get; set; }
+
+    /// <summary>
+    /// Language that was learned in the session.
+    /// </summary>
+    public WordLanguage LanguageToLearn { get; set; } = null!;
+
+    /// <summary>
+    /// The <see cref="WordLanguage"/> reference.
+    /// </summary>
+    public long? LanguageToLearnFromId { get; set; }
+
+    /// <summary>
+    /// Language that was used as native when while learning.
+    /// </summary>
+    public WordLanguage LanguageToLearnFrom { get; set; } = null!;
 }
