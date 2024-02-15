@@ -4,6 +4,7 @@ using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
@@ -30,19 +31,21 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
         NextWordPreference wordPreference,
         CancellationToken ct = default)
     {
-        var userId = await context.RepeatSessions
+        var sessionInfo = await context.RepeatSessions
             .Where(x => x.Id == sessionId)
-            .Select(x => x.UserId)
+            .Select(x => new { x.UserId, x.LanguageToLearnId, x.LanguageToLearnFromId })
             .FirstAsyncLinqToDB(ct);
         
         var query = context.WordTranslations
+            .Where(t => t.HasLanguage(
+                new SelectedTranslation(sessionInfo.LanguageToLearnId, sessionInfo.LanguageToLearnFromId)))
             .Where(x => !context.RepeatSessionWords
                 .Where(y => y.RepeatSessionId == sessionId)
                 .Select(y => y.WordTranslationId)
                 .Contains(x.Id))
             .LeftJoin(
                 context.WordTranslationStates.AsQueryable(),
-                (wt, wts) => wt.Id == wts!.WordTranslationId && wts.UserId == userId,
+                (wt, wts) => wt.Id == wts!.WordTranslationId && wts.UserId == sessionInfo.UserId,
                 (wt, wts) => new { wt, wts })
             .OrderBy(x => x.wts.LearnedAt.HasValue)
             .ThenByDescending(x => x.wts.RepeatedAt);
@@ -219,6 +222,7 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
         }
         
         await context.RepeatSessions
+            .Where(x => x.Id == sessionId)
             .ExecuteUpdateAsync(u => u
                 .SetProperty(x => x.State, RepeatState.Finished)
                 .SetProperty(x => x.FinishedAt, dateTimeProvider.UtcNow), ct);
