@@ -17,9 +17,11 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         Guid userId,
         ShowWordsMode filter,
         PaginatedRequest request,
+        SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
         var dbQuery = context.WordTranslations
+            .Where(t => t.HasLanguage(selectedTranslation))
             .Where(GetGroupWordsFilter(groupId))
             .OrderBy(x => x.WordMeaning.Id)
             .LeftJoin(
@@ -58,8 +60,7 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
 
     public abstract Task<IList<LearningItemGroup<TId>>> GetGroupsAsync(
         Guid userId,
-        long languageIdToLearn,
-        long languageIdToLearnFrom,
+        SelectedTranslation selectedTranslation,
         CancellationToken ct = default);
 
     public abstract Task<string> GetGroupNameAsync(TId groupId, CancellationToken ct = default);

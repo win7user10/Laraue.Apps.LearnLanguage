@@ -12,21 +12,21 @@ public class LearnByCefrLevelController(ILearnByCefrLevelService service) : Tele
     [TelegramCallbackRoute(TelegramRoutes.ListGroupsByCefrLevel)]
     public Task HandleListRequestAsync(
         RequestContext request,
-        [FromQuery] LearnListRequest learnListRequest,
+        [FromQuery] LearnList learnList,
         CancellationToken ct)
     {
-        return service.HandleListViewAsync(learnListRequest, ReplyData.FromRequest(request), ct);
+        return service.HandleListViewAsync(learnList, ReplyData.FromRequest(request), ct);
     }
     
     [TelegramCallbackRoute(TelegramRoutes.DetailGroupByCefrLevel)]
     public Task HandleDetailRequestAsync(
         RequestContext context,
-        [FromQuery] LearnByCefrLevelRequest learnByGroupRequest,
+        [FromQuery] DetailViewByCefrLevel detailViewByGroup,
         CancellationToken ct)
     {
         return service.HandleDetailViewAsync(
             ReplyData.FromRequest(context),
-            learnByGroupRequest,
+            detailViewByGroup,
             ct);
     }
 }

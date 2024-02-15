@@ -6,7 +6,7 @@ public interface ILearnRandomWordsService
     Task HandleSuggestedWordAsync(ReplyData replyData, HandleWordRequest request, CancellationToken ct = default);
     Task HandleRepeatingWindowWordsViewAsync(
         ReplyData replyData,
-        LearnRequest request,
+        DetailView request,
         CancellationToken ct = default);
 }
 

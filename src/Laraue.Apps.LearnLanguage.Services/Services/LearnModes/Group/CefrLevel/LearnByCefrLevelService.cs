@@ -10,7 +10,7 @@ public sealed class LearnByCefrLevelService(
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
     ILearnByCefrLevelRepository learnByCefrLevelRepository) : 
-        BaseLearnByGroupService<long, LearnByCefrLevelRequest>(
+        BaseLearnByGroupService<long, DetailViewByCefrLevel>(
             userRepository,
             wordsRepository,
             wordsWindowFactory,

@@ -66,7 +66,7 @@ public class LearnRandomWordsService(
             case RepeatState.Active:
                 return HandleRepeatingWindowWordsViewAsync(
                     replyData,
-                    new LearnRequest { SessionId = sessionId },
+                    new DetailView { SessionId = sessionId },
                     ct);
         }
 
@@ -87,7 +87,7 @@ public class LearnRandomWordsService(
     
     public async Task HandleRepeatingWindowWordsViewAsync(
         ReplyData replyData,
-        LearnRequest request,
+        DetailView request,
         CancellationToken ct = default)
     {
         await userRepository.UpdateViewSettings(replyData.UserId, request, ct);

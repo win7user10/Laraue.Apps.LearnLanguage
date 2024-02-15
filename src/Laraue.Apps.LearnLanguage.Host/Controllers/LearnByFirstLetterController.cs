@@ -12,21 +12,21 @@ public class LearnByFirstLetterController(ILearnByFirstLetterService service) : 
     [TelegramCallbackRoute(TelegramRoutes.ListGroupsByFirstLetter)]
     public Task HandleListRequestAsync(
         RequestContext request,
-        [FromQuery] LearnListRequest learnListRequest,
+        [FromQuery] LearnList learnList,
         CancellationToken ct)
     {
-        return service.HandleListViewAsync(learnListRequest, ReplyData.FromRequest(request), ct);
+        return service.HandleListViewAsync(learnList, ReplyData.FromRequest(request), ct);
     }
     
     [TelegramCallbackRoute(TelegramRoutes.DetailGroupByFirstLetter)]
     public Task HandleDetailRequestAsync(
         RequestContext context,
-        [FromQuery] LearnByFirstLetterRequest learnByGroupRequest,
+        [FromQuery] DetailViewByFirstLetter detailViewByGroup,
         CancellationToken ct)
     {
         return service.HandleDetailViewAsync(
             ReplyData.FromRequest(context),
-            learnByGroupRequest,
+            detailViewByGroup,
             ct);
     }
 }

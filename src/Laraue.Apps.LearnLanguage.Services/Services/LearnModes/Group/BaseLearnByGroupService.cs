@@ -2,6 +2,7 @@
 using Laraue.Apps.LearnLanguage.Common.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
+using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Apps.LearnLanguage.Services.Resources;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
@@ -18,7 +19,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
     ITelegramBotClient client,
     ILearnByGroupRepository<TId> repository)
     : ILearnByGroupService<TId, TRequest>
-    where TRequest : BaseLearnByGroupRequest<TId>
+    where TRequest : BaseDetailViewByGroup<TId>
     where TId : struct
 {
     /// <summary>
@@ -53,14 +54,17 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
             replyData.UserId,
             userSettings.ShowWordsMode,
             new PaginatedRequest(request.Page, Constants.PaginationCount),
+            request,
             ct);
 
         var viewRoute = new RoutePathBuilder(DetailRoute)
             .WithQueryParameter(ParameterNames.GroupId, request.GroupId)
             .WithQueryParameter(ParameterNames.Page, request.Page)
+            .AddTranslationParameters(request)
             .Freeze();
         
         var returnBackButton = new RoutePathBuilder(ListRoute)
+            .AddTranslationParameters(request)
             .ToInlineKeyboardButton(GroupMode.BackButton);
 
         var groupName = await repository.GetGroupNameAsync(request.GroupId, ct);
@@ -94,18 +98,13 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
     }
 
     public async Task HandleListViewAsync(
-        LearnListRequest learnListRequest,
+        LearnList learnList,
         ReplyData replyData,
         CancellationToken ct = default)
     {
-        if (learnListRequest.languageIdToLearn is not null && learnListRequest.languageIdToLearnFrom is not null)
+        if (learnList.LanguageIdToLearn is not null && learnList.LanguageIdToLearnFrom is not null)
         {
-            await HandleListViewAsync(
-                replyData,
-                learnListRequest.languageIdToLearn.Value,
-                learnListRequest.languageIdToLearnFrom.Value,
-                ct);
-            
+            await HandleListViewAsync(replyData, learnList, ct);
             return;
         }
         
@@ -114,8 +113,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         {
             await HandleListViewAsync(
                 replyData,
-                settings.LanguageIdToLearn,
-                settings.LanguageIdToLearnFrom,
+                new SelectedTranslation(settings.LanguageIdToLearn, settings.LanguageIdToLearnFrom),
                 ct);
             
             return;
@@ -124,7 +122,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         await HandleSelectLanguageViewAsync(replyData, ct);
     }
 
-    private async Task HandleSelectLanguageViewAsync(ReplyData replyData, CancellationToken ct = default)
+    private async Task HandleSelectLanguageViewAsync(TelegramMessageId replyData, CancellationToken ct = default)
     {
         var availablePairs = await wordsRepository.GetAvailableLearningPairsAsync(ct);
         
@@ -137,8 +135,10 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
 
         tmb.AddInlineKeyboardButtons(availablePairs
             .Select(p => listRoute
-                .WithQueryParameter(ParameterNames.LanguageToLearnFrom, p.LanguageToLearnFrom.Id)
-                .WithQueryParameter(ParameterNames.LanguageToLearn, p.LanguageToLearn.Id)
+                .AddTranslationParameters(
+                    new SelectedTranslation(
+                        p.LanguageToLearn.Id,
+                        p.LanguageToLearnFrom.Id))
                 .ToInlineKeyboardButton($"{p.LanguageToLearnFrom.Code} -> {p.LanguageToLearn.Code}")));
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
@@ -146,18 +146,18 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
 
     private async Task HandleListViewAsync(
         ReplyData replyData,
-        long languageIdToLearn,
-        long languageIdToLearnFrom,
+        SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
         var groups = await repository.GetGroupsAsync(
-            replyData.UserId, languageIdToLearn, languageIdToLearnFrom, ct);
+            replyData.UserId, selectedTranslation, ct);
         
         var learnedCount = groups.Sum(x => x.LearnedCount);
         var totalCount = groups.Sum(x => x.TotalCount);
         var completedPercent = learnedCount.DivideAndReturnPercent(totalCount);
 
-        var detailRoute = new RoutePathBuilder(DetailRoute);
+        var detailRoute = new RoutePathBuilder(DetailRoute)
+            .AddTranslationParameters(selectedTranslation);
 
         var tmb = new TelegramMessageBuilder()
             .AppendRow($"<b>{ModeName}</b>")

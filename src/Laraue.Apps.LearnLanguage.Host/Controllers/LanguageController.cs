@@ -26,7 +26,7 @@ public class LanguageController(ILearnRandomWordsService learnRandomWordsService
     [TelegramCallbackRoute(TelegramRoutes.RepeatWindowWordsView)]
     public Task SendRepeatingWindowsWordsAsync(
         RequestContext context,
-        [FromQuery] LearnRequest request,
+        [FromQuery] DetailView request,
         CancellationToken ct)
     {
         return learnRandomWordsService.HandleRepeatingWindowWordsViewAsync(

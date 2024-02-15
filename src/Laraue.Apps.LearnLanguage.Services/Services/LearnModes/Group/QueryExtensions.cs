@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using LinqToDB;
 
 namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group;
@@ -9,8 +10,7 @@ public static class QueryExtensions
     [ExpressionMethod(nameof(TranslationHasLanguage))]
     public static bool HasLanguage(
         this WordTranslation wordTranslation,
-        long languageIdToLearn,
-        long languageIdToLearnFrom)
+        SelectedTranslation selectedTranslation)
     {
         throw new InvalidOperationException();
     }
@@ -18,23 +18,27 @@ public static class QueryExtensions
     [ExpressionMethod(nameof(TopicHasLanguage))]
     public static bool HasLanguage(
         this WordMeaningTopic wordTranslation,
-        long languageIdToLearn,
-        long languageIdToLearnFrom)
+        SelectedTranslation selectedTranslation)
     {
         throw new InvalidOperationException();
     }
     
-    public static Expression<Func<WordTranslation, long, long, bool>> TranslationHasLanguage()
+    public static Expression<Func<WordTranslation, SelectedTranslation, bool>> TranslationHasLanguage()
     {
-        return (x, languageIdToLearn, languageIdToLearnFrom) 
-            => x.WordMeaning.Word.LanguageId == languageIdToLearn && x.LanguageId == languageIdToLearnFrom;
+        return (x, selectedTranslation)
+            => (selectedTranslation.LanguageIdToLearn == null ||
+                x.WordMeaning.Word.LanguageId == selectedTranslation.LanguageIdToLearn)
+               && (selectedTranslation.LanguageIdToLearnFrom == null ||
+                   x.LanguageId == selectedTranslation.LanguageIdToLearnFrom);
     }
     
-    public static Expression<Func<WordMeaningTopic, long, long, bool>> TopicHasLanguage()
+    public static Expression<Func<WordMeaningTopic, SelectedTranslation, bool>> TopicHasLanguage()
     {
-        return (x, languageIdToLearn, languageIdToLearnFrom)
-            => x.WordMeaning.Word.LanguageId == languageIdToLearn &&
-               x.WordMeaning.Translations.Any(t => t.Id == languageIdToLearnFrom);
+        return (x, selectedTranslation)
+            => (selectedTranslation.LanguageIdToLearn == null ||
+                x.WordMeaning.Word.LanguageId == selectedTranslation.LanguageIdToLearn)
+               && (selectedTranslation.LanguageIdToLearnFrom == null ||
+                   x.WordMeaning.Translations.Any(t => t.Id == selectedTranslation.LanguageIdToLearnFrom));
     }
     
     public static IQueryable<WordTranslationState> Learned(

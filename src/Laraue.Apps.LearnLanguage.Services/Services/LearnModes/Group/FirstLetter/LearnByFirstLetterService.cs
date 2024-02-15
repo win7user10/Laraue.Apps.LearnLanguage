@@ -10,7 +10,7 @@ public sealed class LearnByFirstLetterService(
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
     ILearnByFirstLetterRepository learnByFirstLetterRepository) : 
-        BaseLearnByGroupService<char, LearnByFirstLetterRequest>(
+        BaseLearnByGroupService<char, DetailViewByFirstLetter>(
             userRepository,
             wordsRepository,
             wordsWindowFactory,

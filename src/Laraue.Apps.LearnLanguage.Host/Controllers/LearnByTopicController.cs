@@ -12,21 +12,21 @@ public class LearnByTopicController(ILearnByTopicService service) : TelegramCont
     [TelegramCallbackRoute(TelegramRoutes.ListGroupsByTopic)]
     public Task HandleListRequestAsync(
         RequestContext request,
-        [FromQuery] LearnListRequest learnListRequest,
+        [FromQuery] LearnList learnList,
         CancellationToken ct)
     {
-        return service.HandleListViewAsync(learnListRequest, ReplyData.FromRequest(request), ct);
+        return service.HandleListViewAsync(learnList, ReplyData.FromRequest(request), ct);
     }
     
     [TelegramCallbackRoute(TelegramRoutes.DetailGroupByTopic)]
     public Task HandleDetailRequestAsync(
         RequestContext context,
-        [FromQuery] LearnByTopicRequest learnByGroupRequest,
+        [FromQuery] DetailViewByTopic detailViewByGroup,
         CancellationToken ct)
     {
         return service.HandleDetailViewAsync(
             ReplyData.FromRequest(context),
-            learnByGroupRequest,
+            detailViewByGroup,
             ct);
     }
 }

@@ -6,7 +6,7 @@ using Laraue.Telegram.NET.DataAccess;
 
 namespace Laraue.Apps.LearnLanguage.Services.Services;
 
-public abstract record BaseLearnRequest : IChangeUserSettingsRequest, IUpdateWordStateRequest
+public abstract record BaseDetailView : BaseSelectedTranslation, IChangeUserSettingsRequest, IUpdateWordStateRequest
 {
     [FromQuery(ParameterNames.ToggleTranslations)]
     public bool ToggleShowTranslations { get; init; }

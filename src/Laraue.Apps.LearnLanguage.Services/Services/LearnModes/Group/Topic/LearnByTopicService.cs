@@ -10,7 +10,7 @@ public sealed class LearnByTopicService(
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
     ILearnByTopicRepository learnByTopicRepository) : 
-        BaseLearnByGroupService<long, LearnByTopicRequest>(
+        BaseLearnByGroupService<long, DetailViewByTopic>(
             userRepository,
             wordsRepository,
             wordsWindowFactory,

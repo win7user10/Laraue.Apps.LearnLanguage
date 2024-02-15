@@ -15,6 +15,7 @@ public interface ILearnByGroupRepository<TId>
         Guid userId,
         ShowWordsMode filter,
         PaginatedRequest request,
+        SelectedTranslation selectedTranslation,
         CancellationToken ct = default);
 
     /// <summary>
@@ -22,8 +23,7 @@ public interface ILearnByGroupRepository<TId>
     /// </summary>
     Task<IList<LearningItemGroup<TId>>> GetGroupsAsync(
         Guid userId,
-        long languageIdToLearn,
-        long languageIdToLearnFrom,
+        SelectedTranslation selectedTranslation,
         CancellationToken ct = default);
 
     /// <summary>

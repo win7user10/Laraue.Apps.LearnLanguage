@@ -13,12 +13,11 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
 
     public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(
         Guid userId,
-        long languageIdToLearn,
-        long languageIdToLearnFrom,
+        SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
         return await _context.WordTranslations
-            .Where(t => t.HasLanguage(languageIdToLearn, languageIdToLearnFrom))
+            .Where(t => t.HasLanguage(selectedTranslation))
             .Where(x => x.WordMeaning.WordCefrLevelId != null)
             .GroupBy(x => new { x.WordMeaning.WordCefrLevelId, x.WordMeaning.WordCefrLevel!.Name })
             .OrderBy(x => x.Key.WordCefrLevelId)
@@ -27,7 +26,7 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
                 _context.WordTranslationStates
                     .Learned()
                     .Count(y => y.UserId == userId
-                        && y.WordTranslation.HasLanguage(languageIdToLearn, languageIdToLearnFrom)
+                        && y.WordTranslation.HasLanguage(selectedTranslation)
                         && y.WordTranslation.WordMeaning.WordCefrLevelId == x.Key.WordCefrLevelId),
                 x.Count(),
                 x.Key.Name))

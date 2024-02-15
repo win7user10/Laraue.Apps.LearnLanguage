@@ -13,19 +13,18 @@ public class LearnByTopicRepository(DatabaseContext context)
 
     public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(
         Guid userId,
-        long languageIdToLearn,
-        long languageIdToLearnFrom,
+        SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
         return await _context.WordMeaningTopics
-            .Where(x => x.HasLanguage(languageIdToLearn, languageIdToLearnFrom))
+            .Where(x => x.HasLanguage(selectedTranslation))
             .GroupBy(x => new { x.WordTopicId, x.WordTopic.Name })
             .Select(group => new LearningItemGroup<long>(
                 group.Key.WordTopicId,
                 _context.WordTranslationStates
                     .Learned()
                     .Count(y => y.UserId == userId
-                        && y.WordTranslation.HasLanguage(languageIdToLearn, languageIdToLearnFrom)
+                        && y.WordTranslation.HasLanguage(selectedTranslation)
                         && y.WordTranslation.WordMeaning.Topics.Any(t => t.WordTopicId == group.Key.WordTopicId)),
                 group.Count(),
                 group.Key.Name))
