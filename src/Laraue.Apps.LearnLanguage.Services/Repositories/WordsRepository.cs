@@ -105,7 +105,8 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
             })
             .Select(x => new LearningLanguagePair(
                 new LearningLanguagePairItem(x.Key.LanguageIdToLearn, x.Key.LanguageCodeToLearn),
-                new LearningLanguagePairItem(x.Key.LanguageIdToLearnFrom, x.Key.LanguageCodeToLearnFrom)))
+                new LearningLanguagePairItem(x.Key.LanguageIdToLearnFrom, x.Key.LanguageCodeToLearnFrom),
+                x.Count()))
             .ToListAsyncLinqToDB(ct);
     }
 }

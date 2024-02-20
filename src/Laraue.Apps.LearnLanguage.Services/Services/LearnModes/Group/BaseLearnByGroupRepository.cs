@@ -21,7 +21,9 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         CancellationToken ct = default)
     {
         var dbQuery = context.WordTranslations
-            .Where(t => t.HasLanguage(selectedTranslation))
+            .Where(t => t.HasLanguage(
+                selectedTranslation.LanguageToLearnId,
+                selectedTranslation.LanguageToLearnFromId))
             .Where(GetGroupWordsFilter(groupId))
             .OrderBy(x => x.WordMeaning.Id)
             .LeftJoin(

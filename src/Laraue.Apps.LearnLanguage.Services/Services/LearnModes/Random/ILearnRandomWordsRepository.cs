@@ -14,7 +14,7 @@ public interface ILearnRandomWordsRepository
     /// <summary>
     /// Next suggested word to repeat.
     /// </summary>
-    Task<NextRepeatWordTranslation> GetNextRepeatWordAsync(
+    Task<NextRepeatWordTranslation?> GetNextRepeatWordAsync(
         long sessionId,
         NextWordPreference wordPreference,
         CancellationToken ct = default);
@@ -42,7 +42,13 @@ public interface ILearnRandomWordsRepository
     /// Mark word as learned in the repeating session.
     /// </summary>
     /// <returns>Is session finished.</returns>
-    Task<bool> LearnWordAsync(long sessionId, long translationId, CancellationToken ct = default);
+    Task LearnWordAsync(long sessionId, long translationId, CancellationToken ct = default);
+
+    Task ActivateSessionAsync(
+        long sessionId,
+        CancellationToken ct = default);
+
+    Task<bool> TryFinishCurrentUserSessionAsync(Guid userId, CancellationToken ct = default);
 
     Task<IFullPaginatedResult<LearningItem>> GetUnlearnedSessionWordsAsync(
         long sessionId,

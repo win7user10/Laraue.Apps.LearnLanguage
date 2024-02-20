@@ -17,14 +17,18 @@ public class LearnByTopicRepository(DatabaseContext context)
         CancellationToken ct = default)
     {
         return await _context.WordMeaningTopics
-            .Where(x => x.HasLanguage(selectedTranslation))
+            .Where(x => x.HasLanguage(
+                selectedTranslation.LanguageToLearnId,
+                selectedTranslation.LanguageToLearnFromId))
             .GroupBy(x => new { x.WordTopicId, x.WordTopic.Name })
             .Select(group => new LearningItemGroup<long>(
                 group.Key.WordTopicId,
                 _context.WordTranslationStates
                     .Learned()
                     .Count(y => y.UserId == userId
-                        && y.WordTranslation.HasLanguage(selectedTranslation)
+                        && y.WordTranslation.HasLanguage(
+                            selectedTranslation.LanguageToLearnId,
+                            selectedTranslation.LanguageToLearnFromId)
                         && y.WordTranslation.WordMeaning.Topics.Any(t => t.WordTopicId == group.Key.WordTopicId)),
                 group.Count(),
                 group.Key.Name))

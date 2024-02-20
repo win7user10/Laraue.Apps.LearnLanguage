@@ -77,7 +77,9 @@ public class SelectLanguageService(
                     new SelectedTranslation(
                         p.LanguageToLearn.Id,
                         p.LanguageToLearnFrom.Id))
-                .ToInlineKeyboardButton($"{p.LanguageToLearnFrom.Code} -> {p.LanguageToLearn.Code}")));
+                .ToInlineKeyboardButton($"{p.LanguageToLearnFrom.Code} -> {p.LanguageToLearn.Code} ({p.Count})")));
+
+        tmb.AddMainMenuButton();
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }

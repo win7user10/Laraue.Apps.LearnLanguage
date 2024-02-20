@@ -76,32 +76,41 @@ public class LearnRandomWordsService(
         }
     }
 
-    private Task SendRepeatingWindowAsync(ReplyData replyData, RepeatState state, long sessionId, CancellationToken ct = default)
+    private async Task SendRepeatingWindowAsync(ReplyData replyData, RepeatState state, long sessionId, CancellationToken ct = default)
     {
-        switch (state)
+        if (state == RepeatState.Filling)
         {
-            case RepeatState.Filling:
-                return SendSuggestedWordAsync(replyData, sessionId, ct);
-            case RepeatState.Active:
-                return HandleRepeatingWindowWordsViewAsync(
-                    replyData,
-                    new DetailView { SessionId = sessionId },
-                    ct);
+            if (await TrySuggestWordAsync(replyData, sessionId, ct))
+            {
+                return;
+            }
+            
+            await repository.ActivateSessionAsync(sessionId, ct);
+            state = RepeatState.Active;
         }
 
-        return Task.CompletedTask;
+        if (state == RepeatState.Active)
+        {
+            await HandleRepeatingWindowWordsViewAsync(
+                replyData,
+                new DetailView { SessionId = sessionId },
+                ct);
+        }
     }
 
-    private async Task SendSuggestedWordAsync(ReplyData replyData, long sessionId, CancellationToken ct = default)
+    private async Task<bool> TrySuggestWordAsync(ReplyData replyData, long sessionId, CancellationToken ct = default)
     {
-        await using var transaction = await context.Database.BeginTransactionAsync(ct);
-
         var word = await repository.GetNextRepeatWordAsync(sessionId, NextWordPreference.Random, ct);
+
+        if (word is null)
+        {
+            return false;
+        }
+        
         await wordsRepository.IncrementLearnAttemptsIfRequiredAsync(replyData.UserId, [word.Id], ct);
-        
-        await transaction.CommitAsync(ct);
-        
         await SendSuggestedWordAsync(word, replyData, sessionId, false, ct);
+
+        return true;
     }
     
     public async Task HandleRepeatingWindowWordsViewAsync(
@@ -110,11 +119,11 @@ public class LearnRandomWordsService(
         CancellationToken ct = default)
     {
         await userRepository.UpdateViewSettings(replyData.UserId, request, ct);
+        
+        await using var transaction = await context.Database.BeginTransactionAsync(ct);
 
         if (request is { OpenedWordTranslationId: not null })
         {
-            await using var transaction = await context.Database.BeginTransactionAsync(ct);
-            
             await wordsRepository.ChangeWordLearnStateAsync(
                 replyData.UserId,
                 request.OpenedWordTranslationId.Value,
@@ -129,20 +138,19 @@ public class LearnRandomWordsService(
                     request.OpenedWordTranslationId.GetValueOrDefault(),
                     ct);
             }
+        }
 
+        if (await repository.TryFinishCurrentUserSessionAsync(replyData.UserId, ct))
+        {
+            await SendFinishSessionWindowAsync(replyData, request.SessionId, ct);
             await transaction.CommitAsync(ct);
+            return;
         }
         
         var words = await repository.GetUnlearnedSessionWordsAsync(
             request.SessionId,
             new PaginatedRequest(request.Page, Constants.PaginationCount),
             ct);
-        
-        if (words.Data.Count == 0)
-        {
-            await SendFinishSessionWindowAsync(replyData, request.SessionId, ct);
-            return;
-        }
         
         var userSettings = await userRepository.GetViewSettingsAsync(replyData.UserId, ct);
         var currentRoute = new RoutePathBuilder(TelegramRoutes.RepeatWindowWordsView)
@@ -170,6 +178,7 @@ public class LearnRandomWordsService(
         }
 
         await wordsWindow.SendAsync(replyData, ct);
+        await transaction.CommitAsync(ct);
     }
 
     private async Task SendFinishSessionWindowAsync(
@@ -223,13 +232,15 @@ public class LearnRandomWordsService(
         
         handleRoute.Freeze();
 
+        var requiredItemsCount = int.Min(session.MaxWordsInSessionCount, Constants.RepeatModeGroupSize);
+
         var tmb = new TelegramMessageBuilder()
             .AppendRow($"<b>{RandomMode.Title}</b>")
             .AppendRow()
             .AppendRow(string
                 .Format(
                     RandomMode.CollectedWords,
-                    $"<b>{session.WordsAddedToRepeatCount}/{Constants.RepeatModeGroupSize}</b>"));
+                    $"<b>{session.WordsAddedToRepeatCount}/{requiredItemsCount}</b>"));
 
         if (session.WordsRememberedCount > 0)
         {

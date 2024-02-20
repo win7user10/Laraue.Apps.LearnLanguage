@@ -26,7 +26,7 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
             .FirstOrDefaultAsyncEF(ct);
     }
 
-    public async Task<NextRepeatWordTranslation> GetNextRepeatWordAsync(
+    public async Task<NextRepeatWordTranslation?> GetNextRepeatWordAsync(
         long sessionId,
         NextWordPreference wordPreference,
         CancellationToken ct = default)
@@ -37,8 +37,7 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
             .FirstAsyncLinqToDB(ct);
         
         var query = context.WordTranslations
-            .Where(t => t.HasLanguage(
-                new SelectedTranslation(sessionInfo.LanguageToLearnId, sessionInfo.LanguageToLearnFromId)))
+            .Where(t => t.HasLanguage(sessionInfo.LanguageToLearnId, sessionInfo.LanguageToLearnFromId))
             .Where(x => !context.RepeatSessionWords
                 .Where(y => y.RepeatSessionId == sessionId)
                 .Select(y => y.WordTranslationId)
@@ -74,7 +73,7 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
                 x.wt.WordMeaning.WordCefrLevel!.Name,
                 x.wt.WordMeaning.Topics.Select(t => t.WordTopic.Name).ToArray(),
                 x.wt.Difficulty))
-            .FirstAsyncLinqToDB(ct);
+            .FirstOrDefaultAsyncLinqToDB(ct);
     }
 
     public Task<NextRepeatWordTranslation> GetRepeatWordAsync(
@@ -110,9 +109,13 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
                     y => y.RepeatSessionWordState != RepeatSessionWordState.RepeatedSinceFirstAttempt),
                 x.Words.Count(
                     y => y.RepeatSessionWordState == RepeatSessionWordState.RepeatedSinceFirstAttempt),
+                context.WordTranslations
+                    .Where(t => x.Words.All(w =>
+                        w.WordTranslationId != t.Id || w.RepeatSessionWordState != RepeatSessionWordState.RepeatedSinceFirstAttempt))
+                    .Count(t => t.HasLanguage(x.LanguageToLearnId, x.LanguageToLearnFromId)),
                 x.StartedAt,
                 x.FinishedAt))
-            .FirstAsyncEF(ct);
+            .FirstAsyncLinqToDB(ct);
     }
 
     public async Task<long> CreateSessionAsync(
@@ -152,6 +155,7 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
             })
             .FirstAsyncEF(ct);
 
+        // If repeat session doesn't allow to add new word return the previous session state.
         if (info.State != RepeatState.Filling
             || info.WordsCount >= Constants.RepeatModeGroupSize
             || info.AlreadyAdded)
@@ -176,25 +180,48 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
             await UpsertTranslationStateWithRepeatedStateAsync(info.UserId, translationId, ct);
         }
 
+        // If word to remember has been added to the session, session words count increments.
+        // When the words count reach required amount of elements it changes the state.
         var newAddedWordsCount = isRemembered ? info.WordsCount : info.WordsCount + 1;
         if (newAddedWordsCount != Constants.RepeatModeGroupSize)
         {
             await t.CommitAsync(ct);
             return info.State;
         }
-        
-        await context.RepeatSessions
-            .Where(x => x.Id == sessionId)
-            .ExecuteUpdateAsync(u => u
-                .SetProperty(x => x.State, RepeatState.Active)
-                .SetProperty(x => x.StartedAt, dateTimeProvider.UtcNow), ct);
+
+        await ActivateSessionAsync(sessionId, ct);
         
         await t.CommitAsync(ct);
 
         return RepeatState.Active;
     }
 
-    public async Task<bool> LearnWordAsync(long sessionId, long translationId, CancellationToken ct = default)
+    public Task ActivateSessionAsync(
+        long sessionId,
+        CancellationToken ct = default)
+    {
+        return context.RepeatSessions
+            .Where(x => x.Id == sessionId)
+            .ExecuteUpdateAsync(u => u
+                .SetProperty(x => x.State, RepeatState.Active)
+                .SetProperty(x => x.StartedAt, dateTimeProvider.UtcNow), ct);
+    }
+    
+    public async Task<bool> TryFinishCurrentUserSessionAsync(Guid userId, CancellationToken ct = default)
+    {
+        var updatedCount = await context.RepeatSessions
+            .Where(x => x.UserId == userId)
+            .Where(x => x.State == RepeatState.Active)
+            .Where(x => x.Words.All(w => 
+                w.RepeatSessionWordState != RepeatSessionWordState.NotRepeated))
+            .ExecuteUpdateAsync(u => u
+                .SetProperty(x => x.State, RepeatState.Finished)
+                .SetProperty(x => x.FinishedAt, dateTimeProvider.UtcNow), ct);
+
+        return updatedCount == 1;
+    }
+
+    public async Task LearnWordAsync(long sessionId, long translationId, CancellationToken ct = default)
     {
         await context.RepeatSessionWords
             .Where(x => x.RepeatSessionId == sessionId)
@@ -210,24 +237,6 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
             .FirstOrDefaultAsyncEF(ct);
 
         await UpsertTranslationStateWithRepeatedStateAsync(userId, translationId, ct);
-
-        var hasUnlearned = await context.RepeatSessionWords
-            .Where(x => x.RepeatSessionId == sessionId)
-            .Where(x => x.RepeatSessionWordState == RepeatSessionWordState.NotRepeated)
-            .AnyAsyncEF(ct);
-
-        if (hasUnlearned)
-        {
-            return false;
-        }
-        
-        await context.RepeatSessions
-            .Where(x => x.Id == sessionId)
-            .ExecuteUpdateAsync(u => u
-                .SetProperty(x => x.State, RepeatState.Finished)
-                .SetProperty(x => x.FinishedAt, dateTimeProvider.UtcNow), ct);
-
-        return true;
     }
 
     public Task<IFullPaginatedResult<LearningItem>> GetUnlearnedSessionWordsAsync(

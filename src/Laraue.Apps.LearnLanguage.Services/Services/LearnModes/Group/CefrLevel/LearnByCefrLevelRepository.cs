@@ -17,7 +17,9 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
         CancellationToken ct = default)
     {
         return await _context.WordTranslations
-            .Where(t => t.HasLanguage(selectedTranslation))
+            .Where(t => t.HasLanguage(
+                selectedTranslation.LanguageToLearnId,
+                selectedTranslation.LanguageToLearnFromId))
             .Where(x => x.WordMeaning.WordCefrLevelId != null)
             .GroupBy(x => new { x.WordMeaning.WordCefrLevelId, x.WordMeaning.WordCefrLevel!.Name })
             .OrderBy(x => x.Key.WordCefrLevelId)
@@ -26,7 +28,9 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
                 _context.WordTranslationStates
                     .Learned()
                     .Count(y => y.UserId == userId
-                        && y.WordTranslation.HasLanguage(selectedTranslation)
+                        && y.WordTranslation.HasLanguage(
+                            selectedTranslation.LanguageToLearnId,
+                            selectedTranslation.LanguageToLearnFromId)
                         && y.WordTranslation.WordMeaning.WordCefrLevelId == x.Key.WordCefrLevelId),
                 x.Count(),
                 x.Key.Name))
