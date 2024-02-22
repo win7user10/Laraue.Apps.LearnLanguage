@@ -26,4 +26,13 @@
     <data name="SelectLanguage" xml:space="preserve">
         <value>Выберите язык интерфейса</value>
     </data>
+    <data name="CurrentLearnLanguage" xml:space="preserve">
+        <value>Текущий язык для изучения: {0}</value>
+    </data>
+    <data name="SelectLearnLanguage" xml:space="preserve">
+        <value>Выберите языковую пару для изучения. Когда пара выбрана, она будет использована автоматически во всех режимах. Когда не выбрана - будет запрашиваться каждый раз при входе в режим изучения слов.</value>
+    </data>
+    <data name="NotSet" xml:space="preserve">
+        <value>Не задан</value>
+    </data>
 </root>

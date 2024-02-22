@@ -114,6 +114,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language to learn.
+        /// </summary>
+        internal static string Settings_LearnLanguage {
+            get {
+                return ResourceManager.GetString("Settings_LearnLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open stat.
         /// </summary>
         internal static string Stat {

@@ -11,17 +11,27 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
 {
     private readonly DatabaseContext _context = context;
 
-    public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(Guid userId, CancellationToken ct = default)
+    public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(
+        Guid userId,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
     {
         return await _context.WordTranslations
-            .Where(x => x.Word.WordCefrLevelId != null)
-            .GroupBy(x => new { x.Word.WordCefrLevelId, x.Word.WordCefrLevel!.Name })
+            .Where(t => t.HasLanguage(
+                selectedTranslation.LanguageToLearnId,
+                selectedTranslation.LanguageToLearnFromId))
+            .Where(x => x.WordMeaning.WordCefrLevelId != null)
+            .GroupBy(x => new { x.WordMeaning.WordCefrLevelId, x.WordMeaning.WordCefrLevel!.Name })
             .OrderBy(x => x.Key.WordCefrLevelId)
             .Select((x, i) => new LearningItemGroup<long>(
                 x.Key.WordCefrLevelId.GetValueOrDefault(),
                 _context.WordTranslationStates
+                    .Learned()
                     .Count(y => y.UserId == userId
-                                && y.WordTranslation.Word.WordCefrLevelId == x.Key.WordCefrLevelId),
+                        && y.WordTranslation.HasLanguage(
+                            selectedTranslation.LanguageToLearnId,
+                            selectedTranslation.LanguageToLearnFromId)
+                        && y.WordTranslation.WordMeaning.WordCefrLevelId == x.Key.WordCefrLevelId),
                 x.Count(),
                 x.Key.Name))
             .ToListAsyncLinqToDB(ct);
@@ -37,6 +47,6 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
 
     protected override Expression<Func<WordTranslation, bool>> GetGroupWordsFilter(long id)
     {
-        return translation => translation.Word.WordCefrLevelId == id;
+        return translation => translation.WordMeaning.WordCefrLevelId == id;
     }
 }

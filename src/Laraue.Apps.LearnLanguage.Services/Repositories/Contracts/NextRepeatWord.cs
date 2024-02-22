@@ -1,4 +1,5 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 
@@ -10,6 +11,6 @@ public record NextRepeatWordTranslation(
     DateTime? RepeatedAt,
     int LearnAttempts,
     string? CefrLevel,
-    string? Topic,
+    string[] Topics,
     WordTranslationDifficulty? Difficulty);
     

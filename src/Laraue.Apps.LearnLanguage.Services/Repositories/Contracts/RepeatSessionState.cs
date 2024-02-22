@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+﻿using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 

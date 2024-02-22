@@ -1,5 +1,6 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 

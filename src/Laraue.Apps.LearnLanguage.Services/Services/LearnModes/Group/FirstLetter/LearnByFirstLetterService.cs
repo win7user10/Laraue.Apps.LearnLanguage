@@ -9,13 +9,15 @@ public sealed class LearnByFirstLetterService(
     IWordsRepository wordsRepository,
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
-    ILearnByFirstLetterRepository learnByFirstLetterRepository) : 
-        BaseLearnByGroupService<char, LearnByFirstLetterRequest>(
+    ILearnByFirstLetterRepository learnByFirstLetterRepository,
+    ISelectLanguageService selectLanguageService) : 
+        BaseLearnByGroupService<char, DetailViewByFirstLetterRequest>(
             userRepository,
             wordsRepository,
             wordsWindowFactory,
             client,
-            learnByFirstLetterRepository),
+            learnByFirstLetterRepository,
+            selectLanguageService),
         ILearnByFirstLetterService
 {
     protected override string ListRoute => TelegramRoutes.ListGroupsByFirstLetter;

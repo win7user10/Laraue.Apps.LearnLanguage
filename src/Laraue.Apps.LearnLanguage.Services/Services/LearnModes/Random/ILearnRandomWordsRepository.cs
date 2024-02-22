@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+﻿using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 
@@ -14,7 +14,7 @@ public interface ILearnRandomWordsRepository
     /// <summary>
     /// Next suggested word to repeat.
     /// </summary>
-    Task<NextRepeatWordTranslation> GetNextRepeatWordAsync(
+    Task<NextRepeatWordTranslation?> GetNextRepeatWordAsync(
         long sessionId,
         NextWordPreference wordPreference,
         CancellationToken ct = default);
@@ -26,7 +26,7 @@ public interface ILearnRandomWordsRepository
     
     Task<RepeatSessionInfo> GetSessionInfoAsync(long sessionId, CancellationToken ct = default);
 
-    Task<long> CreateSessionAsync(Guid userId, CancellationToken ct = default);
+    Task<long> CreateSessionAsync(Guid userId, SelectedTranslation selectedTranslation, CancellationToken ct = default);
 
     /// <summary>
     /// Create relation between translation and session.
@@ -42,7 +42,13 @@ public interface ILearnRandomWordsRepository
     /// Mark word as learned in the repeating session.
     /// </summary>
     /// <returns>Is session finished.</returns>
-    Task<bool> LearnWordAsync(long sessionId, long translationId, CancellationToken ct = default);
+    Task LearnWordAsync(long sessionId, long translationId, CancellationToken ct = default);
+
+    Task ActivateSessionAsync(
+        long sessionId,
+        CancellationToken ct = default);
+
+    Task<bool> TryFinishCurrentUserSessionAsync(Guid userId, CancellationToken ct = default);
 
     Task<IFullPaginatedResult<LearningItem>> GetUnlearnedSessionWordsAsync(
         long sessionId,

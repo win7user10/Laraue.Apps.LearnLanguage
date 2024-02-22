@@ -19,12 +19,12 @@ namespace Laraue.Apps.LearnLanguage.Services.Services;
 public class WordsWindow(
     IFullPaginatedResult<LearningItem> words,
     UserViewSettings userViewSettings,
-    RoutePathBuilder viewRoute,
+    CallbackRoutePath viewRoute,
     ITelegramBotClient client,
     IWordsRepository wordsRepository)
     : IWordsWindow
 {
-    private RoutePathBuilder? _paginationRoute;
+    private CallbackRoutePath? _paginationRoute;
     private string _title = "Words";
     private LearningItem? _openedTranslation;
     private InlineKeyboardButton? _backButton;
@@ -44,7 +44,7 @@ public class WordsWindow(
         return this;
     }
 
-    public IWordsWindow SetPaginationRoute(RoutePathBuilder paginationRoute)
+    public IWordsWindow SetPaginationRoute(CallbackRoutePath paginationRoute)
     {
         _paginationRoute = paginationRoute;
         return this;
@@ -162,9 +162,9 @@ public class WordsWindow(
 
             tmb.AppendRow();
             
-            if (_openedTranslation.Topic is not null)
+            if (_openedTranslation.Topics.Length != 0)
             {
-                tmb.AppendRow(string.Format(Mode.Topic, _openedTranslation.Topic));
+                tmb.AppendRow(string.Format(Mode.Topic, string.Join(", ", _openedTranslation.Topics)));
             }
 
             if (_openedTranslation.Difficulty is not null || _openedTranslation.CefrLevel is not null)

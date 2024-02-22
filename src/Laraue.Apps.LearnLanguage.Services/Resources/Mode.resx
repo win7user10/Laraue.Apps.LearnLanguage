@@ -84,4 +84,7 @@
     <data name="Navigation_Next" xml:space="preserve">
         <value>Next ➡</value>
     </data>
+    <data name="SelectLanguage" xml:space="preserve">
+        <value>Select the language pair to learn. You also can set the preferred language pair in settings to select the same pair always.</value>
+    </data>
 </root>

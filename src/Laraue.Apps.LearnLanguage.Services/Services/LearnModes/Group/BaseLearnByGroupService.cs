@@ -2,6 +2,7 @@
 using Laraue.Apps.LearnLanguage.Common.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Extensions;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
+using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Apps.LearnLanguage.Services.Resources;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
@@ -16,9 +17,10 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
     IWordsRepository wordsRepository,
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
-    ILearnByGroupRepository<TId> repository)
+    ILearnByGroupRepository<TId> repository,
+    ISelectLanguageService selectLanguageService)
     : ILearnByGroupService<TId, TRequest>
-    where TRequest : BaseLearnByGroupRequest<TId>
+    where TRequest : DetailViewByGroupRequest<TId>
     where TId : struct
 {
     /// <summary>
@@ -53,14 +55,17 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
             replyData.UserId,
             userSettings.ShowWordsMode,
             new PaginatedRequest(request.Page, Constants.PaginationCount),
+            request,
             ct);
 
-        var viewRoute = new RoutePathBuilder(DetailRoute)
+        var viewRoute = new CallbackRoutePath(DetailRoute)
             .WithQueryParameter(ParameterNames.GroupId, request.GroupId)
             .WithQueryParameter(ParameterNames.Page, request.Page)
+            .AddTranslationParameters(request)
             .Freeze();
         
-        var returnBackButton = new RoutePathBuilder(ListRoute)
+        var returnBackButton = new CallbackRoutePath(ListRoute)
+            .AddTranslationParameters(request)
             .ToInlineKeyboardButton(GroupMode.BackButton);
 
         var groupName = await repository.GetGroupNameAsync(request.GroupId, ct);
@@ -93,15 +98,34 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         await wordsWindow.SendAsync(replyData, ct);
     }
 
-    public async Task HandleListViewAsync(ReplyData replyData, CancellationToken ct = default)
+    public Task HandleListViewAsync(
+        OpenModeRequest openModeRequest,
+        ReplyData replyData,
+        CancellationToken ct = default)
     {
-        var groups = await repository.GetGroupsAsync(replyData.UserId, ct);
+        return selectLanguageService.ShowLanguageWindowOrHandleRequestAsync(
+            request: openModeRequest,
+            languageWindowTitle: ModeName,
+            nextRoute: ListRoute,
+            replyData: replyData,
+            handleRequestAsync: HandleListViewAsync,
+            ct);
+    }
+
+    private async Task HandleListViewAsync(
+        ReplyData replyData,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
+    {
+        var groups = await repository.GetGroupsAsync(
+            replyData.UserId, selectedTranslation, ct);
         
         var learnedCount = groups.Sum(x => x.LearnedCount);
         var totalCount = groups.Sum(x => x.TotalCount);
         var completedPercent = learnedCount.DivideAndReturnPercent(totalCount);
 
-        var detailRoute = new RoutePathBuilder(DetailRoute);
+        var detailRoute = new CallbackRoutePath(DetailRoute)
+            .AddTranslationParameters(selectedTranslation);
 
         var tmb = new TelegramMessageBuilder()
             .AppendRow($"<b>{ModeName}</b>")

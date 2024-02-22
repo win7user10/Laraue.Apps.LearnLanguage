@@ -50,16 +50,36 @@ public class UserRepository(DatabaseContext context) : IUserRepository
     public Task<UserSettings> GetSettingsAsync(Guid userId, CancellationToken ct = default)
     {
         return context.Users.Where(x => x.Id == userId)
-            .Select(x => new UserSettings(x.TelegramLanguageCode))
+            .Select(x => new UserSettings(
+                x.TelegramLanguageCode,
+                x.LanguageToLearnId,
+                x.LanguageToLearnFromId,
+                x.LanguageToLearn.Code,
+                x.LanguageToLearnFrom.Code))
             .FirstAsyncEF(ct);
     }
 
     public Task SetLanguageCodeAsync(Guid userId, string code, CancellationToken ct = default)
     {
-        return context.Users.Where(x => x.Id == userId)
+        return context.Users
+            .Where(x => x.Id == userId)
             .UpdateAsync(_ => new User
             {
                 TelegramLanguageCode = code
+            }, ct);
+    }
+
+    public Task UpdateLanguageSettingsAsync(
+        Guid userId,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
+    {
+        return context.Users
+            .Where(x => x.Id == userId)
+            .UpdateAsync(_ => new User
+            {
+                LanguageToLearnFromId = selectedTranslation.LanguageToLearnFromId,
+                LanguageToLearnId = selectedTranslation.LanguageToLearnId,
             }, ct);
     }
 

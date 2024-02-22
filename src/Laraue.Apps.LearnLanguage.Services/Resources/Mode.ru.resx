@@ -77,4 +77,7 @@
     <data name="Navigation_Previous" xml:space="preserve">
         <value>Предыдущая ⬅</value>
     </data>
+    <data name="SelectLanguage" xml:space="preserve">
+        <value>Выберите языковую пару для изучения. Вы также можете установить ее в настройках, чтобы она всегда применялась автоматически.</value>
+    </data>
 </root>

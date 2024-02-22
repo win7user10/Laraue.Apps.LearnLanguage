@@ -69,6 +69,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current language pair to learn is: {0}.
+        /// </summary>
+        internal static string CurrentLearnLanguage {
+            get {
+                return ResourceManager.GetString("CurrentLearnLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit:.
         /// </summary>
         internal static string Edit {
@@ -78,11 +87,29 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not set.
+        /// </summary>
+        internal static string NotSet {
+            get {
+                return ResourceManager.GetString("NotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select the interface language.
         /// </summary>
         internal static string SelectLanguage {
             get {
                 return ResourceManager.GetString("SelectLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the preferred language pair to learn. When the pair is set, it will be used as default in all modes. Otherwise each learn mode will require to select language pair to learn. .
+        /// </summary>
+        internal static string SelectLearnLanguage {
+            get {
+                return ResourceManager.GetString("SelectLearnLanguage", resourceCulture);
             }
         }
         

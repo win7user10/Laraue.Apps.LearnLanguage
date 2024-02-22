@@ -11,19 +11,27 @@ public class LearnByTopicRepository(DatabaseContext context)
 {
     private readonly DatabaseContext _context = context;
 
-    public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(Guid userId, CancellationToken ct = default)
+    public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(
+        Guid userId,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
     {
-        return await _context.WordTranslations
-            .Where(x => x.Word.WordTopicId != null)
-            .GroupBy(x => new { x.Word.WordTopicId, x.Word.WordTopic!.Name })
-            .OrderBy(x => x.Key.Name)
-            .Select((x, i) => new LearningItemGroup<long>(
-                x.Key.WordTopicId.GetValueOrDefault(),
+        return await _context.WordMeaningTopics
+            .Where(x => x.HasLanguage(
+                selectedTranslation.LanguageToLearnId,
+                selectedTranslation.LanguageToLearnFromId))
+            .GroupBy(x => new { x.WordTopicId, x.WordTopic.Name })
+            .Select(group => new LearningItemGroup<long>(
+                group.Key.WordTopicId,
                 _context.WordTranslationStates
+                    .Learned()
                     .Count(y => y.UserId == userId
-                                && y.WordTranslation.Word.WordTopicId == x.Key.WordTopicId),
-                x.Count(),
-                x.Key.Name))
+                        && y.WordTranslation.HasLanguage(
+                            selectedTranslation.LanguageToLearnId,
+                            selectedTranslation.LanguageToLearnFromId)
+                        && y.WordTranslation.WordMeaning.Topics.Any(t => t.WordTopicId == group.Key.WordTopicId)),
+                group.Count(),
+                group.Key.Name))
             .ToListAsyncLinqToDB(ct);
     }
 
@@ -37,6 +45,6 @@ public class LearnByTopicRepository(DatabaseContext context)
 
     protected override Expression<Func<WordTranslation, bool>> GetGroupWordsFilter(long id)
     {
-        return translation => translation.Word.WordTopicId == id;
+        return translation => translation.WordMeaning.Topics.Any(x => x.WordTopicId == id);
     }
 }

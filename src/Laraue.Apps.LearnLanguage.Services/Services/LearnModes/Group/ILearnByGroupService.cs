@@ -1,7 +1,7 @@
 ﻿namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group;
 
 public interface ILearnByGroupService<TId, in TDetailRequest>
-    where TDetailRequest : BaseLearnByGroupRequest<TId>
+    where TDetailRequest : DetailViewByGroupRequest<TId>
     where TId : struct
 {
     /// <summary>
@@ -16,6 +16,7 @@ public interface ILearnByGroupService<TId, in TDetailRequest>
     /// Send all groups to the user.
     /// </summary>
     Task HandleListViewAsync(
+        OpenModeRequest openModeRequest,
         ReplyData replyData,
         CancellationToken ct = default);
 }

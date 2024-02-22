@@ -9,7 +9,7 @@ public interface IWordsWindow
 {
     IWordsWindow SetWindowTitle(string title);
     IWordsWindow SetOpenedTranslation(LearningItem openedTranslation);
-    IWordsWindow SetPaginationRoute(RoutePathBuilder paginationRoute);
+    IWordsWindow SetPaginationRoute(CallbackRoutePath paginationRoute);
     IWordsWindow SetBackButton(InlineKeyboardButton button);
     IWordsWindow SetFallbackPaginationButtons(ControlButtons controlButtons);
     IWordsWindow SetActionButtons(IEnumerable<InlineKeyboardButton> actionButtons);

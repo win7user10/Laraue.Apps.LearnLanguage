@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.DataAccess;
@@ -13,13 +14,17 @@ public class DatabaseContext : DbContext
     {
     }
     
-    public DbSet<TranslationLanguage> Languages { get; init; }
+    public DbSet<WordLanguage> Languages { get; init; }
     
     public DbSet<Word> Words { get; init; }
     
     public DbSet<WordCefrLevel> WordCefrLevels { get; init; }
     
     public DbSet<WordTopic> WordTopics { get; init; }
+    
+    public DbSet<WordMeaning> WordMeanings { get; init; }
+    
+    public DbSet<WordMeaningTopic> WordMeaningTopics { get; init; }
     
     public DbSet<WordTranslation> WordTranslations { get; init; }
     
@@ -35,12 +40,24 @@ public class DatabaseContext : DbContext
     {
         modelBuilder.HasPostgresExtension("uuid-ossp");
 
+        modelBuilder.Entity<Word>()
+            .HasIndex(x => new { x.Name, x.LanguageId })
+            .IsUnique();
+        
+        modelBuilder.Entity<WordTranslation>()
+            .HasIndex(x => new { x.WordMeaningId, x.LanguageId })
+            .IsUnique();
+        
         modelBuilder.Entity<WordTranslationState>()
             .HasIndex(x => new { x.WordTranslationId, x.UserId })
             .IsUnique();
         
+        modelBuilder.Entity<WordMeaningTopic>()
+            .HasKey(x => new { x.WordMeaningId, x.WordTopicId });
+        
         modelBuilder.Entity<RepeatSessionWordTranslation>()
-            .HasIndex(x => new { x.WordTranslationId, x.RepeatSessionId });
+            .HasIndex(x => new { x.WordTranslationId, x.RepeatSessionId })
+            .IsUnique();
 
         modelBuilder.Entity<RepeatSession>()
             .HasIndex(x => new { x.UserId })
@@ -49,20 +66,19 @@ public class DatabaseContext : DbContext
 
         var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
 
-        var languages = new TranslationLanguage[]
-        {
-            new () { Id = 1, Code = "ru" }
-        };
-
         var cefrLevels = new WordCefrLevel[]
         {
-            new () { Id = 1, Name = "A1" },
-            new () { Id = 2, Name = "A2" },
-            new () { Id = 3, Name = "B1" },
-            new () { Id = 4, Name = "B2" },
-            new () { Id = 5, Name = "C1" },
-            new () { Id = 6, Name = "C2" },
+            new () { Id = 1, Name = "A0" },
+            new () { Id = 2, Name = "A1" },
+            new () { Id = 3, Name = "A2" },
+            new () { Id = 4, Name = "B1" },
+            new () { Id = 5, Name = "B2" },
+            new () { Id = 6, Name = "C1" },
+            new () { Id = 7, Name = "C2" },
         };
+        
+        using var languagesStream = File.OpenRead(Path.Combine(assemblyDirectory, "languages.json"));
+        var languages = JsonSerializer.Deserialize<WordLanguage[]>(languagesStream, Constants.JsonWebOptions)!;
 
         using var topicsStream = File.OpenRead(Path.Combine(assemblyDirectory, "topics.json"));
         var topics = JsonSerializer.Deserialize<WordTopic[]>(topicsStream, Constants.JsonWebOptions)!;
@@ -71,7 +87,7 @@ public class DatabaseContext : DbContext
         var cefrLevelsDict = cefrLevels.ToDictionary(x => x.Name, x => x.Id);
         var topicsDict = topics.ToDictionary(x => x.Name, x => x.Id);
         
-        modelBuilder.Entity<TranslationLanguage>().HasData(languages);
+        modelBuilder.Entity<WordLanguage>().HasData(languages);
         modelBuilder.Entity<WordCefrLevel>().HasData(cefrLevels);
         modelBuilder.Entity<WordTopic>().HasData(topics);
         
@@ -87,20 +103,42 @@ public class DatabaseContext : DbContext
                 {
                     Id = word.Id,
                     Name = word.Word,
-                    WordCefrLevelId = word.Level is not null ? cefrLevelsDict[word.Level] : null,
-                    WordTopicId = word.Topic is not null ? topicsDict[word.Topic] : null
+                    LanguageId = languagesDict[word.Language],
+                    Transcription = word.Transcription,
                 });
 
-            foreach (var translation in word.Translations)
+            foreach (var meaning in word.Meanings)
             {
-                modelBuilder.Entity<WordTranslation>()
-                    .HasData(new WordTranslation
+                modelBuilder.Entity<WordMeaning>()
+                    .HasData(new WordMeaning
                     {
-                        Id = translation.Id,
-                        Translation = string.Join(" | ", translation.Translations),
-                        LanguageId = languagesDict[translation.Language],
+                        Id = meaning.Id,
+                        WordCefrLevelId = meaning.Level is not null ? cefrLevelsDict[meaning.Level] : null,
+                        Meaning = meaning.Meaning,
                         WordId = word.Id,
                     });
+                
+                foreach (var topic in meaning.Topics)
+                {
+                    modelBuilder.Entity<WordMeaningTopic>()
+                        .HasData(new WordMeaningTopic
+                        {
+                            WordTopicId = topicsDict[topic],
+                            WordMeaningId = meaning.Id,
+                        });
+                }
+
+                foreach (var translation in meaning.Translations)
+                {
+                    modelBuilder.Entity<WordTranslation>()
+                        .HasData(new WordTranslation
+                        {
+                            Id = translation.Id,
+                            Translation = translation.Text,
+                            LanguageId = languagesDict[translation.Language],
+                            WordMeaningId = meaning.Id,
+                        });
+                }
             }
         }
     }
@@ -108,9 +146,20 @@ public class DatabaseContext : DbContext
     private record struct ImportingWord(
         int Id,
         string Word,
-        ImportingTranslation[] Translations,
-        string? Level,
-        string? Topic);
+        string Language,
+        string? Transcription,
+        ImportingMeaning[] Meanings);
     
-    private record struct ImportingTranslation(int Id, string Language, string[] Translations);
+    private record struct ImportingMeaning(
+        int Id,
+        string? Meaning,
+        string? Level,
+        string[] Topics,
+        string[] PartsOfSpeech,
+        ImportingMeaningTranslation[] Translations);
+
+    private record struct ImportingMeaningTranslation(
+        int Id,
+        string Language,
+        string Text);
 }
