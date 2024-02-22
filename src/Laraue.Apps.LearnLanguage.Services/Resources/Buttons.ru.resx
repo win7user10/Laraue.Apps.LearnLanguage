@@ -32,4 +32,7 @@
     <data name="Settings_BackButton" xml:space="preserve">
         <value>Настройки 🔙</value>
     </data>
+    <data name="Settings_LearnLanguage" xml:space="preserve">
+        <value>Язык для изучения</value>
+    </data>
 </root>

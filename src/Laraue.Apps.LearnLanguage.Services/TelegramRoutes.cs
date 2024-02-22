@@ -20,7 +20,8 @@ public static class TelegramRoutes
     public const string DropMessage = "d";
     
     public const string Settings = "s";
-    public const string LanguageSettings = "s/l";
+    public const string InterfaceLanguageSettings = "s/ils";
+    public const string LearnLanguageSettings = "s/lls";
     
     // Commands section
     public const string Start = "/start";

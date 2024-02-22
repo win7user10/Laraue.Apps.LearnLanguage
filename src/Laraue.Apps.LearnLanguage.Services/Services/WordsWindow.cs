@@ -19,12 +19,12 @@ namespace Laraue.Apps.LearnLanguage.Services.Services;
 public class WordsWindow(
     IFullPaginatedResult<LearningItem> words,
     UserViewSettings userViewSettings,
-    RoutePathBuilder viewRoute,
+    CallbackRoutePath viewRoute,
     ITelegramBotClient client,
     IWordsRepository wordsRepository)
     : IWordsWindow
 {
-    private RoutePathBuilder? _paginationRoute;
+    private CallbackRoutePath? _paginationRoute;
     private string _title = "Words";
     private LearningItem? _openedTranslation;
     private InlineKeyboardButton? _backButton;
@@ -44,7 +44,7 @@ public class WordsWindow(
         return this;
     }
 
-    public IWordsWindow SetPaginationRoute(RoutePathBuilder paginationRoute)
+    public IWordsWindow SetPaginationRoute(CallbackRoutePath paginationRoute)
     {
         _paginationRoute = paginationRoute;
         return this;

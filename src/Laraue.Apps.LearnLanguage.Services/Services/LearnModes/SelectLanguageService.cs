@@ -1,5 +1,6 @@
 ﻿using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+using Laraue.Apps.LearnLanguage.Services.Resources;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Utils;
@@ -28,12 +29,12 @@ public class SelectLanguageService(
             await SendRequestLanguageWindowAsync(
                 languageWindowTitle,
                 replyData,
-                new RoutePathBuilder(nextRoute),
+                new CallbackRoutePath(nextRoute),
                 ct);
         }
         else
         {
-            await handleRequestAsync(replyData, language.Value, ct);
+            await handleRequestAsync(replyData, language, ct);
         }
     }
     
@@ -42,26 +43,24 @@ public class SelectLanguageService(
         WithSelectedTranslationRequest selectedTranslation,
         CancellationToken ct = default)
     {
-        if (selectedTranslation.LanguageIdToLearn is not null && selectedTranslation.LanguageIdToLearnFrom is not null)
+        if (selectedTranslation.LanguageToLearnId is not null || selectedTranslation.LanguageToLearnFromId is not null)
         {
             return new SelectedTranslation(
-                selectedTranslation.LanguageIdToLearn,
-                selectedTranslation.LanguageIdToLearnFrom);
+                selectedTranslation.LanguageToLearnId,
+                selectedTranslation.LanguageToLearnFromId);
         }
         
-        var settings = await userRepository.GetLanguageSettingsAsync(userId, ct);
-        if (settings is not null)
-        {
-            return new SelectedTranslation(settings.LanguageIdToLearn, settings.LanguageIdToLearnFrom);
-        }
+        var settings = await userRepository.GetSettingsAsync(userId, ct);
 
-        return null;
+        return settings.LanguageToLearnFromId is not null || settings.LanguageToLearnId is not null
+            ? new SelectedTranslation(settings.LanguageToLearnId, settings.LanguageToLearnFromId)
+            : null;
     }
 
     private async Task SendRequestLanguageWindowAsync(
         string windowTitle,
         TelegramMessageId replyData,
-        RoutePathBuilder nextRoute,
+        CallbackRoutePath nextRoute,
         CancellationToken ct = default)
     {
         var availablePairs = await wordsRepository.GetAvailableLearningPairsAsync(ct);
@@ -69,7 +68,7 @@ public class SelectLanguageService(
         var tmb = new TelegramMessageBuilder()
             .AppendRow($"<b>{windowTitle}</b>")
             .AppendRow()
-            .AppendRow($"Select the language pair to learn");
+            .AppendRow(Mode.SelectLanguage);
 
         tmb.AddInlineKeyboardButtons(availablePairs
             .Select(p => nextRoute

@@ -10,7 +10,7 @@ public class WordsWindowFactory(
     ITelegramBotClient client,
     IWordsRepository wordsRepository) : IWordsWindowFactory
 {
-    public IWordsWindow Create(IFullPaginatedResult<LearningItem> words, UserViewSettings userViewSettings, RoutePathBuilder viewRoute)
+    public IWordsWindow Create(IFullPaginatedResult<LearningItem> words, UserViewSettings userViewSettings, CallbackRoutePath viewRoute)
     {
         return new WordsWindow(words, userViewSettings, viewRoute, client, wordsRepository);
     }

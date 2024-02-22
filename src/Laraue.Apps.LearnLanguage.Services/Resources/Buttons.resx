@@ -36,6 +36,9 @@
     <data name="Settings_Language" xml:space="preserve">
         <value>Language</value>
     </data>
+    <data name="Settings_LearnLanguage" xml:space="preserve">
+        <value>Language to learn</value>
+    </data>
     <data name="Settings_BackButton" xml:space="preserve">
         <value>Settings 🔙</value>
     </data>

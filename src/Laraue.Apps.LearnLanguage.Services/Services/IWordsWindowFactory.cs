@@ -9,5 +9,5 @@ public interface IWordsWindowFactory
     IWordsWindow Create(
         IFullPaginatedResult<LearningItem> words,
         UserViewSettings userViewSettings,
-        RoutePathBuilder viewRoute);
+        CallbackRoutePath viewRoute);
 }

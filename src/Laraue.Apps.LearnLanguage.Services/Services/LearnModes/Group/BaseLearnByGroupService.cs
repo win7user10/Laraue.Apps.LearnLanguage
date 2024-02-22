@@ -58,13 +58,13 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
             request,
             ct);
 
-        var viewRoute = new RoutePathBuilder(DetailRoute)
+        var viewRoute = new CallbackRoutePath(DetailRoute)
             .WithQueryParameter(ParameterNames.GroupId, request.GroupId)
             .WithQueryParameter(ParameterNames.Page, request.Page)
             .AddTranslationParameters(request)
             .Freeze();
         
-        var returnBackButton = new RoutePathBuilder(ListRoute)
+        var returnBackButton = new CallbackRoutePath(ListRoute)
             .AddTranslationParameters(request)
             .ToInlineKeyboardButton(GroupMode.BackButton);
 
@@ -124,7 +124,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         var totalCount = groups.Sum(x => x.TotalCount);
         var completedPercent = learnedCount.DivideAndReturnPercent(totalCount);
 
-        var detailRoute = new RoutePathBuilder(DetailRoute)
+        var detailRoute = new CallbackRoutePath(DetailRoute)
             .AddTranslationParameters(selectedTranslation);
 
         var tmb = new TelegramMessageBuilder()

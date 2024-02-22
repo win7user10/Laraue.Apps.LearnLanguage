@@ -5,8 +5,16 @@ namespace Laraue.Apps.LearnLanguage.Services.Services;
 public interface IUserSettingsService
 {
     Task HandleSettingsViewAsync(ReplyData replyData, CancellationToken ct = default);
-    Task HandleLanguageSettingsViewAsync(
+    
+    Task HandleInterfaceLanguageSettingsViewAsync(
         ReplyData replyData,
-        UpdateSettingsRequest request,
+        UpdateInterfaceLanguageSettingsRequest request,
+        CancellationToken ct = default);
+    
+    Task HandleLearnLanguageSettingsViewAsync(ReplyData replyData, CancellationToken ct = default);
+    
+    Task UpdateLearnLanguageSettingsAsync(
+        ReplyData replyData,
+        UpdateLearnLanguageSettingsRequest request,
         CancellationToken ct = default);
 }

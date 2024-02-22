@@ -22,4 +22,24 @@ public sealed class User : TelegramIdentityUser<Guid>
     /// All user's translation's states.
     /// </summary>
     public ICollection<WordTranslationState> WordTranslationStates { get; set; } = null!;
+    
+    /// <summary>
+    /// The <see cref="WordLanguage"/> reference.
+    /// </summary>
+    public long? LanguageToLearnId { get; set; }
+
+    /// <summary>
+    /// Default language to learn for the user.
+    /// </summary>
+    public WordLanguage LanguageToLearn { get; set; } = null!;
+
+    /// <summary>
+    /// The <see cref="WordLanguage"/> reference.
+    /// </summary>
+    public long? LanguageToLearnFromId { get; set; }
+
+    /// <summary>
+    /// Default main language for the user.
+    /// </summary>
+    public WordLanguage LanguageToLearnFrom { get; set; } = null!;
 }

@@ -7,17 +7,13 @@ namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
 public abstract record WithSelectedTranslationRequest
 {
     [FromQuery(ParameterNames.LanguageToLearn)]
-    public long? LanguageIdToLearn { get; init; }
+    public long? LanguageToLearnId { get; init; }
     
     [FromQuery(ParameterNames.LanguageToLearnFrom)]
-    public long? LanguageIdToLearnFrom { get; init; }
+    public long? LanguageToLearnFromId { get; init; }
 
     public static implicit operator SelectedTranslation(WithSelectedTranslationRequest @this)
     {
-        return new SelectedTranslation
-        {
-            LanguageToLearnId = @this.LanguageIdToLearn,
-            LanguageToLearnFromId = @this.LanguageIdToLearnFrom
-        };
+        return new SelectedTranslation(@this.LanguageToLearnId, @this.LanguageToLearnFromId);
     }
 }

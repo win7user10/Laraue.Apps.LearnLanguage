@@ -6,11 +6,11 @@ namespace Laraue.Apps.LearnLanguage.Services;
 
 public static class RoutePathBuilderExtensions
 {
-    public static RoutePathBuilder AddTranslationParameters(
-        this RoutePathBuilder builder,
+    public static CallbackRoutePath AddTranslationParameters(
+        this CallbackRoutePath routePath,
         SelectedTranslation selectedTranslation)
     {
-        return builder
+        return routePath
             .WithQueryParameter(ParameterNames.LanguageToLearnFrom, selectedTranslation.LanguageToLearnFromId)
             .WithQueryParameter(ParameterNames.LanguageToLearn, selectedTranslation.LanguageToLearnId);
     }

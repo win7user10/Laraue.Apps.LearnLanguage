@@ -24,6 +24,9 @@
     <data name="CurrentLanguage" xml:space="preserve">
         <value>Current interface language is: {0}</value>
     </data>
+    <data name="CurrentLearnLanguage" xml:space="preserve">
+        <value>Current language pair to learn is: {0}</value>
+    </data>
     <data name="Edit" xml:space="preserve">
         <value>Edit:</value>
     </data>
@@ -32,5 +35,11 @@
     </data>
     <data name="SelectLanguage" xml:space="preserve">
         <value>Select the interface language</value>
+    </data>
+    <data name="SelectLearnLanguage" xml:space="preserve">
+        <value>Select the preferred language pair to learn. When the pair is set, it will be used as default in all modes. Otherwise each learn mode will require to select language pair to learn. </value>
+    </data>
+    <data name="NotSet" xml:space="preserve">
+        <value>Not set</value>
     </data>
 </root>

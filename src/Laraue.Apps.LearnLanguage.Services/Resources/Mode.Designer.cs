@@ -213,6 +213,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the language pair to learn. You also can set the preferred language pair in settings to select the same pair always..
+        /// </summary>
+        internal static string SelectLanguage {
+            get {
+                return ResourceManager.GetString("SelectLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please select the mode.
         /// </summary>
         internal static string SelectMode {
