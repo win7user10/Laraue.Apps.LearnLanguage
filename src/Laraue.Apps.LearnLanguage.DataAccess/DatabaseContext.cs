@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Text.Json;
 using Laraue.Apps.LearnLanguage.Common;
+using Laraue.Apps.LearnLanguage.Common.Contracts;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -64,39 +65,15 @@ public class DatabaseContext : DbContext
             .HasFilter($"state <> {RepeatState.Finished:D}")
             .IsUnique();
 
-        var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-
-        var cefrLevels = new WordCefrLevel[]
-        {
-            new () { Id = 1, Name = "A0" },
-            new () { Id = 2, Name = "A1" },
-            new () { Id = 3, Name = "A2" },
-            new () { Id = 4, Name = "B1" },
-            new () { Id = 5, Name = "B2" },
-            new () { Id = 6, Name = "C1" },
-            new () { Id = 7, Name = "C2" },
-        };
+        var languagesDict = DefaultContextData.WordLanguages.ToDictionary(x => x.Code, x => x.Id);
+        var cefrLevelsDict = DefaultContextData.CefrLevels.ToDictionary(x => x.Name, x => x.Id);
+        var topicsDict = DefaultContextData.WordTopics.ToDictionary(x => x.Name, x => x.Id);
         
-        using var languagesStream = File.OpenRead(Path.Combine(assemblyDirectory, "languages.json"));
-        var languages = JsonSerializer.Deserialize<WordLanguage[]>(languagesStream, Constants.JsonWebOptions)!;
-
-        using var topicsStream = File.OpenRead(Path.Combine(assemblyDirectory, "topics.json"));
-        var topics = JsonSerializer.Deserialize<WordTopic[]>(topicsStream, Constants.JsonWebOptions)!;
-
-        var languagesDict = languages.ToDictionary(x => x.Code, x => x.Id);
-        var cefrLevelsDict = cefrLevels.ToDictionary(x => x.Name, x => x.Id);
-        var topicsDict = topics.ToDictionary(x => x.Name, x => x.Id);
+        modelBuilder.Entity<WordLanguage>().HasData(DefaultContextData.WordLanguages);
+        modelBuilder.Entity<WordCefrLevel>().HasData(DefaultContextData.CefrLevels);
+        modelBuilder.Entity<WordTopic>().HasData(DefaultContextData.WordTopics);
         
-        modelBuilder.Entity<WordLanguage>().HasData(languages);
-        modelBuilder.Entity<WordCefrLevel>().HasData(cefrLevels);
-        modelBuilder.Entity<WordTopic>().HasData(topics);
-        
-        using var translationsStream = File.OpenRead(Path.Combine(assemblyDirectory, "translations.json"));
-        var words = JsonSerializer.Deserialize<ImportingWord[]>(
-            translationsStream,
-            Constants.JsonWebOptions)!;
-        
-        foreach (var word in words)
+        foreach (var word in DefaultContextData.Words)
         {
             modelBuilder.Entity<Word>()
                 .HasData(new Word
@@ -142,24 +119,4 @@ public class DatabaseContext : DbContext
             }
         }
     }
-
-    private record struct ImportingWord(
-        int Id,
-        string Word,
-        string Language,
-        string? Transcription,
-        ImportingMeaning[] Meanings);
-    
-    private record struct ImportingMeaning(
-        int Id,
-        string? Meaning,
-        string? Level,
-        string[] Topics,
-        string[] PartsOfSpeech,
-        ImportingMeaningTranslation[] Translations);
-
-    private record struct ImportingMeaningTranslation(
-        int Id,
-        string Language,
-        string Text);
 }
