@@ -19,4 +19,16 @@ public class WordsController(IWordsService wordsService) : ControllerBase
     {
         return wordsService.AddWordAsync(wordDto);
     }
+    
+    [HttpPost("{wordId:int}/Meaning")]
+    public Task<int> AddMeaningAsync(int wordId, [FromBody] MeaningDto meaningDto)
+    {
+        return wordsService.AddMeaningAsync(wordId, meaningDto);
+    }
+    
+    [HttpPost("{wordId:int}/Meaning/{meaningId:int}/Translation")]
+    public Task<int> AddTranslationAsync(int wordId, int meaningId, [FromBody] TranslationDto translationDto)
+    {
+        return wordsService.AddTranslationAsync(wordId, meaningId, translationDto);
+    }
 }

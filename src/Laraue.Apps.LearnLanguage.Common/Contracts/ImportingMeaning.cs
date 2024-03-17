@@ -6,4 +6,4 @@ public record ImportingMeaning(
     string? Level,
     string[] Topics,
     string[] PartsOfSpeech,
-    ImportingMeaningTranslation[] Translations);
+    List<ImportingMeaningTranslation> Translations);

@@ -6,6 +6,6 @@ public interface IWordsService
 {
     Task<IReadOnlyList<ImportingWord>> GetWordsAsync();
     Task<int> AddWordAsync(WordDto wordDto);
-    Task AddMeaningAsync(int wordId, MeaningDto meaningDto);
-    Task AddTranslationAsync(int meaningId, TranslationDto translationDto);
+    Task<int> AddMeaningAsync(int wordId, MeaningDto meaningDto);
+    Task<int> AddTranslationAsync(int wordId, int meaningId, TranslationDto translationDto);
 }

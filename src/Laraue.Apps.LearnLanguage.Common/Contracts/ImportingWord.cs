@@ -5,4 +5,4 @@ public record ImportingWord(
     string Word,
     string Language,
     string? Transcription,
-    ImportingMeaning[] Meanings);
+    List<ImportingMeaning> Meanings);
