@@ -63,11 +63,7 @@ public class WordsService : IWordsService
 
     public async Task<int> AddMeaningAsync(int wordId, MeaningDto meaningDto)
     {
-        var word = Words.FirstOrDefault(w => w.Id == wordId);
-        if (word is null)
-        {
-            throw new BadRequestException(nameof(wordId), "The word with the passed identifier is not exists");
-        }
+        var word = GetWord(wordId);
 
         if (meaningDto.Meaning == string.Empty)
         {
@@ -100,9 +96,67 @@ public class WordsService : IWordsService
         return newMeaning.Id;
     }
 
-    public Task<int> AddTranslationAsync(int wordId, int meaningId, TranslationDto translationDto)
+    public async Task<int> AddTranslationAsync(int wordId, int meaningId, TranslationDto translationDto)
     {
-        throw new NotImplementedException();
+        var word = GetWord(wordId);
+        var meaning = GetMeaning(word, meaningId);
+        
+        if (string.IsNullOrEmpty(translationDto.Text))
+        {
+            throw new BadRequestException(
+                nameof(translationDto.Text),
+                "Translation should be not null or empty");
+        }
+        
+        if (meaning.Translations.Any(
+            m => m.Language == translationDto.LanguageCode && m.Text == translationDto.Text))
+        {
+            throw new BadRequestException(
+                nameof(translationDto.Text),
+                "The same translation has been added already");
+        }
+        
+        ValidateLanguageCode(translationDto.LanguageCode);
+
+        if (translationDto.LanguageCode == word.Language)
+        {
+            throw new BadRequestException(
+                nameof(translationDto.LanguageCode),
+                "Attempt to add translation to the same language");
+        }
+
+        var newTranslation = new ImportingMeaningTranslation(
+            meaning.Translations.Select(m => m.Id).DefaultIfEmpty().Max() + 1,
+            translationDto.LanguageCode,
+            translationDto.Text);
+        
+        meaning.Translations.Add(newTranslation);
+
+        await UpdateJsonFileAsync();
+
+        return newTranslation.Id;
+    }
+
+    private ImportingWord GetWord(int wordId)
+    {
+        var word = Words.FirstOrDefault(w => w.Id == wordId);
+        if (word is null)
+        {
+            throw new BadRequestException(nameof(wordId), "The word with the passed identifier is not exists");
+        }
+
+        return word;
+    }
+    
+    private ImportingMeaning GetMeaning(ImportingWord word, int meaningId)
+    {
+        var meaning = word.Meanings.FirstOrDefault(m => m.Id == meaningId);
+        if (meaning is null)
+        {
+            throw new BadRequestException(nameof(meaningId), "The meaning with the passed identifier is not exists");
+        }
+
+        return meaning;
     }
 
     private Task UpdateJsonFileAsync()

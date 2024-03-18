@@ -111739,9 +111739,9 @@
   },
   {
     "id": 4681,
-    "word": "blackcurrant",
+    "word": "currant",
     "language": "en",
-    "transcription": "blæk kɜːrənt",
+    "transcription": "kɜːrənt",
     "meanings": [
       {
         "id": 1,
@@ -111753,7 +111753,13 @@
         "partsOfSpeech": [
           "noun"
         ],
-        "translations": []
+        "translations": [
+          {
+            "id": 1,
+            "language": "ru",
+            "text": "смородина"
+          }
+        ]
       }
     ]
   }
