@@ -1,11 +1,12 @@
 ﻿using Laraue.Apps.LearnLanguage.Common.Contracts;
+using Laraue.Core.DataAccess.Contracts;
 
 namespace Laraue.Apps.LearnLanguage.EditorHost.Services;
 
 public interface IWordsService
 {
-    Task<IReadOnlyList<ImportingWord>> GetWordsAsync();
-    Task<int> AddWordAsync(WordDto wordDto);
-    Task<int> AddMeaningAsync(int wordId, MeaningDto meaningDto);
-    Task<int> AddTranslationAsync(int wordId, int meaningId, TranslationDto translationDto);
+    Task<IShortPaginatedResult<ImportingWord>> GetWordsAsync(GetWordsRequest request);
+    Task<long> UpsertWordAsync(UpdateWordDto wordDto);
+    Task<long> UpsertMeaningAsync(long wordId, UpdateMeaningDto updateMeaningDto);
+    Task<long> UpsertTranslationAsync(long wordId, long meaningId, UpdateTranslationDto updateTranslationDto);
 }

@@ -2,8 +2,8 @@
 
 namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
 
-public sealed class WordTopic : BaseEntity, IDictionaryEntity
+public class PartOfSpeech : BaseEntity, IDictionaryEntity
 {
-    [MaxLength(100)]
+    [MaxLength(10)]
     public required string Name { get; init; }
 }

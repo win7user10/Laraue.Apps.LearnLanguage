@@ -8,9 +8,21 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddSingleton<IWordsService, WordsService>();
+builder.Services.AddSingleton<IDictionariesService, DictionariesService>();
 builder.Services.AddScoped<ExceptionHandleMiddleware>();
 
 var app = builder.Build();
+
+var origins = builder
+    .Configuration
+    .GetRequiredSection("Cors:Hosts")
+    .Get<string[]>();
+
+app.UseCors(corsPolicyBuilder =>
+    corsPolicyBuilder.WithOrigins(origins)
+        .AllowCredentials()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
 
 if (app.Environment.IsDevelopment())
 {

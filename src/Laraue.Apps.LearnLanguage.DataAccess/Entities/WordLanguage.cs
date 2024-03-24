@@ -5,11 +5,11 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
 /// <summary>
 /// All possible languages an english <see cref="Word"/> can be translated.
 /// </summary>
-public sealed class WordLanguage : BaseEntity
+public sealed class WordLanguage : BaseEntity, IDictionaryEntity
 {
     /// <summary>
     /// The language ISO code.
     /// </summary>
     [MaxLength(2)]
-    public string Code { get; init; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
 }

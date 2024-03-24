@@ -99,9 +99,9 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
             .GroupBy(x => new
             {
                 LanguageIdToLearn = x.WordMeaning.Word.LanguageId,
-                LanguageCodeToLearn = x.WordMeaning.Word.Language.Code,
+                LanguageCodeToLearn = x.WordMeaning.Word.Language.Name,
                 LanguageIdToLearnFrom = x.LanguageId,
-                LanguageCodeToLearnFrom = x.Language.Code,
+                LanguageCodeToLearnFrom = x.Language.Name,
             })
             .Select(x => new LearningLanguagePair(
                 new LearningLanguagePairItem(x.Key.LanguageIdToLearn, x.Key.LanguageCodeToLearn),

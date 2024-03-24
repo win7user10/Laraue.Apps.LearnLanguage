@@ -1,34 +1,35 @@
 ﻿using Laraue.Apps.LearnLanguage.Common.Contracts;
 using Laraue.Apps.LearnLanguage.EditorHost.Services;
+using Laraue.Core.DataAccess.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Laraue.Apps.LearnLanguage.EditorHost.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class WordsController(IWordsService wordsService) : ControllerBase
 {
     [HttpGet]
-    public Task<IReadOnlyList<ImportingWord>> GetWordsAsync()
+    public Task<IShortPaginatedResult<ImportingWord>> GetWordsAsync([FromQuery] GetWordsRequest request)
     {
-        return wordsService.GetWordsAsync();
+        return wordsService.GetWordsAsync(request);
     }
     
     [HttpPost]
-    public Task<int> AddWordAsync([FromBody] WordDto wordDto)
+    public Task<long> UpsertWordAsync([FromBody] UpdateWordDto wordDto)
     {
-        return wordsService.AddWordAsync(wordDto);
+        return wordsService.UpsertWordAsync(wordDto);
     }
     
     [HttpPost("{wordId:int}/Meaning")]
-    public Task<int> AddMeaningAsync(int wordId, [FromBody] MeaningDto meaningDto)
+    public Task<long> UpsertMeaningAsync(int wordId, [FromBody] UpdateMeaningDto updateMeaningDto)
     {
-        return wordsService.AddMeaningAsync(wordId, meaningDto);
+        return wordsService.UpsertMeaningAsync(wordId, updateMeaningDto);
     }
     
     [HttpPost("{wordId:int}/Meaning/{meaningId:int}/Translation")]
-    public Task<int> AddTranslationAsync(int wordId, int meaningId, [FromBody] TranslationDto translationDto)
+    public Task<long> UpsertTranslationAsync(int wordId, int meaningId, [FromBody] UpdateTranslationDto updateTranslationDto)
     {
-        return wordsService.AddTranslationAsync(wordId, meaningId, translationDto);
+        return wordsService.UpsertTranslationAsync(wordId, meaningId, updateTranslationDto);
     }
 }

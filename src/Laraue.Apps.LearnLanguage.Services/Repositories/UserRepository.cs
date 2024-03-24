@@ -54,8 +54,8 @@ public class UserRepository(DatabaseContext context) : IUserRepository
                 x.TelegramLanguageCode,
                 x.LanguageToLearnId,
                 x.LanguageToLearnFromId,
-                x.LanguageToLearn.Code,
-                x.LanguageToLearnFrom.Code))
+                x.LanguageToLearn.Name,
+                x.LanguageToLearnFrom.Name))
             .FirstAsyncEF(ct);
     }
 

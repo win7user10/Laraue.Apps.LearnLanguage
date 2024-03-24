@@ -65,9 +65,9 @@ public class DatabaseContext : DbContext
             .HasFilter($"state <> {RepeatState.Finished:D}")
             .IsUnique();
 
-        var languagesDict = DefaultContextData.WordLanguages.ToDictionary(x => x.Code, x => x.Id);
-        var cefrLevelsDict = DefaultContextData.CefrLevels.ToDictionary(x => x.Name, x => x.Id);
-        var topicsDict = DefaultContextData.WordTopics.ToDictionary(x => x.Name, x => x.Id);
+        var languagesDict = DefaultContextData.WordLanguages.Items.ToDictionary(x => x.Name, x => x.Id);
+        var cefrLevelsDict = DefaultContextData.CefrLevels.Items.ToDictionary(x => x.Name, x => x.Id);
+        var topicsDict = DefaultContextData.WordTopics.Items.ToDictionary(x => x.Name, x => x.Id);
         
         modelBuilder.Entity<WordLanguage>().HasData(DefaultContextData.WordLanguages);
         modelBuilder.Entity<WordCefrLevel>().HasData(DefaultContextData.CefrLevels);

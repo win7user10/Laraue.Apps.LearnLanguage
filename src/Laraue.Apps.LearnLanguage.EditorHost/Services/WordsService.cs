@@ -1,8 +1,9 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.Common.Contracts;
 using Laraue.Apps.LearnLanguage.DataAccess;
+using Laraue.Core.DataAccess.Contracts;
+using Laraue.Core.DataAccess.Extensions;
 using Laraue.Core.Exceptions.Web;
 
 namespace Laraue.Apps.LearnLanguage.EditorHost.Services;
@@ -32,61 +33,88 @@ public class WordsService : IWordsService
     public WordsService(IConfiguration configuration)
     {
         _wordsJsonPath = configuration["TranslationsFile"]
-                         ?? throw new InvalidOperationException("'TranslationsFile' section is not set");
+            ?? throw new InvalidOperationException("'TranslationsFile' section is not set");
     }
 
-    public Task<IReadOnlyList<ImportingWord>> GetWordsAsync()
+    public Task<IShortPaginatedResult<ImportingWord>> GetWordsAsync(GetWordsRequest request)
     {
-        return Task.FromResult((IReadOnlyList<ImportingWord>) Words);
+        var wordsQuery = Words.AsEnumerable();
+        if (!string.IsNullOrEmpty(request.Search))
+        {
+            wordsQuery = wordsQuery.Where(w => w.Word.StartsWith(request.Search));
+        }
+        
+        return Task.FromResult(wordsQuery
+            .ShortPaginate(request));
     }
 
-    public async Task<int> AddWordAsync(WordDto wordDto)
+    public async Task<long> UpsertWordAsync(UpdateWordDto wordDto)
     {
-        if (Words.Any(w => w.Word == wordDto.Word))
+        DefaultContextData.WordLanguages.EnsureExists(wordDto.Language);
+        
+        if (Words.Any(w => w.Language == wordDto.Language && w.Word == wordDto.Language && w.Id != wordDto.Id))
         {
             throw new BadRequestException(nameof(wordDto.Word), "The same word has been added already");
         }
-        
-        ValidateLanguageCode(wordDto.LanguageCode);
-        
-        Words.Add(new ImportingWord(
-            ++MaxWordId,
-            wordDto.Word,
-            wordDto.LanguageCode,
-            wordDto.Transcription,
-            []));
+
+        if (!wordDto.Id.HasValue)
+        {
+            Words.Add(new ImportingWord
+            {
+                Id = ++MaxWordId,
+                Transcription = wordDto.Transcription,
+                Meanings = [],
+                Language = wordDto.Language,
+                Word = wordDto.Word,
+            });
+            
+            return MaxWordId;
+        }
+
+        var word = GetWord(wordDto.Id.Value);
+        word.Word = wordDto.Word;
+        word.Language = wordDto.Language;
+        word.Transcription = wordDto.Transcription;
 
         await UpdateJsonFileAsync();
 
-        return MaxWordId;
+        return wordDto.Id.Value;
     }
 
-    public async Task<int> AddMeaningAsync(int wordId, MeaningDto meaningDto)
+    public async Task<long> UpsertMeaningAsync(long wordId, UpdateMeaningDto updateMeaningDto)
     {
         var word = GetWord(wordId);
 
-        if (meaningDto.Meaning == string.Empty)
+        if (updateMeaningDto.Meaning == string.Empty)
         {
-            throw new BadRequestException(nameof(meaningDto.Meaning), "Empty meaning has been passed");
+            throw new BadRequestException(nameof(updateMeaningDto.Meaning), "Empty meaning has been passed");
         }
         
-        if (word.Meanings.Any(m => m.Meaning is not null && m.Meaning == meaningDto.Meaning))
+        if (word.Meanings.Any(m => m.Meaning is not null && m.Meaning == updateMeaningDto.Meaning))
         {
-            throw new BadRequestException(nameof(meaningDto.Meaning), "The same meaning has been added already");
+            throw new BadRequestException(nameof(updateMeaningDto.Meaning), "The same meaning has been added already");
         }
         
-        ValidateCefrLevel(meaningDto.CefrLevel);
-        foreach (var topic in meaningDto.Topics)
-        {
-            ValidateTopic(topic);
-        }
+        var cefrLevelId = updateMeaningDto.CefrLevelId.HasValue
+            ? DefaultContextData.CefrLevels.GetName(updateMeaningDto.CefrLevelId.Value)
+            : null;
 
+        foreach (var topic in updateMeaningDto.Topics)
+        {
+            DefaultContextData.WordTopics.EnsureExists(topic);
+        }
+        
+        foreach (var partOfSpeech in updateMeaningDto.PartsOfSpeech)
+        {
+            DefaultContextData.PartOfSpeeches.EnsureExists(partOfSpeech);
+        }
+        
         var newMeaning = new ImportingMeaning(
             word.Meanings.Select(m => m.Id).DefaultIfEmpty().Max() + 1,
-            meaningDto.Meaning,
-            meaningDto.CefrLevel,
-            meaningDto.Topics,
-            meaningDto.PartsOfSpeech,
+            updateMeaningDto.Meaning,
+            cefrLevelId,
+            updateMeaningDto.Topics,
+            updateMeaningDto.PartsOfSpeech,
             []);
         
         word.Meanings.Add(newMeaning);
@@ -96,39 +124,38 @@ public class WordsService : IWordsService
         return newMeaning.Id;
     }
 
-    public async Task<int> AddTranslationAsync(int wordId, int meaningId, TranslationDto translationDto)
+    public async Task<long> UpsertTranslationAsync(long wordId, long meaningId, UpdateTranslationDto updateTranslationDto)
     {
         var word = GetWord(wordId);
         var meaning = GetMeaning(word, meaningId);
         
-        if (string.IsNullOrEmpty(translationDto.Text))
+        if (string.IsNullOrEmpty(updateTranslationDto.Text))
         {
             throw new BadRequestException(
-                nameof(translationDto.Text),
+                nameof(updateTranslationDto.Text),
                 "Translation should be not null or empty");
         }
-        
+
+        DefaultContextData.WordLanguages.EnsureExists(updateTranslationDto.Language);
         if (meaning.Translations.Any(
-            m => m.Language == translationDto.LanguageCode && m.Text == translationDto.Text))
+            m => m.Language == updateTranslationDto.Language && m.Text == updateTranslationDto.Text))
         {
             throw new BadRequestException(
-                nameof(translationDto.Text),
+                nameof(updateTranslationDto.Text),
                 "The same translation has been added already");
         }
-        
-        ValidateLanguageCode(translationDto.LanguageCode);
 
-        if (translationDto.LanguageCode == word.Language)
+        if (updateTranslationDto.Language == word.Language)
         {
             throw new BadRequestException(
-                nameof(translationDto.LanguageCode),
+                nameof(updateTranslationDto.Language),
                 "Attempt to add translation to the same language");
         }
 
         var newTranslation = new ImportingMeaningTranslation(
             meaning.Translations.Select(m => m.Id).DefaultIfEmpty().Max() + 1,
-            translationDto.LanguageCode,
-            translationDto.Text);
+            updateTranslationDto.Language,
+            updateTranslationDto.Text);
         
         meaning.Translations.Add(newTranslation);
 
@@ -137,7 +164,7 @@ public class WordsService : IWordsService
         return newTranslation.Id;
     }
 
-    private ImportingWord GetWord(int wordId)
+    private ImportingWord GetWord(long wordId)
     {
         var word = Words.FirstOrDefault(w => w.Id == wordId);
         if (word is null)
@@ -148,7 +175,7 @@ public class WordsService : IWordsService
         return word;
     }
     
-    private ImportingMeaning GetMeaning(ImportingWord word, int meaningId)
+    private ImportingMeaning GetMeaning(ImportingWord word, long meaningId)
     {
         var meaning = word.Meanings.FirstOrDefault(m => m.Id == meaningId);
         if (meaning is null)
@@ -162,34 +189,5 @@ public class WordsService : IWordsService
     private Task UpdateJsonFileAsync()
     {
         return File.WriteAllTextAsync(_wordsJsonPath, JsonSerializer.Serialize(Words, Constants.JsonWebOptions));
-    }
-
-    private static void ValidateLanguageCode(string languageCode, [CallerMemberName] string propertyName = "")
-    {
-        if (DefaultContextData.WordLanguages.All(l => l.Code != languageCode))
-        {
-            throw new BadRequestException(propertyName, "Unknown language code has been passed");
-        }
-    }
-    
-    private static void ValidateCefrLevel(string? cefrLevel, [CallerMemberName] string propertyName = "")
-    {
-        if (cefrLevel is null)
-        {
-            return;
-        }
-        
-        if (DefaultContextData.CefrLevels.All(l => l.Name != cefrLevel))
-        {
-            throw new BadRequestException(propertyName, "Unknown CEFR level has been passed");
-        }
-    }
-    
-    private static void ValidateTopic(string topicName, [CallerMemberName] string propertyName = "")
-    {
-        if (DefaultContextData.WordTopics.All(l => l.Name != topicName))
-        {
-            throw new BadRequestException(propertyName, "Unknown topic has been passed");
-        }
     }
 }
