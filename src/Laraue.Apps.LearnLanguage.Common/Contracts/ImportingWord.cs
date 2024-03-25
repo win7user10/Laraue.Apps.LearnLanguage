@@ -6,5 +6,5 @@ public record ImportingWord
     public string Word { get; set; } = string.Empty;
     public string Language { get; set; } = string.Empty;
     public string? Transcription { get; set; }
-    public required List<ImportingMeaning> Meanings { get; init; }
+    public List<ImportingMeaning> Meanings { get; set; } = new();
 }

@@ -63,6 +63,7 @@
                         clearable
                         :options="partsOfSpeech"
                         multiple
+                        @update:modelValue="updateMeaning(rowData.id, meaning)"
                     />
                     <VaSelect
                         v-model="meaning.topics"
@@ -72,6 +73,7 @@
                         clearable
                         :options="topics"
                         multiple
+                        @update:modelValue="updateMeaning(rowData.id, meaning)"
                     />
                     <VaSelect
                         v-model="meaning.level"
@@ -80,6 +82,8 @@
                         value-by="name"
                         clearable
                         :options="cefrLevels"
+                        :clearValue="null!"
+                        @update:modelValue="updateMeaning(rowData.id, meaning)"
                     />
                   </div>
                 </div>
@@ -141,7 +145,7 @@ interface Word {
 interface Meaning {
   id: number;
   meaning: string | null;
-  cefrLevel: string | null;
+  level: string | null;
   topics: string[]
   partsOfSpeech: string[]
   translations: Translation[]
@@ -198,7 +202,7 @@ export default {
               return {
                 id: m.id,
                 meaning: m.meaning,
-                cefrLevel: m.cefrLevel,
+                level: m.level,
                 topics: m.topics,
                 partsOfSpeech: m.partsOfSpeech,
                 translations: languages.value
@@ -253,6 +257,10 @@ export default {
       return axios.post('words', word)
     }
 
+    const updateMeaning = (id: number, meaning: Meaning) => {
+      return axios.post(`words/${id}/meanings`, meaning)
+    }
+
     onMounted(async () => {
       let resp = await withLoader(() => axios.get('dictionaries/languages'));
       languages.value = resp.data;
@@ -281,7 +289,8 @@ export default {
       partsOfSpeech,
       topics,
       cefrLevels,
-      updateWord
+      updateWord,
+      updateMeaning
     }
   }
 }

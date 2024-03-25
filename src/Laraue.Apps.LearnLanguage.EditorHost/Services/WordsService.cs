@@ -57,47 +57,43 @@ public class WordsService : IWordsService
             throw new BadRequestException(nameof(wordDto.Word), "The same word has been added already");
         }
 
-        if (!wordDto.Id.HasValue)
+        if (wordDto.Id.HasValue)
         {
-            Words.Add(new ImportingWord
-            {
-                Id = ++MaxWordId,
-                Transcription = wordDto.Transcription,
-                Meanings = [],
-                Language = wordDto.Language,
-                Word = wordDto.Word,
-            });
-            
-            return MaxWordId;
+            var word = GetWord(wordDto.Id.Value);
+            Populate(word, wordDto);
+
+            await UpdateJsonFileAsync();
+            return wordDto.Id.Value;
         }
-
-        var word = GetWord(wordDto.Id.Value);
-        word.Word = wordDto.Word;
-        word.Language = wordDto.Language;
-        word.Transcription = wordDto.Transcription;
-
+        
+        var newWord = new ImportingWord
+        {
+            Id = ++MaxWordId,
+        };
+            
+        Populate(newWord, wordDto);
+        Words.Add(newWord);
+        
         await UpdateJsonFileAsync();
-
-        return wordDto.Id.Value;
+        return newWord.Id;
     }
 
     public async Task<long> UpsertMeaningAsync(long wordId, UpdateMeaningDto updateMeaningDto)
     {
         var word = GetWord(wordId);
-
-        if (updateMeaningDto.Meaning == string.Empty)
-        {
-            throw new BadRequestException(nameof(updateMeaningDto.Meaning), "Empty meaning has been passed");
-        }
         
-        if (word.Meanings.Any(m => m.Meaning is not null && m.Meaning == updateMeaningDto.Meaning))
+        if (word.Meanings.Any(
+            m => m.Meaning is not null
+                && m.Meaning == updateMeaningDto.Meaning
+                && m.Id != updateMeaningDto.Id))
         {
             throw new BadRequestException(nameof(updateMeaningDto.Meaning), "The same meaning has been added already");
         }
-        
-        var cefrLevelId = updateMeaningDto.CefrLevelId.HasValue
-            ? DefaultContextData.CefrLevels.GetName(updateMeaningDto.CefrLevelId.Value)
-            : null;
+
+        if (updateMeaningDto.Level != null)
+        {
+            DefaultContextData.CefrLevels.EnsureExists(updateMeaningDto.Level);
+        }
 
         foreach (var topic in updateMeaningDto.Topics)
         {
@@ -108,19 +104,24 @@ public class WordsService : IWordsService
         {
             DefaultContextData.PartOfSpeeches.EnsureExists(partOfSpeech);
         }
+
+        if (updateMeaningDto.Id.HasValue)
+        {
+            var meaning = GetMeaning(word, updateMeaningDto.Id.Value);
+            Populate(meaning, updateMeaningDto);
+            await UpdateJsonFileAsync();
+            return updateMeaningDto.Id.Value;
+        }
         
-        var newMeaning = new ImportingMeaning(
-            word.Meanings.Select(m => m.Id).DefaultIfEmpty().Max() + 1,
-            updateMeaningDto.Meaning,
-            cefrLevelId,
-            updateMeaningDto.Topics,
-            updateMeaningDto.PartsOfSpeech,
-            []);
+        var newMeaning = new ImportingMeaning
+        {
+            Id = word.Meanings.Select(m => m.Id).DefaultIfEmpty().Max() + 1,
+        };
         
+        Populate(newMeaning, updateMeaningDto);
         word.Meanings.Add(newMeaning);
         
         await UpdateJsonFileAsync();
-
         return newMeaning.Id;
     }
 
@@ -162,6 +163,21 @@ public class WordsService : IWordsService
         await UpdateJsonFileAsync();
 
         return newTranslation.Id;
+    }
+    
+    private static void Populate(ImportingWord word, UpdateWordDto updateWordDto)
+    {
+        word.Transcription = updateWordDto.Transcription;
+        word.Language = updateWordDto.Language;
+        word.Word = updateWordDto.Word;
+    }
+
+    private static void Populate(ImportingMeaning meaning, UpdateMeaningDto updateMeaningDto)
+    {
+        meaning.Meaning = updateMeaningDto.Meaning;
+        meaning.Topics = updateMeaningDto.Topics;
+        meaning.PartsOfSpeech = updateMeaningDto.PartsOfSpeech;
+        meaning.Level = updateMeaningDto.Level;
     }
 
     private ImportingWord GetWord(long wordId)

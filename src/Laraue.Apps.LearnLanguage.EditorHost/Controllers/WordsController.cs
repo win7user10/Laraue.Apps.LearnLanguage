@@ -21,13 +21,13 @@ public class WordsController(IWordsService wordsService) : ControllerBase
         return wordsService.UpsertWordAsync(wordDto);
     }
     
-    [HttpPost("{wordId:int}/Meaning")]
+    [HttpPost("{wordId:int}/Meanings")]
     public Task<long> UpsertMeaningAsync(int wordId, [FromBody] UpdateMeaningDto updateMeaningDto)
     {
         return wordsService.UpsertMeaningAsync(wordId, updateMeaningDto);
     }
     
-    [HttpPost("{wordId:int}/Meaning/{meaningId:int}/Translation")]
+    [HttpPost("{wordId:int}/Meanings/{meaningId:int}/Translations")]
     public Task<long> UpsertTranslationAsync(int wordId, int meaningId, [FromBody] UpdateTranslationDto updateTranslationDto)
     {
         return wordsService.UpsertTranslationAsync(wordId, meaningId, updateTranslationDto);
