@@ -44,6 +44,13 @@ public class WordsService : IWordsService
         {
             wordsQuery = wordsQuery.Where(w => w.Word.StartsWith(request.Search));
         }
+
+        if (request.Topics.Length != 0)
+        {
+            wordsQuery = wordsQuery
+                .Where(w => w.Meanings
+                    .Any(m => m.Topics.Any(request.Topics.Contains)));
+        }
         
         return Task.FromResult(wordsQuery
             .ShortPaginate(request));

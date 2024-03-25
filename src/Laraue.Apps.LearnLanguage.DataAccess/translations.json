@@ -39,7 +39,9 @@
         "meaning": null,
         "level": null,
         "topics": [],
-        "partsOfSpeech": [],
+        "partsOfSpeech": [
+          "verb"
+        ],
         "translations": [
           {
             "id": 2,

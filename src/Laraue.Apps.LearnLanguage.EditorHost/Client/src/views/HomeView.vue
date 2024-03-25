@@ -5,8 +5,18 @@
       <div class="mb-12">
         <div>
           <VaInput
-              v-model="search"
-              placeholder="Search Word"/>
+              v-model="searchFilter"
+              placeholder="Search Word"
+              @update:modelValue="updateFilters"/>
+          <VaSelect
+              v-model="topicsFilter"
+              text-by="name"
+              value-by="name"
+              clearable
+              :options="topics"
+              multiple
+              placeholder="Topics"
+              @update:modelValue="updateFilters"/>
         </div>
       </div>
 
@@ -173,7 +183,8 @@ export default {
 
     const page = ref(-1)
     const perPage = 20
-    const search = ref('');
+    const searchFilter = ref('');
+    const topicsFilter = ref(new Array<string>());
 
     const withLoader = async (func: () => Promise<any>) => {
       try {
@@ -189,7 +200,8 @@ export default {
           params: {
             page: page.value,
             perPage: perPage,
-            search: search.value
+            search: searchFilter.value,
+            topics: topicsFilter.value
           } });
         return data.data.map(i => {
           return {
@@ -280,23 +292,25 @@ export default {
       cefrLevels.value = resp.data;
     });
 
-    watch(search, async () => {
+    const updateFilters = async () => {
       page.value = -1;
       items.value = [];
-    })
+    }
 
     return {
       items,
       columns,
       loadNextItems,
-      search,
+      searchFilter,
+      topicsFilter,
       languages,
       partsOfSpeech,
       topics,
       cefrLevels,
       updateWord,
       updateMeaning,
-      updateTranslation
+      updateTranslation,
+      updateFilters
     }
   }
 }
