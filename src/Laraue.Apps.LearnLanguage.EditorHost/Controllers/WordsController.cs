@@ -32,4 +32,10 @@ public class WordsController(IWordsService wordsService) : ControllerBase
     {
         return wordsService.UpsertTranslationAsync(wordId, meaningId, updateTranslationDto);
     }
+    
+    [HttpDelete("{wordId:int}/Meanings/{meaningId:int}/Translations/{translationCode}")]
+    public Task DeleteTranslationAsync(int wordId, int meaningId, string translationCode)
+    {
+        return wordsService.DeleteTranslationAsync(wordId, meaningId, translationCode);
+    }
 }

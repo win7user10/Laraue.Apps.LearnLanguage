@@ -92,7 +92,6 @@
               <table class="va-table" style="width: 100%">
                 <thead>
                 <tr>
-                  <th>Id</th>
                   <th>Language</th>
                   <th>Text</th>
                 </tr>
@@ -101,12 +100,12 @@
                 <tr
                     v-for="translation in meaning.translations"
                     :key="translation.language">
-                  <td>{{ translation.id }}</td>
                   <td>{{ translation.language }}</td>
                   <td>
                     <EditableField
-                        :model-value="translation.text"
+                        v-model="translation.text"
                         placeholder="Add translation"
+                        @change="updateTranslation(rowData.id, meaning.id, translation)"
                     ></EditableField>
                   </td>
                 </tr>
@@ -257,8 +256,14 @@ export default {
       return axios.post('words', word)
     }
 
-    const updateMeaning = (id: number, meaning: Meaning) => {
-      return axios.post(`words/${id}/meanings`, meaning)
+    const updateMeaning = (wordId: number, meaning: Meaning) => {
+      return axios.post(`words/${wordId}/meanings`, meaning)
+    }
+
+    const updateTranslation = (wordId: number, meaningId: number, translation: Translation) => {
+      return translation.text
+        ? axios.post(`words/${wordId}/meanings/${meaningId}/translations`, translation)
+        : axios.delete(`words/${wordId}/meanings/${meaningId}/translations/${translation.id}`)
     }
 
     onMounted(async () => {
@@ -290,7 +295,8 @@ export default {
       topics,
       cefrLevels,
       updateWord,
-      updateMeaning
+      updateMeaning,
+      updateTranslation
     }
   }
 }

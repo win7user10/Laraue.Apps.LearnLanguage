@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.Common.Contracts;
 using Laraue.Apps.LearnLanguage.DataAccess;
@@ -152,19 +153,37 @@ public class WordsService : IWordsService
                 nameof(updateTranslationDto.Language),
                 "Attempt to add translation to the same language");
         }
-
-        var newTranslation = new ImportingMeaningTranslation(
-            meaning.Translations.Select(m => m.Id).DefaultIfEmpty().Max() + 1,
-            updateTranslationDto.Language,
-            updateTranslationDto.Text);
         
+        if (TryGetTranslation(meaning, updateTranslationDto.Language, out var translation))
+        {
+            Populate(translation, updateTranslationDto);
+            await UpdateJsonFileAsync();
+            return translation.Id;
+        }
+        
+        var newTranslation = new ImportingMeaningTranslation
+        {
+            Id = meaning.Translations.Select(m => m.Id).DefaultIfEmpty().Max() + 1,
+        };
+        
+        Populate(newTranslation, updateTranslationDto);
         meaning.Translations.Add(newTranslation);
-
+        
         await UpdateJsonFileAsync();
-
         return newTranslation.Id;
     }
-    
+
+    public Task DeleteTranslationAsync(long wordId, long meaningId, string translationCode)
+    {
+        var word = GetWord(wordId);
+        var meaning = GetMeaning(word, meaningId);
+        var translation = GetTranslation(meaning, translationCode);
+        
+        meaning.Translations.Remove(translation);
+        
+        return Task.CompletedTask;
+    }
+
     private static void Populate(ImportingWord word, UpdateWordDto updateWordDto)
     {
         word.Transcription = updateWordDto.Transcription;
@@ -179,6 +198,12 @@ public class WordsService : IWordsService
         meaning.PartsOfSpeech = updateMeaningDto.PartsOfSpeech;
         meaning.Level = updateMeaningDto.Level;
     }
+    
+    private static void Populate(ImportingMeaningTranslation translation, UpdateTranslationDto updateTranslationDto)
+    {
+        translation.Language = updateTranslationDto.Language;
+        translation.Text = updateTranslationDto.Text;
+    }
 
     private ImportingWord GetWord(long wordId)
     {
@@ -191,7 +216,7 @@ public class WordsService : IWordsService
         return word;
     }
     
-    private ImportingMeaning GetMeaning(ImportingWord word, long meaningId)
+    private static ImportingMeaning GetMeaning(ImportingWord word, long meaningId)
     {
         var meaning = word.Meanings.FirstOrDefault(m => m.Id == meaningId);
         if (meaning is null)
@@ -200,6 +225,25 @@ public class WordsService : IWordsService
         }
 
         return meaning;
+    }
+    
+    private static ImportingMeaningTranslation GetTranslation(ImportingMeaning meaning, string translationCode)
+    {
+        if (!TryGetTranslation(meaning, translationCode, out var translation))
+        {
+            throw new BadRequestException(nameof(translationCode), "The translation with the passed identifier is not exists");
+        }
+
+        return translation;
+    }
+    
+    private static bool TryGetTranslation(
+        ImportingMeaning meaning,
+        string translationCode,
+        [NotNullWhen(true)] out ImportingMeaningTranslation? translation)
+    {
+        translation = meaning.Translations.FirstOrDefault(m => m.Language == translationCode);
+        return translation is not null;
     }
 
     private Task UpdateJsonFileAsync()
