@@ -17,6 +17,10 @@
               multiple
               placeholder="Topics"
               @update:modelValue="updateFilters"/>
+          <CreateWordModal
+              @created="updateFilters"
+              :languages="languages"
+          ></CreateWordModal>
         </div>
       </div>
 
@@ -132,10 +136,11 @@
 </template>
 
 <script lang="ts">
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import axios from "axios";
 import {DataTableColumnSource} from "vuestic-ui";
-import EditableField from "@/components/EditableField.vue"; // @ is an alias to /src
+import EditableField from "@/components/EditableField.vue";
+import CreateWordModal from "@/components/CreateWordModal.vue"; // @ is an alias to /src
 
 interface Result<T> {
   page: number;
@@ -171,7 +176,7 @@ interface DictionaryItem{
 }
 
 export default {
-  components: {EditableField},
+  components: {CreateWordModal, EditableField},
   setup(){
     const isLoading = ref(false);
     const items = ref(new Array<Word>())

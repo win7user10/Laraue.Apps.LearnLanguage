@@ -53,6 +53,7 @@ public class WordsService : IWordsService
         }
         
         return Task.FromResult(wordsQuery
+            .OrderByDescending(w => w.Id)
             .ShortPaginate(request));
     }
 
@@ -60,7 +61,7 @@ public class WordsService : IWordsService
     {
         DefaultContextData.WordLanguages.EnsureExists(wordDto.Language);
         
-        if (Words.Any(w => w.Language == wordDto.Language && w.Word == wordDto.Language && w.Id != wordDto.Id))
+        if (Words.Any(w => w.Language == wordDto.Language && w.Word == wordDto.Word && w.Id != wordDto.Id))
         {
             throw new BadRequestException(nameof(wordDto.Word), "The same word has been added already");
         }
