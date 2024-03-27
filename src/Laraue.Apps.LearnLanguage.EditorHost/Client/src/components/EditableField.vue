@@ -5,7 +5,7 @@
         @input="input($event.target.value)"
         :placeholder="placeholder"
     />
-    <VaButton v-if="canBeUpdated"
+    <VaButton v-if="allowSave && canBeUpdated"
         icon="save"
         preset="plain"
         size="small"
@@ -15,15 +15,17 @@
 
 <script lang="ts">
 
-import {computed, ref} from "vue";
+import {computed, ref, toRefs} from "vue";
 
 export default {
   props: {
     modelValue: String,
-    placeholder: String
+    placeholder: String,
+    allowSave: Boolean
   },
   emits: ['update:modelValue', 'change'],
   setup(props: any, {emit}: any) {
+    const { allowSave } = toRefs(props);
     const localValue = ref(props.modelValue);
     const save = async() => {
       emit('update:modelValue', localValue);
@@ -43,7 +45,8 @@ export default {
       placeholder: props.placeholder,
       save,
       canBeUpdated,
-      input
+      input,
+      allowSave
     };
   }
 }

@@ -45,12 +45,17 @@
           ></EditableField>
         </template>
 
-        <template #cell(actions)="{ rowIndex, row, isExpanded }">
+        <template #cell(actions)="{ rowIndex, row, isExpanded, rowData }">
           <VaButton
               :icon="isExpanded ? 'va-arrow-up': 'va-arrow-down'"
               preset="secondary"
-              class="w-full"
               @click="row.toggleRowDetails()"
+          />
+          <VaButton
+              icon="add"
+              preset="plain"
+              class="ml-3"
+              @click="addMeaning(rowData)"
           />
           <VaButton
               preset="plain"
@@ -60,14 +65,21 @@
         </template>
 
         <template #expandableRow="{ rowData }">
-
-          <div v-for="meaning in rowData.meanings" class="meaning">
+          <div v-for="(meaning, i) in rowData.meanings" class="meaning">
             <VaAlert
                 color="info"
                 border="top">
               <template #title>
                 <div class="meaning-title">
-                  <h4>Meaning #{{ meaning.id }}</h4>
+                  <div style="display: flex; justify-content: space-between">
+                    <h4>Meaning #{{ meaning.id }}</h4>
+                    <VaButton
+                        preset="plain"
+                        icon="delete"
+                        class="ml-3"
+                        @click="deleteMeaning(rowData, i)"
+                    />
+                  </div>
                   <div class="meaning-selects">
                     <VaSelect
                         v-model="meaning.partsOfSpeech"
@@ -118,6 +130,7 @@
                   <td>
                     <EditableField
                         v-model="translation.text"
+                        :allow-save="!!meaning.id"
                         placeholder="Add translation"
                         @change="updateTranslation(rowData.id, meaning.id, translation)"
                     ></EditableField>
@@ -156,19 +169,18 @@ interface Word {
   meanings: Meaning[]
 }
 
-interface Meaning {
-  id: number;
-  meaning: string | null;
-  level: string | null;
-  topics: string[]
-  partsOfSpeech: string[]
-  translations: Translation[]
+class Meaning {
+  id: number | null = null;
+  meaning: string | null = null;
+  level: string | null = null;
+  topics: string [] = []
+  partsOfSpeech: string[] = []
+  translations: Translation[] = []
 }
 
-interface Translation {
-  id: number;
-  language: string;
-  text: string;
+class Translation {
+  language: string = "";
+  text: string | null | undefined = null;
 }
 
 interface DictionaryItem{
@@ -221,19 +233,23 @@ export default {
                 level: m.level,
                 topics: m.topics,
                 partsOfSpeech: m.partsOfSpeech,
-                translations: languages.value
-                  .filter(l => l.name != i.language)
-                  .map(t => {
-                    return {
-                      language: t.name,
-                      text: m.translations.find(x => x.language == t.name)?.text
-                    }
-                  })
+                translations: getMeaningTranslations(i.language, m.translations)
               }
             })
           }
         })
       })
+    }
+
+    const getMeaningTranslations = (meaningLanguage: string, existingTranslations: Translation[]) => {
+      return languages.value
+          .filter(l => l.name != meaningLanguage)
+          .map(t => {
+            const translation = new Translation()
+            translation.language = t.name;
+            translation.text = existingTranslations.find(x => x.language == t.name)?.text
+            return translation
+          })
     }
 
     const loadNextItems = async () => {
@@ -273,14 +289,28 @@ export default {
       return axios.post('words', word)
     }
 
-    const updateMeaning = (wordId: number, meaning: Meaning) => {
-      return axios.post(`words/${wordId}/meanings`, meaning)
+    const updateMeaning = async (wordId: number, meaning: Meaning) => {
+      const resp = await axios.post(`words/${wordId}/meanings`, meaning)
+      meaning.id = resp.data
+    }
+
+    const addMeaning = (word: Word) => {
+      const meaning = new Meaning()
+      meaning.translations = getMeaningTranslations(word.language, []);
+      word.meanings.push(meaning)
+    }
+
+    const deleteMeaning = async (word: Word, index: number) => {
+      const meaning = word.meanings[index]
+      if (meaning.id)
+        await axios.delete(`words/${word.id}/meanings/${meaning.id}`)
+      word.meanings.splice(index, 1)
     }
 
     const updateTranslation = (wordId: number, meaningId: number, translation: Translation) => {
       return translation.text
         ? axios.post(`words/${wordId}/meanings/${meaningId}/translations`, translation)
-        : axios.delete(`words/${wordId}/meanings/${meaningId}/translations/${translation.id}`)
+        : axios.delete(`words/${wordId}/meanings/${meaningId}/translations/${translation.language}`)
     }
 
     onMounted(async () => {
@@ -315,7 +345,9 @@ export default {
       updateWord,
       updateMeaning,
       updateTranslation,
-      updateFilters
+      updateFilters,
+      addMeaning,
+      deleteMeaning
     }
   }
 }

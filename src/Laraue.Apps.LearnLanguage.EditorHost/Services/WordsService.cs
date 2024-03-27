@@ -189,7 +189,17 @@ public class WordsService : IWordsService
         
         meaning.Translations.Remove(translation);
         
-        return Task.CompletedTask;
+        return UpdateJsonFileAsync();
+    }
+
+    public Task DeleteMeaningAsync(long wordId, long meaningId)
+    {
+        var word = GetWord(wordId);
+        var meaning = GetMeaning(word, meaningId);
+
+        word.Meanings.Remove(meaning);
+        
+        return UpdateJsonFileAsync();
     }
 
     private static void Populate(ImportingWord word, UpdateWordDto updateWordDto)
