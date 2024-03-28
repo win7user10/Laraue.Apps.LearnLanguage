@@ -111760,6 +111760,11 @@
             "id": 1,
             "language": "ru",
             "text": "смородина"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "cassis"
           }
         ]
       }
@@ -111770,6 +111775,30 @@
     "word": "blackberry",
     "language": "en",
     "transcription": "blækberi",
-    "meanings": []
+    "meanings": [
+      {
+        "id": 1,
+        "meaning": null,
+        "level": null,
+        "topics": [
+          "berries"
+        ],
+        "partsOfSpeech": [
+          "noun"
+        ],
+        "translations": [
+          {
+            "id": 1,
+            "language": "fr",
+            "text": "mûres"
+          },
+          {
+            "id": 2,
+            "language": "ru",
+            "text": "ежевика"
+          }
+        ]
+      }
+    ]
   }
 ]

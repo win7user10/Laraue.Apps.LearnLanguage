@@ -202,6 +202,14 @@ public class WordsService : IWordsService
         return UpdateJsonFileAsync();
     }
 
+    public Task DeleteWordAsync(long wordId)
+    {
+        var word = GetWord(wordId);
+        Words.Remove(word);
+
+        return UpdateJsonFileAsync();
+    }
+
     private static void Populate(ImportingWord word, UpdateWordDto updateWordDto)
     {
         word.Transcription = updateWordDto.Transcription;

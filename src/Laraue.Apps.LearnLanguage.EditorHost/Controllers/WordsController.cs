@@ -44,4 +44,10 @@ public class WordsController(IWordsService wordsService) : ControllerBase
     {
         return wordsService.DeleteMeaningAsync(wordId, meaningId);
     }
+    
+    [HttpDelete("{wordId:int}")]
+    public Task DeleteWordAsync(int wordId)
+    {
+        return wordsService.DeleteWordAsync(wordId);
+    }
 }

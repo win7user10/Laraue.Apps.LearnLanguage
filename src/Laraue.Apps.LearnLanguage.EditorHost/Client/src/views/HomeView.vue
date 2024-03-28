@@ -61,6 +61,7 @@
               preset="plain"
               icon="delete"
               class="ml-3"
+              @click="deleteWord(rowIndex)"
           />
         </template>
 
@@ -289,6 +290,12 @@ export default {
       return axios.post('words', word)
     }
 
+    const deleteWord = async (wordIndex: number) => {
+      const word = items.value[wordIndex]
+      await axios.delete(`words/${word.id}`)
+      items.value.splice(wordIndex, 1)
+    }
+
     const updateMeaning = async (wordId: number, meaning: Meaning) => {
       const resp = await axios.post(`words/${wordId}/meanings`, meaning)
       meaning.id = resp.data
@@ -347,7 +354,8 @@ export default {
       updateTranslation,
       updateFilters,
       addMeaning,
-      deleteMeaning
+      deleteMeaning,
+      deleteWord
     }
   }
 }

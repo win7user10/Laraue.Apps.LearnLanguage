@@ -1,7 +1,7 @@
 <template>
   <VaValue v-slot="v">
     <VaInput
-        :model-value="value"
+        :model-value="localValue"
         @input="input($event.target.value)"
         :placeholder="placeholder"
     />
@@ -25,11 +25,11 @@ export default {
   },
   emits: ['update:modelValue', 'change'],
   setup(props: any, {emit}: any) {
-    const { allowSave } = toRefs(props);
+    const { allowSave, modelValue } = toRefs(props);
     const localValue = ref(props.modelValue);
     const save = async() => {
-      emit('update:modelValue', localValue);
-      emit('change', localValue);
+      emit('update:modelValue', localValue.value);
+      emit('change', localValue.value);
     }
 
     const input = (value: string) => {
@@ -37,11 +37,11 @@ export default {
     }
 
     const canBeUpdated = computed(() => {
-      return localValue.value != props.modelValue
+      return localValue.value != modelValue.value
     })
 
     return {
-      value: localValue,
+      localValue: localValue,
       placeholder: props.placeholder,
       save,
       canBeUpdated,

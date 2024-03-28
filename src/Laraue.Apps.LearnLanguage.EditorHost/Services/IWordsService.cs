@@ -11,4 +11,5 @@ public interface IWordsService
     Task<long> UpsertTranslationAsync(long wordId, long meaningId, UpdateTranslationDto updateTranslationDto);
     Task DeleteTranslationAsync(long wordId, long meaningId, string translationCode);
     Task DeleteMeaningAsync(long wordId, long meaningId);
+    Task DeleteWordAsync(long wordId);
 }
