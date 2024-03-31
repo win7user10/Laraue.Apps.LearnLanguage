@@ -8,7 +8,7 @@ public static class QueryExtensions
 {
     [ExpressionMethod(nameof(TranslationHasLanguage))]
     public static bool HasLanguage(
-        this WordTranslation wordTranslation,
+        this Translation translation,
         long? languageToLearnId,
         long? languageToLearnFromId)
     {
@@ -17,29 +17,29 @@ public static class QueryExtensions
     
     [ExpressionMethod(nameof(TopicHasLanguage))]
     public static bool HasLanguage(
-        this WordMeaningTopic wordTranslation,
+        this MeaningTopic translation,
         long? languageToLearnId,
         long? languageToLearnFromId)
     {
         throw new InvalidOperationException();
     }
     
-    public static Expression<Func<WordMeaningTopic, long?, long?, bool>> TopicHasLanguage()
+    public static Expression<Func<MeaningTopic, long?, long?, bool>> TopicHasLanguage()
     {
         return (x, languageToLearnId, languageToLearnFromId)
-            => (languageToLearnId == null || x.WordMeaning.Word.LanguageId == languageToLearnId)
-               && (languageToLearnFromId == null || x.WordMeaning.Translations.Any(t => t.LanguageId == languageToLearnFromId));
+            => (languageToLearnId == null || x.Meaning.Word.LanguageId == languageToLearnId)
+               && (languageToLearnFromId == null || x.Meaning.Translations.Any(t => t.LanguageId == languageToLearnFromId));
     }
     
-    public static Expression<Func<WordTranslation, long?, long?, bool>> TranslationHasLanguage()
+    public static Expression<Func<Translation, long?, long?, bool>> TranslationHasLanguage()
     {
         return (x, languageToLearnId, languageToLearnFromId)
-            => (languageToLearnId == null || x.WordMeaning.Word.LanguageId == languageToLearnId)
+            => (languageToLearnId == null || x.Meaning.Word.LanguageId == languageToLearnId)
                && (languageToLearnFromId == null || x.LanguageId == languageToLearnFromId);
     }
     
-    public static IQueryable<WordTranslationState> Learned(
-        this IQueryable<WordTranslationState> wordTranslations)
+    public static IQueryable<TranslationState> Learned(
+        this IQueryable<TranslationState> wordTranslations)
     {
         return wordTranslations.Where(x => x.LearnedAt != null);
     }

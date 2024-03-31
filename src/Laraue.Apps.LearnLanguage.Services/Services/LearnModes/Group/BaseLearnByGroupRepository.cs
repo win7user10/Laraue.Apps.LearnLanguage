@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
@@ -20,15 +21,15 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        var dbQuery = context.WordTranslations
+        var dbQuery = context.Translations
             .Where(t => t.HasLanguage(
                 selectedTranslation.LanguageToLearnId,
                 selectedTranslation.LanguageToLearnFromId))
             .Where(GetGroupWordsFilter(groupId))
-            .OrderBy(x => x.WordMeaning.Id)
+            .OrderBy(x => x.Meaning.Id)
             .LeftJoin(
-                context.WordTranslationStates,
-                (translation, state) => translation.Id == state.WordTranslationId && state.UserId == userId,
+                context.TranslationStates,
+                (translation, state) => translation.Id == state.TranslationId && state.UserId == userId,
                 (translation, state) => new { translation, state });
 
         if (filter.HasFlag(ShowWordsMode.Hard))
@@ -45,15 +46,20 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         
         return dbQuery
             .Select((x, i) => new LearningItem(
-                x.translation.WordMeaning.Word.Name,
-                x.translation.Translation,
-                x.translation.WordMeaning.Meaning,
+                x.translation.Meaning.Word.Text,
+                x.translation.Text,
+                x.translation.Meaning.Text,
                 request.Page * request.PerPage + i + 1,
                 x.state.IsMarked,
                 x.translation.Difficulty,
-                x.translation.Id,
-                x.translation.WordMeaning.WordCefrLevel!.Name,
-                x.translation.WordMeaning.Topics.Select(wmt => wmt.WordTopic.Name).ToArray(),
+                new TranslationIdentifier
+                {
+                    MeaningId = x.translation.MeaningId,
+                    TranslationId = x.translation.Id,
+                    WordId = x.translation.Meaning.WordId
+                },
+                x.translation.Meaning.CefrLevel!.Name,
+                x.translation.Meaning.Topics.Select(wmt => wmt.Topic.Name).ToArray(),
                 x.state.LearnedAt,
                 x.state.RepeatedAt
             ))
@@ -67,5 +73,5 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
 
     public abstract Task<string> GetGroupNameAsync(TId groupId, CancellationToken ct = default);
     
-    protected abstract Expression<Func<WordTranslation, bool>> GetGroupWordsFilter(TId id);
+    protected abstract Expression<Func<Translation, bool>> GetGroupWordsFilter(TId id);
 }

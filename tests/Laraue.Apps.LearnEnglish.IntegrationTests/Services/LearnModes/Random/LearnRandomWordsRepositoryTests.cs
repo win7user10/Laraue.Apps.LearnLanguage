@@ -33,7 +33,7 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
 
         await using var dbContext = GetDbContext();
         {
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
                 WordTranslationId = DefaultTranslationId,
                 UserId = Users.User1.Id,
@@ -43,7 +43,7 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
             var session = new RepeatSession
             {
                 UserId = Users.User1.Id,
-                Words = new List<RepeatSessionWordTranslation>
+                Words = new List<RepeatSessionTranslation>
                 {
                     new() { WordTranslationId = DefaultTranslationId },
                 }
@@ -57,7 +57,7 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
         }
 
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(learnedAt, state.LearnedAt);
         Assert.Equal(_now, state.RepeatedAt);
@@ -69,7 +69,7 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
         // Arrange
         await using var dbContext = GetDbContext();
         {
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
                 WordTranslationId = DefaultTranslationId,
                 UserId = Users.User1.Id,
@@ -78,7 +78,7 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
             var session = new RepeatSession
             {
                 UserId = Users.User1.Id,
-                Words = new List<RepeatSessionWordTranslation>
+                Words = new List<RepeatSessionTranslation>
                 {
                     new() { WordTranslationId = DefaultTranslationId },
                 }
@@ -92,7 +92,7 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
         }
 
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(_now, state.LearnedAt);
         Assert.Null(state.RepeatedAt);
@@ -107,7 +107,7 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
             var session = new RepeatSession
             {
                 UserId = Users.User1.Id,
-                Words = new List<RepeatSessionWordTranslation>
+                Words = new List<RepeatSessionTranslation>
                 {
                     new() { WordTranslationId = DefaultTranslationId },
                 }
@@ -121,7 +121,7 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
         }
 
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(_now, state.LearnedAt);
         Assert.Null(state.RepeatedAt);

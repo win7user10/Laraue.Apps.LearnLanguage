@@ -39,11 +39,11 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
     public async Task HandleDetailViewAsync(ReplyData replyData, TRequest request, CancellationToken ct = default)
     {
         await userRepository.UpdateViewSettings(replyData.UserId, request, ct);
-        if (request.OpenedWordTranslationId is not null)
+        if (request.TryGetTranslationIdentifier(out var identifier))
         {
             await wordsRepository.ChangeWordLearnStateAsync(
                 replyData.UserId,
-                request.OpenedWordTranslationId.Value,
+                identifier.Value,
                 request.IsLearned,
                 request.IsMarked,
                 ct);
@@ -79,7 +79,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
             .SetBackButton(returnBackButton)
             .UseFilters();
         
-        if (words.TryGetOpenedWord(request.OpenedWordTranslationId, out var openedWord))
+        if (words.TryGetOpenedWord(identifier, out var openedWord))
         {
             wordsWindow.SetOpenedTranslation(openedWord);
             var switchLearnStateButton = viewRoute

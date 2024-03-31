@@ -4,7 +4,9 @@ public static class ParameterNames
 {
     public const string Page = "p";
     
-    public const string OpenedTranslationId = "o";
+    public const string OpenedTranslationId = "ot";
+    public const string OpenedWordId = "ow";
+    public const string OpenedMeaningId = "om";
     public const string ToggleTranslations = "t";
     public const string RevertTranslations = "r";
     public const string ShowMode = "m";

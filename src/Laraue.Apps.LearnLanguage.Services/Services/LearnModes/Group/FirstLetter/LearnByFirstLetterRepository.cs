@@ -16,21 +16,21 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        return await _context.WordTranslations
+        return await _context.Translations
             .Where(t => t.HasLanguage(
                 selectedTranslation.LanguageToLearnId,
                 selectedTranslation.LanguageToLearnFromId))
-            .GroupBy(x => x.WordMeaning.Word.Name.Substring(0, 1))
+            .GroupBy(x => x.Meaning.Word.Text.Substring(0, 1))
             .OrderBy(x => x.Key)
             .Select((x, i) => new LearningItemGroup<char>(
                 x.Key[0],
-                _context.WordTranslationStates
+                _context.TranslationStates
                     .Learned()
                     .Count(y => y.UserId == userId
-                        && y.WordTranslation.HasLanguage(
+                        && y.Translation.HasLanguage(
                             selectedTranslation.LanguageToLearnId,
                             selectedTranslation.LanguageToLearnFromId)
-                        && y.WordTranslation.WordMeaning.Word.Name.StartsWith(x.Key)),
+                        && y.Translation.Meaning.Word.Text.StartsWith(x.Key)),
                 x.Count(),
                 x.Key.ToUpper()))
             .ToListAsyncLinqToDB(ct);
@@ -41,8 +41,8 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
         return Task.FromResult(groupId.ToString().ToUpper());
     }
 
-    protected override Expression<Func<WordTranslation, bool>> GetGroupWordsFilter(char id)
+    protected override Expression<Func<Translation, bool>> GetGroupWordsFilter(char id)
     {
-        return translation => translation.WordMeaning.Word.Name.StartsWith(id);
+        return translation => translation.Meaning.Word.Text.StartsWith(id);
     }
 }

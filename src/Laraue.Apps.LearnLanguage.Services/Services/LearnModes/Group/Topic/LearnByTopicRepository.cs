@@ -16,20 +16,20 @@ public class LearnByTopicRepository(DatabaseContext context)
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        return await _context.WordMeaningTopics
+        return await _context.MeaningTopics
             .Where(x => x.HasLanguage(
                 selectedTranslation.LanguageToLearnId,
                 selectedTranslation.LanguageToLearnFromId))
-            .GroupBy(x => new { x.WordTopicId, x.WordTopic.Name })
+            .GroupBy(x => new { WordTopicId = x.TopicId, x.Topic.Name })
             .Select(group => new LearningItemGroup<long>(
                 group.Key.WordTopicId,
-                _context.WordTranslationStates
+                _context.TranslationStates
                     .Learned()
                     .Count(y => y.UserId == userId
-                        && y.WordTranslation.HasLanguage(
+                        && y.Translation.HasLanguage(
                             selectedTranslation.LanguageToLearnId,
                             selectedTranslation.LanguageToLearnFromId)
-                        && y.WordTranslation.WordMeaning.Topics.Any(t => t.WordTopicId == group.Key.WordTopicId)),
+                        && y.Translation.Meaning.Topics.Any(t => t.TopicId == group.Key.WordTopicId)),
                 group.Count(),
                 group.Key.Name))
             .ToListAsyncLinqToDB(ct);
@@ -37,14 +37,14 @@ public class LearnByTopicRepository(DatabaseContext context)
 
     public override Task<string> GetGroupNameAsync(long groupId, CancellationToken ct = default)
     {
-        return _context.WordTopics
+        return _context.Topics
             .Where(x => x.Id == groupId)
             .Select(x => x.Name)
             .FirstAsyncLinqToDB(ct);
     }
 
-    protected override Expression<Func<WordTranslation, bool>> GetGroupWordsFilter(long id)
+    protected override Expression<Func<Translation, bool>> GetGroupWordsFilter(long id)
     {
-        return translation => translation.WordMeaning.Topics.Any(x => x.WordTopicId == id);
+        return translation => translation.Meaning.Topics.Any(x => x.TopicId == id);
     }
 }

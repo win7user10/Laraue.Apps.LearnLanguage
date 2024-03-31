@@ -22,7 +22,7 @@ public class DefaultContextData
         return  JsonSerializer.Deserialize<T[]>(stream, Constants.JsonWebOptions)!;
     }
     
-    public static DictionaryMap<WordCefrLevel> CefrLevels = new (
+    public static DictionaryMap<CefrLevel> CefrLevels = new (
     [
         new () { Id = 1, Name = "A0" },
         new () { Id = 2, Name = "A1" },
@@ -49,7 +49,7 @@ public class DefaultContextData
     ]);
 
     public static DictionaryMap<WordLanguage> WordLanguages = new (GetJsonData<WordLanguage>("languages.json"));
-    public static DictionaryMap<WordTopic> WordTopics = new (GetJsonData<WordTopic>("topics.json"));
+    public static DictionaryMap<Topic> WordTopics = new (GetJsonData<Topic>("topics.json"));
     public static ImportingWord[] Words = GetJsonData<ImportingWord>("translations.json");
 
     public sealed class DictionaryMap<TEntity> where TEntity : IDictionaryEntity

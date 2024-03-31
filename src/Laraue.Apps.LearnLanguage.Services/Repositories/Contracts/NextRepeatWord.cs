@@ -1,10 +1,10 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+﻿using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 
 public record NextRepeatWordTranslation(
-    long Id,
+    TranslationIdentifier Id,
     string Name,
     string Translation,
     DateTime? LearnedAt,

@@ -35,7 +35,7 @@ public class WordsRepositoryTests : TestWithDatabase
         }
         
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(1, state.LearnAttempts);
         Assert.Equal(_now, state.LastOpenedAt);
@@ -52,14 +52,14 @@ public class WordsRepositoryTests : TestWithDatabase
 
         await using var dbContext = GetDbContext();
         {
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
                 WordTranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeUpdated,
             });
             
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
                 WordTranslationId = 2,
                 UserId = Users.User1.Id,
@@ -67,14 +67,14 @@ public class WordsRepositoryTests : TestWithDatabase
                 LearnedAt = _now.AddHours(-1)
             });
 
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
                 WordTranslationId = 3,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeNotUpdated,
             });
             
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
                 WordTranslationId = 4,
                 UserId = Users.User1.Id,
@@ -90,7 +90,7 @@ public class WordsRepositoryTests : TestWithDatabase
         
         // Assert
         var states = await GetDbContext()
-            .WordTranslationStates
+            .TranslationStates
             .OrderBy(x => x.Id)
             .ToArrayAsyncEF();
         
@@ -115,7 +115,7 @@ public class WordsRepositoryTests : TestWithDatabase
         }
         
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(1, state.LearnAttempts);
         Assert.Equal(DateTime.MinValue, state.LastOpenedAt);
@@ -130,7 +130,7 @@ public class WordsRepositoryTests : TestWithDatabase
         // Arrange
         await using var dbContext = GetDbContext();
         {
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
                 WordTranslationId = 1,
                 UserId = Users.User1.Id,
@@ -144,7 +144,7 @@ public class WordsRepositoryTests : TestWithDatabase
         }
         
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(0, state.LearnAttempts);
         Assert.Equal(_now, state.LastOpenedAt);

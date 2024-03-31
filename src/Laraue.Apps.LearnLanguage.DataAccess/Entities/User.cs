@@ -21,7 +21,7 @@ public sealed class User : TelegramIdentityUser<Guid>
     /// <summary>
     /// All user's translation's states.
     /// </summary>
-    public ICollection<WordTranslationState> WordTranslationStates { get; set; } = null!;
+    public ICollection<TranslationState> WordTranslationStates { get; set; } = null!;
     
     /// <summary>
     /// The <see cref="WordLanguage"/> reference.

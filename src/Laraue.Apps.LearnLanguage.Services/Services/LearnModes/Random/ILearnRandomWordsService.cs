@@ -1,4 +1,6 @@
-﻿namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
+﻿using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+
+namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 
 public interface ILearnRandomWordsService
 {
@@ -10,4 +12,12 @@ public interface ILearnRandomWordsService
         CancellationToken ct = default);
 }
 
-public record HandleWordRequest(long SessionId, int TranslationId, bool? IsRemembered, bool? ShowTranslation);
+public record HandleWordRequest : IWithTranslationIdentifierRequest
+{
+    public long SessionId { get; init; }
+    public bool? IsRemembered { get; init; }
+    public bool? ShowTranslation { get; init; }
+    public long? WordId { get; init; }
+    public long? MeaningId { get; init; }
+    public long? TranslationId { get; init; }
+}

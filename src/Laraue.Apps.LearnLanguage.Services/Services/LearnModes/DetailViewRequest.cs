@@ -21,7 +21,13 @@ public abstract record DetailViewRequest : WithSelectedTranslationRequest, IChan
     public int Page { get; init; }
     
     [FromQuery(ParameterNames.OpenedTranslationId)]
-    public long? OpenedWordTranslationId { get; init; }
+    public long? TranslationId { get; init; }
+    
+    [FromQuery(ParameterNames.OpenedWordId)]
+    public long? WordId { get; init; }
+    
+    [FromQuery(ParameterNames.OpenedMeaningId)]
+    public long? MeaningId { get; init; }
     
     [FromQuery(ParameterNames.LearnState)]
     public bool? IsLearned  { get; init; }

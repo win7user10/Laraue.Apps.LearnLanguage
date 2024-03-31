@@ -12,7 +12,7 @@ public sealed class Word : BaseEntity
     /// The word, e.g. cat, dog etc.
     /// </summary>
     [MaxLength(100)]
-    public required string Name { get; init; }
+    public required string Text { get; init; }
 
     /// <summary>
     /// The word transcription.
@@ -29,4 +29,10 @@ public sealed class Word : BaseEntity
     /// The word language.
     /// </summary>
     public WordLanguage Language { get; set; } = null!;
+    
+    public ICollection<TranslationState> TranslationStates { get; set; } = null!;
+    public ICollection<MeaningTopic> Topics { get; set; } = null!;
+    public ICollection<Meaning> Meanings { get; set; } = null!;
+    public ICollection<RepeatSessionTranslation> RepeatSessionTranslations { get; set; } = null!;
+    public ICollection<Translation> Translations { get; set; } = null!;
 }

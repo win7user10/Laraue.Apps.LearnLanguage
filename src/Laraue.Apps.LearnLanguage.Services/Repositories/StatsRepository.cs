@@ -21,27 +21,27 @@ public class StatsRepository : IStatsRepository
     {
         var wordsCount = await _context.Words.CountAsyncLinqToDB(ct);
         
-        var learnedCount = await _context.WordTranslationStates
+        var learnedCount = await _context.TranslationStates
             .Where(x => x.UserId == userId)
             .Where(x => x.LearnedAt != null)
             .CountAsyncLinqToDB(ct);
 
-        var statByCefrLevel = await _context.WordTranslations
-            .GroupBy(x => x.WordMeaning.WordCefrLevelId)
+        var statByCefrLevel = await _context.Translations
+            .GroupBy(x => x.Meaning.CefrLevelId)
             .OrderBy(x => x.Key)
             .Select(x => new CefrLevelStat(
-                _context.WordCefrLevels
+                _context.CefrLevels
                     .Where(y => y.Id == x.Key)
                     .Select(y => y.Name)
                     .FirstOrDefault() ?? "Undefined",
-                _context.WordTranslationStates
-                    .Count(y => y.UserId == userId && y.WordTranslation.WordMeaning.WordCefrLevelId == x.Key),
+                _context.TranslationStates
+                    .Count(y => y.UserId == userId && y.Translation.Meaning.CefrLevelId == x.Key),
                 x.Count()))
             .ToListAsyncEF(ct);
 
         var totalStat = new TotalStat(learnedCount, wordsCount, statByCefrLevel);
 
-        var daysStat = await _context.WordTranslationStates
+        var daysStat = await _context.TranslationStates
             .Where(x => x.UserId == userId)
             .Where(x => x.LearnedAt != null || x.RepeatedAt != null)
             .GroupBy(x => (x.RepeatedAt ?? x.LearnedAt)!.Value.Date)

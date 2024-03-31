@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess;
+﻿using Laraue.Apps.LearnLanguage.Common;
+using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
@@ -14,7 +15,7 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
     
     public Task ChangeWordLearnStateAsync(
         Guid userId,
-        long wordTranslationId,
+        TranslationIdentifier translationId,
         bool? isLearned,
         bool? isMarked,
         CancellationToken ct = default)
@@ -24,19 +25,21 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
             return Task.CompletedTask;
         }
         
-        return context.WordTranslationStates
+        return context.TranslationStates
             .ToLinqToDBTable()
             .InsertOrUpdateAsync(
-                () => new WordTranslationState
+                () => new TranslationState
                 {
-                    WordTranslationId = wordTranslationId,
+                    TranslationId = translationId.TranslationId,
+                    MeaningId = translationId.MeaningId,
+                    WordId = translationId.WordId,
                     UserId = userId,
                     LearnedAt = isLearned.GetValueOrDefault()
                         ? dateTimeProvider.UtcNow
                         : null,
                     IsMarked = isMarked.GetValueOrDefault(),
                     LearnAttempts = 1,
-                }, x => new WordTranslationState
+                }, x => new TranslationState
                 {
                     LearnedAt = isLearned.HasValue
                         ? isLearned.Value
@@ -45,36 +48,40 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                         : x.LearnedAt,
                     IsMarked = isMarked ?? x.IsMarked
                 },
-                () => new WordTranslationState
+                () => new TranslationState
                 {
                     UserId = userId,
-                    WordTranslationId = wordTranslationId,
+                    TranslationId = translationId.TranslationId,
+                    MeaningId = translationId.MeaningId,
+                    WordId = translationId.WordId,
                 },
                 ct);
     }
 
-    public Task IncrementLearnAttemptsIfRequiredAsync(Guid userId, long[] wordTranslationIds, CancellationToken ct = default)
+    public Task IncrementLearnAttemptsIfRequiredAsync(Guid userId, TranslationIdentifier[] translationIds, CancellationToken ct = default)
     {
-        if (wordTranslationIds.Length == 0)
+        if (translationIds.Length == 0)
         {
             return Task.CompletedTask;
         }
         
         var now = dateTimeProvider.UtcNow;
         
-        return context.WordTranslationStates
+        return context.TranslationStates
             .ToLinqToDBTable()
             .Merge()
-            .Using(wordTranslationIds
+            .Using(translationIds
                 .Select(id => new
                 {
                     UserId = userId,
-                    WordTranslationId = id
+                    id.WordId,
+                    id.MeaningId,
+                    id.TranslationId,
                 }))
             .On(
-                x => new { x.UserId, x.WordTranslationId },
-                x => new { x.UserId, x.WordTranslationId })
-            .UpdateWhenMatched((o, n) => new WordTranslationState
+                x => new { x.UserId, x.WordId, x.MeaningId, x.TranslationId },
+                x => new { x.UserId, x.WordId, x.MeaningId, x.TranslationId })
+            .UpdateWhenMatched((o, n) => new TranslationState
             {
                 LearnAttempts = o.LastOpenedAt - now >= _learnAttemptTime && o.LearnedAt == null
                     ? o.LearnAttempts + 1
@@ -83,23 +90,25 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                     ? now
                     : o.LastOpenedAt,
             })
-            .InsertWhenNotMatched(e => new WordTranslationState
+            .InsertWhenNotMatched(e => new TranslationState
             {
                 UserId = userId,
                 LearnAttempts = 1,
                 LastOpenedAt = dateTimeProvider.UtcNow,
-                WordTranslationId = e.WordTranslationId,
+                TranslationId = e.TranslationId,
+                MeaningId = e.MeaningId,
+                WordId = e.WordId
             })
             .MergeAsync(ct);
     }
 
     public Task<List<LearningLanguagePair>> GetAvailableLearningPairsAsync(CancellationToken ct = default)
     {
-        return context.WordTranslations
+        return context.Translations
             .GroupBy(x => new
             {
-                LanguageIdToLearn = x.WordMeaning.Word.LanguageId,
-                LanguageCodeToLearn = x.WordMeaning.Word.Language.Name,
+                LanguageIdToLearn = x.Meaning.Word.LanguageId,
+                LanguageCodeToLearn = x.Meaning.Word.Language.Name,
                 LanguageIdToLearnFrom = x.LanguageId,
                 LanguageCodeToLearnFrom = x.Language.Name,
             })

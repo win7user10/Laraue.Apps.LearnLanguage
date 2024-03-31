@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 
@@ -8,11 +9,17 @@ public static class FullPaginatedResultExtensions
 {
     public static bool TryGetOpenedWord(
         this IFullPaginatedResult<LearningItem> result,
-        long? openedTranslationId,
+        TranslationIdentifier? translationIdentifier,
         [NotNullWhen(true)] out LearningItem? learningItem)
     {
+        if (translationIdentifier is null)
+        {
+            learningItem = null;
+            return false;
+        }
+
         learningItem = result.Data
-            .FirstOrDefault(x => x.TranslationId == openedTranslationId);
+            .FirstOrDefault(x => x.TranslationId == translationIdentifier.Value);
         return learningItem is not null;
     }
 }
