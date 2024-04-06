@@ -10,28 +10,30 @@ public class UpdateTranslationsComplexityJob(DatabaseContext context)
 {
     public async Task ExecuteAsync()
     {
-        var attemptsStat = await context.WordTranslationStates
+        var attemptsStat = await context.TranslationStates
             .Where(x => x.LearnedAt != null)
-            .GroupBy(x => x.WordTranslationId)
+            .GroupBy(x => new { x.WordId, x.MeaningId, x.TranslationId })
             .Select(x => new
             {
-                TranslationId = x.Key,
+                x.Key,
                 LearnAttempts = x.Average(y => y.LearnAttempts)
             })
             .ToListAsyncEF();
 
-        await context.WordTranslations
+        await context.Translations
             .ToLinqToDBTable()
             .Merge()
             .Using(attemptsStat
-                .Select(x => new WordTranslation
+                .Select(x => new Translation
                 {
-                    Id = x.TranslationId,
+                    Id = x.Key.TranslationId,
+                    MeaningId = x.Key.MeaningId,
+                    WordId = x.Key.WordId,
                     AverageAttempts = x.LearnAttempts,
                     Difficulty = GetDifficulty(x.LearnAttempts)
                 }))
             .On(x => x.Id, x => x.Id)
-            .UpdateWhenMatched((o, n) => new WordTranslation
+            .UpdateWhenMatched((o, n) => new Translation
             {
                 AverageAttempts = n.AverageAttempts,
                 Difficulty = n.Difficulty

@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
@@ -20,15 +21,17 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        var dbQuery = context.WordTranslations
-            .Where(t => t.HasLanguage(
-                selectedTranslation.LanguageToLearnId,
-                selectedTranslation.LanguageToLearnFromId))
+        var dbQuery = context.Translations
+            .Where(t => t.HasLanguage(selectedTranslation.LanguageToLearnId, selectedTranslation.LanguageToLearnFromId))
             .Where(GetGroupWordsFilter(groupId))
-            .OrderBy(x => x.WordMeaning.Id)
+            .OrderBy(x => x.Meaning.Id)
             .LeftJoin(
-                context.WordTranslationStates,
-                (translation, state) => translation.Id == state.WordTranslationId && state.UserId == userId,
+                context.TranslationStates,
+                (translation, state) => 
+                    translation.Id == state.TranslationId
+                    && translation.MeaningId == state.MeaningId
+                    && translation.WordId == state.WordId
+                    && state.UserId == userId,
                 (translation, state) => new { translation, state });
 
         if (filter.HasFlag(ShowWordsMode.Hard))
@@ -42,22 +45,39 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             dbQuery = dbQuery.Where(x => x.state == null || x.state.LearnedAt == null);
         }
-        
+
         return dbQuery
-            .Select((x, i) => new LearningItem(
-                x.translation.WordMeaning.Word.Name,
-                x.translation.Translation,
-                x.translation.WordMeaning.Meaning,
-                request.Page * request.PerPage + i + 1,
-                x.state.IsMarked,
-                x.translation.Difficulty,
-                x.translation.Id,
-                x.translation.WordMeaning.WordCefrLevel!.Name,
-                x.translation.WordMeaning.Topics.Select(wmt => wmt.WordTopic.Name).ToArray(),
-                x.state.LearnedAt,
-                x.state.RepeatedAt
-            ))
+            .Select(x => new LearningItem
+            {
+                Word = x.translation.Meaning.Word.Text,
+                Translation = x.translation.Text,
+                Meaning = x.translation.Meaning.Text,
+                IsMarked = x.state.IsMarked,
+                Difficulty = x.translation.Difficulty,
+                LearnedAt = x.state.LearnedAt,
+                RepeatedAt = x.state.RepeatedAt,
+                TranslationId = ToIdentifier(x.translation),
+                CefrLevel = x.translation.Meaning.CefrLevel!.Name,
+                Topics = x.translation.Meaning.Topics.Select(wmt => wmt.Topic.Name).ToList(),
+            })
             .FullPaginateLinq2DbAsync(request, ct);;
+    }
+    
+    [ExpressionMethod(nameof(ToIdentifier))]
+    public static TranslationIdentifier ToIdentifier(
+        Translation translation)
+    {
+        throw new InvalidOperationException();
+    }
+    
+    public static Expression<Func<Translation, TranslationIdentifier>> ToIdentifier()
+    {
+        return x => new TranslationIdentifier
+        {
+            MeaningId = x.MeaningId,
+            TranslationId = x.Id,
+            WordId = x.Meaning.WordId
+        };
     }
 
     public abstract Task<IList<LearningItemGroup<TId>>> GetGroupsAsync(
@@ -67,5 +87,5 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
 
     public abstract Task<string> GetGroupNameAsync(TId groupId, CancellationToken ct = default);
     
-    protected abstract Expression<Func<WordTranslation, bool>> GetGroupWordsFilter(TId id);
+    protected abstract Expression<Func<Translation, bool>> GetGroupWordsFilter(TId id);
 }

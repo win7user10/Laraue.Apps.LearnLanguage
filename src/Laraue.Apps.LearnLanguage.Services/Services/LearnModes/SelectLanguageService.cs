@@ -72,7 +72,7 @@ public class SelectLanguageService(
 
         tmb.AddInlineKeyboardButtons(availablePairs
             .Select(p => nextRoute
-                .AddTranslationParameters(
+                .WithTranslationDirection(
                     new SelectedTranslation(
                         p.LanguageToLearn.Id,
                         p.LanguageToLearnFrom.Id))

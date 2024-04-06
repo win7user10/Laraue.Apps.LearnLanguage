@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess.Enums;
+﻿using Laraue.Apps.LearnLanguage.Common;
+using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 
@@ -21,7 +22,7 @@ public interface ILearnRandomWordsRepository
     
     Task<NextRepeatWordTranslation> GetRepeatWordAsync(
         Guid userId,
-        long translationId,
+        TranslationIdentifier translationIdentifier,
         CancellationToken ct = default);
     
     Task<RepeatSessionInfo> GetSessionInfoAsync(long sessionId, CancellationToken ct = default);
@@ -34,7 +35,7 @@ public interface ILearnRandomWordsRepository
     /// <returns>Actual session state.</returns>
     Task<RepeatState> AddWordToSessionAsync(
         long sessionId,
-        long translationId,
+        TranslationIdentifier translationIdentifier,
         bool isRemembered,
         CancellationToken ct = default);
 
@@ -42,7 +43,10 @@ public interface ILearnRandomWordsRepository
     /// Mark word as learned in the repeating session.
     /// </summary>
     /// <returns>Is session finished.</returns>
-    Task LearnWordAsync(long sessionId, long translationId, CancellationToken ct = default);
+    Task LearnWordAsync(
+        long sessionId,
+        TranslationIdentifier translationIdentifier,
+        CancellationToken ct = default);
 
     Task ActivateSessionAsync(
         long sessionId,

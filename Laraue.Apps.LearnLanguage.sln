@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.LearnEnglish.In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.LearnLanguage.Common", "src\Laraue.Apps.LearnLanguage.Common\Laraue.Apps.LearnLanguage.Common.csproj", "{9E628B71-3F27-4A1B-BEB0-0F52C9397B04}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.LearnLanguage.EditorHost", "src\Laraue.Apps.LearnLanguage.EditorHost\Laraue.Apps.LearnLanguage.EditorHost.csproj", "{F04C512F-9D9A-471C-8876-886BF75062D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{9E628B71-3F27-4A1B-BEB0-0F52C9397B04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E628B71-3F27-4A1B-BEB0-0F52C9397B04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E628B71-3F27-4A1B-BEB0-0F52C9397B04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F04C512F-9D9A-471C-8876-886BF75062D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F04C512F-9D9A-471C-8876-886BF75062D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F04C512F-9D9A-471C-8876-886BF75062D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F04C512F-9D9A-471C-8876-886BF75062D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{09D2D59B-2C39-4566-9FEF-8E59743149C5} = {0CC97684-89E5-4340-B9C5-13643784106F}
@@ -47,5 +53,6 @@ Global
 		{637937E6-7C87-48A1-9FCE-CDC7E3FD859E} = {0CC97684-89E5-4340-B9C5-13643784106F}
 		{444FE84C-0437-4EAC-ABE9-91074FE1F741} = {03E735E5-C0F2-4914-9BAF-11618BDA6CC4}
 		{9E628B71-3F27-4A1B-BEB0-0F52C9397B04} = {0CC97684-89E5-4340-B9C5-13643784106F}
+		{F04C512F-9D9A-471C-8876-886BF75062D7} = {0CC97684-89E5-4340-B9C5-13643784106F}
 	EndGlobalSection
 EndGlobal

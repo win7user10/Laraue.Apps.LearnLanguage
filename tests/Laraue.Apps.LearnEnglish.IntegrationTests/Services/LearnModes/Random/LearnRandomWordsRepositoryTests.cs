@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 using Laraue.Core.DateTime.Extensions;
@@ -15,7 +16,13 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
 {
     private readonly LearnRandomWordsRepository _repository;
     private readonly DateTime _now = new DateTime(2021, 01, 01).UseUtcKind();
-    private const int DefaultTranslationId = 1;
+
+    private readonly TranslationIdentifier _defaultTranslation = new()
+    {
+        WordId = 1,
+        MeaningId = 1,
+        TranslationId = 1,
+    };
 
     public LearnRandomWordsRepositoryTests()
     {
@@ -33,9 +40,11 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
 
         await using var dbContext = GetDbContext();
         {
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
-                WordTranslationId = DefaultTranslationId,
+                WordId = _defaultTranslation.WordId,
+                MeaningId = _defaultTranslation.MeaningId,
+                TranslationId = _defaultTranslation.TranslationId,
                 UserId = Users.User1.Id,
                 LearnedAt = learnedAt
             });
@@ -43,9 +52,14 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
             var session = new RepeatSession
             {
                 UserId = Users.User1.Id,
-                Words = new List<RepeatSessionWordTranslation>
+                Words = new List<RepeatSessionTranslation>
                 {
-                    new() { WordTranslationId = DefaultTranslationId },
+                    new()
+                    {
+                        WordId = _defaultTranslation.WordId,
+                        MeaningId = _defaultTranslation.MeaningId,
+                        TranslationId = _defaultTranslation.TranslationId,
+                    },
                 }
             };
         
@@ -53,11 +67,11 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
             await dbContext.SaveChangesAsync();
             
             // Act
-            await _repository.LearnWordAsync(session.Id, DefaultTranslationId);
+            await _repository.LearnWordAsync(session.Id, _defaultTranslation);
         }
 
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(learnedAt, state.LearnedAt);
         Assert.Equal(_now, state.RepeatedAt);
@@ -69,18 +83,25 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
         // Arrange
         await using var dbContext = GetDbContext();
         {
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
-                WordTranslationId = DefaultTranslationId,
+                WordId = _defaultTranslation.WordId,
+                MeaningId = _defaultTranslation.MeaningId,
+                TranslationId = _defaultTranslation.TranslationId,
                 UserId = Users.User1.Id,
             });
 
             var session = new RepeatSession
             {
                 UserId = Users.User1.Id,
-                Words = new List<RepeatSessionWordTranslation>
+                Words = new List<RepeatSessionTranslation>
                 {
-                    new() { WordTranslationId = DefaultTranslationId },
+                    new()
+                    {
+                        WordId = _defaultTranslation.WordId,
+                        MeaningId = _defaultTranslation.MeaningId,
+                        TranslationId = _defaultTranslation.TranslationId,
+                    },
                 }
             };
         
@@ -88,11 +109,11 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
             await dbContext.SaveChangesAsync();
             
             // Act
-            await _repository.LearnWordAsync(session.Id, DefaultTranslationId);
+            await _repository.LearnWordAsync(session.Id, _defaultTranslation);
         }
 
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(_now, state.LearnedAt);
         Assert.Null(state.RepeatedAt);
@@ -107,9 +128,14 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
             var session = new RepeatSession
             {
                 UserId = Users.User1.Id,
-                Words = new List<RepeatSessionWordTranslation>
+                Words = new List<RepeatSessionTranslation>
                 {
-                    new() { WordTranslationId = DefaultTranslationId },
+                    new()
+                    {
+                        WordId = _defaultTranslation.WordId,
+                        MeaningId = _defaultTranslation.MeaningId,
+                        TranslationId = _defaultTranslation.TranslationId,
+                    },
                 }
             };
         
@@ -117,11 +143,11 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
             await dbContext.SaveChangesAsync();
             
             // Act
-            await _repository.LearnWordAsync(session.Id, DefaultTranslationId);
+            await _repository.LearnWordAsync(session.Id, _defaultTranslation);
         }
 
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(_now, state.LearnedAt);
         Assert.Null(state.RepeatedAt);

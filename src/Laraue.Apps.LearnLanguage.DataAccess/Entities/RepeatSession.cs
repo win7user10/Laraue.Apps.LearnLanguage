@@ -17,7 +17,7 @@ public sealed class RepeatSession : BaseEntity
     /// <summary>
     /// Translations in the session.
     /// </summary>
-    public ICollection<RepeatSessionWordTranslation> Words { get; set; } = null!;
+    public ICollection<RepeatSessionTranslation> Words { get; set; } = null!;
 
     /// <summary>
     /// The session current state.

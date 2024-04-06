@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Core.DateTime.Extensions;
@@ -31,16 +32,22 @@ public class WordsRepositoryTests : TestWithDatabase
         await using var dbContext = GetDbContext();
         {
             // Act
-            await _repository.IncrementLearnAttemptsIfRequiredAsync(Users.User1.Id, [1L]);
+            await _repository.IncrementLearnAttemptsIfRequiredAsync(
+                Users.User1.Id,
+                [
+                    new TranslationIdentifier { WordId = 3, MeaningId = 1, TranslationId = 1 }
+                ]);
         }
         
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(1, state.LearnAttempts);
         Assert.Equal(_now, state.LastOpenedAt);
         Assert.Equal(Users.User1.Id, state.UserId);
-        Assert.Equal(1, state.WordTranslationId);
+        Assert.Equal(3, state.WordId);
+        Assert.Equal(1, state.MeaningId);
+        Assert.Equal(1, state.TranslationId);
     }
 
     [Fact]
@@ -52,31 +59,39 @@ public class WordsRepositoryTests : TestWithDatabase
 
         await using var dbContext = GetDbContext();
         {
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
-                WordTranslationId = 1,
+                WordId = 1,
+                MeaningId = 1,
+                TranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeUpdated,
             });
             
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
-                WordTranslationId = 2,
+                WordId = 2,
+                MeaningId = 1,
+                TranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeUpdated,
                 LearnedAt = _now.AddHours(-1)
             });
 
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
-                WordTranslationId = 3,
+                WordId = 3,
+                MeaningId = 1,
+                TranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeNotUpdated,
             });
             
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
-                WordTranslationId = 4,
+                WordId = 4,
+                MeaningId = 1,
+                TranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeNotUpdated,
                 LearnedAt = _now.AddHours(-1)
@@ -85,13 +100,20 @@ public class WordsRepositoryTests : TestWithDatabase
             await dbContext.SaveChangesAsync();
             
             // Act
-            await _repository.IncrementLearnAttemptsIfRequiredAsync(Users.User1.Id, [1L, 2, 3, 4]);
+            await _repository.IncrementLearnAttemptsIfRequiredAsync(
+                Users.User1.Id,
+                [
+                    new TranslationIdentifier { WordId = 1, MeaningId = 1, TranslationId = 1 },
+                    new TranslationIdentifier { WordId = 2, MeaningId = 1, TranslationId = 1 },
+                    new TranslationIdentifier { WordId = 3, MeaningId = 1, TranslationId = 1 },
+                    new TranslationIdentifier { WordId = 4, MeaningId = 1, TranslationId = 1 },
+                ]);
         }
         
         // Assert
         var states = await GetDbContext()
-            .WordTranslationStates
-            .OrderBy(x => x.Id)
+            .TranslationStates
+            .OrderBy(x => x.WordId)
             .ToArrayAsyncEF();
         
         Assert.Equal(1, states[0].LearnAttempts);
@@ -111,16 +133,22 @@ public class WordsRepositoryTests : TestWithDatabase
         await using var dbContext = GetDbContext();
         {
             // Act
-            await _repository.ChangeWordLearnStateAsync(Users.User1.Id, 1, true, null);
+            await _repository.ChangeWordLearnStateAsync(
+                Users.User1.Id,
+                new TranslationIdentifier { WordId = 3, MeaningId = 1, TranslationId = 1 },
+                true,
+                null);
         }
         
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(1, state.LearnAttempts);
-        Assert.Equal(DateTime.MinValue, state.LastOpenedAt);
+        Assert.Equal(_now, state.LastOpenedAt);
         Assert.Equal(Users.User1.Id, state.UserId);
-        Assert.Equal(1, state.WordTranslationId);
+        Assert.Equal(3, state.WordId);
+        Assert.Equal(1, state.MeaningId);
+        Assert.Equal(1, state.TranslationId);
         Assert.Equal(_now, state.LearnedAt);
     }
     
@@ -130,9 +158,11 @@ public class WordsRepositoryTests : TestWithDatabase
         // Arrange
         await using var dbContext = GetDbContext();
         {
-            dbContext.WordTranslationStates.Add(new WordTranslationState
+            dbContext.TranslationStates.Add(new TranslationState
             {
-                WordTranslationId = 1,
+                WordId = 3,
+                MeaningId = 1,
+                TranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = _now
             });
@@ -140,11 +170,15 @@ public class WordsRepositoryTests : TestWithDatabase
             await dbContext.SaveChangesAsync();
             
             // Act
-            await _repository.ChangeWordLearnStateAsync(Users.User1.Id, 1, true, null);
+            await _repository.ChangeWordLearnStateAsync(
+                Users.User1.Id,
+                new TranslationIdentifier { WordId = 3, MeaningId = 1, TranslationId = 1 },
+                true,
+                null);
         }
         
         // Assert
-        var state = await GetDbContext().WordTranslationStates.SingleAsyncEF();
+        var state = await GetDbContext().TranslationStates.SingleAsyncEF();
         
         Assert.Equal(0, state.LearnAttempts);
         Assert.Equal(_now, state.LastOpenedAt);

@@ -39,11 +39,11 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
     public async Task HandleDetailViewAsync(ReplyData replyData, TRequest request, CancellationToken ct = default)
     {
         await userRepository.UpdateViewSettings(replyData.UserId, request, ct);
-        if (request.OpenedWordTranslationId is not null)
+        if (request.TryGetTranslationIdentifier(out var identifier))
         {
             await wordsRepository.ChangeWordLearnStateAsync(
                 replyData.UserId,
-                request.OpenedWordTranslationId.Value,
+                identifier,
                 request.IsLearned,
                 request.IsMarked,
                 ct);
@@ -61,11 +61,11 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         var viewRoute = new CallbackRoutePath(DetailRoute)
             .WithQueryParameter(ParameterNames.GroupId, request.GroupId)
             .WithQueryParameter(ParameterNames.Page, request.Page)
-            .AddTranslationParameters(request)
+            .WithTranslationDirection(request)
             .Freeze();
         
         var returnBackButton = new CallbackRoutePath(ListRoute)
-            .AddTranslationParameters(request)
+            .WithTranslationDirection(request)
             .ToInlineKeyboardButton(GroupMode.BackButton);
 
         var groupName = await repository.GetGroupNameAsync(request.GroupId, ct);
@@ -79,17 +79,17 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
             .SetBackButton(returnBackButton)
             .UseFilters();
         
-        if (words.TryGetOpenedWord(request.OpenedWordTranslationId, out var openedWord))
+        if (words.TryGetOpenedWord(identifier, out var openedWord))
         {
             wordsWindow.SetOpenedTranslation(openedWord);
             var switchLearnStateButton = viewRoute
                 .WithQueryParameter(ParameterNames.LearnState, openedWord.LearnedAt is null)
-                .WithQueryParameter(ParameterNames.OpenedTranslationId, openedWord.TranslationId)
+                .WithTranslationIdentifier(openedWord.TranslationId)
                 .ToInlineKeyboardButton(openedWord.LearnedAt is not null ? "Not learned ❌" : "Learned ✅");
         
             var switchIsHardButton = viewRoute
                 .WithQueryParameter(ParameterNames.MarkState, !openedWord.IsMarked)
-                .WithQueryParameter(ParameterNames.OpenedTranslationId, openedWord.TranslationId)
+                .WithTranslationIdentifier(openedWord.TranslationId)
                 .ToInlineKeyboardButton(openedWord.IsMarked ? "Drop mark" : "Add mark");
 
             wordsWindow.SetActionButtons(new[] { switchLearnStateButton, switchIsHardButton });
@@ -125,7 +125,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         var completedPercent = learnedCount.DivideAndReturnPercent(totalCount);
 
         var detailRoute = new CallbackRoutePath(DetailRoute)
-            .AddTranslationParameters(selectedTranslation);
+            .WithTranslationDirection(selectedTranslation);
 
         var tmb = new TelegramMessageBuilder()
             .AppendRow($"<b>{ModeName}</b>")

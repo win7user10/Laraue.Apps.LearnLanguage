@@ -1,14 +1,14 @@
 ﻿[
   {
-    "code": "en",
+    "name": "en",
     "id": 1
   },
   {
-    "code": "ru",
+    "name": "ru",
     "id": 2
   },
   {
-    "code": "fr",
+    "name": "fr",
     "id": 3
   }
 ]

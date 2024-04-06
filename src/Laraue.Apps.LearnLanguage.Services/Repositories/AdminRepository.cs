@@ -30,14 +30,14 @@ public class AdminRepository : IAdminRepository
         var totalUserCount = await _context.Users
             .CountAsyncEF(ct);
 
-        var activeUsersCount = await _context.WordTranslationStates
+        var activeUsersCount = await _context.TranslationStates
             .Where(x => (x.LearnedAt.HasValue && x.LearnedAt.Value >= weekBeforeDate)
                         || (x.RepeatedAt.HasValue && x.RepeatedAt.Value >= weekBeforeDate))
             .Select(x => x.UserId)
             .Distinct()
             .CountAsyncEF(ct);
         
-        var activeUsers = await _context.WordTranslationStates
+        var activeUsers = await _context.TranslationStates
             .Where(x => (x.LearnedAt.HasValue && x.LearnedAt.Value >= weekBeforeDate)
                 || (x.RepeatedAt.HasValue && x.RepeatedAt.Value >= weekBeforeDate))
             .Select(x => new

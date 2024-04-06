@@ -9,29 +9,27 @@ namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.CefrLevel
 public class LearnByCefrLevelRepository(DatabaseContext context)
     : BaseLearnByGroupRepository<long>(context), ILearnByCefrLevelRepository
 {
-    private readonly DatabaseContext _context = context;
-
     public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(
         Guid userId,
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        return await _context.WordTranslations
+        return await context.Translations
             .Where(t => t.HasLanguage(
                 selectedTranslation.LanguageToLearnId,
                 selectedTranslation.LanguageToLearnFromId))
-            .Where(x => x.WordMeaning.WordCefrLevelId != null)
-            .GroupBy(x => new { x.WordMeaning.WordCefrLevelId, x.WordMeaning.WordCefrLevel!.Name })
+            .Where(x => x.Meaning.CefrLevelId != null)
+            .GroupBy(x => new { WordCefrLevelId = x.Meaning.CefrLevelId, x.Meaning.CefrLevel!.Name })
             .OrderBy(x => x.Key.WordCefrLevelId)
             .Select((x, i) => new LearningItemGroup<long>(
                 x.Key.WordCefrLevelId.GetValueOrDefault(),
-                _context.WordTranslationStates
+                context.TranslationStates
                     .Learned()
                     .Count(y => y.UserId == userId
-                        && y.WordTranslation.HasLanguage(
+                        && y.Translation.HasLanguage(
                             selectedTranslation.LanguageToLearnId,
                             selectedTranslation.LanguageToLearnFromId)
-                        && y.WordTranslation.WordMeaning.WordCefrLevelId == x.Key.WordCefrLevelId),
+                        && y.Translation.Meaning.CefrLevelId == x.Key.WordCefrLevelId),
                 x.Count(),
                 x.Key.Name))
             .ToListAsyncLinqToDB(ct);
@@ -39,14 +37,14 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
 
     public override Task<string> GetGroupNameAsync(long groupId, CancellationToken ct = default)
     {
-        return _context.WordCefrLevels
+        return context.CefrLevels
             .Where(x => x.Id == groupId)
             .Select(x => x.Name)
             .FirstAsyncLinqToDB(ct);
     }
 
-    protected override Expression<Func<WordTranslation, bool>> GetGroupWordsFilter(long id)
+    protected override Expression<Func<Translation, bool>> GetGroupWordsFilter(long id)
     {
-        return translation => translation.WordMeaning.WordCefrLevelId == id;
+        return translation => translation.Meaning.CefrLevelId == id;
     }
 }

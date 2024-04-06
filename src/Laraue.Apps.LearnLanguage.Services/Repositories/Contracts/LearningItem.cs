@@ -1,16 +1,18 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess.Enums;
+﻿using Laraue.Apps.LearnLanguage.Common;
+using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 
-public record LearningItem(
-    string Word,
-    string Translation,
-    string? Meaning,
-    long SerialNumber,
-    bool IsMarked,
-    WordTranslationDifficulty? Difficulty,
-    long TranslationId,
-    string? CefrLevel,
-    string[] Topics,
-    DateTime? LearnedAt,
-    DateTime? RepeatedAt);
+public record LearningItem
+{
+    public string Word { get; init; }
+    public string Translation { get; init; }
+    public string? Meaning { get; init; }
+    public bool IsMarked { get; init; }
+    public WordTranslationDifficulty? Difficulty { get; init; }
+    public TranslationIdentifier TranslationId { get; init; }
+    public string? CefrLevel { get; init; }
+    public List<string> Topics { get; init; }
+    public DateTime? LearnedAt { get; init; }
+    public DateTime? RepeatedAt { get; init; }
+}

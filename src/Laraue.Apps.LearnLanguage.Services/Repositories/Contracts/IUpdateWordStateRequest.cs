@@ -1,12 +1,7 @@
 ﻿namespace Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 
-public interface IUpdateWordStateRequest
+public interface IUpdateWordStateRequest : IWithTranslationIdentifierRequest
 {
-    /// <summary>
-    /// Id of the opened translation.
-    /// </summary>
-    public long? OpenedWordTranslationId { get; init; }
-    
     /// <summary>
     /// When passed, learn state of the opened translation will be changed to this value.
     /// </summary>

@@ -1,4 +1,8 @@
-﻿namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
+﻿using Laraue.Apps.LearnLanguage.Common;
+using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+using Laraue.Telegram.NET.Abstractions.Request;
+
+namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 
 public interface ILearnRandomWordsService
 {
@@ -10,4 +14,23 @@ public interface ILearnRandomWordsService
         CancellationToken ct = default);
 }
 
-public record HandleWordRequest(long SessionId, int TranslationId, bool? IsRemembered, bool? ShowTranslation);
+public record HandleWordRequest : IWithTranslationIdentifierRequest
+{
+    [FromQuery(ParameterNames.SessionId)]
+    public long SessionId { get; init; }
+    
+    [FromQuery(ParameterNames.LearnState)]
+    public bool? IsRemembered { get; init; }
+    
+    [FromQuery(ParameterNames.ToggleTranslations)]
+    public bool? ShowTranslation { get; init; }
+    
+    [FromQuery(ParameterNames.OpenedWordId)]
+    public long? WordId { get; init; }
+    
+    [FromQuery(ParameterNames.OpenedMeaningId)]
+    public long? MeaningId { get; init; }
+    
+    [FromQuery(ParameterNames.OpenedTranslationId)]
+    public long? TranslationId { get; init; }
+}

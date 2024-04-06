@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+﻿using Laraue.Apps.LearnLanguage.Common;
+using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 
 namespace Laraue.Apps.LearnLanguage.Services.Repositories;
 
@@ -10,7 +11,7 @@ public interface IWordsRepository
     /// <returns></returns>
     Task ChangeWordLearnStateAsync(
         Guid userId,
-        long wordTranslationId,
+        TranslationIdentifier translationId,
         bool? isLearned,
         bool? isMarked,
         CancellationToken ct = default);
@@ -18,7 +19,7 @@ public interface IWordsRepository
     /// <summary>
     /// Increment seen counter for the passed translations.
     /// </summary>
-    Task IncrementLearnAttemptsIfRequiredAsync(Guid userId, long[] wordTranslationIds, CancellationToken ct = default);
+    Task IncrementLearnAttemptsIfRequiredAsync(Guid userId, TranslationIdentifier[] translationIds, CancellationToken ct = default);
 
     /// <summary>
     /// Returns available pairs for the learning.
