@@ -41,9 +41,6 @@ public class DatabaseContext : DbContext
         modelBuilder.Entity<Meaning>()
             .HasKey(x => new { x.WordId, x.Id });
         
-        modelBuilder.Entity<Meaning>()
-            .HasForeignKeyToWord(x => x.Meanings);
-        
         modelBuilder.Entity<MeaningTopic>()
             .HasKey(x => new { x.WordId, x.MeaningId, WordTopicId = x.TopicId });
         

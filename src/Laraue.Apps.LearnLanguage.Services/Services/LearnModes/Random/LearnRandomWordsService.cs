@@ -63,7 +63,7 @@ public class LearnRandomWordsService(
         {
             // After the word has been added, session may be started
             var repeatState = await repository.AddWordToSessionAsync(
-                request.SessionId, id.Value, request.IsRemembered.Value, ct);
+                request.SessionId, id, request.IsRemembered.Value, ct);
 
             // Send the repeat mode window in the current mode state
             await SendRepeatingWindowAsync(replyData, repeatState, request.SessionId, ct);
@@ -72,7 +72,7 @@ public class LearnRandomWordsService(
         else if ((request.ShowTranslation ?? false) && request.TryGetTranslationIdentifier(out id))
         {
             await SendWordWithTranslationAsync(
-                replyData, id.Value, request.SessionId, ct);
+                replyData, id, request.SessionId, ct);
         }
     }
 
@@ -126,7 +126,7 @@ public class LearnRandomWordsService(
         {
             await wordsRepository.ChangeWordLearnStateAsync(
                 replyData.UserId,
-                id.Value,
+                id,
                 request.IsLearned,
                 request.IsMarked,
                 ct);
@@ -135,7 +135,7 @@ public class LearnRandomWordsService(
             {
                 await repository.LearnWordAsync(
                     request.SessionId,
-                    id.Value,
+                    id,
                     ct);
             }
         }
@@ -171,7 +171,7 @@ public class LearnRandomWordsService(
             wordsWindow.SetOpenedTranslation(openedWord);
             var switchLearnStateButton = currentRoute
                 .WithQueryParameter(ParameterNames.LearnState, true)
-                .WithQueryParameter(ParameterNames.OpenedTranslationId, openedWord.TranslationId)
+                .WithTranslationIdentifier(openedWord.TranslationId)
                 .ToInlineKeyboardButton(openedWord.LearnedAt is null ? "Learned ✅" : "Remembered");
 
             wordsWindow.SetActionButtons(new[] { switchLearnStateButton });
@@ -227,8 +227,8 @@ public class LearnRandomWordsService(
         var sessionWordsCount = session.WordsAddedToRepeatCount + session.WordsRememberedCount;
         
         var handleRoute = new CallbackRoutePath(TelegramRoutes.HandleSuggestion)
-            .WithQueryParameter(nameof(HandleWordRequest.SessionId), sessionId)
-            .WithQueryParameter(nameof(HandleWordRequest.TranslationId), word.Id);
+            .WithQueryParameter(ParameterNames.SessionId, sessionId)
+            .WithTranslationIdentifier(word.Id);
         
         handleRoute.Freeze();
 
@@ -278,18 +278,18 @@ public class LearnRandomWordsService(
         else
         {
             var showTranslationsButton = handleRoute
-                .WithQueryParameter(nameof(HandleWordRequest.ShowTranslation), true)
+                .WithQueryParameter(ParameterNames.ToggleTranslations, true)
                 .ToInlineKeyboardButton(Buttons.SeeTranslation);
         
             tmb.AddInlineKeyboardButtons(new[] { showTranslationsButton });
         }
 
         var yesButton = handleRoute
-            .WithQueryParameter(nameof(HandleWordRequest.IsRemembered), true)
+            .WithQueryParameter(ParameterNames.LearnState, true)
             .ToInlineKeyboardButton(RandomMode.Yes);
         
         var noButton = handleRoute
-            .WithQueryParameter(nameof(HandleWordRequest.IsRemembered), false)
+            .WithQueryParameter(ParameterNames.LearnState, false)
             .ToInlineKeyboardButton(RandomMode.No);
         
         tmb.AddInlineKeyboardButtons(new[] { yesButton, noButton });

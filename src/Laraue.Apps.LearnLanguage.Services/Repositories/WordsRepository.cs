@@ -39,6 +39,7 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                         : null,
                     IsMarked = isMarked.GetValueOrDefault(),
                     LearnAttempts = 1,
+                    LastOpenedAt = dateTimeProvider.UtcNow
                 }, x => new TranslationState
                 {
                     LearnedAt = isLearned.HasValue
@@ -97,7 +98,8 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                 LastOpenedAt = dateTimeProvider.UtcNow,
                 TranslationId = e.TranslationId,
                 MeaningId = e.MeaningId,
-                WordId = e.WordId
+                WordId = e.WordId,
+                IsMarked = false
             })
             .MergeAsync(ct);
     }

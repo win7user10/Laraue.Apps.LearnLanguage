@@ -38,13 +38,15 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
         
         var query = context.Translations
             .Where(t => t.HasLanguage(sessionInfo.LanguageToLearnId, sessionInfo.LanguageToLearnFromId))
-            .Where(x => !context.RepeatSessionTranslations
-                .Where(y => y.RepeatSessionId == sessionId)
-                .Select(y => y.TranslationId)
-                .Contains(x.Id))
+            .Where(x => !x.RepeatSessionTranslations
+                .Any(y => y.WordId == x.WordId && y.MeaningId == x.MeaningId && y.TranslationId == x.Id))
             .LeftJoin(
                 context.TranslationStates.AsQueryable(),
-                (wt, wts) => wt.Id == wts!.TranslationId && wts.UserId == sessionInfo.UserId,
+                (wt, wts) =>
+                    wt.WordId == wts.WordId
+                    && wt.MeaningId == wts.MeaningId
+                    && wt.Id == wts!.TranslationId
+                    && wts.UserId == sessionInfo.UserId,
                 (t, ts) => new { t, ts })
             .OrderBy(x => x.ts.LearnedAt.HasValue)
             .ThenByDescending(x => x.ts.RepeatedAt);
@@ -271,28 +273,31 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
             .LeftJoin(
                 context.TranslationStates.AsQueryable(),
                 (wg, wts) =>
-                    wg.TranslationId == wts.TranslationId
+                    wg.WordId == wts.WordId
+                    && wg.MeaningId == wts.MeaningId
+                    && wg.TranslationId == wts.TranslationId
                     && wg.RepeatSession.UserId == wts.UserId,
                 (relation, state) => new { relation, state })
             .Where(x => x.relation.RepeatSessionWordState == RepeatSessionWordState.NotRepeated)
             .OrderBy(x => x.relation.CreatedAt)
-            .Select((x, i) => new LearningItem(
-                x.relation.Translation.Meaning.Word.Text,
-                x.relation.Translation.Text,
-                x.relation.Translation.Meaning.Text,
-                request.Page * request.PerPage + i + 1,
-                x.state.IsMarked,
-                x.relation.Translation.Difficulty,
-                new TranslationIdentifier
+            .Select(x => new LearningItem
+            {
+                Word = x.relation.Translation.Meaning.Word.Text,
+                Translation = x.relation.Translation.Text,
+                Meaning = x.relation.Translation.Meaning.Text,
+                IsMarked = x.state.IsMarked,
+                Difficulty = x.relation.Translation.Difficulty,
+                TranslationId = new TranslationIdentifier
                 {
                     TranslationId = x.relation.TranslationId,
                     MeaningId = x.relation.MeaningId,
                     WordId = x.relation.WordId
                 },
-                x.relation.Translation.Meaning.CefrLevel!.Name,
-                x.relation.Translation.Meaning.Topics.Select(t => t.Topic.Name).ToArray(),
-                x.state.LearnedAt,
-                x.state.RepeatedAt))
+                LearnedAt = x.state.LearnedAt,
+                RepeatedAt = x.state.RepeatedAt,
+                CefrLevel = x.relation.Translation.Meaning.CefrLevel!.Name,
+                Topics = x.relation.Translation.Meaning.Topics.Select(t => t.Topic.Name).ToList(),
+            })
             .FullPaginateLinq2DbAsync(request, ct);
     }
 
@@ -314,6 +319,8 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
                     UserId = userId,
                     LearnedAt = now,
                     LearnAttempts = 1,
+                    LastOpenedAt = dateTimeProvider.UtcNow,
+                    IsMarked = false
                 }, x => new TranslationState
                 {
                     LearnedAt = x.LearnedAt ?? now,

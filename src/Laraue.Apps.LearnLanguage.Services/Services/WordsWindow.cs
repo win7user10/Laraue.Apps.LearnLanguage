@@ -5,6 +5,8 @@ using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Apps.LearnLanguage.Services.Resources;
 using Laraue.Core.DataAccess.Contracts;
+using Laraue.Core.DataAccess.Extensions;
+using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Utils;
@@ -21,7 +23,8 @@ public class WordsWindow(
     UserViewSettings userViewSettings,
     CallbackRoutePath viewRoute,
     ITelegramBotClient client,
-    IWordsRepository wordsRepository)
+    IWordsRepository wordsRepository,
+    IDateTimeProvider dateTimeProvider)
     : IWordsWindow
 {
     private CallbackRoutePath? _paginationRoute;
@@ -129,7 +132,7 @@ public class WordsWindow(
             {
                 var msgBuilder = GetTextBuilder(x, areTranslationsReverted, areTranslationHidden);
                 msgBuilder.Insert(0, ") ")
-                    .Insert(0, x.SerialNumber);
+                    .Insert(0, words.GetFirstItemSerialNumber() + i);
 
                 var difficultyString = CommonStrings.GetDifficultyString(x.Difficulty, x.CefrLevel);
                 if (difficultyString is not null)
@@ -162,7 +165,7 @@ public class WordsWindow(
 
             tmb.AppendRow();
             
-            if (_openedTranslation.Topics.Length != 0)
+            if (_openedTranslation.Topics.Count != 0)
             {
                 tmb.AppendRow(string.Format(Mode.Topic, string.Join(", ", _openedTranslation.Topics)));
             }
@@ -177,21 +180,21 @@ public class WordsWindow(
                 
             if (_openedTranslation.LearnedAt is not null)
             {
-                var daysLearnedAgo = (DateTime.UtcNow - _openedTranslation.LearnedAt.Value).TotalDays;
+                var daysLearnedAgo = (dateTimeProvider.UtcNow - _openedTranslation.LearnedAt.Value).TotalDays;
                 tmb.AppendRow(string.Format(Mode.Learned, $"{daysLearnedAgo:N0}"));
             }
                 
             if (_openedTranslation.RepeatedAt is not null)
             {
-                var daysRepeatedAgo = (DateTime.UtcNow - _openedTranslation.RepeatedAt.Value).TotalDays;
+                var daysRepeatedAgo = (dateTimeProvider.UtcNow - _openedTranslation.RepeatedAt.Value).TotalDays;
                 tmb.AppendRow(string.Format(Mode.Repeated, $"{daysRepeatedAgo:N0}"));
             }
         }
         
         tmb
-            .AddInlineKeyboardButtons(words, (x, _) => viewRoute
-                .WithQueryParameter(ParameterNames.OpenedTranslationId, x.TranslationId)
-                .ToInlineKeyboardButton(x.SerialNumber.ToString()));
+            .AddInlineKeyboardButtons(words, (x, i) => viewRoute
+                .WithTranslationIdentifier(x.TranslationId)
+                .ToInlineKeyboardButton((words.GetFirstItemSerialNumber() + i).ToString()));
 
         if (_actionButtons is not null)
         {

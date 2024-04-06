@@ -22,14 +22,16 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         CancellationToken ct = default)
     {
         var dbQuery = context.Translations
-            .Where(t => t.HasLanguage(
-                selectedTranslation.LanguageToLearnId,
-                selectedTranslation.LanguageToLearnFromId))
+            .Where(t => t.HasLanguage(selectedTranslation.LanguageToLearnId, selectedTranslation.LanguageToLearnFromId))
             .Where(GetGroupWordsFilter(groupId))
             .OrderBy(x => x.Meaning.Id)
             .LeftJoin(
                 context.TranslationStates,
-                (translation, state) => translation.Id == state.TranslationId && state.UserId == userId,
+                (translation, state) => 
+                    translation.Id == state.TranslationId
+                    && translation.MeaningId == state.MeaningId
+                    && translation.WordId == state.WordId
+                    && state.UserId == userId,
                 (translation, state) => new { translation, state });
 
         if (filter.HasFlag(ShowWordsMode.Hard))
@@ -43,27 +45,39 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             dbQuery = dbQuery.Where(x => x.state == null || x.state.LearnedAt == null);
         }
-        
+
         return dbQuery
-            .Select((x, i) => new LearningItem(
-                x.translation.Meaning.Word.Text,
-                x.translation.Text,
-                x.translation.Meaning.Text,
-                request.Page * request.PerPage + i + 1,
-                x.state.IsMarked,
-                x.translation.Difficulty,
-                new TranslationIdentifier
-                {
-                    MeaningId = x.translation.MeaningId,
-                    TranslationId = x.translation.Id,
-                    WordId = x.translation.Meaning.WordId
-                },
-                x.translation.Meaning.CefrLevel!.Name,
-                x.translation.Meaning.Topics.Select(wmt => wmt.Topic.Name).ToArray(),
-                x.state.LearnedAt,
-                x.state.RepeatedAt
-            ))
+            .Select(x => new LearningItem
+            {
+                Word = x.translation.Meaning.Word.Text,
+                Translation = x.translation.Text,
+                Meaning = x.translation.Meaning.Text,
+                IsMarked = x.state.IsMarked,
+                Difficulty = x.translation.Difficulty,
+                LearnedAt = x.state.LearnedAt,
+                RepeatedAt = x.state.RepeatedAt,
+                TranslationId = ToIdentifier(x.translation),
+                CefrLevel = x.translation.Meaning.CefrLevel!.Name,
+                Topics = x.translation.Meaning.Topics.Select(wmt => wmt.Topic.Name).ToList(),
+            })
             .FullPaginateLinq2DbAsync(request, ct);;
+    }
+    
+    [ExpressionMethod(nameof(ToIdentifier))]
+    public static TranslationIdentifier ToIdentifier(
+        Translation translation)
+    {
+        throw new InvalidOperationException();
+    }
+    
+    public static Expression<Func<Translation, TranslationIdentifier>> ToIdentifier()
+    {
+        return x => new TranslationIdentifier
+        {
+            MeaningId = x.MeaningId,
+            TranslationId = x.Id,
+            WordId = x.Meaning.WordId
+        };
     }
 
     public abstract Task<IList<LearningItemGroup<TId>>> GetGroupsAsync(

@@ -9,14 +9,12 @@ namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.FirstLett
 public class LearnByFirstLetterRepository(DatabaseContext context)
     : BaseLearnByGroupRepository<char>(context), ILearnByFirstLetterRepository
 {
-    private readonly DatabaseContext _context = context;
-
     public override async Task<IList<LearningItemGroup<char>>> GetGroupsAsync(
         Guid userId,
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        return await _context.Translations
+        return await context.Translations
             .Where(t => t.HasLanguage(
                 selectedTranslation.LanguageToLearnId,
                 selectedTranslation.LanguageToLearnFromId))
@@ -24,7 +22,7 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
             .OrderBy(x => x.Key)
             .Select((x, i) => new LearningItemGroup<char>(
                 x.Key[0],
-                _context.TranslationStates
+                context.TranslationStates
                     .Learned()
                     .Count(y => y.UserId == userId
                         && y.Translation.HasLanguage(

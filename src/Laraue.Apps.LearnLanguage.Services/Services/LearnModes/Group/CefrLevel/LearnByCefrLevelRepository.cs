@@ -9,14 +9,12 @@ namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.CefrLevel
 public class LearnByCefrLevelRepository(DatabaseContext context)
     : BaseLearnByGroupRepository<long>(context), ILearnByCefrLevelRepository
 {
-    private readonly DatabaseContext _context = context;
-
     public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(
         Guid userId,
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        return await _context.Translations
+        return await context.Translations
             .Where(t => t.HasLanguage(
                 selectedTranslation.LanguageToLearnId,
                 selectedTranslation.LanguageToLearnFromId))
@@ -25,7 +23,7 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
             .OrderBy(x => x.Key.WordCefrLevelId)
             .Select((x, i) => new LearningItemGroup<long>(
                 x.Key.WordCefrLevelId.GetValueOrDefault(),
-                _context.TranslationStates
+                context.TranslationStates
                     .Learned()
                     .Count(y => y.UserId == userId
                         && y.Translation.HasLanguage(
@@ -39,7 +37,7 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
 
     public override Task<string> GetGroupNameAsync(long groupId, CancellationToken ct = default)
     {
-        return _context.CefrLevels
+        return context.CefrLevels
             .Where(x => x.Id == groupId)
             .Select(x => x.Name)
             .FirstAsyncLinqToDB(ct);

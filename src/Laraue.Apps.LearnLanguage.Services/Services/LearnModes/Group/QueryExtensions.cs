@@ -15,6 +15,12 @@ public static class QueryExtensions
         throw new InvalidOperationException();
     }
     
+    public static IQueryable<Translation> HasLanguage(this IQueryable<Translation> queryable, long? languageToLearnId, long? languageToLearnFromId)
+    {
+        return queryable.Where(x => (languageToLearnId == null || x.Meaning.Word.LanguageId == languageToLearnId)
+               && (languageToLearnFromId == null || x.Meaning.Translations.Any(t => t.LanguageId == languageToLearnFromId)));
+    }
+    
     [ExpressionMethod(nameof(TopicHasLanguage))]
     public static bool HasLanguage(
         this MeaningTopic translation,

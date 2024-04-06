@@ -19,7 +19,7 @@ public static class FullPaginatedResultExtensions
         }
 
         learningItem = result.Data
-            .FirstOrDefault(x => x.TranslationId == translationIdentifier.Value);
+            .FirstOrDefault(x => x.TranslationId == translationIdentifier);
         return learningItem is not null;
     }
 }
