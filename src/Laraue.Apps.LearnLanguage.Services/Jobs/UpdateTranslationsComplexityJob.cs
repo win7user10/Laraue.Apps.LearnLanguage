@@ -15,7 +15,9 @@ public class UpdateTranslationsComplexityJob(DatabaseContext context)
             .GroupBy(x => new { x.WordId, x.MeaningId, x.TranslationId })
             .Select(x => new
             {
-                x.Key,
+                x.Key.WordId,
+                x.Key.MeaningId,
+                x.Key.TranslationId,
                 LearnAttempts = x.Average(y => y.LearnAttempts)
             })
             .ToListAsyncEF();
@@ -26,13 +28,13 @@ public class UpdateTranslationsComplexityJob(DatabaseContext context)
             .Using(attemptsStat
                 .Select(x => new Translation
                 {
-                    Id = x.Key.TranslationId,
-                    MeaningId = x.Key.MeaningId,
-                    WordId = x.Key.WordId,
+                    WordId = x.WordId,
+                    MeaningId = x.MeaningId,
+                    Id = x.TranslationId,
                     AverageAttempts = x.LearnAttempts,
-                    Difficulty = GetDifficulty(x.LearnAttempts)
+                    Difficulty = GetDifficulty(x.LearnAttempts) // Difficulty the meaning should have, not translation
                 }))
-            .On(x => x.Id, x => x.Id)
+            .On(x => new { x.WordId, x.MeaningId, x.Id }, x => new { x.WordId, x.MeaningId, x.Id })
             .UpdateWhenMatched((o, n) => new Translation
             {
                 AverageAttempts = n.AverageAttempts,

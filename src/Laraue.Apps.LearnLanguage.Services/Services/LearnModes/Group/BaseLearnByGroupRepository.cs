@@ -28,38 +28,42 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
             .LeftJoin(
                 context.TranslationStates,
                 (translation, state) => 
-                    translation.Id == state.TranslationId
+                    translation.WordId == state.WordId
                     && translation.MeaningId == state.MeaningId
-                    && translation.WordId == state.WordId
+                    && translation.Id == state.TranslationId
                     && state.UserId == userId,
-                (translation, state) => new { translation, state });
+                (translation, state) => new LearningItem
+                {
+                    IsMarked = state.IsMarked,
+                    TranslationId = ToIdentifier(translation),
+                    Translation = translation.Text,
+                    Difficulty = translation.Difficulty,
+                    LearnedAt = state.LearnedAt,
+                    RepeatedAt = state.RepeatedAt,
+                    Word = translation.Meaning.Word.Text,
+                    CefrLevel = translation.Meaning.CefrLevel!.Name,
+                    Meaning = translation.Meaning.Text,
+                    Topics = context.MeaningTopics
+                        .Where(x =>
+                            x.WordId == translation.WordId
+                            && x.MeaningId == translation.MeaningId)
+                        .Select(wmt => wmt.Topic.Name)
+                        .ToList(),
+                });
 
         if (filter.HasFlag(ShowWordsMode.Hard))
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-            dbQuery = dbQuery.Where(x => x.state.IsMarked);
+            dbQuery = dbQuery.Where(x => x.IsMarked);
         }
 
         if (filter.HasFlag(ShowWordsMode.NotLearned))
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-            dbQuery = dbQuery.Where(x => x.state == null || x.state.LearnedAt == null);
+            dbQuery = dbQuery.Where(x => x.LearnedAt == null);
         }
 
         return dbQuery
-            .Select(x => new LearningItem
-            {
-                Word = x.translation.Meaning.Word.Text,
-                Translation = x.translation.Text,
-                Meaning = x.translation.Meaning.Text,
-                IsMarked = x.state.IsMarked,
-                Difficulty = x.translation.Difficulty,
-                LearnedAt = x.state.LearnedAt,
-                RepeatedAt = x.state.RepeatedAt,
-                TranslationId = ToIdentifier(x.translation),
-                CefrLevel = x.translation.Meaning.CefrLevel!.Name,
-                Topics = x.translation.Meaning.Topics.Select(wmt => wmt.Topic.Name).ToList(),
-            })
             .FullPaginateLinq2DbAsync(request, ct);;
     }
     

@@ -42,7 +42,7 @@ public class DatabaseContext : DbContext
             .HasKey(x => new { x.WordId, x.Id });
         
         modelBuilder.Entity<MeaningTopic>()
-            .HasKey(x => new { x.WordId, x.MeaningId, WordTopicId = x.TopicId });
+            .HasKey(x => new { x.WordId, x.MeaningId, x.TopicId });
         
         modelBuilder.Entity<MeaningTopic>()
             .HasForeignKeyToMeaning(x => x.Topics)
@@ -73,7 +73,7 @@ public class DatabaseContext : DbContext
             .HasForeignKeyToWord(x => x.Translations);
         
         modelBuilder.Entity<TranslationState>()
-            .HasTranslationKey();
+            .HasKey(x => new { x.WordId, x.MeaningId, x.TranslationId, x.UserId });
         
         modelBuilder.Entity<TranslationState>()
             .HasForeignKeyToTranslation(x => x.TranslationStates)
