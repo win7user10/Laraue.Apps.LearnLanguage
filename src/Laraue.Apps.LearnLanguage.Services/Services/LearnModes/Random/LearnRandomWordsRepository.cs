@@ -125,7 +125,7 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
                     y => y.RepeatSessionWordState == RepeatSessionWordState.RepeatedSinceFirstAttempt),
                 context.Translations
                     .Where(t => x.Words.All(w =>
-                        w.TranslationId != t.Id || w.RepeatSessionWordState != RepeatSessionWordState.RepeatedSinceFirstAttempt))
+                        !(w.WordId == t.WordId && w.MeaningId == t.MeaningId && w.TranslationId == t.Id) || w.RepeatSessionWordState != RepeatSessionWordState.RepeatedSinceFirstAttempt))
                     .Count(t => t.HasLanguage(x.LanguageToLearnId, x.LanguageToLearnFromId)),
                 x.StartedAt,
                 x.FinishedAt))
