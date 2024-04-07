@@ -98,6 +98,7 @@
                         text-by="name"
                         value-by="name"
                         clearable
+                        searchable
                         :options="topics"
                         multiple
                         @update:modelValue="updateMeaning(rowData.id, meaning)"

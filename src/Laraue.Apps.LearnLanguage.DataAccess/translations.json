@@ -40093,7 +40093,7 @@
   },
   {
     "id": 1679,
-    "word": "flight attendant",
+    "word": "flight attendant",
     "language": "en",
     "transcription": null,
     "meanings": [
@@ -78727,13 +78727,22 @@
         "id": 1,
         "meaning": null,
         "level": null,
-        "topics": [],
-        "partsOfSpeech": [],
+        "topics": [
+          "berries"
+        ],
+        "partsOfSpeech": [
+          "noun"
+        ],
         "translations": [
           {
             "id": 1,
             "language": "ru",
             "text": "малина"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "framboise"
           }
         ]
       }
@@ -96188,7 +96197,7 @@
         "meaning": null,
         "level": "B1",
         "topics": [
-          "food and drink"
+          "berries"
         ],
         "partsOfSpeech": [
           "noun"
@@ -96198,6 +96207,11 @@
             "id": 1,
             "language": "ru",
             "text": "клубника"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "fraise"
           }
         ]
       }
@@ -111796,6 +111810,192 @@
             "id": 2,
             "language": "ru",
             "text": "ежевика"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 4683,
+    "word": "blueberry",
+    "language": "en",
+    "transcription": "bluːberi",
+    "meanings": [
+      {
+        "id": 1,
+        "meaning": null,
+        "level": null,
+        "topics": [
+          "berries"
+        ],
+        "partsOfSpeech": [
+          "noun"
+        ],
+        "translations": [
+          {
+            "id": 1,
+            "language": "fr",
+            "text": "myrtille"
+          },
+          {
+            "id": 2,
+            "language": "ru",
+            "text": "брусника, голубика"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 4684,
+    "word": "cherry",
+    "language": "en",
+    "transcription": "tʃeri",
+    "meanings": [
+      {
+        "id": 1,
+        "meaning": null,
+        "level": null,
+        "topics": [
+          "berries"
+        ],
+        "partsOfSpeech": [
+          "noun"
+        ],
+        "translations": [
+          {
+            "id": 1,
+            "language": "ru",
+            "text": "вишня, черешня"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "cerise"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 4685,
+    "word": "grapes",
+    "language": "en",
+    "transcription": "ɡreɪps",
+    "meanings": [
+      {
+        "id": 1,
+        "meaning": null,
+        "level": null,
+        "topics": [
+          "berries"
+        ],
+        "partsOfSpeech": [
+          "noun"
+        ],
+        "translations": [
+          {
+            "id": 1,
+            "language": "ru",
+            "text": "виноград"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "raisin"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 4686,
+    "word": "watermelon",
+    "language": "en",
+    "transcription": "wɔːtərmelən",
+    "meanings": [
+      {
+        "id": 1,
+        "meaning": null,
+        "level": null,
+        "topics": [
+          "berries"
+        ],
+        "partsOfSpeech": [
+          "noun"
+        ],
+        "translations": [
+          {
+            "id": 1,
+            "language": "fr",
+            "text": "pastèque"
+          },
+          {
+            "id": 2,
+            "language": "ru",
+            "text": "арбуз"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 4687,
+    "word": "сranberry",
+    "language": "en",
+    "transcription": "krænberi",
+    "meanings": [
+      {
+        "id": 1,
+        "meaning": null,
+        "level": null,
+        "topics": [
+          "berries"
+        ],
+        "partsOfSpeech": [
+          "noun"
+        ],
+        "translations": [
+          {
+            "id": 1,
+            "language": "fr",
+            "text": "canneberge"
+          },
+          {
+            "id": 2,
+            "language": "ru",
+            "text": "клюква"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 4688,
+    "word": "gooseberry",
+    "language": "en",
+    "transcription": "ɡuːsberi",
+    "meanings": [
+      {
+        "id": 1,
+        "meaning": null,
+        "level": null,
+        "topics": [
+          "berries"
+        ],
+        "partsOfSpeech": [
+          "noun"
+        ],
+        "translations": [
+          {
+            "id": 1,
+            "language": "ru",
+            "text": "крыжовник"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "groseilliers"
           }
         ]
       }
