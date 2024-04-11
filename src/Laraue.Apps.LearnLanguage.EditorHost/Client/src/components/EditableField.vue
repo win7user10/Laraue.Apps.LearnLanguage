@@ -4,32 +4,46 @@
         :model-value="localValue"
         @input="input($event.target.value)"
         :placeholder="placeholder"
-    />
-    <VaButton v-if="allowSave && canBeUpdated"
-        icon="save"
-        preset="plain"
-        size="small"
-        @click="save()" />
+    >
+      <template #appendInner>
+        <VaButton
+            v-if="hasUpperCaseWarn"
+            icon="warning"
+            color="secondary"
+            preset="plain"
+            @click="toLowerCase"
+        />
+        <VaButton
+            v-if="allowSave && canBeUpdated"
+            icon="save"
+            preset="plain"
+            @click="save" />
+      </template>
+    </VaInput>
   </VaValue>
 </template>
 
 <script lang="ts">
 
-import {computed, ref, toRefs} from "vue";
+import {computed, ref, toRefs, watch} from "vue";
 
 export default {
   props: {
     modelValue: String,
     placeholder: String,
-    allowSave: Boolean
+    allowSave: Boolean,
+    upperCaseWarn: Boolean
   },
   emits: ['update:modelValue', 'change'],
   setup(props: any, {emit}: any) {
-    const { allowSave, modelValue } = toRefs(props);
+    const { allowSave, modelValue, upperCaseWarn } = toRefs(props);
     const localValue = ref(props.modelValue);
+    const isLastChangeMadeOutside = ref(false)
+
     const save = async() => {
       emit('update:modelValue', localValue.value);
       emit('change', localValue.value);
+      isLastChangeMadeOutside.value = false;
     }
 
     const input = (value: string) => {
@@ -37,8 +51,25 @@ export default {
     }
 
     const canBeUpdated = computed(() => {
-      return localValue.value != modelValue.value
+      return isLastChangeMadeOutside.value || localValue.value != modelValue.value
     })
+
+    const hasUpperCaseWarn = computed(() => {
+      return upperCaseWarn.value
+          && localValue.value
+          && localValue.value.charAt(0).toUpperCase() == localValue.value.charAt(0)
+    })
+
+    const toLowerCase = () => {
+      
+    }
+
+    watch(modelValue, (newValue, oldValue) => {
+      if (newValue != localValue.value){
+        localValue.value = newValue
+        isLastChangeMadeOutside.value = true
+      }
+    });
 
     return {
       localValue: localValue,
@@ -46,7 +77,9 @@ export default {
       save,
       canBeUpdated,
       input,
-      allowSave
+      allowSave,
+      hasUpperCaseWarn,
+      toLowerCase
     };
   }
 }

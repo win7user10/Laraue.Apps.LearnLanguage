@@ -1,153 +1,160 @@
 <template>
-  <div class="main-view">
-    <div class="main-view-content">
-
-      <div class="mb-12">
-        <div>
-          <VaInput
-              v-model="searchFilter"
-              placeholder="Search Word"
-              @update:modelValue="updateFilters"/>
-          <VaSelect
-              v-model="topicsFilter"
-              text-by="name"
-              value-by="name"
-              clearable
-              :options="topics"
-              multiple
-              placeholder="Topics"
-              @update:modelValue="updateFilters"/>
-          <CreateWordModal
-              @created="updateFilters"
-              :languages="languages"
-          ></CreateWordModal>
-        </div>
-      </div>
-
-      <VaDataTable
-          :items="items"
-          :columns="columns"
-          sticky-header
-          sticky-footer
-          height="700px"
-          :scroll-bottom-margin="20"
-          @scroll:bottom="loadNextItems">
-
-        <template #cell(meanings)="{source}">
-          {{ source.length }}
-        </template>
-
-        <template #cell(transcription)="{rowData}">
-          <EditableField
-              v-model="rowData.transcription"
-              @change="updateWord(rowData)"
-              placeholder="Add transcription"
-          ></EditableField>
-        </template>
-
-        <template #cell(actions)="{ rowIndex, row, isExpanded, rowData }">
-          <VaButton
-              :icon="isExpanded ? 'va-arrow-up': 'va-arrow-down'"
-              preset="secondary"
-              @click="row.toggleRowDetails()"
-          />
-          <VaButton
-              icon="add"
-              preset="plain"
-              class="ml-3"
-              @click="addMeaning(rowData)"
-          />
-          <VaButton
-              preset="plain"
-              icon="delete"
-              class="ml-3"
-              @click="deleteWord(rowIndex)"
-          />
-        </template>
-
-        <template #expandableRow="{ rowData }">
-          <div v-for="(meaning, i) in rowData.meanings" class="meaning">
-            <VaAlert
-                color="info"
-                border="top">
-              <template #title>
-                <div class="meaning-title">
-                  <div style="display: flex; justify-content: space-between">
-                    <h4>Meaning #{{ meaning.id }}</h4>
-                    <VaButton
-                        preset="plain"
-                        icon="delete"
-                        class="ml-3"
-                        @click="deleteMeaning(rowData, i)"
-                    />
-                  </div>
-                  <div class="meaning-selects">
-                    <VaSelect
-                        v-model="meaning.partsOfSpeech"
-                        label="Parts of speech"
-                        text-by="name"
-                        value-by="name"
-                        clearable
-                        :options="partsOfSpeech"
-                        multiple
-                        @update:modelValue="updateMeaning(rowData.id, meaning)"
-                    />
-                    <VaSelect
-                        v-model="meaning.topics"
-                        label="Topics"
-                        text-by="name"
-                        value-by="name"
-                        clearable
-                        searchable
-                        :options="topics"
-                        multiple
-                        @update:modelValue="updateMeaning(rowData.id, meaning)"
-                    />
-                    <VaSelect
-                        v-model="meaning.level"
-                        label="CEFR level"
-                        text-by="name"
-                        value-by="name"
-                        clearable
-                        :options="cefrLevels"
-                        :clearValue="null!"
-                        @update:modelValue="updateMeaning(rowData.id, meaning)"
-                    />
-                  </div>
-                </div>
-              </template>
-              <VaDivider />
-              <table class="va-table" style="width: 100%">
-                <thead>
-                <tr>
-                  <th>Language</th>
-                  <th>Text</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr
-                    v-for="translation in meaning.translations"
-                    :key="translation.language">
-                  <td>{{ translation.language }}</td>
-                  <td>
-                    <EditableField
-                        v-model="translation.text"
-                        :allow-save="!!meaning.id"
-                        placeholder="Add translation"
-                        @change="updateTranslation(rowData.id, meaning.id, translation)"
-                    ></EditableField>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </VaAlert>
+  <VaInnerLoading :loading="isLoading">
+    <div class="main-view">
+      <div class="main-view-content">
+        <div class="mb-12">
+          <div>
+            <VaInput
+                v-model="searchFilter"
+                placeholder="Search Word"
+                @update:modelValue="updateFilters"/>
+            <VaSelect
+                v-model="topicsFilter"
+                text-by="name"
+                value-by="name"
+                clearable
+                :options="topics"
+                multiple
+                placeholder="Topics"
+                @update:modelValue="updateFilters"/>
+            <CreateWordModal
+                @created="updateFilters"
+                :languages="languages"
+            ></CreateWordModal>
           </div>
+        </div>
+        <VaDataTable
+            :items="items"
+            :columns="columns"
+            sticky-header
+            sticky-footer
+            height="700px"
+            :scroll-bottom-margin="20"
+            @scroll:bottom="loadNextItems">
 
-        </template>
+          <template #cell(meanings)="{source}">
+            {{ source.length }}
+          </template>
 
-      </VaDataTable>
+          <template #cell(transcription)="{rowData}">
+            <EditableField
+                v-model="rowData.transcription"
+                upper-case-warn
+                @change="updateWord(rowData)"
+                placeholder="Add transcription"
+            ></EditableField>
+          </template>
+
+          <template #cell(actions)="{ rowIndex, row, isExpanded, rowData }">
+            <VaButton
+                :icon="isExpanded ? 'va-arrow-up': 'va-arrow-down'"
+                preset="secondary"
+                @click="row.toggleRowDetails()"
+            />
+            <VaButton
+                icon="add"
+                preset="plain"
+                class="ml-3"
+                @click="addMeaning(rowData)"
+            />
+            <VaButton
+                preset="plain"
+                class="ml-3"
+                :disabled="!isAutoTranslationAvailable(rowData)"
+                icon="auto_fix_high"
+                @click="autoTranslate(rowData)"
+            />
+            <VaButton
+                preset="plain"
+                icon="delete"
+                class="ml-3"
+                @click="deleteWord(rowIndex)"
+            />
+          </template>
+
+          <template #expandableRow="{ rowData }">
+            <div v-for="(meaning, i) in rowData.meanings" :key="meaning.id" class="meaning">
+              <VaAlert
+                  color="info"
+                  border="top">
+                <template #title>
+                  <div class="meaning-title">
+                    <div style="display: flex; justify-content: space-between">
+                      <h4>Meaning #{{ meaning.id }}</h4>
+                      <VaButton
+                          preset="plain"
+                          icon="delete"
+                          class="ml-3"
+                          @click="deleteMeaning(rowData, i)"
+                      />
+                    </div>
+                    <div class="meaning-selects">
+                      <VaSelect
+                          v-model="meaning.partsOfSpeech"
+                          label="Parts of speech"
+                          text-by="name"
+                          value-by="name"
+                          clearable
+                          :options="partsOfSpeech"
+                          multiple
+                          @update:modelValue="updateMeaning(rowData.id, meaning)"
+                      />
+                      <VaSelect
+                          v-model="meaning.topics"
+                          label="Topics"
+                          text-by="name"
+                          value-by="name"
+                          clearable
+                          searchable
+                          :options="topics"
+                          multiple
+                          @update:modelValue="updateMeaning(rowData.id, meaning)"
+                      />
+                      <VaSelect
+                          v-model="meaning.level"
+                          label="CEFR level"
+                          text-by="name"
+                          value-by="name"
+                          clearable
+                          :options="cefrLevels"
+                          :clearValue="null!"
+                          @update:modelValue="updateMeaning(rowData.id, meaning)"
+                      />
+                    </div>
+                  </div>
+                </template>
+                <VaDivider />
+                <table class="va-table" style="width: 100%">
+                  <thead>
+                  <tr>
+                    <th>Language</th>
+                    <th>Text</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr
+                      v-for="translation in meaning.translations"
+                      :key="translation.language">
+                    <td>{{ translation.language }}</td>
+                    <td>
+                      <EditableField
+                          v-model="translation.text"
+                          :allow-save="!!meaning.id"
+                          placeholder="Add translation"
+                          upper-case-warn
+                          @change="updateTranslation(rowData.id, meaning.id, translation)"
+                      ></EditableField>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </VaAlert>
+            </div>
+          </template>
+        </VaDataTable>
+      </div>
     </div>
-  </div>
+  </VaInnerLoading>
 </template>
 
 <script lang="ts">
@@ -189,6 +196,14 @@ interface DictionaryItem{
   name: string;
 }
 
+interface TranslationResult{
+  items: { [id: string] : TranslationResultItem };
+}
+
+interface TranslationResultItem{
+  translation: string;
+}
+
 export default {
   components: {CreateWordModal, EditableField},
   setup(){
@@ -206,6 +221,7 @@ export default {
     const topicsFilter = ref(new Array<string>());
 
     const withLoader = async (func: () => Promise<any>) => {
+      isLoading.value = true;
       try {
         return await func();
       } finally {
@@ -340,6 +356,21 @@ export default {
       items.value = [];
     }
 
+    const isAutoTranslationAvailable = (word: Word) => {
+      return word.meanings.length == 1
+    }
+
+    const autoTranslate = async (word: Word) => {
+      const resp = await withLoader(() => axios.post('utils/translate', {
+        word: word.word,
+        fromLanguage: word.language,
+        toLanguages: word.meanings[0].translations.map(t => t.language)
+      }));
+
+      const data = resp.data as TranslationResult;
+      word.meanings[0].translations.map(t => t.text = data.items[t.language].translation)
+    }
+
     return {
       items,
       columns,
@@ -356,7 +387,10 @@ export default {
       updateFilters,
       addMeaning,
       deleteMeaning,
-      deleteWord
+      deleteWord,
+      isAutoTranslationAvailable,
+      autoTranslate,
+      isLoading
     }
   }
 }

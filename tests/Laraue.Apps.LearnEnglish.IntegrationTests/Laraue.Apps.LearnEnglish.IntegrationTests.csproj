@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Laraue.Apps.LearnLanguage.Common\Laraue.Apps.LearnLanguage.Common.csproj" />
+    <ProjectReference Include="..\..\src\Laraue.Apps.LearnLanguage.EditorHost\Laraue.Apps.LearnLanguage.EditorHost.csproj" />
     <ProjectReference Include="..\..\src\Laraue.Apps.LearnLanguage.Services\Laraue.Apps.LearnLanguage.Services.csproj" />
   </ItemGroup>
 

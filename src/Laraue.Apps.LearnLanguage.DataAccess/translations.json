@@ -111364,6 +111364,11 @@
             "id": 1,
             "language": "ru",
             "text": "запястье"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "poignet"
           }
         ]
       }
@@ -111431,7 +111436,12 @@
           {
             "id": 1,
             "language": "ru",
-            "text": "проступок, правонарушение"
+            "text": "проступок"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "méfait"
           }
         ]
       }
@@ -111479,7 +111489,12 @@
           {
             "id": 1,
             "language": "ru",
-            "text": "дергать"
+            "text": "дернуть"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "coup sec"
           }
         ]
       }
@@ -111579,7 +111594,12 @@
           {
             "id": 1,
             "language": "ru",
-            "text": "кричать, вопить"
+            "text": "кричать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "crier"
           }
         ]
       }
@@ -111601,7 +111621,12 @@
           {
             "id": 1,
             "language": "ru",
-            "text": "пока ещё (отриц.) | всё же"
+            "text": "еще"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "encore"
           }
         ]
       }
@@ -111649,7 +111674,12 @@
           {
             "id": 1,
             "language": "ru",
-            "text": "юноша, ребёнок"
+            "text": "юноша"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "enfant"
           }
         ]
       }
@@ -111722,6 +111752,11 @@
             "id": 1,
             "language": "ru",
             "text": "молния (застёжка)"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "fermeture éclair"
           }
         ]
       }
@@ -111748,6 +111783,11 @@
             "id": 1,
             "language": "ru",
             "text": "зоопарк"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "zoo"
           }
         ]
       }
