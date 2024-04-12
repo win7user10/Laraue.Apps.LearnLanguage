@@ -8,22 +8,20 @@ using Xunit;
 
 namespace Laraue.Apps.LearnEnglish.IntegrationTests.Services;
 
-public class GoogleAutoTranslatorTests : IDisposable
+public class YandexAutoTranslatorTests : IDisposable
 {
-    private readonly GoogleAutoTranslator _translator;
+    private readonly YandexAutoTranslator _translator;
     private readonly BrowserFactory _browserFactory;
     
-    public GoogleAutoTranslatorTests()
+    public YandexAutoTranslatorTests()
     {
-        Environment.SetEnvironmentVariable("LANG", "en");
-        
         _browserFactory = new BrowserFactory(
             new LaunchOptions
             {
                 Headless = false,
                 Args = ["--lang='en-US'"]
             }, new LoggerFactory());
-        _translator = new GoogleAutoTranslator(
+        _translator = new YandexAutoTranslator(
             new LoggerFactory(),
             _browserFactory);
     }
@@ -40,6 +38,7 @@ public class GoogleAutoTranslatorTests : IDisposable
         
         Assert.Equal("Собака", translationResult.Items["ru"].Translation);
         Assert.Equal("Chien", translationResult.Items["fr"].Translation);
+        Assert.Equal("dɒg", translationResult.Transcription);
     }
 
     public void Dispose()

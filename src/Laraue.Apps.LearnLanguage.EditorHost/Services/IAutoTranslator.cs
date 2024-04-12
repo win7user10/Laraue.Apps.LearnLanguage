@@ -14,7 +14,9 @@ public record TranslationData
 
 public record TranslationResult
 {
-    public required Dictionary<string, TranslationResultItem> Items { get; set; }
+    public string? PartOfSpeech { get; set; }
+    public string? Transcription { get; set; }
+    public required Dictionary<string, TranslationResultItem> Items { get; set; } = new ();
 }
 
 public record TranslationResultItem

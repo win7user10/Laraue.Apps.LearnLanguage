@@ -14,7 +14,7 @@ builder.Services.AddSingleton<IDictionariesService, DictionariesService>();
 builder.Services.AddScoped<ExceptionHandleMiddleware>();
 
 builder.Services.AddSingleton<IBrowserFactory, BrowserFactory>();
-builder.Services.AddSingleton<IAutoTranslator, GoogleAutoTranslator>();
+builder.Services.AddSingleton<IAutoTranslator, YandexAutoTranslator>();
 builder.Services.AddSingleton(new LaunchOptions { Headless = true });
 
 var app = builder.Build();

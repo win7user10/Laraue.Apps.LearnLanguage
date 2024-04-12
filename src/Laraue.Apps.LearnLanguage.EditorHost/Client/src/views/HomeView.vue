@@ -41,6 +41,7 @@
                 v-model="rowData.transcription"
                 upper-case-warn
                 @change="updateWord(rowData)"
+                :allow-save="!!rowData.id"
                 placeholder="Add transcription"
             ></EditableField>
           </template>
@@ -197,6 +198,7 @@ interface DictionaryItem{
 }
 
 interface TranslationResult{
+  transcription: string
   items: { [id: string] : TranslationResultItem };
 }
 
@@ -369,6 +371,9 @@ export default {
 
       const data = resp.data as TranslationResult;
       word.meanings[0].translations.map(t => t.text = data.items[t.language].translation)
+      if (data.transcription) {
+        word.transcription = data.transcription
+      }
     }
 
     return {
