@@ -296,7 +296,12 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
                 LearnedAt = x.state.LearnedAt,
                 RepeatedAt = x.state.RepeatedAt,
                 CefrLevel = x.relation.Translation.Meaning.CefrLevel!.Name,
-                Topics = x.relation.Translation.Meaning.Topics.Select(t => t.Topic.Name).ToList(),
+                Topics = context.MeaningTopics
+                    .Where(meaningTopic =>
+                        meaningTopic.WordId == x.state.Translation.WordId
+                        && meaningTopic.MeaningId == x.state.Translation.MeaningId)
+                    .Select(wmt => wmt.Topic.Name)
+                    .ToList(),
             })
             .FullPaginateLinq2DbAsync(request, ct);
     }
