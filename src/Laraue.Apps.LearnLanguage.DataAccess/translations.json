@@ -111636,7 +111636,7 @@
     "id": 4675,
     "word": "yield",
     "language": "en",
-    "transcription": null,
+    "transcription": "jiːld",
     "meanings": [
       {
         "id": 1,
@@ -111751,12 +111751,12 @@
           {
             "id": 1,
             "language": "ru",
-            "text": "молния (застёжка)"
+            "text": "молния"
           },
           {
             "id": 2,
             "language": "fr",
-            "text": "fermeture éclair"
+            "text": "fermeture"
           }
         ]
       }
