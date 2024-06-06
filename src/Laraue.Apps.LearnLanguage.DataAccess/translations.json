@@ -110885,7 +110885,7 @@
     "id": 4645,
     "word": "wool",
     "language": "en",
-    "transcription": null,
+    "transcription": "wʊl",
     "meanings": [
       {
         "id": 1,
@@ -110900,6 +110900,11 @@
             "id": 1,
             "language": "ru",
             "text": "шерсть, шерстяной"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "laine"
           }
         ]
       }
@@ -110924,6 +110929,11 @@
             "id": 1,
             "language": "ru",
             "text": "тренироваться | получиться, сработать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "s'entraîner"
           }
         ]
       }
@@ -110933,7 +110943,7 @@
     "id": 4647,
     "word": "workshop",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈwɜːkʃɒp",
     "meanings": [
       {
         "id": 1,
@@ -110950,6 +110960,11 @@
             "id": 1,
             "language": "ru",
             "text": "мастерская, студия"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "atelier"
           }
         ]
       }
@@ -110959,7 +110974,7 @@
     "id": 4648,
     "word": "worldwide",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈwɜːldwaɪd",
     "meanings": [
       {
         "id": 1,
@@ -110976,6 +110991,11 @@
             "id": 1,
             "language": "ru",
             "text": "всемирный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "dans"
           }
         ]
       }
@@ -110985,7 +111005,7 @@
     "id": 4649,
     "word": "worm",
     "language": "en",
-    "transcription": null,
+    "transcription": "wɜːm",
     "meanings": [
       {
         "id": 1,
@@ -111002,6 +111022,11 @@
             "id": 1,
             "language": "ru",
             "text": "червь"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "ver"
           }
         ]
       }
@@ -111011,7 +111036,7 @@
     "id": 4650,
     "word": "worry",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈwʌrɪ",
     "meanings": [
       {
         "id": 1,
@@ -111028,6 +111053,11 @@
             "id": 1,
             "language": "ru",
             "text": "волновать (ся)"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "inquiétude"
           }
         ]
       }
@@ -111037,7 +111067,7 @@
     "id": 4651,
     "word": "worsen",
     "language": "en",
-    "transcription": null,
+    "transcription": "wɜːsn",
     "meanings": [
       {
         "id": 1,
@@ -111052,6 +111082,11 @@
             "id": 1,
             "language": "ru",
             "text": "ухудшать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "empirer"
           }
         ]
       }
@@ -111061,7 +111096,7 @@
     "id": 4652,
     "word": "worship",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈwɜːʃɪp",
     "meanings": [
       {
         "id": 1,
@@ -111076,6 +111111,11 @@
             "id": 1,
             "language": "ru",
             "text": "почитать, поклоняться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "culte"
           }
         ]
       }
@@ -111085,7 +111125,7 @@
     "id": 4653,
     "word": "worth",
     "language": "en",
-    "transcription": null,
+    "transcription": "wɜːθ",
     "meanings": [
       {
         "id": 1,
@@ -111098,6 +111138,11 @@
             "id": 1,
             "language": "ru",
             "text": "стоимость, стоящий"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "valeur"
           }
         ]
       }
@@ -111107,7 +111152,7 @@
     "id": 4654,
     "word": "worthwhile",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈwɜːθwaɪl",
     "meanings": [
       {
         "id": 1,
@@ -111122,6 +111167,11 @@
             "id": 1,
             "language": "ru",
             "text": "стоящий"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "vaut"
           }
         ]
       }
@@ -111131,7 +111181,7 @@
     "id": 4655,
     "word": "wound",
     "language": "en",
-    "transcription": null,
+    "transcription": "wuːnd",
     "meanings": [
       {
         "id": 1,
@@ -111148,6 +111198,11 @@
             "id": 1,
             "language": "ru",
             "text": "рана, ранить"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "blessure"
           }
         ]
       }
@@ -111157,7 +111212,7 @@
     "id": 4656,
     "word": "wrap",
     "language": "en",
-    "transcription": null,
+    "transcription": "ræp",
     "meanings": [
       {
         "id": 1,
@@ -111174,6 +111229,11 @@
             "id": 1,
             "language": "ru",
             "text": "заворачивать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "envelopper"
           }
         ]
       }
@@ -111183,7 +111243,7 @@
     "id": 4657,
     "word": "wrath",
     "language": "en",
-    "transcription": null,
+    "transcription": "rɒθ",
     "meanings": [
       {
         "id": 1,
@@ -111196,6 +111256,11 @@
             "id": 1,
             "language": "ru",
             "text": "ярость"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "colère"
           }
         ]
       }
@@ -111205,7 +111270,7 @@
     "id": 4658,
     "word": "wreath",
     "language": "en",
-    "transcription": null,
+    "transcription": "riːθ",
     "meanings": [
       {
         "id": 1,
@@ -111218,6 +111283,11 @@
             "id": 1,
             "language": "ru",
             "text": "венок"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "couronne"
           }
         ]
       }
@@ -111227,7 +111297,7 @@
     "id": 4659,
     "word": "wreck",
     "language": "en",
-    "transcription": null,
+    "transcription": "rek",
     "meanings": [
       {
         "id": 1,
@@ -111244,6 +111314,11 @@
             "id": 1,
             "language": "ru",
             "text": "разрушать, крушение, развалина"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "épave"
           }
         ]
       }
@@ -111253,7 +111328,7 @@
     "id": 4660,
     "word": "wrench",
     "language": "en",
-    "transcription": null,
+    "transcription": "renʧ",
     "meanings": [
       {
         "id": 1,
@@ -111266,6 +111341,11 @@
             "id": 1,
             "language": "ru",
             "text": "гаечный ключ"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "clé"
           }
         ]
       }
@@ -111275,7 +111355,7 @@
     "id": 4661,
     "word": "wrestle",
     "language": "en",
-    "transcription": null,
+    "transcription": "resl",
     "meanings": [
       {
         "id": 1,
@@ -111288,6 +111368,11 @@
             "id": 1,
             "language": "ru",
             "text": "бороться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lutte"
           }
         ]
       }
@@ -111297,7 +111382,7 @@
     "id": 4662,
     "word": "wretched",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈreʧɪd",
     "meanings": [
       {
         "id": 1,
@@ -111312,6 +111397,11 @@
             "id": 1,
             "language": "ru",
             "text": "жалкий, несчастный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "misérable"
           }
         ]
       }
@@ -111321,7 +111411,7 @@
     "id": 4663,
     "word": "wrinkle",
     "language": "en",
-    "transcription": null,
+    "transcription": "rɪŋkl",
     "meanings": [
       {
         "id": 1,
@@ -111338,6 +111428,11 @@
             "id": 1,
             "language": "ru",
             "text": "морщина, сморщиваться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "rides"
           }
         ]
       }
@@ -111391,6 +111486,11 @@
             "id": 1,
             "language": "ru",
             "text": "выписать (документ)"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "écrivez"
           }
         ]
       }
@@ -111400,7 +111500,7 @@
     "id": 4666,
     "word": "wrong",
     "language": "en",
-    "transcription": null,
+    "transcription": "rɒŋ",
     "meanings": [
       {
         "id": 1,
@@ -111415,6 +111515,11 @@
             "id": 1,
             "language": "ru",
             "text": "не тот"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "Faux"
           }
         ]
       }
@@ -111451,7 +111556,7 @@
     "id": 4668,
     "word": "yacht",
     "language": "en",
-    "transcription": null,
+    "transcription": "jɒt",
     "meanings": [
       {
         "id": 1,
@@ -111468,6 +111573,11 @@
             "id": 1,
             "language": "ru",
             "text": "яхта"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "voilier"
           }
         ]
       }
@@ -111504,7 +111614,7 @@
     "id": 4670,
     "word": "yard",
     "language": "en",
-    "transcription": null,
+    "transcription": "jɑːd",
     "meanings": [
       {
         "id": 1,
@@ -111521,6 +111631,11 @@
             "id": 1,
             "language": "ru",
             "text": "двор"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "cour"
           }
         ]
       }
@@ -111530,7 +111645,7 @@
     "id": 4671,
     "word": "yawn",
     "language": "en",
-    "transcription": null,
+    "transcription": "jɔːn",
     "meanings": [
       {
         "id": 1,
@@ -111547,6 +111662,11 @@
             "id": 1,
             "language": "ru",
             "text": "зевать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "bâillement"
           }
         ]
       }
@@ -111556,7 +111676,7 @@
     "id": 4672,
     "word": "yearn",
     "language": "en",
-    "transcription": null,
+    "transcription": "jɜːn",
     "meanings": [
       {
         "id": 1,
@@ -111569,6 +111689,11 @@
             "id": 1,
             "language": "ru",
             "text": "тосковать, жаждать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "aspirer"
           }
         ]
       }
@@ -111651,6 +111776,11 @@
             "id": 1,
             "language": "ru",
             "text": "уступать | приносить (доход)"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "rendement"
           }
         ]
       }
@@ -111689,7 +111819,7 @@
     "id": 4677,
     "word": "youth",
     "language": "en",
-    "transcription": null,
+    "transcription": "jʊθ",
     "meanings": [
       {
         "id": 1,
@@ -111706,6 +111836,11 @@
             "id": 1,
             "language": "ru",
             "text": "молодёжь, молодость"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "jeunesse"
           }
         ]
       }
@@ -111728,6 +111863,11 @@
             "id": 1,
             "language": "ru",
             "text": "рвение, усердие"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "zèle"
           }
         ]
       }
