@@ -53,7 +53,7 @@ foreach (var word in result.Data)
     if (missingTranslationLanguages.Length > 0)
     {
         logger.LogInformation(
-            "Try to translate '{Word}' to [{Languages}]",
+            "Try to translate '{Word}' to '[{Languages}]'",
             word.Word,
             string.Join(", ", missingTranslationLanguages));
         
@@ -67,7 +67,7 @@ foreach (var word in result.Data)
         if (translationResult.Transcription is not null && word.Transcription is null)
         {
             logger.LogInformation(
-                "Update '{Word}' transcription to {Transcription}",
+                "Update '{Word}' transcription to '{Transcription}'",
                 word.Word,
                 translationResult.Transcription);
             
@@ -83,7 +83,7 @@ foreach (var word in result.Data)
         foreach (var translationResultItem in translationResult.Items)
         {
             logger.LogInformation(
-                "Update {Word} translation to {Language} to {Value}", 
+                "Update '{Word}' translation to '{Language}' to '{Value}'", 
                 word.Word,
                 translationResultItem.Key,
                 translationResultItem.Value.Translation);
