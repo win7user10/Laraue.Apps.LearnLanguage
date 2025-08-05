@@ -18,7 +18,7 @@ public class CommonMessageController : TelegramController
     [TelegramCallbackRoute(TelegramRoutes.DropMessage)]
     public Task DropLastMessageAsync(RequestContext request, CancellationToken ct)
     {
-        return _client.DeleteMessageAsync(
+        return _client.DeleteMessage(
             request.Update.GetUserId(),
             request.Update.CallbackQuery!.Message!.MessageId,
             ct);

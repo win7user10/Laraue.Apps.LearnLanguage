@@ -58180,6 +58180,11 @@
             "id": 1,
             "language": "ru",
             "text": "разрешение"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "licence"
           }
         ]
       }
@@ -58189,7 +58194,7 @@
     "id": 2442,
     "word": "lick",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɪk",
     "meanings": [
       {
         "id": 1,
@@ -58206,6 +58211,11 @@
             "id": 1,
             "language": "ru",
             "text": "лизать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lécher"
           }
         ]
       }
@@ -58215,7 +58225,7 @@
     "id": 2443,
     "word": "lid",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɪd",
     "meanings": [
       {
         "id": 1,
@@ -58230,6 +58240,11 @@
             "id": 1,
             "language": "ru",
             "text": "крышка"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "couvercle"
           }
         ]
       }
@@ -58239,7 +58254,7 @@
     "id": 2444,
     "word": "lie",
     "language": "en",
-    "transcription": null,
+    "transcription": "laɪ",
     "meanings": [
       {
         "id": 1,
@@ -58256,6 +58271,11 @@
             "id": 1,
             "language": "ru",
             "text": "лгать, ложь"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "mensonge"
           }
         ]
       }
@@ -58278,6 +58298,11 @@
             "id": 1,
             "language": "ru",
             "text": "лежать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "couche"
           }
         ]
       }
@@ -58302,6 +58327,11 @@
             "id": 1,
             "language": "ru",
             "text": "пожизненный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "à"
           }
         ]
       }
@@ -58311,7 +58341,7 @@
     "id": 2447,
     "word": "lift",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɪft",
     "meanings": [
       {
         "id": 1,
@@ -58328,6 +58358,11 @@
             "id": 1,
             "language": "ru",
             "text": "поднимать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "ascenseur"
           }
         ]
       }
@@ -58350,6 +58385,11 @@
             "id": 1,
             "language": "ru",
             "text": "зажигать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lumière"
           }
         ]
       }
@@ -58359,7 +58399,7 @@
     "id": 2449,
     "word": "light up",
     "language": "en",
-    "transcription": null,
+    "transcription": "laɪt ʌp",
     "meanings": [
       {
         "id": 1,
@@ -58372,6 +58412,11 @@
             "id": 1,
             "language": "ru",
             "text": "осветить или загореться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "allumez"
           }
         ]
       }
@@ -58381,7 +58426,7 @@
     "id": 2450,
     "word": "lightning",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlaɪtnɪŋ",
     "meanings": [
       {
         "id": 1,
@@ -58398,6 +58443,11 @@
             "id": 1,
             "language": "ru",
             "text": "молния"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "foudre"
           }
         ]
       }
@@ -58407,7 +58457,7 @@
     "id": 2451,
     "word": "like",
     "language": "en",
-    "transcription": null,
+    "transcription": "laɪk",
     "meanings": [
       {
         "id": 1,
@@ -58420,6 +58470,11 @@
             "id": 1,
             "language": "ru",
             "text": "как"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "comme"
           }
         ]
       }
@@ -58429,7 +58484,7 @@
     "id": 2452,
     "word": "like that",
     "language": "en",
-    "transcription": null,
+    "transcription": "laɪk ðæt",
     "meanings": [
       {
         "id": 1,
@@ -58442,6 +58497,11 @@
             "id": 1,
             "language": "ru",
             "text": "так"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "comme"
           }
         ]
       }
@@ -58451,7 +58511,7 @@
     "id": 2453,
     "word": "likely",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlaɪklɪ",
     "meanings": [
       {
         "id": 1,
@@ -58466,6 +58526,11 @@
             "id": 1,
             "language": "ru",
             "text": "вероятно"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "probable"
           }
         ]
       }
@@ -58475,7 +58540,7 @@
     "id": 2454,
     "word": "likewise",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlaɪkwaɪz",
     "meanings": [
       {
         "id": 1,
@@ -58490,6 +58555,11 @@
             "id": 1,
             "language": "ru",
             "text": "также"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "de"
           }
         ]
       }
@@ -58512,6 +58582,11 @@
             "id": 1,
             "language": "ru",
             "text": "конечность"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "membre"
           }
         ]
       }
@@ -58521,7 +58596,7 @@
     "id": 2456,
     "word": "limit",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪmɪt",
     "meanings": [
       {
         "id": 1,
@@ -58538,6 +58613,11 @@
             "id": 1,
             "language": "ru",
             "text": "ограничивать, ограничение"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "limite"
           }
         ]
       }
@@ -58547,7 +58627,7 @@
     "id": 2457,
     "word": "limp",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɪmp",
     "meanings": [
       {
         "id": 1,
@@ -58560,6 +58640,11 @@
             "id": 1,
             "language": "ru",
             "text": "хромать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "mou"
           }
         ]
       }
@@ -58569,7 +58654,7 @@
     "id": 2458,
     "word": "line",
     "language": "en",
-    "transcription": null,
+    "transcription": "laɪn",
     "meanings": [
       {
         "id": 1,
@@ -58586,6 +58671,11 @@
             "id": 1,
             "language": "ru",
             "text": "строка | линия, ряд"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "ligne"
           }
         ]
       }
@@ -58608,6 +58698,11 @@
             "id": 1,
             "language": "ru",
             "text": "встать в очередь"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "alignez-vous"
           }
         ]
       }
@@ -58617,7 +58712,7 @@
     "id": 2460,
     "word": "lineage",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪnɪɪʤ",
     "meanings": [
       {
         "id": 1,
@@ -58630,6 +58725,11 @@
             "id": 1,
             "language": "ru",
             "text": "родословная"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lignée"
           }
         ]
       }
@@ -58639,7 +58739,7 @@
     "id": 2461,
     "word": "linen",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪnɪn",
     "meanings": [
       {
         "id": 1,
@@ -58654,6 +58754,11 @@
             "id": 1,
             "language": "ru",
             "text": "бельё | льняная ткань"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "linge"
           }
         ]
       }
@@ -58663,7 +58768,7 @@
     "id": 2462,
     "word": "lineup",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlaɪnɪp",
     "meanings": [
       {
         "id": 1,
@@ -58676,6 +58781,11 @@
             "id": 1,
             "language": "ru",
             "text": "расстановка, расположение"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "gamme"
           }
         ]
       }
@@ -58685,7 +58795,7 @@
     "id": 2463,
     "word": "linger",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪngə",
     "meanings": [
       {
         "id": 1,
@@ -58700,6 +58810,11 @@
             "id": 1,
             "language": "ru",
             "text": "задерживаться, медлить"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "s'attarder"
           }
         ]
       }
@@ -58709,7 +58824,7 @@
     "id": 2464,
     "word": "link",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɪŋk",
     "meanings": [
       {
         "id": 1,
@@ -58726,6 +58841,11 @@
             "id": 1,
             "language": "ru",
             "text": "связь, звено, ссылка"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lien"
           }
         ]
       }
@@ -58735,7 +58855,7 @@
     "id": 2465,
     "word": "lip",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɪp",
     "meanings": [
       {
         "id": 1,
@@ -58752,6 +58872,11 @@
             "id": 1,
             "language": "ru",
             "text": "губа"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lèvre"
           }
         ]
       }
@@ -58761,7 +58886,7 @@
     "id": 2466,
     "word": "lipstick",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪpstɪk",
     "meanings": [
       {
         "id": 1,
@@ -58774,6 +58899,11 @@
             "id": 1,
             "language": "ru",
             "text": "губная помада"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "rouge"
           }
         ]
       }
@@ -58783,7 +58913,7 @@
     "id": 2467,
     "word": "liquid",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪkwɪd",
     "meanings": [
       {
         "id": 1,
@@ -58798,6 +58928,11 @@
             "id": 1,
             "language": "ru",
             "text": "жидкость, жидкий"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "liquide"
           }
         ]
       }
@@ -58807,7 +58942,7 @@
     "id": 2468,
     "word": "list",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɪst",
     "meanings": [
       {
         "id": 1,
@@ -58824,6 +58959,11 @@
             "id": 1,
             "language": "ru",
             "text": "список, перечислять"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "liste"
           }
         ]
       }
@@ -58846,6 +58986,11 @@
             "id": 1,
             "language": "ru",
             "text": "подслушивать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "écoutez"
           }
         ]
       }
@@ -58855,7 +59000,7 @@
     "id": 2470,
     "word": "literal",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪtərəl",
     "meanings": [
       {
         "id": 1,
@@ -58870,6 +59015,11 @@
             "id": 1,
             "language": "ru",
             "text": "буквальный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "littéral"
           }
         ]
       }
@@ -58879,7 +59029,7 @@
     "id": 2471,
     "word": "literary",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪtərərɪ",
     "meanings": [
       {
         "id": 1,
@@ -58896,6 +59046,11 @@
             "id": 1,
             "language": "ru",
             "text": "литературный, книжный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "littéraire"
           }
         ]
       }
@@ -58905,7 +59060,7 @@
     "id": 2472,
     "word": "literate",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪtərɪt",
     "meanings": [
       {
         "id": 1,
@@ -58920,6 +59075,11 @@
             "id": 1,
             "language": "ru",
             "text": "грамотность"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "alphabétisés"
           }
         ]
       }
@@ -58929,7 +59089,7 @@
     "id": 2473,
     "word": "litter",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪtə",
     "meanings": [
       {
         "id": 1,
@@ -58944,6 +59104,11 @@
             "id": 1,
             "language": "ru",
             "text": "мусор (на улице)"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "portée"
           }
         ]
       }
@@ -58966,6 +59131,11 @@
             "id": 1,
             "language": "ru",
             "text": "соответствовать, дотягивать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "vivre"
           }
         ]
       }
@@ -58975,7 +59145,7 @@
     "id": 2475,
     "word": "livelihood",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlaɪvlɪhʊd",
     "meanings": [
       {
         "id": 1,
@@ -58988,6 +59158,11 @@
             "id": 1,
             "language": "ru",
             "text": "средства к существованию"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "moyens"
           }
         ]
       }
@@ -59010,6 +59185,11 @@
             "id": 1,
             "language": "ru",
             "text": "оживить, взбодрить"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "animer"
           }
         ]
       }
@@ -59019,7 +59199,7 @@
     "id": 2477,
     "word": "liver",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪvə",
     "meanings": [
       {
         "id": 1,
@@ -59036,6 +59216,11 @@
             "id": 1,
             "language": "ru",
             "text": "печень"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "foie"
           }
         ]
       }
@@ -59045,7 +59230,7 @@
     "id": 2478,
     "word": "livestock",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlaɪvstɒk",
     "meanings": [
       {
         "id": 1,
@@ -59058,6 +59243,11 @@
             "id": 1,
             "language": "ru",
             "text": "скот"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "bétail"
           }
         ]
       }
@@ -59067,7 +59257,7 @@
     "id": 2479,
     "word": "lizard",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪzəd",
     "meanings": [
       {
         "id": 1,
@@ -59080,6 +59270,11 @@
             "id": 1,
             "language": "ru",
             "text": "ящерица"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lézard"
           }
         ]
       }
@@ -59089,7 +59284,7 @@
     "id": 2480,
     "word": "load",
     "language": "en",
-    "transcription": null,
+    "transcription": "ləʊd",
     "meanings": [
       {
         "id": 1,
@@ -59106,6 +59301,11 @@
             "id": 1,
             "language": "ru",
             "text": "грузить, груз"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "charge"
           }
         ]
       }
@@ -59115,7 +59315,7 @@
     "id": 2481,
     "word": "loaf",
     "language": "en",
-    "transcription": null,
+    "transcription": "ləʊf",
     "meanings": [
       {
         "id": 1,
@@ -59132,6 +59332,11 @@
             "id": 1,
             "language": "ru",
             "text": "буханка, булка"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "pain"
           }
         ]
       }
@@ -59141,7 +59346,7 @@
     "id": 2482,
     "word": "loan",
     "language": "en",
-    "transcription": null,
+    "transcription": "ləʊn",
     "meanings": [
       {
         "id": 1,
@@ -59158,6 +59363,11 @@
             "id": 1,
             "language": "ru",
             "text": "заём, ссуда"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "prêt"
           }
         ]
       }
@@ -59167,7 +59377,7 @@
     "id": 2483,
     "word": "loathe",
     "language": "en",
-    "transcription": null,
+    "transcription": "ləʊð",
     "meanings": [
       {
         "id": 1,
@@ -59182,6 +59392,11 @@
             "id": 1,
             "language": "ru",
             "text": "ненавидеть, питать отвращение"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "déteste"
           }
         ]
       }
@@ -59191,7 +59406,7 @@
     "id": 2484,
     "word": "lobby",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɒbɪ",
     "meanings": [
       {
         "id": 1,
@@ -59208,6 +59423,11 @@
             "id": 1,
             "language": "ru",
             "text": "вестибюль, фойе, прихожая"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "hall"
           }
         ]
       }
@@ -59217,7 +59437,7 @@
     "id": 2485,
     "word": "lobster",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɒbstə",
     "meanings": [
       {
         "id": 1,
@@ -59230,6 +59450,11 @@
             "id": 1,
             "language": "ru",
             "text": "омар"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "homard"
           }
         ]
       }
@@ -59239,7 +59464,7 @@
     "id": 2486,
     "word": "local",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈləʊkəl",
     "meanings": [
       {
         "id": 1,
@@ -59254,6 +59479,11 @@
             "id": 1,
             "language": "ru",
             "text": "местный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "locaux"
           }
         ]
       }
@@ -59263,7 +59493,7 @@
     "id": 2487,
     "word": "locate",
     "language": "en",
-    "transcription": null,
+    "transcription": "ləʊˈkeɪt",
     "meanings": [
       {
         "id": 1,
@@ -59280,6 +59510,11 @@
             "id": 1,
             "language": "ru",
             "text": "определить местоположение"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "localiser"
           }
         ]
       }
@@ -59289,7 +59524,7 @@
     "id": 2488,
     "word": "lock",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɒk",
     "meanings": [
       {
         "id": 1,
@@ -59306,6 +59541,11 @@
             "id": 1,
             "language": "ru",
             "text": "замок, запирать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "serrure"
           }
         ]
       }
@@ -59315,7 +59555,7 @@
     "id": 2489,
     "word": "lock up",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɒk ʌp",
     "meanings": [
       {
         "id": 1,
@@ -59328,6 +59568,11 @@
             "id": 1,
             "language": "ru",
             "text": "посадить в тюрьму или дурку"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "enfermez-vous"
           }
         ]
       }
@@ -59337,7 +59582,7 @@
     "id": 2490,
     "word": "locker",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɒkə",
     "meanings": [
       {
         "id": 1,
@@ -59350,6 +59595,11 @@
             "id": 1,
             "language": "ru",
             "text": "ящик, шкаф (закрывающийся)"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "casier"
           }
         ]
       }
@@ -59359,7 +59609,7 @@
     "id": 2491,
     "word": "locus",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈləʊkəs",
     "meanings": [
       {
         "id": 1,
@@ -59372,6 +59622,11 @@
             "id": 1,
             "language": "ru",
             "text": "местоположение"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lieu"
           }
         ]
       }
@@ -59381,7 +59636,7 @@
     "id": 2492,
     "word": "lodge",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɒʤ",
     "meanings": [
       {
         "id": 1,
@@ -59394,6 +59649,11 @@
             "id": 1,
             "language": "ru",
             "text": "домик, поселиться, остановиться | подавать (документ)"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "loge"
           }
         ]
       }
@@ -59403,7 +59663,7 @@
     "id": 2493,
     "word": "loft",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɒft",
     "meanings": [
       {
         "id": 1,
@@ -59420,6 +59680,11 @@
             "id": 1,
             "language": "ru",
             "text": "чердак, верхний нежилой этаж"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "grenier"
           }
         ]
       }
@@ -59429,7 +59694,7 @@
     "id": 2494,
     "word": "log",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɒg",
     "meanings": [
       {
         "id": 1,
@@ -59446,6 +59711,11 @@
             "id": 1,
             "language": "ru",
             "text": "бревно"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "journal"
           }
         ]
       }
@@ -59455,7 +59725,7 @@
     "id": 2495,
     "word": "lone",
     "language": "en",
-    "transcription": null,
+    "transcription": "ləʊn",
     "meanings": [
       {
         "id": 1,
@@ -59468,6 +59738,11 @@
             "id": 1,
             "language": "ru",
             "text": "одинокий"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "solitaire"
           }
         ]
       }
@@ -59477,7 +59752,7 @@
     "id": 2496,
     "word": "long ago",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɒŋ əˈgəʊ",
     "meanings": [
       {
         "id": 1,
@@ -59492,6 +59767,11 @@
             "id": 1,
             "language": "ru",
             "text": "давно"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "il"
           }
         ]
       }
@@ -59514,6 +59794,11 @@
             "id": 1,
             "language": "ru",
             "text": "желать или скучать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "longtemps"
           }
         ]
       }
@@ -59523,7 +59808,7 @@
     "id": 2498,
     "word": "longevity",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɒnˈʤevɪtɪ",
     "meanings": [
       {
         "id": 1,
@@ -59540,6 +59825,11 @@
             "id": 1,
             "language": "ru",
             "text": "долговечность, долголетие"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "longévité"
           }
         ]
       }
@@ -59549,7 +59839,7 @@
     "id": 2499,
     "word": "look",
     "language": "en",
-    "transcription": null,
+    "transcription": "lʊk",
     "meanings": [
       {
         "id": 1,
@@ -59566,6 +59856,11 @@
             "id": 1,
             "language": "ru",
             "text": "выглядеть"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "regarde"
           }
         ]
       }
@@ -59588,6 +59883,11 @@
             "id": 1,
             "language": "ru",
             "text": "присматривать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "prendre"
           }
         ]
       }
@@ -59610,6 +59910,11 @@
             "id": 1,
             "language": "ru",
             "text": "посмотреть, оглядеть"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "regarde"
           }
         ]
       }
@@ -59632,6 +59937,11 @@
             "id": 1,
             "language": "ru",
             "text": "рассмотреть, обдумать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "regarde"
           }
         ]
       }
@@ -59654,6 +59964,11 @@
             "id": 1,
             "language": "ru",
             "text": "искать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "chercher"
           }
         ]
       }
@@ -59676,6 +59991,11 @@
             "id": 1,
             "language": "ru",
             "text": "ожидать, предвкушать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "regarder"
           }
         ]
       }
@@ -59698,6 +60018,11 @@
             "id": 1,
             "language": "ru",
             "text": "посмотреть, изучить"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "regardez"
           }
         ]
       }
@@ -59720,6 +60045,11 @@
             "id": 1,
             "language": "ru",
             "text": "смотреть (опасность!)"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "regarde"
           }
         ]
       }
@@ -59742,6 +60072,11 @@
             "id": 1,
             "language": "ru",
             "text": "найти (в списке и т. п.)"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "regardez"
           }
         ]
       }
@@ -59766,6 +60101,11 @@
             "id": 1,
             "language": "ru",
             "text": "улучшаться, налаживаться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lève"
           }
         ]
       }
@@ -59788,6 +60128,11 @@
             "id": 1,
             "language": "ru",
             "text": "уважать, восхищаться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lève"
           }
         ]
       }
@@ -59797,7 +60142,7 @@
     "id": 2510,
     "word": "loom",
     "language": "en",
-    "transcription": null,
+    "transcription": "luːm",
     "meanings": [
       {
         "id": 1,
@@ -59812,6 +60157,11 @@
             "id": 1,
             "language": "ru",
             "text": "маячить, виднеться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "métier"
           }
         ]
       }
@@ -59821,7 +60171,7 @@
     "id": 2511,
     "word": "loop",
     "language": "en",
-    "transcription": null,
+    "transcription": "luːp",
     "meanings": [
       {
         "id": 1,
@@ -59834,6 +60184,11 @@
             "id": 1,
             "language": "ru",
             "text": "петля"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "boucle"
           }
         ]
       }
@@ -59843,7 +60198,7 @@
     "id": 2512,
     "word": "loose",
     "language": "en",
-    "transcription": null,
+    "transcription": "luːs",
     "meanings": [
       {
         "id": 1,
@@ -59858,6 +60213,11 @@
             "id": 1,
             "language": "ru",
             "text": "свободный, болтающийся"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "en"
           }
         ]
       }
@@ -59867,7 +60227,7 @@
     "id": 2513,
     "word": "loot",
     "language": "en",
-    "transcription": null,
+    "transcription": "luːt",
     "meanings": [
       {
         "id": 1,
@@ -59880,6 +60240,11 @@
             "id": 1,
             "language": "ru",
             "text": "грабить, добыча"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "butin"
           }
         ]
       }
@@ -59889,7 +60254,7 @@
     "id": 2514,
     "word": "lord",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɔːd",
     "meanings": [
       {
         "id": 1,
@@ -59902,6 +60267,11 @@
             "id": 1,
             "language": "ru",
             "text": "господин, господь (бог)"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "seigneur"
           }
         ]
       }
@@ -59911,7 +60281,7 @@
     "id": 2515,
     "word": "loss",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɒs",
     "meanings": [
       {
         "id": 1,
@@ -59928,6 +60298,11 @@
             "id": 1,
             "language": "ru",
             "text": "потеря"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "perte"
           }
         ]
       }
@@ -59937,7 +60312,7 @@
     "id": 2516,
     "word": "lot",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɒt",
     "meanings": [
       {
         "id": 1,
@@ -59950,6 +60325,11 @@
             "id": 1,
             "language": "ru",
             "text": "жребий, судьба"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lot"
           }
         ]
       }
@@ -59959,7 +60339,7 @@
     "id": 2517,
     "word": "loud",
     "language": "en",
-    "transcription": null,
+    "transcription": "laʊd",
     "meanings": [
       {
         "id": 1,
@@ -59976,6 +60356,11 @@
             "id": 1,
             "language": "ru",
             "text": "громкий"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "fort"
           }
         ]
       }
@@ -59985,7 +60370,7 @@
     "id": 2518,
     "word": "lounge",
     "language": "en",
-    "transcription": null,
+    "transcription": "laʊnʤ",
     "meanings": [
       {
         "id": 1,
@@ -60002,6 +60387,11 @@
             "id": 1,
             "language": "ru",
             "text": "гостиная, холл, комната отдыха | расслабляться, бездельничать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "salon"
           }
         ]
       }
@@ -60011,7 +60401,7 @@
     "id": 2519,
     "word": "lousy",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlaʊzɪ",
     "meanings": [
       {
         "id": 1,
@@ -60024,6 +60414,11 @@
             "id": 1,
             "language": "ru",
             "text": "паршивый"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "moche"
           }
         ]
       }
@@ -60033,7 +60428,7 @@
     "id": 2520,
     "word": "lovely",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlʌvlɪ",
     "meanings": [
       {
         "id": 1,
@@ -60050,6 +60445,11 @@
             "id": 1,
             "language": "ru",
             "text": "чудесный, милый"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "charmant"
           }
         ]
       }
@@ -60059,7 +60459,7 @@
     "id": 2521,
     "word": "lower",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈləʊə",
     "meanings": [
       {
         "id": 1,
@@ -60076,6 +60476,11 @@
             "id": 1,
             "language": "ru",
             "text": "нижний"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "inférieur"
           }
         ]
       }
@@ -60085,7 +60490,7 @@
     "id": 2522,
     "word": "loyal",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɔɪəl",
     "meanings": [
       {
         "id": 1,
@@ -60102,6 +60507,11 @@
             "id": 1,
             "language": "ru",
             "text": "верный, преданный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "fidèle"
           }
         ]
       }
@@ -60111,7 +60521,7 @@
     "id": 2523,
     "word": "lucrative",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈluːkrətɪv",
     "meanings": [
       {
         "id": 1,
@@ -60128,6 +60538,11 @@
             "id": 1,
             "language": "ru",
             "text": "прибыльный, выгодный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lucratif"
           }
         ]
       }
@@ -60137,7 +60552,7 @@
     "id": 2524,
     "word": "ludicrous",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈluːdɪkrəs",
     "meanings": [
       {
         "id": 1,
@@ -60150,6 +60565,11 @@
             "id": 1,
             "language": "ru",
             "text": "нелепый, смехотворный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "ridicule"
           }
         ]
       }
@@ -60159,7 +60579,7 @@
     "id": 2525,
     "word": "luggage",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlʌgɪʤ",
     "meanings": [
       {
         "id": 1,
@@ -60176,6 +60596,11 @@
             "id": 1,
             "language": "ru",
             "text": "багаж"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "bagages"
           }
         ]
       }
@@ -60185,7 +60610,7 @@
     "id": 2526,
     "word": "lumber",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlʌmbə",
     "meanings": [
       {
         "id": 1,
@@ -60200,6 +60625,11 @@
             "id": 1,
             "language": "ru",
             "text": "пиломатериалы"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "bois"
           }
         ]
       }
@@ -60209,7 +60639,7 @@
     "id": 2527,
     "word": "lump",
     "language": "en",
-    "transcription": null,
+    "transcription": "lʌmp",
     "meanings": [
       {
         "id": 1,
@@ -60224,6 +60654,11 @@
             "id": 1,
             "language": "ru",
             "text": "кусок, глыба, ком"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "morceau"
           }
         ]
       }
@@ -60233,7 +60668,7 @@
     "id": 2528,
     "word": "lunar",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈluːnə",
     "meanings": [
       {
         "id": 1,
@@ -60246,6 +60681,11 @@
             "id": 1,
             "language": "ru",
             "text": "лунный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "lunaire"
           }
         ]
       }
@@ -60255,7 +60695,7 @@
     "id": 2529,
     "word": "luncheon",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlʌnʧən",
     "meanings": [
       {
         "id": 1,
@@ -60268,6 +60708,11 @@
             "id": 1,
             "language": "ru",
             "text": "завтрак"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "déjeuner"
           }
         ]
       }
@@ -60277,7 +60722,7 @@
     "id": 2530,
     "word": "lung",
     "language": "en",
-    "transcription": null,
+    "transcription": "lʌŋ",
     "meanings": [
       {
         "id": 1,
@@ -60294,6 +60739,11 @@
             "id": 1,
             "language": "ru",
             "text": "легкое"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "poumon"
           }
         ]
       }
@@ -60303,7 +60753,7 @@
     "id": 2531,
     "word": "lurch",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɜːʧ",
     "meanings": [
       {
         "id": 1,
@@ -60316,6 +60766,11 @@
             "id": 1,
             "language": "ru",
             "text": "крениться, шататься"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "embardée"
           }
         ]
       }
@@ -60325,7 +60780,7 @@
     "id": 2532,
     "word": "lure",
     "language": "en",
-    "transcription": null,
+    "transcription": "ljʊə",
     "meanings": [
       {
         "id": 1,
@@ -60340,6 +60795,11 @@
             "id": 1,
             "language": "ru",
             "text": "приманка, манить"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "leurre"
           }
         ]
       }
@@ -60349,7 +60809,7 @@
     "id": 2533,
     "word": "lurk",
     "language": "en",
-    "transcription": null,
+    "transcription": "lɜːk",
     "meanings": [
       {
         "id": 1,
@@ -60362,6 +60822,11 @@
             "id": 1,
             "language": "ru",
             "text": "таиться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "rôde"
           }
         ]
       }
@@ -60371,7 +60836,7 @@
     "id": 2534,
     "word": "lush",
     "language": "en",
-    "transcription": null,
+    "transcription": "lʌʃ",
     "meanings": [
       {
         "id": 1,
@@ -60384,6 +60849,11 @@
             "id": 1,
             "language": "ru",
             "text": "пышный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "luxuriant"
           }
         ]
       }
@@ -60393,7 +60863,7 @@
     "id": 2535,
     "word": "lust",
     "language": "en",
-    "transcription": null,
+    "transcription": "lʌst",
     "meanings": [
       {
         "id": 1,
@@ -60406,6 +60876,11 @@
             "id": 1,
             "language": "ru",
             "text": "вожделение, страсть"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "luxure"
           }
         ]
       }
@@ -60415,7 +60890,7 @@
     "id": 2536,
     "word": "luxury",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlʌkʃərɪ",
     "meanings": [
       {
         "id": 1,
@@ -60430,6 +60905,11 @@
             "id": 1,
             "language": "ru",
             "text": "роскошь"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "luxe"
           }
         ]
       }
@@ -60439,7 +60919,7 @@
     "id": 2537,
     "word": "lyrics",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈlɪrɪks",
     "meanings": [
       {
         "id": 1,
@@ -60456,6 +60936,11 @@
             "id": 1,
             "language": "ru",
             "text": "текст песни"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "paroles"
           }
         ]
       }
@@ -60465,7 +60950,7 @@
     "id": 2538,
     "word": "magazine",
     "language": "en",
-    "transcription": null,
+    "transcription": "mægəˈziːn",
     "meanings": [
       {
         "id": 1,
@@ -60482,6 +60967,11 @@
             "id": 1,
             "language": "ru",
             "text": "журнал"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "revue"
           }
         ]
       }
@@ -60491,7 +60981,7 @@
     "id": 2539,
     "word": "magician",
     "language": "en",
-    "transcription": null,
+    "transcription": "məˈʤɪʃn",
     "meanings": [
       {
         "id": 1,
@@ -60504,6 +60994,11 @@
             "id": 1,
             "language": "ru",
             "text": "волшебник, фокусник"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "magicien"
           }
         ]
       }
@@ -60513,7 +61008,7 @@
     "id": 2540,
     "word": "magnificent",
     "language": "en",
-    "transcription": null,
+    "transcription": "mægˈnɪfɪsnt",
     "meanings": [
       {
         "id": 1,
@@ -60530,6 +61025,11 @@
             "id": 1,
             "language": "ru",
             "text": "великолепный, величественный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "magnifique"
           }
         ]
       }
@@ -60539,7 +61039,7 @@
     "id": 2541,
     "word": "magnify",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmægnɪfaɪ",
     "meanings": [
       {
         "id": 1,
@@ -60552,6 +61052,11 @@
             "id": 1,
             "language": "ru",
             "text": "увеличивать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "agrandir"
           }
         ]
       }
@@ -60561,7 +61066,7 @@
     "id": 2542,
     "word": "magnitude",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmægnɪtjuːd",
     "meanings": [
       {
         "id": 1,
@@ -60574,6 +61079,11 @@
             "id": 1,
             "language": "ru",
             "text": "величина, сила"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "magnitude"
           }
         ]
       }
@@ -60583,7 +61093,7 @@
     "id": 2543,
     "word": "maid",
     "language": "en",
-    "transcription": null,
+    "transcription": "meɪd",
     "meanings": [
       {
         "id": 1,
@@ -60596,6 +61106,11 @@
             "id": 1,
             "language": "ru",
             "text": "служанка, горничная"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "femme"
           }
         ]
       }
@@ -60618,6 +61133,11 @@
             "id": 1,
             "language": "ru",
             "text": "дева, девственница"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "jeune"
           }
         ]
       }
@@ -60627,7 +61147,7 @@
     "id": 2545,
     "word": "mainland",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmeɪnlənd",
     "meanings": [
       {
         "id": 1,
@@ -60640,6 +61160,11 @@
             "id": 1,
             "language": "ru",
             "text": "материк или большой остров"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "continent"
           }
         ]
       }
@@ -60649,7 +61174,7 @@
     "id": 2546,
     "word": "maintain",
     "language": "en",
-    "transcription": null,
+    "transcription": "meɪnˈteɪn",
     "meanings": [
       {
         "id": 1,
@@ -60666,6 +61191,11 @@
             "id": 1,
             "language": "ru",
             "text": "поддерживать, сохранять"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "maintenir"
           }
         ]
       }
@@ -60675,7 +61205,7 @@
     "id": 2547,
     "word": "majesty",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmæʤɪstɪ",
     "meanings": [
       {
         "id": 1,
@@ -60688,6 +61218,11 @@
             "id": 1,
             "language": "ru",
             "text": "величие, величество"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "majesté"
           }
         ]
       }
@@ -60697,7 +61232,7 @@
     "id": 2548,
     "word": "major",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmeɪʤə",
     "meanings": [
       {
         "id": 1,
@@ -60714,6 +61249,11 @@
             "id": 1,
             "language": "ru",
             "text": "главный, большой"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "majeur"
           }
         ]
       }
@@ -60736,6 +61276,11 @@
             "id": 1,
             "language": "ru",
             "text": "смеяться, издеваться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "se"
           }
         ]
       }
@@ -60758,6 +61303,11 @@
             "id": 1,
             "language": "ru",
             "text": "переделать в"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "faire"
           }
         ]
       }
@@ -60780,6 +61330,11 @@
             "id": 1,
             "language": "ru",
             "text": "извлечь, получить"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "marque"
           }
         ]
       }
@@ -60802,6 +61357,11 @@
             "id": 1,
             "language": "ru",
             "text": "разобрать, понять | целоваться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "faire"
           }
         ]
       }
@@ -60811,7 +61371,7 @@
     "id": 2553,
     "word": "make sure",
     "language": "en",
-    "transcription": null,
+    "transcription": "meɪk ʃʊə",
     "meanings": [
       {
         "id": 1,
@@ -60828,6 +61388,11 @@
             "id": 1,
             "language": "ru",
             "text": "убедиться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "assurez-vous"
           }
         ]
       }
@@ -60850,6 +61415,11 @@
             "id": 1,
             "language": "ru",
             "text": "выдумать | помириться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "maquillage"
           }
         ]
       }
@@ -60872,6 +61442,11 @@
             "id": 1,
             "language": "ru",
             "text": "компенсировать, наверстать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "compenser"
           }
         ]
       }
@@ -60881,7 +61456,7 @@
     "id": 2556,
     "word": "makeup",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmeɪkʌp",
     "meanings": [
       {
         "id": 1,
@@ -60898,6 +61473,11 @@
             "id": 1,
             "language": "ru",
             "text": "макияж"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "maquillage"
           }
         ]
       }
@@ -60907,7 +61487,7 @@
     "id": 2557,
     "word": "male",
     "language": "en",
-    "transcription": null,
+    "transcription": "meɪl",
     "meanings": [
       {
         "id": 1,
@@ -60922,6 +61502,11 @@
             "id": 1,
             "language": "ru",
             "text": "мужской"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "hommes"
           }
         ]
       }
@@ -60931,7 +61516,7 @@
     "id": 2558,
     "word": "mall",
     "language": "en",
-    "transcription": null,
+    "transcription": "mɔːl",
     "meanings": [
       {
         "id": 1,
@@ -60946,6 +61531,11 @@
             "id": 1,
             "language": "ru",
             "text": "торговый центр"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "centre"
           }
         ]
       }
@@ -60955,7 +61545,7 @@
     "id": 2559,
     "word": "mammal",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmæməl",
     "meanings": [
       {
         "id": 1,
@@ -60972,6 +61562,11 @@
             "id": 1,
             "language": "ru",
             "text": "млекопитающее"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "mammifère"
           }
         ]
       }
@@ -60981,7 +61576,7 @@
     "id": 2560,
     "word": "mammoth",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmæməθ",
     "meanings": [
       {
         "id": 1,
@@ -60994,6 +61589,11 @@
             "id": 1,
             "language": "ru",
             "text": "мамонт"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "mammouth"
           }
         ]
       }
@@ -61003,7 +61603,7 @@
     "id": 2561,
     "word": "manage",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmænɪʤ",
     "meanings": [
       {
         "id": 1,
@@ -61020,6 +61620,11 @@
             "id": 1,
             "language": "ru",
             "text": "справляться, управлять"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "gérer"
           }
         ]
       }
@@ -61029,7 +61634,7 @@
     "id": 2562,
     "word": "mandatory",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmændətərɪ",
     "meanings": [
       {
         "id": 1,
@@ -61042,6 +61647,11 @@
             "id": 1,
             "language": "ru",
             "text": "обязательный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "obligatoire"
           }
         ]
       }
@@ -61051,7 +61661,7 @@
     "id": 2563,
     "word": "manifest",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmænɪfest",
     "meanings": [
       {
         "id": 1,
@@ -61064,6 +61674,11 @@
             "id": 1,
             "language": "ru",
             "text": "проявить, явный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "manifeste"
           }
         ]
       }
@@ -61073,7 +61688,7 @@
     "id": 2564,
     "word": "mankind",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmænkaɪnd",
     "meanings": [
       {
         "id": 1,
@@ -61088,6 +61703,11 @@
             "id": 1,
             "language": "ru",
             "text": "человечество"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "humanité"
           }
         ]
       }
@@ -61097,7 +61717,7 @@
     "id": 2565,
     "word": "mansion",
     "language": "en",
-    "transcription": null,
+    "transcription": "mænʃn",
     "meanings": [
       {
         "id": 1,
@@ -61114,6 +61734,11 @@
             "id": 1,
             "language": "ru",
             "text": "особняк, здание"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "manoir"
           }
         ]
       }
@@ -61123,7 +61748,7 @@
     "id": 2566,
     "word": "mantle",
     "language": "en",
-    "transcription": null,
+    "transcription": "mæntl",
     "meanings": [
       {
         "id": 1,
@@ -61136,6 +61761,11 @@
             "id": 1,
             "language": "ru",
             "text": "мантия"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "manteau"
           }
         ]
       }
@@ -61145,7 +61775,7 @@
     "id": 2567,
     "word": "manual",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmænjʊəl",
     "meanings": [
       {
         "id": 1,
@@ -61162,6 +61792,11 @@
             "id": 1,
             "language": "ru",
             "text": "руководство, учебник | ручной"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "manuel"
           }
         ]
       }
@@ -61171,7 +61806,7 @@
     "id": 2568,
     "word": "manufacture",
     "language": "en",
-    "transcription": null,
+    "transcription": "mænjʊˈfækʧə",
     "meanings": [
       {
         "id": 1,
@@ -61188,6 +61823,11 @@
             "id": 1,
             "language": "ru",
             "text": "производить, производство"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "fabrication"
           }
         ]
       }
@@ -61197,7 +61837,7 @@
     "id": 2569,
     "word": "manure",
     "language": "en",
-    "transcription": null,
+    "transcription": "məˈnjʊə",
     "meanings": [
       {
         "id": 1,
@@ -61210,6 +61850,11 @@
             "id": 1,
             "language": "ru",
             "text": "навоз"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "fumier"
           }
         ]
       }
@@ -61232,6 +61877,11 @@
             "id": 1,
             "language": "ru",
             "text": "запланировать, расписать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "cartographier"
           }
         ]
       }
@@ -61241,7 +61891,7 @@
     "id": 2571,
     "word": "maple",
     "language": "en",
-    "transcription": null,
+    "transcription": "meɪpl",
     "meanings": [
       {
         "id": 1,
@@ -61254,6 +61904,11 @@
             "id": 1,
             "language": "ru",
             "text": "клён"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "érable"
           }
         ]
       }
@@ -61263,7 +61918,7 @@
     "id": 2572,
     "word": "marble",
     "language": "en",
-    "transcription": null,
+    "transcription": "mɑːbl",
     "meanings": [
       {
         "id": 1,
@@ -61276,6 +61931,11 @@
             "id": 1,
             "language": "ru",
             "text": "мрамор"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "marbre"
           }
         ]
       }
@@ -61285,7 +61945,7 @@
     "id": 2573,
     "word": "margin",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmɑːʤɪn",
     "meanings": [
       {
         "id": 1,
@@ -61302,6 +61962,11 @@
             "id": 1,
             "language": "ru",
             "text": "край, граница | маржа, накрутка"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "marge"
           }
         ]
       }
@@ -61311,7 +61976,7 @@
     "id": 2574,
     "word": "marine",
     "language": "en",
-    "transcription": null,
+    "transcription": "məˈriːn",
     "meanings": [
       {
         "id": 1,
@@ -61324,6 +61989,11 @@
             "id": 1,
             "language": "ru",
             "text": "морской"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "marin"
           }
         ]
       }
@@ -61333,7 +62003,7 @@
     "id": 2575,
     "word": "marital",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmærɪtl",
     "meanings": [
       {
         "id": 1,
@@ -61346,6 +62016,11 @@
             "id": 1,
             "language": "ru",
             "text": "супружеский"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "conjugal"
           }
         ]
       }
@@ -61355,7 +62030,7 @@
     "id": 2576,
     "word": "maritime",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmærɪtaɪm",
     "meanings": [
       {
         "id": 1,
@@ -61368,6 +62043,11 @@
             "id": 1,
             "language": "ru",
             "text": "морской"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "maritime"
           }
         ]
       }
@@ -61377,7 +62057,7 @@
     "id": 2577,
     "word": "mark",
     "language": "en",
-    "transcription": null,
+    "transcription": "mɑːk",
     "meanings": [
       {
         "id": 1,
@@ -61394,6 +62074,11 @@
             "id": 1,
             "language": "ru",
             "text": "метка, отмечать"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "marque"
           }
         ]
       }
@@ -61416,6 +62101,11 @@
             "id": 1,
             "language": "ru",
             "text": "снижать ценник"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "marquer"
           }
         ]
       }
@@ -61425,7 +62115,7 @@
     "id": 2579,
     "word": "marry",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmærɪ",
     "meanings": [
       {
         "id": 1,
@@ -61440,6 +62130,11 @@
             "id": 1,
             "language": "ru",
             "text": "жениться, выйти замуж"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "se"
           }
         ]
       }
@@ -61449,7 +62144,7 @@
     "id": 2580,
     "word": "marsh",
     "language": "en",
-    "transcription": null,
+    "transcription": "mɑːʃ",
     "meanings": [
       {
         "id": 1,
@@ -61462,6 +62157,11 @@
             "id": 1,
             "language": "ru",
             "text": "болото"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "marais"
           }
         ]
       }
@@ -61471,7 +62171,7 @@
     "id": 2581,
     "word": "martial",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmɑːʃəl",
     "meanings": [
       {
         "id": 1,
@@ -61484,6 +62184,11 @@
             "id": 1,
             "language": "ru",
             "text": "боевой, военный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "martial"
           }
         ]
       }
@@ -61493,7 +62198,7 @@
     "id": 2582,
     "word": "martyr",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmɑːtə",
     "meanings": [
       {
         "id": 1,
@@ -61506,6 +62211,11 @@
             "id": 1,
             "language": "ru",
             "text": "мученик"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "martyr"
           }
         ]
       }
@@ -61515,7 +62225,7 @@
     "id": 2583,
     "word": "marvel",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmɑːvəl",
     "meanings": [
       {
         "id": 1,
@@ -61528,6 +62238,11 @@
             "id": 1,
             "language": "ru",
             "text": "диво, удивляться"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "merveille"
           }
         ]
       }
@@ -61537,7 +62252,7 @@
     "id": 2584,
     "word": "mash",
     "language": "en",
-    "transcription": null,
+    "transcription": "mæʃ",
     "meanings": [
       {
         "id": 1,
@@ -61550,6 +62265,11 @@
             "id": 1,
             "language": "ru",
             "text": "разминать, месиво"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "purée"
           }
         ]
       }
@@ -61559,7 +62279,7 @@
     "id": 2585,
     "word": "massacre",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmæsəkə",
     "meanings": [
       {
         "id": 1,
@@ -61576,6 +62296,11 @@
             "id": 1,
             "language": "ru",
             "text": "резня"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "massacre"
           }
         ]
       }
@@ -61585,7 +62310,7 @@
     "id": 2586,
     "word": "master",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmɑːstə",
     "meanings": [
       {
         "id": 1,
@@ -61602,6 +62327,11 @@
             "id": 1,
             "language": "ru",
             "text": "хозяин | овладеть (напр. искусством)"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "maître"
           }
         ]
       }
@@ -61611,7 +62341,7 @@
     "id": 2587,
     "word": "masterpiece",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmɑːstəpiːs",
     "meanings": [
       {
         "id": 1,
@@ -61628,6 +62358,11 @@
             "id": 1,
             "language": "ru",
             "text": "шедевр"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "chef-d'œuvre"
           }
         ]
       }
@@ -61637,7 +62372,7 @@
     "id": 2588,
     "word": "mat",
     "language": "en",
-    "transcription": null,
+    "transcription": "mæt",
     "meanings": [
       {
         "id": 1,
@@ -61652,6 +62387,11 @@
             "id": 1,
             "language": "ru",
             "text": "коврик, циновка"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "tapis"
           }
         ]
       }
@@ -61661,7 +62401,7 @@
     "id": 2589,
     "word": "match",
     "language": "en",
-    "transcription": null,
+    "transcription": "mæʧ",
     "meanings": [
       {
         "id": 1,
@@ -61678,6 +62418,11 @@
             "id": 1,
             "language": "ru",
             "text": "соответствие, нечто соответствующее | спичка"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "match"
           }
         ]
       }
@@ -61687,7 +62432,7 @@
     "id": 2590,
     "word": "mate",
     "language": "en",
-    "transcription": null,
+    "transcription": "meɪt",
     "meanings": [
       {
         "id": 1,
@@ -61700,6 +62445,11 @@
             "id": 1,
             "language": "ru",
             "text": "товарищ, компаньон"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "maté"
           }
         ]
       }
@@ -61709,7 +62459,7 @@
     "id": 2591,
     "word": "maternal",
     "language": "en",
-    "transcription": null,
+    "transcription": "məˈtɜːnl",
     "meanings": [
       {
         "id": 1,
@@ -61722,6 +62472,11 @@
             "id": 1,
             "language": "ru",
             "text": "материнский"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "maternelle"
           }
         ]
       }
@@ -61731,7 +62486,7 @@
     "id": 2592,
     "word": "matter",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmætə",
     "meanings": [
       {
         "id": 1,
@@ -61748,6 +62503,11 @@
             "id": 1,
             "language": "ru",
             "text": "вещество, материя | дело, вопрос | иметь значение"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "matière"
           }
         ]
       }
@@ -61757,7 +62517,7 @@
     "id": 2593,
     "word": "mature",
     "language": "en",
-    "transcription": null,
+    "transcription": "məˈʧʊə",
     "meanings": [
       {
         "id": 1,
@@ -61774,6 +62534,11 @@
             "id": 1,
             "language": "ru",
             "text": "зрелый, зреть"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "matures"
           }
         ]
       }
@@ -61783,7 +62548,7 @@
     "id": 2594,
     "word": "may",
     "language": "en",
-    "transcription": null,
+    "transcription": "meɪ",
     "meanings": [
       {
         "id": 1,
@@ -61800,6 +62565,11 @@
             "id": 1,
             "language": "ru",
             "text": "пусть"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "mai"
           }
         ]
       }
@@ -61809,7 +62579,7 @@
     "id": 2595,
     "word": "mayor",
     "language": "en",
-    "transcription": null,
+    "transcription": "meə",
     "meanings": [
       {
         "id": 1,
@@ -61824,6 +62594,11 @@
             "id": 1,
             "language": "ru",
             "text": "мэр"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "maire"
           }
         ]
       }
@@ -61833,7 +62608,7 @@
     "id": 2596,
     "word": "maze",
     "language": "en",
-    "transcription": null,
+    "transcription": "meɪz",
     "meanings": [
       {
         "id": 1,
@@ -61846,6 +62621,11 @@
             "id": 1,
             "language": "ru",
             "text": "лабиринт"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "labyrinthe"
           }
         ]
       }
@@ -61855,7 +62635,7 @@
     "id": 2597,
     "word": "meadow",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmedəʊ",
     "meanings": [
       {
         "id": 1,
@@ -61868,6 +62648,11 @@
             "id": 1,
             "language": "ru",
             "text": "луг"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "prairie"
           }
         ]
       }
@@ -61877,7 +62662,7 @@
     "id": 2598,
     "word": "meager",
     "language": "en",
-    "transcription": null,
+    "transcription": "ˈmiːgə",
     "meanings": [
       {
         "id": 1,
@@ -61890,6 +62675,11 @@
             "id": 1,
             "language": "ru",
             "text": "скудный, недостаточный"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "maigre"
           }
         ]
       }
@@ -61916,6 +62706,11 @@
             "id": 1,
             "language": "ru",
             "text": "еда"
+          },
+          {
+            "id": 2,
+            "language": "fr",
+            "text": "repas"
           }
         ]
       }

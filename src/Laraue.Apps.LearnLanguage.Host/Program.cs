@@ -43,6 +43,9 @@ builder.Services
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();
 
+builder.Services
+    .AddTelegramLongPoolingService();
+
 builder.Services.AddOptions<RoleUsers>();
 builder.Services.Configure<RoleUsers>(builder.Configuration.GetSection("Telegram:Roles"));
 builder.Services.UseUserRolesProvider<StaticUserRoleProvider>();
@@ -96,8 +99,6 @@ builder.Services
 var app = builder.Build();
 
 app.Services.UseLinq2Db();
-
-app.MapTelegramRequests(builder.Configuration["Telegram:WebhookUrl"]);
 
 using (var scope = app.Services.CreateScope())
 {
