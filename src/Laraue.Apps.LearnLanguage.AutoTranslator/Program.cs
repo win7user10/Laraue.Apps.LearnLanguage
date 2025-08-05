@@ -11,6 +11,8 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
 
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+
 var loggerFactory = LoggerFactory.Create(builder => builder
     .AddConsole());
 
@@ -19,7 +21,7 @@ var logger = loggerFactory.CreateLogger<Program>();
 var wordsService = new WordsService(configuration);
 var autoTranslator = new YandexAutoTranslator(
     loggerFactory,
-    new BrowserFactory(new LaunchOptions(), loggerFactory));
+    new BrowserFactory(new LaunchOptions { Headless = false }, loggerFactory));
 
 var result = await wordsService.GetWordsAsync(new GetWordsRequest
 {
@@ -46,7 +48,7 @@ foreach (var word in result.Data)
     var allTranslationLanguages = DefaultContextData.WordLanguages
         .Items
         .Select(t => t.Name)
-        .Except(new [] { word.Language });
+        .Except([word.Language]);
 
     var missingTranslationLanguages = allTranslationLanguages.Except(existsTranslationLanguages).ToArray();
 

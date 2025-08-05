@@ -11,7 +11,7 @@ public class YandexAutoTranslator(ILoggerFactory loggerFactory, IBrowserFactory 
     private readonly ICompiledDocumentSchema<IElementHandle, HtmlSelector, TranslationResultItem> _translationSchema =
         new PuppeterSharpSchemaBuilder<TranslationResultItem>()
             .HasProperty(x => x.Translation, b => b
-                .UseSelector(".translation-word.translation-chunk"))
+                .UseSelector("#dstBox div:nth-child(1) div:nth-child(1)"))
             .Build();
     
     private readonly ICompiledDocumentSchema<IElementHandle, HtmlSelector, TranslationResult> _transcriptionSchema =
@@ -19,7 +19,7 @@ public class YandexAutoTranslator(ILoggerFactory loggerFactory, IBrowserFactory 
             .HasProperty(
                 x => x.Transcription,
                 builder => builder
-                    .UseSelector("#dictionary > div > ul > li:nth-child(1) > div > span:nth-child(2)")
+                    .UseSelector("#dstBox div:nth-child(1) div:nth-child(2)")
                     .GetValueFromElement(e => e
                         .GetInnerTextAsync()
                         .AwaitAndModify(innerText => innerText?
@@ -44,7 +44,7 @@ public class YandexAutoTranslator(ILoggerFactory loggerFactory, IBrowserFactory 
                 translationData.Word);
             
             await page.GoToAsync(url);
-            await Task.Delay(2000);
+            await Task.Delay(10000);
             var item = await parser.ParseAsync(page, _translationSchema);
             
             items.Add(toLanguage, item!);

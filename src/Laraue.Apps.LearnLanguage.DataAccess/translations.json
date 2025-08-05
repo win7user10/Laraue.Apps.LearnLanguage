@@ -122791,6 +122791,11 @@
             "id": 2,
             "language": "fr",
             "text": "rendement"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "歩留まり"
           }
         ]
       }
@@ -122800,7 +122805,7 @@
     "id": 4676,
     "word": "youngster",
     "language": "en",
-    "transcription": null,
+    "transcription": "tin",
     "meanings": [
       {
         "id": 1,
@@ -122820,6 +122825,11 @@
             "id": 2,
             "language": "fr",
             "text": "enfant"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ティーン"
           }
         ]
       }
@@ -122851,6 +122861,11 @@
             "id": 2,
             "language": "fr",
             "text": "jeunesse"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ユース"
           }
         ]
       }
@@ -122878,6 +122893,11 @@
             "id": 2,
             "language": "fr",
             "text": "zèle"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ジール"
           }
         ]
       }
@@ -122907,6 +122927,11 @@
             "id": 2,
             "language": "fr",
             "text": "fermeture"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ジッパー"
           }
         ]
       }
@@ -122938,6 +122963,11 @@
             "id": 2,
             "language": "fr",
             "text": "zoo"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "動物園"
           }
         ]
       }
@@ -122969,6 +122999,11 @@
             "id": 2,
             "language": "fr",
             "text": "cassis"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "カラント"
           }
         ]
       }
@@ -123000,6 +123035,11 @@
             "id": 2,
             "language": "ru",
             "text": "ежевика"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ブラックベリー"
           }
         ]
       }
@@ -123031,6 +123071,11 @@
             "id": 2,
             "language": "ru",
             "text": "брусника, голубика"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ブルーベリー"
           }
         ]
       }
@@ -123062,6 +123107,11 @@
             "id": 2,
             "language": "fr",
             "text": "cerise"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "チェリー"
           }
         ]
       }
@@ -123093,6 +123143,11 @@
             "id": 2,
             "language": "fr",
             "text": "raisin"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ぶどう"
           }
         ]
       }
@@ -123124,6 +123179,11 @@
             "id": 2,
             "language": "ru",
             "text": "арбуз"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "スイカ"
           }
         ]
       }
@@ -123155,6 +123215,11 @@
             "id": 2,
             "language": "ru",
             "text": "клюква"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "クランベリー"
           }
         ]
       }
@@ -123186,6 +123251,11 @@
             "id": 2,
             "language": "fr",
             "text": "groseilliers"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "グーズベリー"
           }
         ]
       }
