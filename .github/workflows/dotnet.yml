@@ -34,6 +34,6 @@ jobs:
        port: ${{ secrets.SSH_PORT }} # 22
        user: ${{ secrets.SSH_USER }} # "user"
        password: ${{ secrets.SSH_PASSWORD }} # "password"
-       local: Laraue.Apps.LearnLanguage.Host/bin/Release/net9.0/*
+       local: src/Laraue.Apps.LearnLanguage.Host/bin/Release/net9.0/*
        remote: "/home/laraue/backend-learn-language"
        post_upload: echo "Uploaded successfully"
