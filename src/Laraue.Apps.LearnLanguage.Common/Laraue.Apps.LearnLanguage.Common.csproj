@@ -8,10 +8,10 @@
   
   <ItemGroup>
     <PackageReference Include="Laraue.Core.DateTime" Version="9.0.0" />
-    <PackageReference Include="Laraue.Telegram.NET.Core" Version="2.5.0" />
-    <PackageReference Include="Laraue.Telegram.NET.DataAccess" Version="2.5.0" />
-    <PackageReference Include="Laraue.Telegram.NET.Localization" Version="2.5.0" />
-    <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="2.5.0" />
+    <PackageReference Include="Laraue.Telegram.NET.Core" Version="2.5.3" />
+    <PackageReference Include="Laraue.Telegram.NET.DataAccess" Version="2.5.3" />
+    <PackageReference Include="Laraue.Telegram.NET.Localization" Version="2.5.3" />
+    <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="2.5.3" />
   </ItemGroup>
   
   <ItemGroup>

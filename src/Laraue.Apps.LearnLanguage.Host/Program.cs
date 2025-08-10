@@ -22,15 +22,22 @@ using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Telegram.NET.Authentication.Services;
+using Laraue.Telegram.NET.Core;
 using Laraue.Telegram.NET.Core.Middleware;
 using Laraue.Telegram.NET.Localization;
 using Laraue.Telegram.NET.Localization.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddOptions<TelegramOptions>();
+builder.Services.Configure<TelegramOptions>(builder.Configuration.GetSection("Telegram"));
+
+builder.Services.AddOptions<TelegramNetOptions>();
+builder.Services.Configure<TelegramNetOptions>(builder.Configuration.GetSection("Telegram"));
+
 builder.Services
     .AddSingleton<IDateTimeProvider, DateTimeProvider>()
-    .AddTelegramCore(new TelegramBotClientOptions(builder.Configuration["Telegram:Token"]))
+    .AddTelegramCore()
     .AddTelegramMiddleware<HandleExceptionsMiddleware>()
     .AddTelegramMiddleware<AutoCallbackResponseMiddleware>()
     .AddTelegramRequestLocalization<LocalizationProvider>()
@@ -42,9 +49,6 @@ builder.Services
     .AddTelegramAuthentication<User, Guid, RequestContext>()
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();
-
-builder.Services
-    .AddTelegramLongPoolingService();
 
 builder.Services.AddOptions<RoleUsers>();
 builder.Services.Configure<RoleUsers>(builder.Configuration.GetSection("Telegram:Roles"));
