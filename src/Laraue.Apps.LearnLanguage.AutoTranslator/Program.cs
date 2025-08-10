@@ -4,24 +4,29 @@ using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.EditorHost.Services;
 using Laraue.Crawling.Dynamic.PuppeterSharp.Utils;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
+    .AddJsonFile("appsettings.Development.json", optional: true)
     .Build();
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-var loggerFactory = LoggerFactory.Create(builder => builder
-    .AddConsole());
+var services = new ServiceCollection()
+    .AddLogging(x => x.AddConsole())
+    .AddSingleton<IWordsService, WordsService>()
+    .AddSingleton<IAutoTranslator, YandexAutoTranslator>()
+    .AddSingleton<IBrowserFactory, BrowserFactory>()
+    .AddSingleton(new LaunchOptions { Headless = false })
+    .AddSingleton<IConfiguration>(configuration)
+    .BuildServiceProvider();
 
-var logger = loggerFactory.CreateLogger<Program>();
-
-var wordsService = new WordsService(configuration);
-var autoTranslator = new YandexAutoTranslator(
-    loggerFactory,
-    new BrowserFactory(new LaunchOptions { Headless = false }, loggerFactory));
+var wordsService = services.GetRequiredService<IWordsService>();
+var logger = services.GetRequiredService<ILogger<Program>>();
+var autoTranslator = services.GetRequiredService<IAutoTranslator>();
 
 var result = await wordsService.GetWordsAsync(new GetWordsRequest
 {

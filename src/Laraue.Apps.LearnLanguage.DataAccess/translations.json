@@ -122646,6 +122646,11 @@
             "id": 2,
             "language": "fr",
             "text": "cour"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "yard（ヤード）"
           }
         ]
       }
@@ -122677,6 +122682,11 @@
             "id": 2,
             "language": "fr",
             "text": "bâillement"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "あくび"
           }
         ]
       }
@@ -122704,6 +122714,11 @@
             "id": 2,
             "language": "fr",
             "text": "aspirer"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "憧れ"
           }
         ]
       }
@@ -122713,7 +122728,7 @@
     "id": 4673,
     "word": "yell",
     "language": "en",
-    "transcription": null,
+    "transcription": "donaru",
     "meanings": [
       {
         "id": 1,
@@ -122735,6 +122750,11 @@
             "id": 2,
             "language": "fr",
             "text": "crier"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "怒鳴る"
           }
         ]
       }
@@ -122744,7 +122764,7 @@
     "id": 4674,
     "word": "yet",
     "language": "en",
-    "transcription": null,
+    "transcription": "ma da",
     "meanings": [
       {
         "id": 1,
@@ -122762,6 +122782,11 @@
             "id": 2,
             "language": "fr",
             "text": "encore"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "まだ"
           }
         ]
       }

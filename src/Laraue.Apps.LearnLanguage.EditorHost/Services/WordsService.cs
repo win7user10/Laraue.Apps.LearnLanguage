@@ -31,10 +31,12 @@ public class WordsService : IWordsService
         set => _maxWordId = value;
     }
 
-    public WordsService(IConfiguration configuration)
+    public WordsService(IConfiguration configuration, ILogger<WordsService> logger)
     {
         _wordsJsonPath = configuration["TranslationsFile"]
-            ?? throw new InvalidOperationException("'TranslationsFile' section is not set");
+                         ?? throw new InvalidOperationException("'TranslationsFile' section is not set");
+        
+        logger.LogInformation("Write translations to '{TranslationsFile}'", _wordsJsonPath);
     }
 
     public Task<IShortPaginatedResult<ImportingWord>> GetWordsAsync(GetWordsRequest request)
