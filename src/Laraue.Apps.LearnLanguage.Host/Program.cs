@@ -108,6 +108,8 @@ using (var scope = app.Services.CreateScope())
 {
     await using var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
     await db.Database.MigrateAsync();
+    
+    app.MapTelegramRequests();
 
     var jobClient = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
     
