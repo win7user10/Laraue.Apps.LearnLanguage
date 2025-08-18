@@ -20,7 +20,7 @@ var services = new ServiceCollection()
     .AddSingleton<IWordsService, WordsService>()
     .AddSingleton<IAutoTranslator, YandexAutoTranslator>()
     .AddSingleton<IBrowserFactory, BrowserFactory>()
-    .AddSingleton(new LaunchOptions { Headless = false })
+    .AddSingleton(new LaunchOptions { Headless = false, Args = ["--no-sandbox"]})
     .AddSingleton<IConfiguration>(configuration)
     .BuildServiceProvider();
 

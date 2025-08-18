@@ -122244,6 +122244,11 @@
             "id": 2,
             "language": "fr",
             "text": "envelopper"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ラップ"
           }
         ]
       }
@@ -122271,6 +122276,11 @@
             "id": 2,
             "language": "fr",
             "text": "colère"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "怒り"
           }
         ]
       }
@@ -122298,6 +122308,11 @@
             "id": 2,
             "language": "fr",
             "text": "couronne"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "リース"
           }
         ]
       }
@@ -122329,6 +122344,11 @@
             "id": 2,
             "language": "fr",
             "text": "épave"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "難破船"
           }
         ]
       }
@@ -122356,6 +122376,11 @@
             "id": 2,
             "language": "fr",
             "text": "clé"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "レンチ"
           }
         ]
       }
@@ -122383,6 +122408,11 @@
             "id": 2,
             "language": "fr",
             "text": "lutte"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "レッスル"
           }
         ]
       }
@@ -122412,6 +122442,11 @@
             "id": 2,
             "language": "fr",
             "text": "misérable"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "惨めな"
           }
         ]
       }
@@ -122443,6 +122478,11 @@
             "id": 2,
             "language": "fr",
             "text": "rides"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "しわ"
           }
         ]
       }
@@ -122474,6 +122514,11 @@
             "id": 2,
             "language": "fr",
             "text": "poignet"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "手首"
           }
         ]
       }
@@ -122501,6 +122546,11 @@
             "id": 2,
             "language": "fr",
             "text": "écrivez"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "書き出す"
           }
         ]
       }
@@ -122530,6 +122580,11 @@
             "id": 2,
             "language": "fr",
             "text": "Faux"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "違うんだ。"
           }
         ]
       }
@@ -122557,6 +122612,11 @@
             "id": 2,
             "language": "fr",
             "text": "méfait"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "不正行為"
           }
         ]
       }
@@ -122588,6 +122648,11 @@
             "id": 2,
             "language": "fr",
             "text": "voilier"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ヨット"
           }
         ]
       }
@@ -122615,6 +122680,11 @@
             "id": 2,
             "language": "fr",
             "text": "coup sec"
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ヤンク"
           }
         ]
       }
