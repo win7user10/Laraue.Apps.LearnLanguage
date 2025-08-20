@@ -51,7 +51,7 @@ builder.Services
     .AddDefaultTokenProviders();
 
 builder.Services.AddOptions<RoleUsers>();
-builder.Services.Configure<RoleUsers>(builder.Configuration.GetSection("Telegram:Roles"));
+builder.Services.Configure<RoleUsers>(builder.Configuration.GetSection("Telegram:UserNamesByRoles"));
 builder.Services.UseUserRolesProvider<StaticUserRoleProvider>();
 
 builder.Services
