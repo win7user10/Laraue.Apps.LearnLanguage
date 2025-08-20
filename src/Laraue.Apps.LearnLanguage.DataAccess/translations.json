@@ -128304,6 +128304,12 @@
             "language": "fr",
             "text": "sage",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ワイズ",
+            "transcription": ""
           }
         ]
       }
@@ -128337,6 +128343,12 @@
             "language": "fr",
             "text": "avec",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ウィット",
+            "transcription": ""
           }
         ]
       }
@@ -128368,6 +128380,12 @@
             "language": "fr",
             "text": "sorcière",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "魔女",
+            "transcription": ""
           }
         ]
       }
@@ -128430,6 +128448,12 @@
             "language": "fr",
             "text": "dépérir",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ウィザー",
+            "transcription": ""
           }
         ]
       }
@@ -128459,6 +128483,12 @@
             "language": "fr",
             "text": "retenir",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "差し控え",
+            "transcription": ""
           }
         ]
       }
@@ -128492,6 +128522,12 @@
             "language": "fr",
             "text": "à",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "内",
+            "transcription": ""
           }
         ]
       }
@@ -128614,6 +128650,12 @@
             "language": "fr",
             "text": "vaciller",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ウォブル",
+            "transcription": ""
           }
         ]
       }
@@ -128643,6 +128685,12 @@
             "language": "fr",
             "text": "malheur",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "災い",
+            "transcription": ""
           }
         ]
       }
@@ -128676,6 +128724,12 @@
             "language": "fr",
             "text": "merveille",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ワンダー",
+            "transcription": ""
           }
         ]
       }
@@ -128705,6 +128759,12 @@
             "language": "fr",
             "text": "courtiser",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ウー",
+            "transcription": "u"
           }
         ]
       }
@@ -128736,6 +128796,12 @@
             "language": "fr",
             "text": "bois",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "木",
+            "transcription": "ki"
           }
         ]
       }
@@ -128767,6 +128833,12 @@
             "language": "fr",
             "text": "laine",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ウール",
+            "transcription": "uru"
           }
         ]
       }
@@ -128798,6 +128870,12 @@
             "language": "fr",
             "text": "s'entraîner",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ワークアウト",
+            "transcription": "waku auto"
           }
         ]
       }
@@ -128831,6 +128909,12 @@
             "language": "fr",
             "text": "atelier",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ワークショップ",
+            "transcription": "wakushoppu"
           }
         ]
       }
@@ -128864,6 +128948,12 @@
             "language": "fr",
             "text": "dans",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "世界的に",
+            "transcription": "sekaiteki ni"
           }
         ]
       }
@@ -128897,6 +128987,12 @@
             "language": "fr",
             "text": "ver",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ワーム",
+            "transcription": "wamu"
           }
         ]
       }
@@ -128930,6 +129026,12 @@
             "language": "fr",
             "text": "inquiétude",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "心配",
+            "transcription": "shinpai"
           }
         ]
       }
@@ -128992,6 +129094,12 @@
             "language": "fr",
             "text": "culte",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "礼拝",
+            "transcription": "raihai"
           }
         ]
       }
@@ -129021,6 +129129,12 @@
             "language": "fr",
             "text": "valeur",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "価値がある",
+            "transcription": "kachi ga a ru"
           }
         ]
       }
@@ -129052,6 +129166,12 @@
             "language": "fr",
             "text": "vaut",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "価値がある",
+            "transcription": "kachi ga a ru"
           }
         ]
       }

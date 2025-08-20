@@ -38,12 +38,11 @@ public class YandexAutoTranslator(ILoggerFactory loggerFactory, IBrowserFactory 
                 translationData.Word);
             
             await page.GoToAsync(url);
-            await Task.Delay(2000);
             var item = await parser.ParseAsync(page, _translationSchema);
             
             items.Add(toLanguage, item!);
             
-            await Task.Delay(2000);
+            await Task.Delay(50000);
         }
 
         return new TranslationResult
