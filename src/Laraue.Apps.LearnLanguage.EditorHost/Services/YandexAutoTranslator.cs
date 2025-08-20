@@ -12,19 +12,13 @@ public class YandexAutoTranslator(ILoggerFactory loggerFactory, IBrowserFactory 
         new PuppeterSharpSchemaBuilder<TranslationResultItem>()
             .HasProperty(x => x.Translation, b => b
                 .UseSelector("#dstBox div:nth-child(1) div:nth-child(1)"))
-            .Build();
-    
-    private readonly ICompiledDocumentSchema<IElementHandle, HtmlSelector, TranslationResult> _transcriptionSchema =
-        new PuppeterSharpSchemaBuilder<TranslationResult>()
-            .HasProperty(
-                x => x.Transcription,
-                builder => builder
-                    .UseSelector("#dstBox div:nth-child(1) div:nth-child(2)")
-                    .GetValueFromElement(e => e
-                        .GetInnerTextAsync()
-                        .AwaitAndModify(innerText => innerText?
-                            .Replace("[", string.Empty)
-                            .Replace("]", string.Empty))))
+            .HasProperty(x => x.Transcription, builder => builder
+                .UseSelector("#dstBox div:nth-child(1) div:nth-child(2)")
+                .GetValueFromElement(e => e
+                    .GetInnerTextAsync()
+                    .AwaitAndModify(innerText => innerText?
+                        .Replace("[", string.Empty)
+                        .Replace("]", string.Empty))))
             .Build();
     
     public async Task<TranslationResult> TranslateAsync(TranslationData translationData)
@@ -49,12 +43,12 @@ public class YandexAutoTranslator(ILoggerFactory loggerFactory, IBrowserFactory 
             
             items.Add(toLanguage, item!);
             
-            await Task.Delay(50000);
+            await Task.Delay(2000);
         }
-        
-        var result = await parser.ParseAsync(page, _transcriptionSchema);
-        result.Items = items;
 
-        return result;
+        return new TranslationResult
+        {
+            Items = items
+        };
     }
 }

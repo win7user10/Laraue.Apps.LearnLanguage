@@ -28,6 +28,11 @@ public sealed class Translation : BaseEntity, IEntityWithMeaningReference
     /// The language of the translation.
     /// </summary>
     public WordLanguage Language { get; set; } = null!;
+    
+    /// <summary>
+    /// Transcription of the translation.
+    /// </summary>
+    public string? Transcription { get; set; }
 
     #region Computed Fields
 

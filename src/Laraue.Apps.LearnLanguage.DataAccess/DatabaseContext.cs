@@ -127,6 +127,7 @@ public class DatabaseContext : DbContext
                             LanguageId = DefaultContextData.WordLanguages.GetId(translation.Language),
                             MeaningId = meaning.Id,
                             WordId = word.Id,
+                            Transcription = translation.Transcription,
                         });
                 }
             }

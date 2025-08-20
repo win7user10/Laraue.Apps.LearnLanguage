@@ -17,11 +17,11 @@ public record TranslationData
 public record TranslationResult : ICrawlingModel
 {
     public string? PartOfSpeech { get; set; }
-    public string? Transcription { get; set; }
     public required Dictionary<string, TranslationResultItem> Items { get; set; } = new ();
 }
 
 public record TranslationResultItem : ICrawlingModel
 {
     public required string? Translation { get; set; }
+    public required string? Transcription { get; set; }
 }

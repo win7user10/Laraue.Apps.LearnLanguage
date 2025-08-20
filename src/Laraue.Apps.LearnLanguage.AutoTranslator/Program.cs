@@ -71,36 +71,22 @@ foreach (var word in result.Data)
             Word = word.Word
         });
 
-        if (translationResult.Transcription is not null && word.Transcription is null)
-        {
-            logger.LogInformation(
-                "Update '{Word}' transcription to '{Transcription}'",
-                word.Word,
-                translationResult.Transcription);
-            
-            await wordsService.UpsertWordAsync(new UpdateWordDto
-            {
-                Language = word.Language,
-                Word = word.Word,
-                Id = word.Id,
-                Transcription = translationResult.Transcription
-            });
-        }
-
         foreach (var translationResultItem in translationResult.Items)
         {
             logger.LogInformation(
-                "Update '{Word}' translation to '{Language}' to '{Value}'", 
+                "Update '{Word}' translation to '{Language}' to '{Value}' '({Transcription})'", 
                 word.Word,
                 translationResultItem.Key,
-                translationResultItem.Value.Translation);
+                translationResultItem.Value.Translation,
+                translationResultItem.Value.Transcription);
             
             await wordsService.UpsertTranslationAsync(
                 word.Id,
                 defaultMeaning.Id, 
                 new UpdateTranslationDto(
                     translationResultItem.Key,
-                    translationResultItem.Value.Translation!));
+                    translationResultItem.Value.Translation!,
+                    translationResultItem.Value.Transcription));
         }
     }
 }

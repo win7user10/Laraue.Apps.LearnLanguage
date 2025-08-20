@@ -3,7 +3,7 @@
 namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
 
 /// <summary>
-/// It is any word could be met in the book.
+/// It is a word that could meet in a book.
 /// <example>Cat (en), human (en), снег (ru)</example>
 /// </summary>
 public sealed class Word : BaseEntity

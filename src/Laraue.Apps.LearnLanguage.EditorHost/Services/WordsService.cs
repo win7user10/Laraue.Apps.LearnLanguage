@@ -231,6 +231,7 @@ public class WordsService : IWordsService
     {
         translation.Language = updateTranslationDto.Language;
         translation.Text = updateTranslationDto.Text;
+        translation.Transcription = updateTranslationDto.Transcription;
     }
 
     private ImportingWord GetWord(long wordId)
