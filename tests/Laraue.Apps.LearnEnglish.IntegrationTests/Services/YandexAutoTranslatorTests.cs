@@ -37,8 +37,8 @@ public class YandexAutoTranslatorTests : IDisposable
         });
         
         Assert.Equal("Собака", translationResult.Items["ru"].Translation);
+        Assert.Equal("sobaka", translationResult.Items["ru"].Transcription);
         Assert.Equal("Chien", translationResult.Items["fr"].Translation);
-        Assert.Equal("dɒg", translationResult.Transcription);
     }
 
     public void Dispose()
