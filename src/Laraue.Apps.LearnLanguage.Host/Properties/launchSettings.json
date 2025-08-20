@@ -1,11 +1,19 @@
 ﻿{
   "profiles": {
-    "Laraue.LearnLanguage.Host": {
+    "Laraue.LearnLanguage.Host (dev)": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5004",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Laraue.LearnLanguage.Host (prod)": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5004",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
     }
   }
