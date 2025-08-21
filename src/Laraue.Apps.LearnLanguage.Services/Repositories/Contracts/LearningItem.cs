@@ -7,6 +7,7 @@ public record LearningItem
 {
     public string Word { get; init; }
     public string Translation { get; init; }
+    public string? Transcription { get; init; }
     public string? Meaning { get; init; }
     public bool IsMarked { get; init; }
     public WordTranslationDifficulty? Difficulty { get; init; }

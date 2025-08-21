@@ -5,7 +5,6 @@ using Laraue.Telegram.NET.Authentication.Extensions;
 using Laraue.Telegram.NET.Core.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Telegram.Bot;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Laraue.Apps.LearnLanguage.Common;

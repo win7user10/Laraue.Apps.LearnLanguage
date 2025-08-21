@@ -284,6 +284,7 @@ public class LearnRandomWordsRepository(DatabaseContext context, IDateTimeProvid
             {
                 Word = x.relation.Translation.Meaning.Word.Text,
                 Translation = x.relation.Translation.Text,
+                Transcription = x.relation.Translation.Transcription,
                 Meaning = x.relation.Translation.Meaning.Text,
                 IsMarked = x.state.IsMarked,
                 Difficulty = x.relation.Translation.Difficulty,

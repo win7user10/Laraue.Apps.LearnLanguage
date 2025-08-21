@@ -128238,6 +128238,12 @@
             "language": "fr",
             "text": "effacer",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "打ち負かす",
+            "transcription": "Uchiai makasu"
           }
         ]
       }
@@ -128271,6 +128277,12 @@
             "language": "fr",
             "text": "fil",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "ワイヤー",
+            "transcription": "wai-yā"
           }
         ]
       }
@@ -128419,6 +128431,12 @@
             "language": "fr",
             "text": "retrait",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "引き出す",
+            "transcription": "hikidasu"
           }
         ]
       }
@@ -128559,6 +128577,12 @@
             "language": "fr",
             "text": "résister",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "耐える",
+            "transcription": "taieru"
           }
         ]
       }
@@ -128592,6 +128616,12 @@
             "language": "fr",
             "text": "témoin",
             "transcription": null
+          },
+          {
+            "id": 3,
+            "language": "ja",
+            "text": "証人",
+            "transcription": "shōnin"
           }
         ]
       }

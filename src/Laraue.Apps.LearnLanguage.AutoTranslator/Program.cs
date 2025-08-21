@@ -2,11 +2,9 @@
 
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.EditorHost.Services;
-using Laraue.Crawling.Dynamic.PuppeterSharp.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using PuppeteerSharp;
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -15,14 +13,17 @@ var configuration = new ConfigurationBuilder()
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-var services = new ServiceCollection()
+var serviceCollection = new ServiceCollection()
     .AddLogging(x => x.AddConsole())
     .AddSingleton<IWordsService, WordsService>()
-    .AddSingleton<IAutoTranslator, YandexAutoTranslator>()
-    .AddSingleton<IBrowserFactory, BrowserFactory>()
-    .AddSingleton(new LaunchOptions { Headless = false, Args = ["--no-sandbox"]})
-    .AddSingleton<IConfiguration>(configuration)
-    .BuildServiceProvider();
+    .AddSingleton<IConfiguration>(configuration);
+
+serviceCollection.AddHttpClient<IAutoTranslator, OllamaAutoTranslator>(x =>
+{
+    x.BaseAddress = new Uri("http://localhost:11434/");
+});
+
+var services = serviceCollection.BuildServiceProvider();
 
 var wordsService = services.GetRequiredService<IWordsService>();
 var logger = services.GetRequiredService<ILogger<Program>>();

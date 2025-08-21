@@ -37,6 +37,7 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
                     IsMarked = state.IsMarked,
                     TranslationId = ToIdentifier(translation),
                     Translation = translation.Text,
+                    Transcription = translation.Transcription,
                     Difficulty = translation.Difficulty,
                     LearnedAt = state.LearnedAt,
                     RepeatedAt = state.RepeatedAt,

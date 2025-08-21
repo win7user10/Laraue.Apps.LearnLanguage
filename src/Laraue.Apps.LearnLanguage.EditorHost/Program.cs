@@ -13,9 +13,10 @@ builder.Services.AddSingleton<IWordsService, WordsService>();
 builder.Services.AddSingleton<IDictionariesService, DictionariesService>();
 builder.Services.AddScoped<ExceptionHandleMiddleware>();
 
-builder.Services.AddSingleton<IBrowserFactory, BrowserFactory>();
-builder.Services.AddSingleton<IAutoTranslator, YandexAutoTranslator>();
-builder.Services.AddSingleton(new LaunchOptions { Headless = true });
+builder.Services.AddHttpClient<IAutoTranslator, OllamaAutoTranslator>(x =>
+{
+    x.BaseAddress = new Uri("http://localhost:11434/");
+});
 
 var app = builder.Build();
 

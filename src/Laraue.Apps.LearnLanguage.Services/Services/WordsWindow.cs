@@ -240,30 +240,27 @@ public class WordsWindow(
         bool areTranslationsReverted,
         bool areTranslationHidden)
     {
-        (string, string?) textParts = new ()
-        {
-            Item1 = areTranslationsReverted ? item.Translation : item.Word,
-            Item2 = areTranslationHidden
-                ? null
-                : areTranslationsReverted
-                    ? item.Word
-                    : item.Translation
-        };
-
-        if (areTranslationHidden)
-        {
-            textParts.Item2 = null;
-        }
+        var source = areTranslationsReverted ? item.Translation : item.Word;
+        var translation = areTranslationHidden
+            ? null
+            : areTranslationsReverted
+                ? item.Word
+                : GetTranslationText(item.Translation, item.Transcription);
             
         var msgBuilder = new StringBuilder()
-            .Append(textParts.Item1);
+            .Append(source);
 
-        if (textParts.Item2 is not null)
+        if (translation is not null)
         {
-            msgBuilder.Append('-')
-                .Append(textParts.Item2);
+            msgBuilder.Append(" - ")
+                .Append(translation);
         }
 
         return msgBuilder;
+    }
+
+    private static string GetTranslationText(string translation, string? transcription)
+    {
+        return string.IsNullOrWhiteSpace(transcription) ? translation : $"{translation} [{transcription}]";
     }
 }
