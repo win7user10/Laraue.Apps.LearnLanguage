@@ -26,7 +26,7 @@ Respond with JSON
             "api/generate", 
             new
             {
-                Model = "gemma3:4b",
+                Model = "gemma3:12b",
                 Prompt = prompt,
                 Stream = false,
                 Format = new

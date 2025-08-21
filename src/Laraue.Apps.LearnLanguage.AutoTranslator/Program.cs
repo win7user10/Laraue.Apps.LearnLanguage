@@ -49,6 +49,7 @@ foreach (var word in result.Data)
     var defaultMeaning = word.Meanings.Single();
     var existsTranslationLanguages = defaultMeaning.Translations
         .Where(t => !string.IsNullOrEmpty(t.Text))
+        .Where(t => !string.IsNullOrEmpty(t.Transcription))
         .Select(t => t.Language);
     
     var allTranslationLanguages = DefaultContextData.WordLanguages
