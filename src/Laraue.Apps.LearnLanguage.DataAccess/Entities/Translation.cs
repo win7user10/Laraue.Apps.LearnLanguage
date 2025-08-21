@@ -16,7 +16,7 @@ public sealed class Translation : BaseEntity, IEntityWithMeaningReference
     /// <summary>
     /// Translation text.
     /// </summary>
-    [MaxLength(100)]
+    [MaxLength(150)]
     public string Text { get; set; } = string.Empty;
     
     /// <summary>
