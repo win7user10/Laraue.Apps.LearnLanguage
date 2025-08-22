@@ -43,6 +43,9 @@ public sealed class Word : BaseEntity
     /// </summary>
     public CefrLevel? CefrLevel { get; init; }
     
+    public long PartOfSpeechId { get; set; }
+    public PartOfSpeech? PartOfSpeech { get; set; }
+    
     public ICollection<TranslationState> TranslationStates { get; set; } = null!;
     public ICollection<WordTopic> Topics { get; set; } = null!;
     public ICollection<Meaning> Meanings { get; set; } = null!;

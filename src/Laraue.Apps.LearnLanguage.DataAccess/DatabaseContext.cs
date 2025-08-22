@@ -57,8 +57,7 @@ public class DatabaseContext : DbContext
             .HasForeignKeyToWord(x => x.RepeatSessionTranslations);
         
         modelBuilder.Entity<Word>()
-            .HasIndex(x => new { Name = x.Text, x.LanguageId })
-            .IsUnique();
+            .HasIndex(x => x.Text);
 
         modelBuilder.Entity<Translation>()
             .HasKey(x => new { x.WordId, x.Id, x.LanguageId });
@@ -76,6 +75,7 @@ public class DatabaseContext : DbContext
         modelBuilder.Entity<WordLanguage>().HasData(DefaultContextData.WordLanguages.Items);
         modelBuilder.Entity<CefrLevel>().HasData(DefaultContextData.CefrLevels.Items);
         modelBuilder.Entity<Topic>().HasData(DefaultContextData.WordTopics.Items);
+        modelBuilder.Entity<PartOfSpeech>().HasData(DefaultContextData.PartOfSpeeches.Items);
         
         foreach (var word in DefaultContextData.Words)
         {
@@ -84,9 +84,10 @@ public class DatabaseContext : DbContext
                 {
                     Id = word.Id,
                     Text = word.Word,
-                    LanguageId = DefaultContextData.WordLanguages.GetId("en"),
-                    CefrLevelId = DefaultContextData.CefrLevels.GetId(word.CefrLevel),
+                    CefrLevelId = word.CefrLevel is not null ? DefaultContextData.CefrLevels.GetId(word.CefrLevel) : null,
                     Transcription = word.Transcription,
+                    PartOfSpeechId = DefaultContextData.PartOfSpeeches.GetId(word.PartOfSpeech),
+                    LanguageId =  DefaultContextData.WordLanguages.GetId("en"),
                 });
             
             foreach (var topic in word.Topics)

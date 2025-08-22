@@ -1,0 +1,70 @@
+[
+  {
+    "id": 1,
+    "name": "indefinite article"
+  },
+  {
+    "id": 2,
+    "name": "verb"
+  },
+  {
+    "id": 3,
+    "name": "noun"
+  },
+  {
+    "id": 4,
+    "name": "adjective"
+  },
+  {
+    "id": 5,
+    "name": "adverb"
+  },
+  {
+    "id": 6,
+    "name": "preposition"
+  },
+  {
+    "id": 7,
+    "name": "conjunction"
+  },
+  {
+    "id": 8,
+    "name": "exclamation"
+  },
+  {
+    "id": 9,
+    "name": "determiner"
+  },
+  {
+    "id": 10,
+    "name": "pronoun"
+  },
+  {
+    "id": 11,
+    "name": "auxiliary verb"
+  },
+  {
+    "id": 12,
+    "name": "number"
+  },
+  {
+    "id": 13,
+    "name": "modal verb"
+  },
+  {
+    "id": 14,
+    "name": "ordinal number"
+  },
+  {
+    "id": 15,
+    "name": "linking verb"
+  },
+  {
+    "id": 16,
+    "name": "definite article"
+  },
+  {
+    "id": 17,
+    "name": "infinitive marker"
+  }
+]

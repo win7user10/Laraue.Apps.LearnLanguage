@@ -149,6 +149,7 @@ public class WordsService : IWordsService
         word.PartOfSpeech = updateWordDto.PartOfSpeech;
         word.Topics = updateWordDto.Topics;
         word.Frequency = updateWordDto.Frequency;
+        word.Meaning = updateWordDto.Meaning;
     }
     
     private static void Populate(ImportingTranslation translation, UpdateTranslationDto updateTranslationDto)
