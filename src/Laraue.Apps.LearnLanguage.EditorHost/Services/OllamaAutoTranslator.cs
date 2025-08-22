@@ -12,15 +12,15 @@ Respond with JSON
 
 ```
 {{
-    ""transcription"": ""$Transcription of requested word"",
+    ""transcription"": ""$Transliterated requested word. For example 'she' should become 'shi:'"",
     ""meaning"": ""$Meaning of the requested word"",
     ""frequency"": ""$How frequent the requested word appears in a text. The number from 1 to 10"",
     ""topics"": [""$Topic name of the requested word""]
     ""translations"": [
         {{
-            ""language"": ""$language_code"",
-            ""text"": ""$translation"",
-            ""transcription"": ""$english transcription of translation""
+            ""language"": ""$Language code"",
+            ""text"": ""$The translation"",
+            ""transcription"": ""$English transliteration of the translation""
         }}
     ]
 }}
