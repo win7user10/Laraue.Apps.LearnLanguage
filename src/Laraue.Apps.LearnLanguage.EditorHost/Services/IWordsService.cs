@@ -7,9 +7,7 @@ public interface IWordsService
 {
     Task<IShortPaginatedResult<ImportingWord>> GetWordsAsync(GetWordsRequest request);
     Task<long> UpsertWordAsync(UpdateWordDto wordDto);
-    Task<long> UpsertMeaningAsync(long wordId, UpdateMeaningDto updateMeaningDto);
-    Task<long> UpsertTranslationAsync(long wordId, long meaningId, UpdateTranslationDto updateTranslationDto);
-    Task DeleteTranslationAsync(long wordId, long meaningId, string translationCode);
-    Task DeleteMeaningAsync(long wordId, long meaningId);
+    Task<long> UpsertTranslationAsync(long wordId, UpdateTranslationDto updateTranslationDto);
+    Task DeleteTranslationAsync(long wordId, string translationCode);
     Task DeleteWordAsync(long wordId);
 }

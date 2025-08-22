@@ -27,7 +27,7 @@ public class StatsRepository : IStatsRepository
             .CountAsyncLinqToDB(ct);
 
         var statByCefrLevel = await _context.Translations
-            .GroupBy(x => x.Meaning.CefrLevelId)
+            .GroupBy(x => x.Word.CefrLevelId)
             .OrderBy(x => x.Key)
             .Select(x => new CefrLevelStat(
                 _context.CefrLevels
@@ -35,7 +35,7 @@ public class StatsRepository : IStatsRepository
                     .Select(y => y.Name)
                     .FirstOrDefault() ?? "Undefined",
                 _context.TranslationStates
-                    .Count(y => y.UserId == userId && y.Translation.Meaning.CefrLevelId == x.Key),
+                    .Count(y => y.UserId == userId && y.Word.CefrLevelId == x.Key),
                 x.Count()))
             .ToListAsyncEF(ct);
 

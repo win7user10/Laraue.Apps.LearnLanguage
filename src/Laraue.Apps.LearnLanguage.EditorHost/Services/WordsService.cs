@@ -46,13 +46,6 @@ public class WordsService : IWordsService
         {
             wordsQuery = wordsQuery.Where(w => w.Word.StartsWith(request.Search));
         }
-
-        if (request.Topics.Length != 0)
-        {
-            wordsQuery = wordsQuery
-                .Where(w => w.Meanings
-                    .Any(m => m.Topics.Any(request.Topics.Contains)));
-        }
         
         return Task.FromResult(wordsQuery
             .OrderByDescending(w => w.Id)
@@ -61,12 +54,7 @@ public class WordsService : IWordsService
 
     public async Task<long> UpsertWordAsync(UpdateWordDto wordDto)
     {
-        DefaultContextData.WordLanguages.EnsureExists(wordDto.Language);
-        
-        if (Words.Any(w => w.Language == wordDto.Language && w.Word == wordDto.Word && w.Id != wordDto.Id))
-        {
-            throw new BadRequestException(nameof(wordDto.Word), "The same word has been added already");
-        }
+        DefaultContextData.CefrLevels.EnsureExists(wordDto.CefrLevel);
 
         if (wordDto.Id.HasValue)
         {
@@ -89,57 +77,9 @@ public class WordsService : IWordsService
         return newWord.Id;
     }
 
-    public async Task<long> UpsertMeaningAsync(long wordId, UpdateMeaningDto updateMeaningDto)
+    public async Task<long> UpsertTranslationAsync(long wordId, UpdateTranslationDto updateTranslationDto)
     {
         var word = GetWord(wordId);
-        
-        if (word.Meanings.Any(
-            m => m.Meaning is not null
-                && m.Meaning == updateMeaningDto.Meaning
-                && m.Id != updateMeaningDto.Id))
-        {
-            throw new BadRequestException(nameof(updateMeaningDto.Meaning), "The same meaning has been added already");
-        }
-
-        if (updateMeaningDto.Level != null)
-        {
-            DefaultContextData.CefrLevels.EnsureExists(updateMeaningDto.Level);
-        }
-
-        foreach (var topic in updateMeaningDto.Topics)
-        {
-            DefaultContextData.WordTopics.EnsureExists(topic);
-        }
-        
-        foreach (var partOfSpeech in updateMeaningDto.PartsOfSpeech)
-        {
-            DefaultContextData.PartOfSpeeches.EnsureExists(partOfSpeech);
-        }
-
-        if (updateMeaningDto.Id.HasValue)
-        {
-            var meaning = GetMeaning(word, updateMeaningDto.Id.Value);
-            Populate(meaning, updateMeaningDto);
-            await UpdateJsonFileAsync();
-            return updateMeaningDto.Id.Value;
-        }
-        
-        var newMeaning = new ImportingMeaning
-        {
-            Id = word.Meanings.Select(m => m.Id).DefaultIfEmpty().Max() + 1,
-        };
-        
-        Populate(newMeaning, updateMeaningDto);
-        word.Meanings.Add(newMeaning);
-        
-        await UpdateJsonFileAsync();
-        return newMeaning.Id;
-    }
-
-    public async Task<long> UpsertTranslationAsync(long wordId, long meaningId, UpdateTranslationDto updateTranslationDto)
-    {
-        var word = GetWord(wordId);
-        var meaning = GetMeaning(word, meaningId);
         
         if (string.IsNullOrEmpty(updateTranslationDto.Text))
         {
@@ -149,7 +89,7 @@ public class WordsService : IWordsService
         }
 
         DefaultContextData.WordLanguages.EnsureExists(updateTranslationDto.Language);
-        if (meaning.Translations.Any(
+        if (word.Translations.Any(
             m => m.Language == updateTranslationDto.Language && m.Text == updateTranslationDto.Text))
         {
             throw new BadRequestException(
@@ -157,49 +97,38 @@ public class WordsService : IWordsService
                 "The same translation has been added already");
         }
 
-        if (updateTranslationDto.Language == word.Language)
+        if (updateTranslationDto.Language == "en")
         {
             throw new BadRequestException(
                 nameof(updateTranslationDto.Language),
                 "Attempt to add translation to the same language");
         }
         
-        if (TryGetTranslation(meaning, updateTranslationDto.Language, out var translation))
+        if (TryGetTranslation(word, updateTranslationDto.Language, out var translation))
         {
             Populate(translation, updateTranslationDto);
             await UpdateJsonFileAsync();
             return translation.Id;
         }
         
-        var newTranslation = new ImportingMeaningTranslation
+        var newTranslation = new ImportingTranslation
         {
-            Id = meaning.Translations.Select(m => m.Id).DefaultIfEmpty().Max() + 1,
+            Id = word.Translations.Select(m => m.Id).DefaultIfEmpty().Max() + 1,
         };
         
         Populate(newTranslation, updateTranslationDto);
-        meaning.Translations.Add(newTranslation);
+        word.Translations.Add(newTranslation);
         
         await UpdateJsonFileAsync();
         return newTranslation.Id;
     }
 
-    public Task DeleteTranslationAsync(long wordId, long meaningId, string translationCode)
+    public Task DeleteTranslationAsync(long wordId, string translationCode)
     {
         var word = GetWord(wordId);
-        var meaning = GetMeaning(word, meaningId);
-        var translation = GetTranslation(meaning, translationCode);
+        var translation = GetTranslation(word, translationCode);
         
-        meaning.Translations.Remove(translation);
-        
-        return UpdateJsonFileAsync();
-    }
-
-    public Task DeleteMeaningAsync(long wordId, long meaningId)
-    {
-        var word = GetWord(wordId);
-        var meaning = GetMeaning(word, meaningId);
-
-        word.Meanings.Remove(meaning);
+        word.Translations.Remove(translation);
         
         return UpdateJsonFileAsync();
     }
@@ -215,19 +144,14 @@ public class WordsService : IWordsService
     private static void Populate(ImportingWord word, UpdateWordDto updateWordDto)
     {
         word.Transcription = updateWordDto.Transcription;
-        word.Language = updateWordDto.Language;
+        word.CefrLevel = updateWordDto.CefrLevel;
         word.Word = updateWordDto.Word;
-    }
-
-    private static void Populate(ImportingMeaning meaning, UpdateMeaningDto updateMeaningDto)
-    {
-        meaning.Meaning = updateMeaningDto.Meaning;
-        meaning.Topics = updateMeaningDto.Topics;
-        meaning.PartsOfSpeech = updateMeaningDto.PartsOfSpeech;
-        meaning.Level = updateMeaningDto.Level;
+        word.PartOfSpeech = updateWordDto.PartOfSpeech;
+        word.Topics = updateWordDto.Topics;
+        word.Frequency = updateWordDto.Frequency;
     }
     
-    private static void Populate(ImportingMeaningTranslation translation, UpdateTranslationDto updateTranslationDto)
+    private static void Populate(ImportingTranslation translation, UpdateTranslationDto updateTranslationDto)
     {
         translation.Language = updateTranslationDto.Language;
         translation.Text = updateTranslationDto.Text;
@@ -245,20 +169,9 @@ public class WordsService : IWordsService
         return word;
     }
     
-    private static ImportingMeaning GetMeaning(ImportingWord word, long meaningId)
+    private static ImportingTranslation GetTranslation(ImportingWord word, string translationCode)
     {
-        var meaning = word.Meanings.FirstOrDefault(m => m.Id == meaningId);
-        if (meaning is null)
-        {
-            throw new BadRequestException(nameof(meaningId), "The meaning with the passed identifier is not exists");
-        }
-
-        return meaning;
-    }
-    
-    private static ImportingMeaningTranslation GetTranslation(ImportingMeaning meaning, string translationCode)
-    {
-        if (!TryGetTranslation(meaning, translationCode, out var translation))
+        if (!TryGetTranslation(word, translationCode, out var translation))
         {
             throw new BadRequestException(nameof(translationCode), "The translation with the passed identifier is not exists");
         }
@@ -267,11 +180,11 @@ public class WordsService : IWordsService
     }
     
     private static bool TryGetTranslation(
-        ImportingMeaning meaning,
+        ImportingWord word,
         string translationCode,
-        [NotNullWhen(true)] out ImportingMeaningTranslation? translation)
+        [NotNullWhen(true)] out ImportingTranslation? translation)
     {
-        translation = meaning.Translations.FirstOrDefault(m => m.Language == translationCode);
+        translation = word.Translations.FirstOrDefault(m => m.Language == translationCode);
         return translation is not null;
     }
 

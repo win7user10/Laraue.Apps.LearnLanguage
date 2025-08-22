@@ -4,7 +4,10 @@ public record ImportingWord
 {
     public int Id { get; init; }
     public string Word { get; set; } = string.Empty;
-    public string Language { get; set; } = string.Empty;
     public string? Transcription { get; set; }
-    public List<ImportingMeaning> Meanings { get; set; } = new();
+    public string CefrLevel { get; set; } = string.Empty;
+    public string PartOfSpeech { get; set; }
+    public int Frequency { get; set; }
+    public string[] Topics { get; set; } = [];
+    public List<ImportingTranslation> Translations { get; set; } = new();
 }

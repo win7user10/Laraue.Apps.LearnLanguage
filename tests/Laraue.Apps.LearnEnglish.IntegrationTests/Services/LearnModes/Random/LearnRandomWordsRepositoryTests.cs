@@ -20,7 +20,6 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
     private readonly TranslationIdentifier _defaultTranslation = new()
     {
         WordId = 1,
-        MeaningId = 1,
         TranslationId = 1,
     };
 
@@ -43,7 +42,6 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
             dbContext.TranslationStates.Add(new TranslationState
             {
                 WordId = _defaultTranslation.WordId,
-                MeaningId = _defaultTranslation.MeaningId,
                 TranslationId = _defaultTranslation.TranslationId,
                 UserId = Users.User1.Id,
                 LearnedAt = learnedAt
@@ -57,7 +55,6 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
                     new()
                     {
                         WordId = _defaultTranslation.WordId,
-                        MeaningId = _defaultTranslation.MeaningId,
                         TranslationId = _defaultTranslation.TranslationId,
                     },
                 }
@@ -86,7 +83,6 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
             dbContext.TranslationStates.Add(new TranslationState
             {
                 WordId = _defaultTranslation.WordId,
-                MeaningId = _defaultTranslation.MeaningId,
                 TranslationId = _defaultTranslation.TranslationId,
                 UserId = Users.User1.Id,
             });
@@ -99,7 +95,6 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
                     new()
                     {
                         WordId = _defaultTranslation.WordId,
-                        MeaningId = _defaultTranslation.MeaningId,
                         TranslationId = _defaultTranslation.TranslationId,
                     },
                 }
@@ -133,7 +128,6 @@ public class LearnRandomWordsRepositoryTests : TestWithDatabase
                     new()
                     {
                         WordId = _defaultTranslation.WordId,
-                        MeaningId = _defaultTranslation.MeaningId,
                         TranslationId = _defaultTranslation.TranslationId,
                     },
                 }

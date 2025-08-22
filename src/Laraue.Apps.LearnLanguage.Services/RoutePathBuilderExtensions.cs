@@ -21,7 +21,6 @@ public static class RoutePathBuilderExtensions
     {
         return routePath
             .WithQueryParameter(ParameterNames.OpenedWordId, translationIdentifier.WordId)
-            .WithQueryParameter(ParameterNames.OpenedMeaningId, translationIdentifier.MeaningId)
             .WithQueryParameter(ParameterNames.OpenedTranslationId, translationIdentifier.TranslationId);
     }
 }

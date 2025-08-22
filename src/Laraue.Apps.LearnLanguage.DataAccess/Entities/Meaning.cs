@@ -22,21 +22,11 @@ public sealed class Meaning : BaseEntity, IEntityWithWordReference
     /// </summary>
     [MaxLength(150)]
     public string? Text { get; set; }
-    
-    /// <summary>
-    /// The reference to <see cref="CefrLevel"/>.
-    /// </summary>
-    public required long? CefrLevelId { get; init; }
-    
-    /// <summary>
-    /// The meaning cefr level, e.g A1, A2, B1 etc.
-    /// </summary>
-    public CefrLevel? CefrLevel { get; init; }
 
     /// <summary>
     /// The table with <see cref="Topic"/> references.
     /// </summary>
-    public ICollection<MeaningTopic> Topics { get; set; } = null!;
+    public ICollection<WordTopic> Topics { get; set; } = null!;
     
     /// <summary>
     /// List of <see cref="Translation"/> related to the meaning. 

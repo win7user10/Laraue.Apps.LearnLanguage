@@ -17,30 +17,30 @@ public static class QueryExtensions
     
     public static IQueryable<Translation> HasLanguage(this IQueryable<Translation> queryable, long? languageToLearnId, long? languageToLearnFromId)
     {
-        return queryable.Where(x => (languageToLearnId == null || x.Meaning.Word.LanguageId == languageToLearnId)
-               && (languageToLearnFromId == null || x.Meaning.Translations.Any(t => t.LanguageId == languageToLearnFromId)));
+        return queryable.Where(x => (languageToLearnId == null || x.Word.LanguageId == languageToLearnId)
+               && (languageToLearnFromId == null || x.Word.Translations.Any(t => t.LanguageId == languageToLearnFromId)));
     }
     
     [ExpressionMethod(nameof(TopicHasLanguage))]
     public static bool HasLanguage(
-        this MeaningTopic translation,
+        this WordTopic translation,
         long? languageToLearnId,
         long? languageToLearnFromId)
     {
         throw new InvalidOperationException();
     }
     
-    public static Expression<Func<MeaningTopic, long?, long?, bool>> TopicHasLanguage()
+    public static Expression<Func<WordTopic, long?, long?, bool>> TopicHasLanguage()
     {
         return (x, languageToLearnId, languageToLearnFromId)
-            => (languageToLearnId == null || x.Meaning.Word.LanguageId == languageToLearnId)
-               && (languageToLearnFromId == null || x.Meaning.Translations.Any(t => t.LanguageId == languageToLearnFromId));
+            => (languageToLearnId == null || x.Word.LanguageId == languageToLearnId)
+               && (languageToLearnFromId == null || x.Word.Translations.Any(t => t.LanguageId == languageToLearnFromId));
     }
     
     public static Expression<Func<Translation, long?, long?, bool>> TranslationHasLanguage()
     {
         return (x, languageToLearnId, languageToLearnFromId)
-            => (languageToLearnId == null || x.Meaning.Word.LanguageId == languageToLearnId)
+            => (languageToLearnId == null || x.Word.LanguageId == languageToLearnId)
                && (languageToLearnFromId == null || x.LanguageId == languageToLearnFromId);
     }
     

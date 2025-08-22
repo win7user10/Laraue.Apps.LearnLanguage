@@ -24,12 +24,10 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         var dbQuery = context.Translations
             .Where(t => t.HasLanguage(selectedTranslation.LanguageToLearnId, selectedTranslation.LanguageToLearnFromId))
             .Where(GetGroupWordsFilter(groupId))
-            .OrderBy(x => x.Meaning.Id)
             .LeftJoin(
                 context.TranslationStates,
                 (translation, state) => 
                     translation.WordId == state.WordId
-                    && translation.MeaningId == state.MeaningId
                     && translation.Id == state.TranslationId
                     && state.UserId == userId,
                 (translation, state) => new LearningItem
@@ -41,13 +39,11 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
                     Difficulty = translation.Difficulty,
                     LearnedAt = state.LearnedAt,
                     RepeatedAt = state.RepeatedAt,
-                    Word = translation.Meaning.Word.Text,
-                    CefrLevel = translation.Meaning.CefrLevel!.Name,
-                    Meaning = translation.Meaning.Text,
-                    Topics = context.MeaningTopics
-                        .Where(x =>
-                            x.WordId == translation.WordId
-                            && x.MeaningId == translation.MeaningId)
+                    Word = translation.Word.Text,
+                    CefrLevel = translation.Word.CefrLevel!.Name,
+                    Meaning = translation.Word.Meaning,
+                    Topics = context.WordTopics
+                        .Where(x => x.WordId == translation.WordId)
                         .Select(wmt => wmt.Topic.Name)
                         .ToList(),
                 });
@@ -79,9 +75,8 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
     {
         return x => new TranslationIdentifier
         {
-            MeaningId = x.MeaningId,
             TranslationId = x.Id,
-            WordId = x.Meaning.WordId
+            WordId = x.WordId
         };
     }
 

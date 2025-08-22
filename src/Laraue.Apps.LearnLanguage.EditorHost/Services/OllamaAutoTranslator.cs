@@ -1,24 +1,29 @@
 ﻿using System.Text.Json;
-using Laraue.Apps.LearnLanguage.Common.Contracts;
 
 namespace Laraue.Apps.LearnLanguage.EditorHost.Services;
 
-public class OllamaAutoTranslator(HttpClient httpClient) : IAutoTranslator
+public class OllamaAutoTranslator(HttpClient httpClient, ILogger<OllamaAutoTranslator> logger) : IAutoTranslator
 {
     public async Task<TranslationResult> TranslateAsync(TranslationData translationData)
     {
         var prompt = @$"
-Translate the word ""{translationData.Word}"" to the languages '{string.Join(',', translationData.ToLanguages)}'
+Translate the word ""{translationData.Word}"" with part of speech ""{translationData.PartOfSpeech}"" to the languages '{string.Join(',', translationData.ToLanguages)}'.
 Respond with JSON
 
 ```
-[
-  {{
-    ""language"": ""$language_code"",
-    ""text"": ""$translation"",
-    ""transcription"": ""$transcription""
-  }}
-]
+{{
+    ""transcription"": ""$Transcription of requested word"",
+    ""meaning"": ""$Meaning of the requested word"",
+    ""frequency"": ""$How frequent the requested word appears in a text. The number from 1 to 10"",
+    ""topics"": [""$Topic name of the requested word""]
+    ""translations"": [
+        {{
+            ""language"": ""$language_code"",
+            ""text"": ""$translation"",
+            ""transcription"": ""$english transcription of translation""
+        }}
+    ]
+}}
 ```
 ";
 
@@ -31,23 +36,50 @@ Respond with JSON
                 Stream = false,
                 Format = new
                 {
-                    Type = "array",
-                    Items = new
+                    Type = "object",
+                    Properties = new
                     {
-                        Type = "object",
-                        Properties = new
+                        Transcription = new
                         {
-                            Language = new
+                            Type = "string",
+                        },
+                        Meaning = new
+                        {
+                            Type = "string",
+                        },
+                        Frequency = new
+                        {
+                            Type = "number",
+                        },
+                        Topics = new
+                        {
+                            Type = "array",
+                            Items = new
                             {
                                 Type = "string",
-                            },
-                            Text = new
+                            }
+                        },
+                        Translations = new
+                        {
+                            Type = "array",
+                            Items = new
                             {
-                                Type = "string",
-                            },
-                            Transcription = new
-                            {
-                                Type = "string",
+                                Type = "object",
+                                Properties = new
+                                {
+                                    Language = new
+                                    {
+                                        Type = "string",
+                                    },
+                                    Text = new
+                                    {
+                                        Type = "string",
+                                    },
+                                    Transcription = new
+                                    {
+                                        Type = "string",
+                                    }
+                                }
                             }
                         }
                     }
@@ -56,14 +88,16 @@ Respond with JSON
             JsonSerializerOptions.Web);
 
         var ollamaResult = await response.Content.ReadFromJsonAsync<OllamaResult>(JsonSerializerOptions.Web);
-        var result = JsonSerializer.Deserialize<Translation[]>(ollamaResult!.Response, JsonSerializerOptions.Web);
+        var result = JsonSerializer.Deserialize<Word>(ollamaResult!.Response, JsonSerializerOptions.Web);
 
         if (result is null)
         {
             throw new InvalidOperationException();
         }
+        
+        logger.LogInformation("Taken ollama response {Response}", result);
 
-        var items = result
+        var items = result.Translations
             .ToDictionary(x => x.Language, x => new TranslationResultItem
         {
             Transcription = x.Transcription,
@@ -77,7 +111,11 @@ Respond with JSON
 
         return new TranslationResult
         {
-            Items = items
+            Items = items,
+            Transcription = result.Transcription,
+            Topics = result.Topics,
+            Meaning = result.Meaning,
+            Frequency = result.Frequency,
         };
     }
 
@@ -86,6 +124,15 @@ Respond with JSON
         public required string Response { get; set; }
     }
 
+    private class Word
+    {
+        public required string Transcription { get; set; }
+        public required string Meaning { get; set; }
+        public required int Frequency { get; set; }
+        public required string[] Topics { get; set; }
+        public required Translation[] Translations { get; set; }
+    }
+    
     private class Translation
     {
         public required string Language { get; set; }

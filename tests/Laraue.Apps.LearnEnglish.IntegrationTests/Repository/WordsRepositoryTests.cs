@@ -35,7 +35,7 @@ public class WordsRepositoryTests : TestWithDatabase
             await _repository.IncrementLearnAttemptsIfRequiredAsync(
                 Users.User1.Id,
                 [
-                    new TranslationIdentifier { WordId = 3, MeaningId = 1, TranslationId = 1 }
+                    new TranslationIdentifier { WordId = 3, TranslationId = 1 }
                 ]);
         }
         
@@ -46,7 +46,6 @@ public class WordsRepositoryTests : TestWithDatabase
         Assert.Equal(_now, state.LastOpenedAt);
         Assert.Equal(Users.User1.Id, state.UserId);
         Assert.Equal(3, state.WordId);
-        Assert.Equal(1, state.MeaningId);
         Assert.Equal(1, state.TranslationId);
     }
 
@@ -62,7 +61,6 @@ public class WordsRepositoryTests : TestWithDatabase
             dbContext.TranslationStates.Add(new TranslationState
             {
                 WordId = 1,
-                MeaningId = 1,
                 TranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeUpdated,
@@ -71,7 +69,6 @@ public class WordsRepositoryTests : TestWithDatabase
             dbContext.TranslationStates.Add(new TranslationState
             {
                 WordId = 2,
-                MeaningId = 1,
                 TranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeUpdated,
@@ -81,7 +78,6 @@ public class WordsRepositoryTests : TestWithDatabase
             dbContext.TranslationStates.Add(new TranslationState
             {
                 WordId = 3,
-                MeaningId = 1,
                 TranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeNotUpdated,
@@ -90,7 +86,6 @@ public class WordsRepositoryTests : TestWithDatabase
             dbContext.TranslationStates.Add(new TranslationState
             {
                 WordId = 4,
-                MeaningId = 1,
                 TranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = dateShouldBeNotUpdated,
@@ -103,10 +98,10 @@ public class WordsRepositoryTests : TestWithDatabase
             await _repository.IncrementLearnAttemptsIfRequiredAsync(
                 Users.User1.Id,
                 [
-                    new TranslationIdentifier { WordId = 1, MeaningId = 1, TranslationId = 1 },
-                    new TranslationIdentifier { WordId = 2, MeaningId = 1, TranslationId = 1 },
-                    new TranslationIdentifier { WordId = 3, MeaningId = 1, TranslationId = 1 },
-                    new TranslationIdentifier { WordId = 4, MeaningId = 1, TranslationId = 1 },
+                    new TranslationIdentifier { WordId = 1, TranslationId = 1 },
+                    new TranslationIdentifier { WordId = 2, TranslationId = 1 },
+                    new TranslationIdentifier { WordId = 3, TranslationId = 1 },
+                    new TranslationIdentifier { WordId = 4, TranslationId = 1 },
                 ]);
         }
         
@@ -135,7 +130,7 @@ public class WordsRepositoryTests : TestWithDatabase
             // Act
             await _repository.ChangeWordLearnStateAsync(
                 Users.User1.Id,
-                new TranslationIdentifier { WordId = 3, MeaningId = 1, TranslationId = 1 },
+                new TranslationIdentifier { WordId = 3, TranslationId = 1 },
                 true,
                 null);
         }
@@ -147,7 +142,6 @@ public class WordsRepositoryTests : TestWithDatabase
         Assert.Equal(_now, state.LastOpenedAt);
         Assert.Equal(Users.User1.Id, state.UserId);
         Assert.Equal(3, state.WordId);
-        Assert.Equal(1, state.MeaningId);
         Assert.Equal(1, state.TranslationId);
         Assert.Equal(_now, state.LearnedAt);
     }
@@ -161,7 +155,6 @@ public class WordsRepositoryTests : TestWithDatabase
             dbContext.TranslationStates.Add(new TranslationState
             {
                 WordId = 3,
-                MeaningId = 1,
                 TranslationId = 1,
                 UserId = Users.User1.Id,
                 LastOpenedAt = _now
@@ -172,7 +165,7 @@ public class WordsRepositoryTests : TestWithDatabase
             // Act
             await _repository.ChangeWordLearnStateAsync(
                 Users.User1.Id,
-                new TranslationIdentifier { WordId = 3, MeaningId = 1, TranslationId = 1 },
+                new TranslationIdentifier { WordId = 3, TranslationId = 1 },
                 true,
                 null);
         }

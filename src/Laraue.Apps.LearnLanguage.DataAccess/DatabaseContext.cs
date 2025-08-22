@@ -22,7 +22,7 @@ public class DatabaseContext : DbContext
     
     public DbSet<Meaning> Meanings { get; init; }
     
-    public DbSet<MeaningTopic> MeaningTopics { get; init; }
+    public DbSet<WordTopic> WordTopics { get; init; }
     
     public DbSet<Translation> Translations { get; init; }
     
@@ -41,12 +41,8 @@ public class DatabaseContext : DbContext
         modelBuilder.Entity<Meaning>()
             .HasKey(x => new { x.WordId, x.Id });
         
-        modelBuilder.Entity<MeaningTopic>()
-            .HasKey(x => new { x.WordId, x.MeaningId, x.TopicId });
-        
-        modelBuilder.Entity<MeaningTopic>()
-            .HasForeignKeyToMeaning(x => x.Topics)
-            .HasForeignKeyToWord(x => x.Topics);
+        modelBuilder.Entity<WordTopic>()
+            .HasKey(x => new { x.WordId, x.TopicId });
 
         modelBuilder.Entity<RepeatSession>()
             .HasIndex(x => new { x.UserId })
@@ -58,7 +54,6 @@ public class DatabaseContext : DbContext
 
         modelBuilder.Entity<RepeatSessionTranslation>()
             .HasForeignKeyToTranslation(x => x.RepeatSessionTranslations)
-            .HasForeignKeyToMeaning(x => x.RepeatSessionTranslations)
             .HasForeignKeyToWord(x => x.RepeatSessionTranslations);
         
         modelBuilder.Entity<Word>()
@@ -66,18 +61,16 @@ public class DatabaseContext : DbContext
             .IsUnique();
 
         modelBuilder.Entity<Translation>()
-            .HasKey(x => new { x.WordId, x.MeaningId, x.Id, x.LanguageId });
+            .HasKey(x => new { x.WordId, x.Id, x.LanguageId });
         
         modelBuilder.Entity<Translation>()
-            .HasForeignKeyToMeaning(x => x.Translations)
             .HasForeignKeyToWord(x => x.Translations);
         
         modelBuilder.Entity<TranslationState>()
-            .HasKey(x => new { x.WordId, x.MeaningId, x.TranslationId, x.UserId });
+            .HasKey(x => new { x.WordId, x.TranslationId, x.UserId });
         
         modelBuilder.Entity<TranslationState>()
             .HasForeignKeyToTranslation(x => x.TranslationStates)
-            .HasForeignKeyToMeaning(x => x.TranslationStates)
             .HasForeignKeyToWord(x => x.TranslationStates);
         
         modelBuilder.Entity<WordLanguage>().HasData(DefaultContextData.WordLanguages.Items);
@@ -91,45 +84,32 @@ public class DatabaseContext : DbContext
                 {
                     Id = word.Id,
                     Text = word.Word,
-                    LanguageId = DefaultContextData.WordLanguages.GetId(word.Language),
+                    LanguageId = DefaultContextData.WordLanguages.GetId("en"),
+                    CefrLevelId = DefaultContextData.CefrLevels.GetId(word.CefrLevel),
                     Transcription = word.Transcription,
                 });
-
-            foreach (var meaning in word.Meanings)
+            
+            foreach (var topic in word.Topics)
             {
-                modelBuilder.Entity<Meaning>()
-                    .HasData(new Meaning
+                modelBuilder.Entity<WordTopic>()
+                    .HasData(new WordTopic
                     {
-                        Id = meaning.Id,
-                        CefrLevelId = meaning.Level is not null ? DefaultContextData.CefrLevels.GetId(meaning.Level) : null,
-                        Text = meaning.Meaning,
                         WordId = word.Id,
+                        TopicId = DefaultContextData.WordTopics.GetId(topic),
                     });
-                
-                foreach (var topic in meaning.Topics)
-                {
-                    modelBuilder.Entity<MeaningTopic>()
-                        .HasData(new MeaningTopic
-                        {
-                            WordId = word.Id,
-                            TopicId = DefaultContextData.WordTopics.GetId(topic),
-                            MeaningId = meaning.Id,
-                        });
-                }
+            }
 
-                foreach (var translation in meaning.Translations)
-                {
-                    modelBuilder.Entity<Translation>()
-                        .HasData(new Translation
-                        {
-                            Id = translation.Id,
-                            Text = translation.Text,
-                            LanguageId = DefaultContextData.WordLanguages.GetId(translation.Language),
-                            MeaningId = meaning.Id,
-                            WordId = word.Id,
-                            Transcription = translation.Transcription,
-                        });
-                }
+            foreach (var translation in word.Translations)
+            {
+                modelBuilder.Entity<Translation>()
+                    .HasData(new Translation
+                    {
+                        Id = translation.Id,
+                        Text = translation.Text,
+                        LanguageId = DefaultContextData.WordLanguages.GetId(translation.Language),
+                        WordId = word.Id,
+                        Transcription = translation.Transcription,
+                    });
             }
         }
     }

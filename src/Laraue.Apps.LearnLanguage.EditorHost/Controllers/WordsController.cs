@@ -21,28 +21,16 @@ public class WordsController(IWordsService wordsService) : ControllerBase
         return wordsService.UpsertWordAsync(wordDto);
     }
     
-    [HttpPost("{wordId:int}/Meanings")]
-    public Task<long> UpsertMeaningAsync(int wordId, [FromBody] UpdateMeaningDto updateMeaningDto)
+    [HttpPost("{wordId:int}/Translations")]
+    public Task<long> UpsertTranslationAsync(int wordId, [FromBody] UpdateTranslationDto updateTranslationDto)
     {
-        return wordsService.UpsertMeaningAsync(wordId, updateMeaningDto);
+        return wordsService.UpsertTranslationAsync(wordId, updateTranslationDto);
     }
     
-    [HttpPost("{wordId:int}/Meanings/{meaningId:int}/Translations")]
-    public Task<long> UpsertTranslationAsync(int wordId, int meaningId, [FromBody] UpdateTranslationDto updateTranslationDto)
+    [HttpDelete("{wordId:int}/Translations/{translationCode}")]
+    public Task DeleteTranslationAsync(int wordId, string translationCode)
     {
-        return wordsService.UpsertTranslationAsync(wordId, meaningId, updateTranslationDto);
-    }
-    
-    [HttpDelete("{wordId:int}/Meanings/{meaningId:int}/Translations/{translationCode}")]
-    public Task DeleteTranslationAsync(int wordId, int meaningId, string translationCode)
-    {
-        return wordsService.DeleteTranslationAsync(wordId, meaningId, translationCode);
-    }
-    
-    [HttpDelete("{wordId:int}/Meanings/{meaningId:int}")]
-    public Task DeleteMeaningAsync(int wordId, int meaningId)
-    {
-        return wordsService.DeleteMeaningAsync(wordId, meaningId);
+        return wordsService.DeleteTranslationAsync(wordId, translationCode);
     }
     
     [HttpDelete("{wordId:int}")]

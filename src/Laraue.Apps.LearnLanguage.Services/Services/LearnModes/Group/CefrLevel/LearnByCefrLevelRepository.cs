@@ -18,8 +18,8 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
             .Where(t => t.HasLanguage(
                 selectedTranslation.LanguageToLearnId,
                 selectedTranslation.LanguageToLearnFromId))
-            .Where(x => x.Meaning.CefrLevelId != null)
-            .GroupBy(x => new { WordCefrLevelId = x.Meaning.CefrLevelId, x.Meaning.CefrLevel!.Name })
+            .Where(x => x.Word.CefrLevelId != null)
+            .GroupBy(x => new { WordCefrLevelId = x.Word.CefrLevelId, x.Word.CefrLevel!.Name })
             .OrderBy(x => x.Key.WordCefrLevelId)
             .Select((x, i) => new LearningItemGroup<long>(
                 x.Key.WordCefrLevelId.GetValueOrDefault(),
@@ -29,7 +29,7 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
                         && y.Translation.HasLanguage(
                             selectedTranslation.LanguageToLearnId,
                             selectedTranslation.LanguageToLearnFromId)
-                        && y.Translation.Meaning.CefrLevelId == x.Key.WordCefrLevelId),
+                        && y.Word.CefrLevelId == x.Key.WordCefrLevelId),
                 x.Count(),
                 x.Key.Name))
             .ToListAsyncLinqToDB(ct);
@@ -45,6 +45,6 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
 
     protected override Expression<Func<Translation, bool>> GetGroupWordsFilter(long id)
     {
-        return translation => translation.Meaning.CefrLevelId == id;
+        return translation => translation.Word.CefrLevelId == id;
     }
 }

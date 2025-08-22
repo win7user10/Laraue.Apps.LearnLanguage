@@ -4,8 +4,6 @@ public record TranslationState : IEntityWithTranslationReference
 {
     public long WordId { get; init; }
     public Word Word { get; set; }
-    public long MeaningId { get; init; }
-    public Meaning Meaning { get; set; }
     public long TranslationId { get; init; }
     public Translation Translation { get; set; }
     

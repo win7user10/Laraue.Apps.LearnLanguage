@@ -18,7 +18,7 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
             .Where(t => t.HasLanguage(
                 selectedTranslation.LanguageToLearnId,
                 selectedTranslation.LanguageToLearnFromId))
-            .GroupBy(x => x.Meaning.Word.Text.Substring(0, 1))
+            .GroupBy(x => x.Word.Text.Substring(0, 1))
             .OrderBy(x => x.Key)
             .Select((x, i) => new LearningItemGroup<char>(
                 x.Key[0],
@@ -28,7 +28,7 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
                         && y.Translation.HasLanguage(
                             selectedTranslation.LanguageToLearnId,
                             selectedTranslation.LanguageToLearnFromId)
-                        && y.Translation.Meaning.Word.Text.StartsWith(x.Key)),
+                        && y.Translation.Word.Text.StartsWith(x.Key)),
                 x.Count(),
                 x.Key.ToUpper()))
             .ToListAsyncLinqToDB(ct);
@@ -41,6 +41,6 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
 
     protected override Expression<Func<Translation, bool>> GetGroupWordsFilter(char id)
     {
-        return translation => translation.Meaning.Word.Text.StartsWith(id);
+        return translation => translation.Word.Text.StartsWith(id);
     }
 }

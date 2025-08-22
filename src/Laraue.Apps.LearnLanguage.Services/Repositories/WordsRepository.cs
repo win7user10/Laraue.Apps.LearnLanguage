@@ -31,7 +31,6 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                 () => new TranslationState
                 {
                     TranslationId = translationId.TranslationId,
-                    MeaningId = translationId.MeaningId,
                     WordId = translationId.WordId,
                     UserId = userId,
                     LearnedAt = isLearned.GetValueOrDefault()
@@ -53,7 +52,6 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                 {
                     UserId = userId,
                     TranslationId = translationId.TranslationId,
-                    MeaningId = translationId.MeaningId,
                     WordId = translationId.WordId,
                 },
                 ct);
@@ -76,12 +74,11 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                 {
                     UserId = userId,
                     id.WordId,
-                    id.MeaningId,
                     id.TranslationId,
                 }))
             .On(
-                x => new { x.UserId, x.WordId, x.MeaningId, x.TranslationId },
-                x => new { x.UserId, x.WordId, x.MeaningId, x.TranslationId })
+                x => new { x.UserId, x.WordId, x.TranslationId },
+                x => new { x.UserId, x.WordId, x.TranslationId })
             .UpdateWhenMatched((o, n) => new TranslationState
             {
                 LearnAttempts = o.LastOpenedAt - now >= _learnAttemptTime && o.LearnedAt == null
@@ -97,7 +94,6 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
                 LearnAttempts = 1,
                 LastOpenedAt = dateTimeProvider.UtcNow,
                 TranslationId = e.TranslationId,
-                MeaningId = e.MeaningId,
                 WordId = e.WordId,
                 IsMarked = false
             })
@@ -109,8 +105,8 @@ public class WordsRepository(DatabaseContext context, IDateTimeProvider dateTime
         return context.Translations
             .GroupBy(x => new
             {
-                LanguageIdToLearn = x.Meaning.Word.LanguageId,
-                LanguageCodeToLearn = x.Meaning.Word.Language.Name,
+                LanguageIdToLearn = x.Word.LanguageId,
+                LanguageCodeToLearn = x.Word.Language.Name,
                 LanguageIdToLearnFrom = x.LanguageId,
                 LanguageCodeToLearnFrom = x.Language.Name,
             })

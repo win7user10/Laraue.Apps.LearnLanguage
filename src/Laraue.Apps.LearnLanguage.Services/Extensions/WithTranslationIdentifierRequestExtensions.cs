@@ -15,7 +15,6 @@ public static class WithTranslationIdentifierRequestExtensions
             translationIdentifier = new TranslationIdentifier
             {
                 WordId = request.WordId.Value,
-                MeaningId = request.MeaningId.Value,
                 TranslationId = request.TranslationId.Value
             };
 

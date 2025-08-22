@@ -3,7 +3,6 @@
 public record TranslationIdentifier
 {
     public long WordId { get; init; }
-    public long MeaningId { get; init; }
     public long TranslationId { get; init; }
 }
 
@@ -12,12 +11,7 @@ public interface IHasWordReference
     public long WordId { get; }
 }
 
-public interface IHasMeaningReference : IHasWordReference
-{
-    public long MeaningId { get; }
-}
-
-public interface IHasTranslationReference : IHasMeaningReference
+public interface IHasTranslationReference : IHasWordReference
 {
     public long TranslationId { get; }
 }
