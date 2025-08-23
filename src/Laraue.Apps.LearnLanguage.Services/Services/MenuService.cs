@@ -15,6 +15,8 @@ public class MenuService(ITelegramBotClient client) : IMenuService
         var tmb = new TelegramMessageBuilder()
             .AppendRow(Mode.SelectMode)
             .AppendRow()
+            .AppendRow($"<b>{QuizMode.ButtonName}</b> - {QuizMode.Description}")
+            .AppendRow()
             .AppendRow($"<b>{RandomMode.ButtonName}</b> - {RandomMode.Description}")
             .AppendRow()
             .AppendRow($"<b>{GroupMode.CefrLevel_ButtonName}</b> - {GroupMode.CefrLevel_Description}")
@@ -22,6 +24,11 @@ public class MenuService(ITelegramBotClient client) : IMenuService
             .AppendRow($"<b>{GroupMode.Sequential_ButtonName}</b> - {GroupMode.Sequential_Description}")
             .AppendRow()
             .AppendRow($"<b>{GroupMode.Topics_ButtonName}</b> - {GroupMode.Topics_Description}")
+            .AddInlineKeyboardButtons(new[]
+            {
+                InlineKeyboardButton.WithCallbackData(
+                    QuizMode.ButtonName, TelegramRoutes.QuizSetup),
+            })
             .AddInlineKeyboardButtons(new[]
             {
                 InlineKeyboardButton.WithCallbackData(

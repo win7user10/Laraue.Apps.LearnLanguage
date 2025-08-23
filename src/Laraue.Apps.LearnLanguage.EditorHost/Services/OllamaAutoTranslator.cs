@@ -6,9 +6,31 @@ public class OllamaAutoTranslator(HttpClient httpClient, ILogger<OllamaAutoTrans
 {
     public async Task<TranslationResult> TranslateAsync(TranslationData translationData)
     {
+        for (var i = 0; i < 3; i++)
+        {
+            try
+            {
+                return await TranslateInternalAsync(translationData);
+            }
+            // sometimes the model gallucinate and returns incorrect result
+            catch (ArgumentException e)
+            {
+                logger.LogError(e, e.Message);
+            }
+            catch (JsonException e)
+            {
+                logger.LogError(e, e.Message);
+            }
+        }
+        
+        throw new InvalidOperationException();
+    }
+
+    private async Task<TranslationResult> TranslateInternalAsync(TranslationData translationData)
+    {
         var prompt = @$"
 Translate the word ""{translationData.Word}"" with part of speech ""{translationData.PartOfSpeech}"" to the languages '{string.Join(',', translationData.ToLanguages)}'.
-Respond with JSON
+Respond with JSON. Don't return translation for language if it is not exist.
 
 ```
 {{
@@ -92,7 +114,7 @@ Respond with JSON
 
         if (result is null)
         {
-            throw new InvalidOperationException();
+            throw new ArgumentException();
         }
         
         logger.LogInformation("Taken ollama response {Response}", result);
@@ -103,11 +125,6 @@ Respond with JSON
             Transcription = x.Transcription,
             Translation = x.Text
         });
-
-        if (!items.Keys.SequenceEqual(translationData.ToLanguages))
-        {
-            throw new InvalidOperationException($"Requested {string.Join(',', translationData.ToLanguages)}, got {string.Join(',', items.Keys)}");
-        }
 
         return new TranslationResult
         {

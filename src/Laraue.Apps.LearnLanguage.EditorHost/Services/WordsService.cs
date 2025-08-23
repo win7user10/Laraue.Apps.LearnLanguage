@@ -54,7 +54,10 @@ public class WordsService : IWordsService
 
     public async Task<long> UpsertWordAsync(UpdateWordDto wordDto)
     {
-        DefaultContextData.CefrLevels.EnsureExists(wordDto.CefrLevel);
+        if (wordDto.CefrLevel is not null)
+        {
+            DefaultContextData.CefrLevels.EnsureExists(wordDto.CefrLevel);
+        }
 
         if (wordDto.Id.HasValue)
         {

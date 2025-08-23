@@ -86,6 +86,7 @@ var connection = builder.Configuration.GetConnectionString("Postgre");
 builder.Services
     .AddDbContext<DatabaseContext>(opt =>
     {
+        opt.EnableSensitiveDataLogging();
         opt.UseNpgsql(connection)
             .UseSnakeCaseNamingConvention();
     })

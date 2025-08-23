@@ -33,6 +33,12 @@ public class DatabaseContext : DbContext
     public DbSet<RepeatSessionTranslation> RepeatSessionTranslations { get; init; }
     
     public DbSet<TranslationState> TranslationStates { get; init; }
+    
+    public DbSet<LearnedTranslation> LearnedTranslations { get; init; }
+
+    public DbSet<UserQuiz> UserQuizzes { get; init; }
+
+    public DbSet<UserQuizQuestion> UserQuizQuestions { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -76,6 +82,21 @@ public class DatabaseContext : DbContext
         modelBuilder.Entity<CefrLevel>().HasData(DefaultContextData.CefrLevels.Items);
         modelBuilder.Entity<Topic>().HasData(DefaultContextData.WordTopics.Items);
         modelBuilder.Entity<PartOfSpeech>().HasData(DefaultContextData.PartOfSpeeches.Items);
+        
+        modelBuilder.Entity<LearnedTranslation>()
+            .HasIndex(x => new { x.UserId, x.LearnedAt });
+        
+        modelBuilder.Entity<UserQuiz>()
+            .HasIndex(x => x.UserId);
+        
+        modelBuilder.Entity<UserQuiz>()
+            .HasIndex(x => x.LanguageId);
+        
+        modelBuilder.Entity<UserQuizQuestion>()
+            .HasIndex(x => x.QuizId);
+        
+        modelBuilder.Entity<UserQuizQuestion>()
+            .HasIndex(x => x.TranslationId);
         
         foreach (var word in DefaultContextData.Words)
         {
