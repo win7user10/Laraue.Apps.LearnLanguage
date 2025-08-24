@@ -15,16 +15,6 @@ public class QuizController(IQuizService service) : TelegramController
         [FromQuery] OpenModeRequest request,
         CancellationToken ct)
     {
-        return service.HandleQuizWindowAsync(ReplyData.FromRequest(context), ct);
-    }
-    
-    
-    [TelegramCallbackRoute(TelegramRoutes.StartQuiz)]
-    public Task HandleStartQuizAsync(
-        RequestContext context,
-        [FromQuery] OpenModeRequest request,
-        CancellationToken ct)
-    {
-        return service.HandleStartQuizAsync(ReplyData.FromRequest(context), request, ct);
+        return service.HandleQuizWindowAsync(ReplyData.FromRequest(context), request, ct);
     }
 }

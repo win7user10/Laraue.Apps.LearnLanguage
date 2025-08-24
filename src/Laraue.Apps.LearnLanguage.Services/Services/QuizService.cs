@@ -1,9 +1,10 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess.Entities;
+﻿using Laraue.Apps.LearnLanguage.DataAccess;
+using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Apps.LearnLanguage.Services.Resources;
 using Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
-using Laraue.Telegram.NET.Core.Extensions;
-using Laraue.Telegram.NET.Core.Utils;
+using Laraue.Core.DateTime.Services.Abstractions;
+using LinqToDB.EntityFrameworkCore;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -12,44 +13,30 @@ namespace Laraue.Apps.LearnLanguage.Services.Services;
 public class QuizService(
     QuizService.IRepository repository,
     ISelectLanguageService selectLanguageService,
-    ITelegramBotClient client)
+    ITelegramBotClient client,
+    DatabaseContext context,
+    IQuestionsGenerator questionsGenerator)
     : IQuizService
 {
-    public async Task HandleQuizWindowAsync(ReplyData replyData, CancellationToken ct = default)
+    public async Task HandleQuizWindowAsync(ReplyData replyData, OpenModeRequest request, CancellationToken ct = default)
     {
-        var state = await repository.GetCurrentQuizStateAsync(replyData.UserId, ct);
-        var task = state.Status == null
-            ? HandleNewQuizWindowAsync(replyData, ct)
-            : HandleCurrentQuizWindowAsync(replyData, ct);
+        var hasActiveQuiz = await repository.HasActiveQuizAsync(replyData.UserId, ct);
+        var task = hasActiveQuiz
+            ? HandleCurrentQuizWindowAsync(replyData, ct)
+            : HandleNewQuizWindowAsync(replyData, request, ct);
 
         await task;
     }
 
-    public async Task HandleStartQuizAsync(ReplyData replyData, OpenModeRequest request, CancellationToken ct = default)
+    private async Task HandleNewQuizWindowAsync(ReplyData replyData, OpenModeRequest request, CancellationToken ct = default)
     {
         await selectLanguageService.ShowLanguageWindowOrHandleRequestAsync(
             request,
-            "Quiz language",
-            TelegramRoutes.CurrentQuiz,
+            "Quiz mode",
+            TelegramRoutes.QuizSetup,
             replyData,
             StartNewQuizAsync,
             ct);
-    }
-
-    private async Task HandleNewQuizWindowAsync(ReplyData replyData, CancellationToken ct = default)
-    {
-        var tmb = new TelegramMessageBuilder();
-        
-        tmb
-            .Append(QuizMode.Description)
-            .AddInlineKeyboardButtons(new List<InlineKeyboardButton>
-            {
-                InlineKeyboardButton
-                    .WithCallbackData(QuizMode.StartButtonName, TelegramRoutes.StartQuiz)
-            })
-            .AddMainMenuButton();
-
-        await client.EditMessageTextAsync(replyData, tmb, cancellationToken: ct);
     }
     
     private async Task StartNewQuizAsync(
@@ -57,7 +44,28 @@ public class QuizService(
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        await repository.CreateQuizAsync(replyData.UserId, selectedTranslation, ct);
+        await using var transaction = await context.Database.BeginTransactionAsync(ct);
+        
+        var quizId = await repository.CreateQuizAsync(
+            replyData.UserId,
+            selectedTranslation.LanguageToLearnFromId!.Value,
+            ct);
+
+        // TODO - use settings to setup
+        const int questionsCount = 20;
+        const int optionsCount = 6;
+        
+        var questions = await questionsGenerator.GenerateQuestions(
+            replyData.UserId,
+            selectedTranslation.LanguageToLearnFromId!.Value,
+            questionsCount,
+            optionsCount,
+            ct);
+
+        await repository.SaveQuizQuestionsAsync(quizId, questions, ct);
+        
+        await transaction.CommitAsync(ct);
+        
         await HandleCurrentQuizWindowAsync(replyData, ct);
     }
     
@@ -70,8 +78,9 @@ public class QuizService(
 
     public interface IRepository
     {
-        Task<CurrentQuizState> GetCurrentQuizStateAsync(Guid userId, CancellationToken ct = default);
-        Task CreateQuizAsync(Guid userId, SelectedTranslation selectedTranslation, CancellationToken ct = default);
+        Task<bool> HasActiveQuizAsync(Guid userId, CancellationToken ct = default);
+        Task<long> CreateQuizAsync(Guid userId, long languageId, CancellationToken ct = default);
+        Task SaveQuizQuestionsAsync(long quizId, QuestionDto[] questions, CancellationToken ct = default);
         Task<FlashCard[]> GetFlashCardsAsync(CancellationToken ct = default);
     }
 
@@ -86,16 +95,52 @@ public class QuizService(
         public UserQuizStatus? Status { get; set; }
     }
     
-    public class Repository : IRepository
+    public class Repository(DatabaseContext context, IDateTimeProvider dateTimeProvider) : IRepository
     {
-        public Task<CurrentQuizState> GetCurrentQuizStateAsync(Guid userId, CancellationToken ct = default)
+        public Task<bool> HasActiveQuizAsync(Guid userId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return context.UserQuizzes
+                .Where(x => x.UserId == userId)
+                .Where(x => x.Status == UserQuizStatus.Active)
+                .AnyAsyncLinqToDB(ct);
         }
 
-        public Task CreateQuizAsync(Guid userId, SelectedTranslation selectedTranslation, CancellationToken ct = default)
+        public async Task<long> CreateQuizAsync(Guid userId, long languageId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var quiz = new UserQuiz
+            {
+                UserId = userId,
+                Status = UserQuizStatus.Active,
+                CreatedAt = dateTimeProvider.UtcNow,
+                LanguageId = languageId,
+            };
+            
+            context.Add(quiz);
+            
+            await context.SaveChangesAsync(ct);
+            
+            return quiz.Id;
+        }
+
+        public async Task SaveQuizQuestionsAsync(
+            long quizId,
+            QuestionDto[] questions,
+            CancellationToken ct = default)
+        {
+            foreach (var question in questions)
+            {
+                var entity = new UserQuizQuestion
+                {
+                    TranslationId = question.WordId,
+                    Status = UserQuizQuestionStatus.New,
+                    QuizId = quizId,
+                    OptionIds = question.OptionIds,
+                };
+                
+                context.UserQuizQuestions.Add(entity);
+            }
+
+            await context.SaveChangesAsync(ct);
         }
 
         public Task<FlashCard[]> GetFlashCardsAsync(CancellationToken ct = default)

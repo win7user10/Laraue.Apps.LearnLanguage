@@ -80,7 +80,8 @@ builder.Services
     .AddScoped<ILearnByFirstLetterRepository, LearnByFirstLetterRepository>()
 
     .AddScoped<IQuizService, QuizService>()
-    .AddScoped<QuizService.IRepository, QuizService.Repository>();
+    .AddScoped<QuizService.IRepository, QuizService.Repository>()
+    .AddScoped<IQuestionsGenerator, QuestionsGenerator>();
 
 builder.Services.AddControllers();
 
@@ -89,7 +90,6 @@ var connection = builder.Configuration.GetConnectionString("Postgre");
 builder.Services
     .AddDbContext<DatabaseContext>(opt =>
     {
-        opt.EnableSensitiveDataLogging();
         opt.UseNpgsql(connection)
             .UseSnakeCaseNamingConvention();
     })
