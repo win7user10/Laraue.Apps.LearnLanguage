@@ -55,29 +55,32 @@ builder.Services.UseUserRolesProvider<StaticUserRoleProvider>();
 
 builder.Services
     .AddScoped<IMenuService, MenuService>()
-    
+
     .AddScoped<IWordsRepository, WordsRepository>()
     .AddScoped<IWordsWindowFactory, WordsWindowFactory>()
-    
+
     .AddScoped<IStatsRepository, StatsRepository>()
     .AddScoped<IAdminRepository, AdminRepository>()
-    
+
     .AddScoped<IUserSettingsService, UserSettingsService>()
     .AddScoped<IUserRepository, UserRepository>()
-    
+
     .AddScoped<ILearnRandomWordsService, LearnRandomWordsService>()
     .AddScoped<ILearnRandomWordsRepository, LearnRandomWordsRepository>()
-    
+
     .AddScoped<ISelectLanguageService, SelectLanguageService>()
-    
+
     .AddScoped<IStatsService, StatsService>()
-    
+
     .AddScoped<ILearnByCefrLevelService, LearnByCefrLevelService>()
     .AddScoped<ILearnByFirstLetterService, LearnByFirstLetterService>()
     .AddScoped<ILearnByTopicService, LearnByTopicService>()
     .AddScoped<ILearnByCefrLevelRepository, LearnByCefrLevelRepository>()
     .AddScoped<ILearnByTopicRepository, LearnByTopicRepository>()
-    .AddScoped<ILearnByFirstLetterRepository, LearnByFirstLetterRepository>();
+    .AddScoped<ILearnByFirstLetterRepository, LearnByFirstLetterRepository>()
+
+    .AddScoped<IQuizService, QuizService>()
+    .AddScoped<QuizService.IRepository, QuizService.Repository>();
 
 builder.Services.AddControllers();
 

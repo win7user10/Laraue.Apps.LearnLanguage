@@ -39,6 +39,8 @@ public class DatabaseContext : DbContext
     public DbSet<UserQuiz> UserQuizzes { get; init; }
 
     public DbSet<UserQuizQuestion> UserQuizQuestions { get; init; }
+    
+    public DbSet<CurrentUserQuizQuestionAnswers> CurrentUserQuizQuestionAnswers { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -67,6 +69,9 @@ public class DatabaseContext : DbContext
 
         modelBuilder.Entity<Translation>()
             .HasKey(x => new { x.WordId, x.Id, x.LanguageId });
+        
+        modelBuilder.Entity<CurrentUserQuizQuestionAnswers>()
+            .HasKey(x => x.UserId);
         
         modelBuilder.Entity<Translation>()
             .HasForeignKeyToWord(x => x.Translations);

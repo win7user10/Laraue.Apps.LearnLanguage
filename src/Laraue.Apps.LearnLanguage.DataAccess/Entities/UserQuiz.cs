@@ -2,7 +2,7 @@
 
 public class UserQuiz : BaseEntity
 {
-    public long UserId { get; set; }
+    public Guid UserId { get; set; }
     public User User { get; set; } = new();
     public long LanguageId { get; set; }
     public WordLanguage Language { get; set; } = new();

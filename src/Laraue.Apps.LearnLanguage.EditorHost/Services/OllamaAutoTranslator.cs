@@ -30,19 +30,19 @@ public class OllamaAutoTranslator(HttpClient httpClient, ILogger<OllamaAutoTrans
     {
         var prompt = @$"
 Translate the word ""{translationData.Word}"" with part of speech ""{translationData.PartOfSpeech}"" to the languages '{string.Join(',', translationData.ToLanguages)}'.
-Respond with JSON. Don't return translation for language if it is not exist.
+Respond with JSON. Return no more than one translation for each language key.
 
 ```
 {{
     ""transcription"": ""$Transliterated requested word. For example 'she' should become 'shi:'"",
-    ""meaning"": ""$Meaning of the requested word"",
-    ""frequency"": ""$How frequent the requested word appears in a text. The number from 1 to 10"",
-    ""topics"": [""$Topic name of the requested word""]
+    ""meaning"": ""$Meaning of requested word"",
+    ""frequency"": ""$How frequent requested word appears in a text. Number from 1 to 10 where 1 means word never appears in text and 10 - always in text"",
+    ""topics"": [""$Topic name of requested word""]
     ""translations"": [
         {{
             ""language"": ""$Language code"",
-            ""text"": ""$The translation"",
-            ""transcription"": ""$English transliteration of the translation""
+            ""text"": ""$Translation"",
+            ""transcription"": ""$English transliteration of translation""
         }}
     ]
 }}

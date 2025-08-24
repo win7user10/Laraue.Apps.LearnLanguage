@@ -15,6 +15,9 @@
         <value>Викторина</value>
     </data>
     <data name="Description" xml:space="preserve">
-        <value>выбирайте карточки с правильными словами</value>
+        <value>Выберите одно из предложенных слов в режиме викторины</value>
+    </data>
+    <data name="StartButtonName" xml:space="preserve">
+        <value>Начать</value>
     </data>
 </root>

@@ -16,6 +16,8 @@ public static class TelegramRoutes
     public const string DetailGroupByTopic = "dgt";
     
     public const string QuizSetup = "qset";
+    public const string CurrentQuiz = "quiz";
+    public const string StartQuiz = "qstart";
     
     public const string Stat = "stat";
     public const string Menu = "m";

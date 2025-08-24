@@ -76,5 +76,14 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
                 return ResourceManager.GetString("Description", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        internal static string StartButtonName {
+            get {
+                return ResourceManager.GetString("StartButtonName", resourceCulture);
+            }
+        }
     }
 }
