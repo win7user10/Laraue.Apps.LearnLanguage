@@ -11,11 +11,6 @@ public enum ShowWordsMode : byte
     All = 0,
     
     /// <summary>
-    /// Show only hard words in the list.
-    /// </summary>
-    Hard = 1,
-    
-    /// <summary>
     /// Show only not learned words in the list.
     /// </summary>
     NotLearned = 2,

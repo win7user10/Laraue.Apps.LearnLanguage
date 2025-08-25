@@ -19,7 +19,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="SelectMode" xml:space="preserve">
-        <value>Please select the mode</value>
+        <value>Please select view mode</value>
     </data>
     <data name="ShowTranslations" xml:space="preserve">
         <value>Show translations 👁</value>
@@ -85,6 +85,12 @@
         <value>Next ➡</value>
     </data>
     <data name="SelectLanguage" xml:space="preserve">
-        <value>Select the language pair to learn. You also can set the preferred language pair in settings to select the same pair always.</value>
+        <value>Select the language pair. You also can set the preferred language pair in settings to select the same pair always.</value>
+    </data>
+    <data name="ListMode" xml:space="preserve">
+        <value>Words lists</value>
+    </data>
+    <data name="ListModeDescription" xml:space="preserve">
+        <value>View words groups</value>
     </data>
 </root>

@@ -21,14 +21,14 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class RandomMode {
+    internal class QuizMode {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal RandomMode() {
+        internal QuizMode() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.RandomMode", typeof(RandomMode).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.QuizMode", typeof(QuizMode).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,7 +60,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Random learning.
+        ///   Looks up a localized string similar to Quiz Mode.
         /// </summary>
         internal static string ButtonName {
             get {
@@ -69,25 +69,16 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selected words: {0}.
+        ///   Looks up a localized string similar to Right.
         /// </summary>
-        internal static string CollectedWords {
+        internal static string Correct {
             get {
-                return ResourceManager.GetString("CollectedWords", resourceCulture);
+                return ResourceManager.GetString("Correct", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Continue.
-        /// </summary>
-        internal static string Continue {
-            get {
-                return ResourceManager.GetString("Continue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to learn words in random order.
+        ///   Looks up a localized string similar to Select one of the suggested word in quiz mode.
         /// </summary>
         internal static string Description {
             get {
@@ -96,83 +87,83 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do your know the word {0}.
+        ///   Looks up a localized string similar to Wrong.
         /// </summary>
-        internal static string DoYouKnowWord {
+        internal static string Incorrect {
             get {
-                return ResourceManager.GetString("DoYouKnowWord", resourceCulture);
+                return ResourceManager.GetString("Incorrect", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do your still remember the word {0}.
+        ///   Looks up a localized string similar to Question.
         /// </summary>
-        internal static string DoYouRememberWord {
+        internal static string Question {
             get {
-                return ResourceManager.GetString("DoYouRememberWord", resourceCulture);
+                return ResourceManager.GetString("Question", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No.
+        ///   Looks up a localized string similar to +.
         /// </summary>
-        internal static string No {
+        internal static string QuizAnswer_Correct {
             get {
-                return ResourceManager.GetString("No", resourceCulture);
+                return ResourceManager.GetString("QuizAnswer_Correct", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remembered words: {0}.
+        ///   Looks up a localized string similar to -.
         /// </summary>
-        internal static string RememberedWords {
+        internal static string QuizAnswer_Incorrect {
             get {
-                return ResourceManager.GetString("RememberedWords", resourceCulture);
+                return ResourceManager.GetString("QuizAnswer_Incorrect", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Learn session finished.
+        ///   Looks up a localized string similar to Skipped.
         /// </summary>
-        internal static string SessionFinished {
+        internal static string QuizAnswer_Skipped {
             get {
-                return ResourceManager.GetString("SessionFinished", resourceCulture);
+                return ResourceManager.GetString("QuizAnswer_Skipped", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Time spent: {0}.
+        ///   Looks up a localized string similar to Quiz finished.
         /// </summary>
-        internal static string TimeSpent {
+        internal static string QuizFinishedTitle {
             get {
-                return ResourceManager.GetString("TimeSpent", resourceCulture);
+                return ResourceManager.GetString("QuizFinishedTitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mode: Random learning.
+        ///   Looks up a localized string similar to Skip.
         /// </summary>
-        internal static string Title {
+        internal static string SkipButtonName {
             get {
-                return ResourceManager.GetString("Title", resourceCulture);
+                return ResourceManager.GetString("SkipButtonName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} words remembered.
+        ///   Looks up a localized string similar to Start.
         /// </summary>
-        internal static string WordsRemembered {
+        internal static string StartButtonName {
             get {
-                return ResourceManager.GetString("WordsRemembered", resourceCulture);
+                return ResourceManager.GetString("StartButtonName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Yes.
+        ///   Looks up a localized string similar to Select the translation for.
         /// </summary>
-        internal static string Yes {
+        internal static string TranslateWord {
             get {
-                return ResourceManager.GetString("Yes", resourceCulture);
+                return ResourceManager.GetString("TranslateWord", resourceCulture);
             }
         }
     }

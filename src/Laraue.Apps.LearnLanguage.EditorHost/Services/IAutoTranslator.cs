@@ -9,6 +9,7 @@ public interface IAutoTranslator
 
 public record TranslationData
 {
+    public required string PartOfSpeech { get; set; }
     public required string Word { get; set; }
     public required string FromLanguage { get; set; }
     public required string[] ToLanguages { get; set; }
@@ -16,8 +17,12 @@ public record TranslationData
 
 public record TranslationResult : ICrawlingModel
 {
-    public string? PartOfSpeech { get; set; }
+    public required int Frequency { get; set; }
+    public required string Transcription { get; set; }
+    public required string Meaning { get; set; }
     public required Dictionary<string, TranslationResultItem> Items { get; set; } = new ();
+    
+    public required string[] Topics { get; set; }
 }
 
 public record TranslationResultItem : ICrawlingModel

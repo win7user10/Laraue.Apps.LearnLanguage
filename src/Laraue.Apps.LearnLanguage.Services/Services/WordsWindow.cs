@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Laraue.Apps.LearnLanguage.Common;
 using Laraue.Apps.LearnLanguage.DataAccess.Enums;
-using Laraue.Apps.LearnLanguage.Services.Repositories;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Apps.LearnLanguage.Services.Resources;
 using Laraue.Core.DataAccess.Contracts;
@@ -23,7 +22,6 @@ public class WordsWindow(
     UserViewSettings userViewSettings,
     CallbackRoutePath viewRoute,
     ITelegramBotClient client,
-    IWordsRepository wordsRepository,
     IDateTimeProvider dateTimeProvider)
     : IWordsWindow
 {
@@ -33,7 +31,6 @@ public class WordsWindow(
     private InlineKeyboardButton? _backButton;
     private ControlButtons? _fallbackPaginationButtons;
     private IEnumerable<InlineKeyboardButton>? _actionButtons;
-    private bool _useFilters;
 
     public IWordsWindow SetWindowTitle(string title)
     {
@@ -71,12 +68,6 @@ public class WordsWindow(
         return this;
     }
 
-    public IWordsWindow UseFilters(bool useFilters = true)
-    {
-        _useFilters = useFilters;
-        return this;
-    }
-
     public async Task SendAsync(ReplyData replyData, CancellationToken ct = default)
     {
         var areTranslationHidden = userViewSettings
@@ -99,31 +90,7 @@ public class WordsWindow(
             .WithQueryParameter(ParameterNames.RevertTranslations, true)
             .ToInlineKeyboardButton(areTranslationsReverted ? Mode.ViewMode_WordToTranslation : Mode.ViewMode_TranslationToWord);
 
-        List<InlineKeyboardButton>? changeShowWordsModeButtons = null; 
-        if (_useFilters)
-        {
-            changeShowWordsModeButtons = new List<InlineKeyboardButton>();
-            if (userViewSettings.ShowWordsMode != ShowWordsMode.Hard)
-            {
-                changeShowWordsModeButtons.Add(viewRoute
-                    .WithQueryParameter(ParameterNames.ShowMode, ShowWordsMode.Hard)
-                    .ToInlineKeyboardButton(Mode.Filter_Marked));
-            }
-        
-            if (userViewSettings.ShowWordsMode != ShowWordsMode.NotLearned)
-            {
-                changeShowWordsModeButtons.Add(viewRoute
-                    .WithQueryParameter(ParameterNames.ShowMode, ShowWordsMode.NotLearned)
-                    .ToInlineKeyboardButton(Mode.Filter_NotLearned));
-            }
-        
-            if (userViewSettings.ShowWordsMode != ShowWordsMode.All)
-            {
-                changeShowWordsModeButtons.Add(viewRoute
-                    .WithQueryParameter(ParameterNames.ShowMode, ShowWordsMode.All)
-                    .ToInlineKeyboardButton(Mode.Filter_None));
-            }
-        }
+        List<InlineKeyboardButton>? changeShowWordsModeButtons = null;
         
         var tmb = new TelegramMessageBuilder()
             .AppendRow($"<b>{_title}. {Mode.Page} {words.Page + 1}/{words.LastPage + 1}</b>")
@@ -143,11 +110,6 @@ public class WordsWindow(
                 if (x.LearnedAt != null)
                 {
                     msgBuilder.Append('✅');
-                }
-
-                if (x.IsMarked)
-                {
-                    msgBuilder.Append("🧠");
                 }
 
                 return msgBuilder.ToString();
@@ -182,12 +144,6 @@ public class WordsWindow(
             {
                 var daysLearnedAgo = (dateTimeProvider.UtcNow - _openedTranslation.LearnedAt.Value).TotalDays;
                 tmb.AppendRow(string.Format(Mode.Learned, $"{daysLearnedAgo:N0}"));
-            }
-                
-            if (_openedTranslation.RepeatedAt is not null)
-            {
-                var daysRepeatedAgo = (dateTimeProvider.UtcNow - _openedTranslation.RepeatedAt.Value).TotalDays;
-                tmb.AppendRow(string.Format(Mode.Repeated, $"{daysRepeatedAgo:N0}"));
             }
         }
         
@@ -226,13 +182,6 @@ public class WordsWindow(
             tmb,
             ParseMode.Html,
             cancellationToken: ct);
-        
-        await wordsRepository.IncrementLearnAttemptsIfRequiredAsync(
-            replyData.UserId,
-            words.Data
-                .Select(x => x.TranslationId)
-                .ToArray(),
-            ct);
     }
 
     private static StringBuilder GetTextBuilder(

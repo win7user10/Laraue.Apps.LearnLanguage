@@ -8,9 +8,4 @@ public interface IStatsRepository
     /// Get learn total statistics for the user.
     /// </summary>
     Task<LearnStats> GetLearnStatsAsync(Guid userId, CancellationToken ct = default);
-    
-    /// <summary>
-    /// Return daily statistics for all users.
-    /// </summary>
-    Task<IList<UserDailyStats>> GetYesterdayAllUsersStatsAsync(CancellationToken ct = default);
 }

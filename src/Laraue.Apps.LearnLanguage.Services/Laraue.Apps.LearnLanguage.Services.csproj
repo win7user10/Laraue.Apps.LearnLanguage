@@ -26,10 +26,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Mode.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\RandomMode.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RandomMode.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="Resources\GroupMode.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GroupMode.Designer.cs</LastGenOutput>
@@ -46,6 +42,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\QuizMode.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>QuizMode.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -58,11 +58,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Mode.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\RandomMode.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RandomMode.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\GroupMode.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -83,6 +78,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\QuizMode.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>QuizMode.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 

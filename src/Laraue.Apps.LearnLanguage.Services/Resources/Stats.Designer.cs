@@ -96,7 +96,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} - learned: {1}, repeated: {2} word(s) - {3}%.
+        ///   Looks up a localized string similar to {0} - learned: {1} word(s) - {2}%.
         /// </summary>
         internal static string LastActivityRow {
             get {

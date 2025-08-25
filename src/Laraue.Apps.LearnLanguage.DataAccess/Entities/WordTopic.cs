@@ -3,12 +3,11 @@
 /// <summary>
 /// A relation between <see cref="Entities.Meaning"/> and <see cref="Topic"/>.
 /// </summary>
-public sealed class MeaningTopic : IEntityWithMeaningReference
+public sealed class WordTopic : IEntityWithWordReference
 {
     public long WordId { get; init; }
+    
     public Word Word { get; set; }
-    public long MeaningId { get; init; }
-    public Meaning Meaning { get; set; }
     
     /// <summary>
     /// The <see cref="Topic"/> reference.

@@ -6,14 +6,12 @@ namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.FirstLett
 
 public sealed class LearnByFirstLetterService(
     IUserRepository userRepository,
-    IWordsRepository wordsRepository,
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
     ILearnByFirstLetterRepository learnByFirstLetterRepository,
     ISelectLanguageService selectLanguageService) : 
         BaseLearnByGroupService<char, DetailViewByFirstLetterRequest>(
             userRepository,
-            wordsRepository,
             wordsWindowFactory,
             client,
             learnByFirstLetterRepository,

@@ -17,7 +17,6 @@ using Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
 using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.CefrLevel;
 using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.FirstLetter;
 using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.Topic;
-using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Random;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Telegram.NET.Authentication.Services;
@@ -55,29 +54,30 @@ builder.Services.UseUserRolesProvider<StaticUserRoleProvider>();
 
 builder.Services
     .AddScoped<IMenuService, MenuService>()
-    
+
     .AddScoped<IWordsRepository, WordsRepository>()
     .AddScoped<IWordsWindowFactory, WordsWindowFactory>()
-    
+
     .AddScoped<IStatsRepository, StatsRepository>()
     .AddScoped<IAdminRepository, AdminRepository>()
-    
+
     .AddScoped<IUserSettingsService, UserSettingsService>()
     .AddScoped<IUserRepository, UserRepository>()
-    
-    .AddScoped<ILearnRandomWordsService, LearnRandomWordsService>()
-    .AddScoped<ILearnRandomWordsRepository, LearnRandomWordsRepository>()
-    
+
     .AddScoped<ISelectLanguageService, SelectLanguageService>()
-    
+
     .AddScoped<IStatsService, StatsService>()
-    
+
     .AddScoped<ILearnByCefrLevelService, LearnByCefrLevelService>()
     .AddScoped<ILearnByFirstLetterService, LearnByFirstLetterService>()
     .AddScoped<ILearnByTopicService, LearnByTopicService>()
     .AddScoped<ILearnByCefrLevelRepository, LearnByCefrLevelRepository>()
     .AddScoped<ILearnByTopicRepository, LearnByTopicRepository>()
-    .AddScoped<ILearnByFirstLetterRepository, LearnByFirstLetterRepository>();
+    .AddScoped<ILearnByFirstLetterRepository, LearnByFirstLetterRepository>()
+
+    .AddScoped<IQuizService, QuizService>()
+    .AddScoped<QuizService.IRepository, QuizService.Repository>()
+    .AddScoped<IQuestionsGenerator, QuestionsGenerator>();
 
 builder.Services.AddControllers();
 
@@ -111,11 +111,6 @@ using (var scope = app.Services.CreateScope())
     app.MapTelegramRequests();
 
     var jobClient = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
-    
-    jobClient.AddOrUpdate<CalculateDailyStatJob>(
-        nameof(CalculateDailyStatJob),
-        x => x.ExecuteAsync(),
-        Cron.Daily);
     
     jobClient.AddOrUpdate<UpdateTranslationsComplexityJob>(
         nameof(UpdateTranslationsComplexityJob),

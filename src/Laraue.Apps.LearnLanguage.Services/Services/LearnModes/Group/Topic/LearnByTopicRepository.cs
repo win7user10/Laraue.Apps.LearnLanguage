@@ -16,20 +16,20 @@ public class LearnByTopicRepository(DatabaseContext context)
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        return await _context.MeaningTopics
+        return await _context.WordTopics
             .Where(x => x.HasLanguage(
                 selectedTranslation.LanguageToLearnId,
                 selectedTranslation.LanguageToLearnFromId))
             .GroupBy(x => new { WordTopicId = x.TopicId, x.Topic.Name })
             .Select(group => new LearningItemGroup<long>(
                 group.Key.WordTopicId,
-                _context.TranslationStates
+                _context.LearnedTranslations
                     .Learned()
                     .Count(y => y.UserId == userId
                         && y.Translation.HasLanguage(
                             selectedTranslation.LanguageToLearnId,
                             selectedTranslation.LanguageToLearnFromId)
-                        && y.Translation.Meaning.Topics.Any(t => t.TopicId == group.Key.WordTopicId)),
+                        && y.Translation.Word.Topics.Any(t => t.TopicId == group.Key.WordTopicId)),
                 group.Count(),
                 group.Key.Name))
             .ToListAsyncLinqToDB(ct);
@@ -45,6 +45,6 @@ public class LearnByTopicRepository(DatabaseContext context)
 
     protected override Expression<Func<Translation, bool>> GetGroupWordsFilter(long id)
     {
-        return translation => translation.Meaning.Topics.Any(x => x.TopicId == id);
+        return translation => translation.Word.Topics.Any(x => x.TopicId == id);
     }
 }

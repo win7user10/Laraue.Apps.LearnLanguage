@@ -3,8 +3,6 @@
 public sealed record AdminStats(
     int TotalUsersCount,
     int ActiveUsersCount,
-    IList<RegisteredUsers> RegisteredUsers,
-    IList<ActiveUsers> ActiveUsers);
+    IList<RegisteredUsers> RegisteredUsers);
 
 public sealed record RegisteredUsers(DateTime Date, int Count);
-public sealed record ActiveUsers(DateTime Date, int Count);

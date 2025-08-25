@@ -24,39 +24,27 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         var dbQuery = context.Translations
             .Where(t => t.HasLanguage(selectedTranslation.LanguageToLearnId, selectedTranslation.LanguageToLearnFromId))
             .Where(GetGroupWordsFilter(groupId))
-            .OrderBy(x => x.Meaning.Id)
             .LeftJoin(
-                context.TranslationStates,
+                context.LearnedTranslations,
                 (translation, state) => 
                     translation.WordId == state.WordId
-                    && translation.MeaningId == state.MeaningId
-                    && translation.Id == state.TranslationId
+                    && translation.LanguageId == state.LanguageId
                     && state.UserId == userId,
                 (translation, state) => new LearningItem
                 {
-                    IsMarked = state.IsMarked,
                     TranslationId = ToIdentifier(translation),
                     Translation = translation.Text,
                     Transcription = translation.Transcription,
                     Difficulty = translation.Difficulty,
                     LearnedAt = state.LearnedAt,
-                    RepeatedAt = state.RepeatedAt,
-                    Word = translation.Meaning.Word.Text,
-                    CefrLevel = translation.Meaning.CefrLevel!.Name,
-                    Meaning = translation.Meaning.Text,
-                    Topics = context.MeaningTopics
-                        .Where(x =>
-                            x.WordId == translation.WordId
-                            && x.MeaningId == translation.MeaningId)
+                    Word = translation.Word.Text,
+                    CefrLevel = translation.Word.CefrLevel!.Name,
+                    Meaning = translation.Word.Meaning,
+                    Topics = context.WordTopics
+                        .Where(x => x.WordId == translation.WordId)
                         .Select(wmt => wmt.Topic.Name)
                         .ToList(),
                 });
-
-        if (filter.HasFlag(ShowWordsMode.Hard))
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-            dbQuery = dbQuery.Where(x => x.IsMarked);
-        }
 
         if (filter.HasFlag(ShowWordsMode.NotLearned))
         {
@@ -79,9 +67,8 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
     {
         return x => new TranslationIdentifier
         {
-            MeaningId = x.MeaningId,
-            TranslationId = x.Id,
-            WordId = x.Meaning.WordId
+            LanguageId = x.LanguageId,
+            WordId = x.WordId
         };
     }
 

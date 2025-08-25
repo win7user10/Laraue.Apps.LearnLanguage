@@ -16,40 +16,6 @@ public class StatsService(
     IAdminRepository adminRepository,
     ILogger<StatsService> logger) : IStatsService
 {
-    public async Task SendDailyStatMessages(CancellationToken ct = default)
-    {
-        var learnedStat = await statsRepository.GetYesterdayAllUsersStatsAsync(ct);
-
-        foreach (var userLearnedStat in learnedStat)
-        {
-            var learnedYesterdayPercent = userLearnedStat.LearnedYesterdayCount
-                .DivideAndReturnPercent(userLearnedStat.TotalWordsCount);
-            
-            var messageBuilder = new TelegramMessageBuilder()
-                .AppendRow(string.Format(Stats.YesterdayWereLearned, userLearnedStat.LearnedYesterdayCount))
-                .AppendRow(
-                    string.Format(
-                        Stats.TotalStatIs,
-                        $"{userLearnedStat.LearnedTotalCount} / {userLearnedStat.TotalWordsCount} (+{learnedYesterdayPercent:F}%)"))
-                .AddDeleteMessageButton(Buttons.Okay);
-
-            try
-            {
-                await client.SendTextMessageAsync(
-                    userLearnedStat.TelegramId,
-                    messageBuilder,
-                    cancellationToken: ct);
-            }
-            catch (Exception e)
-            {
-                logger.LogWarning(
-                    e,
-                    "Error while sending stat to the user {TelegramId}",
-                    userLearnedStat.TelegramId);
-            }
-        }
-    }
-
     public async Task SendStatsAsync(ReplyData replyData, CancellationToken ct = default)
     {
         var (totalStat, dayLearnStatsCollection) = await statsRepository.GetLearnStatsAsync(replyData.UserId, ct);
@@ -86,7 +52,6 @@ public class StatsService(
                     Stats.LastActivityRow,
                     dayStat.Date.ToShortDateString(),
                     dayStat.LearnedCount,
-                    dayStat.RepeatedCount,
                     $"{dayLearnPercent:F}"));
         }
 
@@ -107,13 +72,6 @@ public class StatsService(
         foreach (var registeredUsers in stats.RegisteredUsers)
         {
             tmb.AppendRow($"{registeredUsers.Date:d} (+{registeredUsers.Count})");
-        }
-        
-        tmb.AppendRow();
-        tmb.AppendRow($"<b>{string.Format(Stats.AdminStats_ActiveUsers, stats.ActiveUsersCount / (double)stats.ActiveUsers.Count)}</b>");
-        foreach (var activeUsers in stats.ActiveUsers)
-        {
-            tmb.AppendRow($"{activeUsers.Date:d} - {activeUsers.Count}");
         }
         
         await client.SendTextMessageAsync(telegramId, tmb, parseMode: ParseMode.Html, cancellationToken: ct);

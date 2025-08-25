@@ -33,21 +33,7 @@ public class DefaultContextData
         new () { Id = 7, Name = "C2" }
     ]);
 
-    public static DictionaryMap<PartOfSpeech> PartOfSpeeches = new (
-    [
-        new () { Id = 1, Name = "verb" },
-        new () { Id = 2, Name = "noun" },
-        new () { Id = 3, Name = "preposition" },
-        new () { Id = 4, Name = "adjective" },
-        new () { Id = 5, Name = "adverb" },
-        new () { Id = 6, Name = "phrase" },
-        new () { Id = 7, Name = "determiner" },
-        new () { Id = 8, Name = "phrasal verb" },
-        new () { Id = 9, Name = "exclamation" },
-        new () { Id = 10, Name = "modal verb" },
-        new () { Id = 11, Name = "pronoun" },
-    ]);
-
+    public static DictionaryMap<PartOfSpeech> PartOfSpeeches = new (GetJsonData<PartOfSpeech>("partsOfSpeech.json"));
     public static DictionaryMap<WordLanguage> WordLanguages = new (GetJsonData<WordLanguage>("languages.json"));
     public static DictionaryMap<Topic> WordTopics = new (GetJsonData<Topic>("topics.json"));
     public static ImportingWord[] Words = GetJsonData<ImportingWord>("translations.json");
@@ -76,7 +62,7 @@ public class DefaultContextData
         {
             var entity = Items.FirstOrDefault(l => l.Name == name);
             return entity?.Id ?? 
-                   throw new BadRequestException(propertyName, $"Unknown name: {name} has been passed for entity {typeof(TEntity)}");
+                   throw new InvalidOperationException($"Unknown name: {name} has been passed for entity {typeof(TEntity)}");
         }
         
         public void EnsureExists(string name, [CallerMemberName] string propertyName = "")

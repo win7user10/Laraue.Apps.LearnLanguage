@@ -9,7 +9,7 @@ public static class EntityTypeBuilderExtensions
     public static KeyBuilder HasTranslationKey<T>(this EntityTypeBuilder<T> builder)
         where T : class, IEntityWithTranslationReference
     {
-        return builder.HasKey(x => new { x.WordId, x.MeaningId, x.TranslationId });
+        return builder.HasKey(x => new { x.WordId, x.LanguageId });
     }
     
     public static EntityTypeBuilder<T> HasForeignKeyToTranslation<T>(
@@ -19,21 +19,8 @@ public static class EntityTypeBuilderExtensions
     {
         builder.HasOne(x => x.Translation)
             .WithMany(backReference)
-            .HasForeignKey(x => new { x.WordId, x.MeaningId, x.TranslationId  })
-            .HasPrincipalKey(x => new { x.WordId, x.MeaningId, x.Id });
-
-        return builder;
-    }
-    
-    public static EntityTypeBuilder<T> HasForeignKeyToMeaning<T>(
-        this EntityTypeBuilder<T> builder,
-        Expression<Func<Meaning, IEnumerable<T>?>> backReference)
-        where T : class, IEntityWithMeaningReference
-    {
-        builder.HasOne(x => x.Meaning)
-            .WithMany(backReference)
-            .HasForeignKey(x => new { x.WordId, x.MeaningId })
-            .HasPrincipalKey(x => new { x.WordId, x.Id });
+            .HasForeignKey(x => new { x.WordId, x.LanguageId  })
+            .HasPrincipalKey(x => new { x.WordId, x.LanguageId });
 
         return builder;
     }

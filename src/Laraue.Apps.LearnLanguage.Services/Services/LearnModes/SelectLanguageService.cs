@@ -70,13 +70,17 @@ public class SelectLanguageService(
             .AppendRow()
             .AppendRow(Mode.SelectLanguage);
 
-        tmb.AddInlineKeyboardButtons(availablePairs
-            .Select(p => nextRoute
+        foreach (var pair in availablePairs)
+        {
+            var button = nextRoute
                 .WithTranslationDirection(
                     new SelectedTranslation(
-                        p.LanguageToLearn.Id,
-                        p.LanguageToLearnFrom.Id))
-                .ToInlineKeyboardButton($"{p.LanguageToLearnFrom.Code} -> {p.LanguageToLearn.Code} ({p.Count})")));
+                        pair.LanguageToLearn.Id,
+                        pair.LanguageToLearnFrom.Id))
+                .ToInlineKeyboardButton($"{pair.LanguageToLearnFrom.Code} -> {pair.LanguageToLearn.Code} ({pair.Count})");
+            
+            tmb.AddInlineKeyboardButtons([button]);
+        }
 
         tmb.AddMainMenuButton();
         

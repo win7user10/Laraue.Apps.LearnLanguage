@@ -17,11 +17,6 @@ public sealed class User : TelegramIdentityUser<Guid>
     /// Which words should be shown to the user.
     /// </summary>
     public ShowWordsMode ShowWordsMode { get; set; }
-
-    /// <summary>
-    /// All user's translation's states.
-    /// </summary>
-    public ICollection<TranslationState> WordTranslationStates { get; set; } = null!;
     
     /// <summary>
     /// The <see cref="WordLanguage"/> reference.

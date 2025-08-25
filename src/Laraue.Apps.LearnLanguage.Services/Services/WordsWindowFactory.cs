@@ -9,7 +9,6 @@ namespace Laraue.Apps.LearnLanguage.Services.Services;
 
 public class WordsWindowFactory(
     ITelegramBotClient client,
-    IWordsRepository wordsRepository,
     IDateTimeProvider dateTimeProvider) : IWordsWindowFactory
 {
     public IWordsWindow Create(
@@ -22,7 +21,6 @@ public class WordsWindowFactory(
             userViewSettings,
             viewRoute,
             client,
-            wordsRepository,
             dateTimeProvider);
     }
 }
