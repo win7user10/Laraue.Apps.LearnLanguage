@@ -22,7 +22,7 @@ public class WordsController(IWordsService wordsService) : ControllerBase
     }
     
     [HttpPost("{wordId:int}/Translations")]
-    public Task<long> UpsertTranslationAsync(int wordId, [FromBody] UpdateTranslationDto updateTranslationDto)
+    public Task UpsertTranslationAsync(int wordId, [FromBody] UpdateTranslationDto updateTranslationDto)
     {
         return wordsService.UpsertTranslationAsync(wordId, updateTranslationDto);
     }

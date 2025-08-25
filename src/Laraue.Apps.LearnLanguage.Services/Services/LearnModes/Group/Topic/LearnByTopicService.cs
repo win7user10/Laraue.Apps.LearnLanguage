@@ -6,14 +6,12 @@ namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.Topic;
 
 public sealed class LearnByTopicService(
     IUserRepository userRepository,
-    IWordsRepository wordsRepository,
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
     ILearnByTopicRepository learnByTopicRepository,
     ISelectLanguageService selectLanguageService) : 
         BaseLearnByGroupService<long, DetailViewByTopicRequest>(
             userRepository,
-            wordsRepository,
             wordsWindowFactory,
             client,
             learnByTopicRepository,

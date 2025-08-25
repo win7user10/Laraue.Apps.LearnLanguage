@@ -3,7 +3,7 @@
 public record TranslationIdentifier
 {
     public long WordId { get; init; }
-    public long TranslationId { get; init; }
+    public long LanguageId { get; init; }
 }
 
 public interface IHasWordReference
@@ -13,5 +13,5 @@ public interface IHasWordReference
 
 public interface IHasTranslationReference : IHasWordReference
 {
-    public long TranslationId { get; }
+    public long LanguageId { get; }
 }

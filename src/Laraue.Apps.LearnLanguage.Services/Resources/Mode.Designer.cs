@@ -159,6 +159,24 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Words lists.
+        /// </summary>
+        internal static string ListMode {
+            get {
+                return ResourceManager.GetString("ListMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View words groups.
+        /// </summary>
+        internal static string ListModeDescription {
+            get {
+                return ResourceManager.GetString("ListModeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next ➡.
         /// </summary>
         internal static string Navigation_Next {
@@ -213,7 +231,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select the language pair to learn. You also can set the preferred language pair in settings to select the same pair always..
+        ///   Looks up a localized string similar to Select the language pair. You also can set the preferred language pair in settings to select the same pair always..
         /// </summary>
         internal static string SelectLanguage {
             get {
@@ -222,7 +240,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select the mode.
+        ///   Looks up a localized string similar to Please select view mode.
         /// </summary>
         internal static string SelectMode {
             get {

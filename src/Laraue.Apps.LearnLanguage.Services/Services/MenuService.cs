@@ -17,31 +17,13 @@ public class MenuService(ITelegramBotClient client) : IMenuService
             .AppendRow()
             .AppendRow($"<b>{QuizMode.ButtonName}</b> - {QuizMode.Description}")
             .AppendRow()
-            .AppendRow($"<b>{RandomMode.ButtonName}</b> - {RandomMode.Description}")
-            .AppendRow()
-            .AppendRow($"<b>{GroupMode.CefrLevel_ButtonName}</b> - {GroupMode.CefrLevel_Description}")
-            .AppendRow()
-            .AppendRow($"<b>{GroupMode.Sequential_ButtonName}</b> - {GroupMode.Sequential_Description}")
-            .AppendRow()
-            .AppendRow($"<b>{GroupMode.Topics_ButtonName}</b> - {GroupMode.Topics_Description}")
+            .AppendRow($"<b>{Mode.ListMode}</b> - {Mode.ListModeDescription}")
             .AddInlineKeyboardButtons(new[]
             {
                 InlineKeyboardButton.WithCallbackData(
-                    QuizMode.ButtonName, TelegramRoutes.QuizSetup),
-            })
-            .AddInlineKeyboardButtons(new[]
-            {
+                    QuizMode.ButtonName, TelegramRoutes.CurrentQuiz),
                 InlineKeyboardButton.WithCallbackData(
-                    RandomMode.ButtonName, TelegramRoutes.RepeatWindow),
-            })
-            .AddInlineKeyboardButtons(new[]
-            {
-                InlineKeyboardButton.WithCallbackData(
-                    GroupMode.CefrLevel_ButtonName, TelegramRoutes.ListGroupsByCefrLevel),
-                InlineKeyboardButton.WithCallbackData(
-                    GroupMode.Topics_ButtonName, TelegramRoutes.ListGroupsByTopic),
-                InlineKeyboardButton.WithCallbackData(
-                    GroupMode.Sequential_ButtonName, TelegramRoutes.ListGroupsByFirstLetter),
+                    Mode.ListMode, TelegramRoutes.ViewWordsListMenu),
             })
             .AddInlineKeyboardButtons(new[]
             {
@@ -53,6 +35,30 @@ public class MenuService(ITelegramBotClient client) : IMenuService
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.Settings, TelegramRoutes.Settings)
             });
+
+        return client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
+    }
+
+    public Task SendWordsListsMenuAsync(ReplyData replyData, CancellationToken ct = default)
+    {
+        var tmb = new TelegramMessageBuilder()
+            .AppendRow(Mode.SelectMode)
+            .AppendRow()
+            .AppendRow($"<b>{GroupMode.CefrLevel_ButtonName}</b> - {GroupMode.CefrLevel_Description}")
+            .AppendRow()
+            .AppendRow($"<b>{GroupMode.Sequential_ButtonName}</b> - {GroupMode.Sequential_Description}")
+            .AppendRow()
+            .AppendRow($"<b>{GroupMode.Topics_ButtonName}</b> - {GroupMode.Topics_Description}")
+            .AddInlineKeyboardButtons(new[]
+            {
+                InlineKeyboardButton.WithCallbackData(
+                    GroupMode.CefrLevel_ButtonName, TelegramRoutes.ListGroupsByCefrLevel),
+                InlineKeyboardButton.WithCallbackData(
+                    GroupMode.Topics_ButtonName, TelegramRoutes.ListGroupsByTopic),
+                InlineKeyboardButton.WithCallbackData(
+                    GroupMode.Sequential_ButtonName, TelegramRoutes.ListGroupsByFirstLetter),
+            })
+            .AddMainMenuButton();
 
         return client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }

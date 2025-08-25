@@ -10,12 +10,12 @@ public static class WithTranslationIdentifierRequestExtensions
         this IWithTranslationIdentifierRequest request,
         [NotNullWhen(true)] out TranslationIdentifier? translationIdentifier)
     {
-        if (request.WordId is not null && request.MeaningId is not null && request.TranslationId is not null)
+        if (request.WordId is not null && request.LanguageId is not null)
         {
             translationIdentifier = new TranslationIdentifier
             {
                 WordId = request.WordId.Value,
-                TranslationId = request.TranslationId.Value
+                LanguageId = request.LanguageId.Value
             };
 
             return true;

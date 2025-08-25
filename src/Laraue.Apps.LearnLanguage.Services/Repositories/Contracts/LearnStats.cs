@@ -8,4 +8,4 @@ public record TotalStat(int LearnedCount, int TotalCount, ICollection<CefrLevelS
 
 public record CefrLevelStat(string? Level, int LearnedCount, int TotalCount);
 
-public record DayLearnStats(DateTime Date, int LearnedCount, int RepeatedCount);
+public record DayLearnStats(DateTime Date, int LearnedCount);

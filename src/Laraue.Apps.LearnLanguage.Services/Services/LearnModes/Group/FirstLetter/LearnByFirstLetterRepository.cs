@@ -22,7 +22,7 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
             .OrderBy(x => x.Key)
             .Select((x, i) => new LearningItemGroup<char>(
                 x.Key[0],
-                context.TranslationStates
+                context.LearnedTranslations
                     .Learned()
                     .Count(y => y.UserId == userId
                         && y.Translation.HasLanguage(

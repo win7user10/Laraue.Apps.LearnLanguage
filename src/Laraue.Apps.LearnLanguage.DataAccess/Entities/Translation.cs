@@ -3,13 +3,12 @@ using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 
 namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
 
-public sealed class Translation : BaseEntity, IEntityWithWordReference
+public sealed class Translation : IEntityWithWordReference
 {
     public long WordId { get; init; }
     public Word Word { get; set; }
     
-    public ICollection<TranslationState> TranslationStates { get; set; } = null!;
-    public ICollection<RepeatSessionTranslation> RepeatSessionTranslations { get; set; } = null!;
+    public ICollection<LearnedTranslation> LearnedTranslations { get; set; } = null!;
 
     /// <summary>
     /// Translation text.

@@ -2,9 +2,7 @@
 
 public static class TelegramRoutes
 {
-    public const string RepeatWindow = "rw";
-    public const string RepeatWindowWordsView = "rww";
-    public const string HandleSuggestion = "hs";
+    public const string ViewWordsListMenu = "wwl";
 
     public const string ListGroupsByCefrLevel = "lgcl";
     public const string DetailGroupByCefrLevel = "dgcl";
@@ -15,9 +13,7 @@ public static class TelegramRoutes
     public const string ListGroupsByTopic = "lgt";
     public const string DetailGroupByTopic = "dgt";
     
-    public const string QuizSetup = "qset";
     public const string CurrentQuiz = "quiz";
-    public const string StartQuiz = "qstart";
     
     public const string Stat = "stat";
     public const string Menu = "m";

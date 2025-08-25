@@ -27,4 +27,31 @@
     <data name="StartButtonName" xml:space="preserve">
         <value>Start</value>
     </data>
+    <data name="QuizAnswer_Correct" xml:space="preserve">
+        <value>+</value>
+    </data>
+    <data name="QuizAnswer_Incorrect" xml:space="preserve">
+        <value>-</value>
+    </data>
+    <data name="QuizFinishedTitle" xml:space="preserve">
+        <value>Quiz finished</value>
+    </data>
+    <data name="QuizAnswer_Skipped" xml:space="preserve">
+        <value>Skipped</value>
+    </data>
+    <data name="Correct" xml:space="preserve">
+        <value>Right</value>
+    </data>
+    <data name="Incorrect" xml:space="preserve">
+        <value>Wrong</value>
+    </data>
+    <data name="TranslateWord" xml:space="preserve">
+        <value>Select the translation for</value>
+    </data>
+    <data name="SkipButtonName" xml:space="preserve">
+        <value>Skip</value>
+    </data>
+    <data name="Question" xml:space="preserve">
+        <value>Question</value>
+    </data>
 </root>

@@ -14,7 +14,6 @@ namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group;
 
 public abstract class BaseLearnByGroupService<TId, TRequest>(
     IUserRepository userRepository,
-    IWordsRepository wordsRepository,
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
     ILearnByGroupRepository<TId> repository,
@@ -39,15 +38,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
     public async Task HandleDetailViewAsync(ReplyData replyData, TRequest request, CancellationToken ct = default)
     {
         await userRepository.UpdateViewSettings(replyData.UserId, request, ct);
-        if (request.TryGetTranslationIdentifier(out var identifier))
-        {
-            await wordsRepository.ChangeWordLearnStateAsync(
-                replyData.UserId,
-                identifier,
-                request.IsLearned,
-                request.IsMarked,
-                ct);
-        }
+        request.TryGetTranslationIdentifier(out var identifier);
         
         var userSettings = await userRepository.GetViewSettingsAsync(replyData.UserId, ct);
         var words = await repository.GetGroupWordsAsync(
@@ -76,23 +67,11 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
                 userViewSettings: userSettings,
                 viewRoute: viewRoute)
             .SetWindowTitle($"{ModeName} - {groupName}")
-            .SetBackButton(returnBackButton)
-            .UseFilters();
+            .SetBackButton(returnBackButton);
         
         if (words.TryGetOpenedWord(identifier, out var openedWord))
         {
             wordsWindow.SetOpenedTranslation(openedWord);
-            var switchLearnStateButton = viewRoute
-                .WithQueryParameter(ParameterNames.LearnState, openedWord.LearnedAt is null)
-                .WithTranslationIdentifier(openedWord.TranslationId)
-                .ToInlineKeyboardButton(openedWord.LearnedAt is not null ? "Not learned ❌" : "Learned ✅");
-        
-            var switchIsHardButton = viewRoute
-                .WithQueryParameter(ParameterNames.MarkState, !openedWord.IsMarked)
-                .WithTranslationIdentifier(openedWord.TranslationId)
-                .ToInlineKeyboardButton(openedWord.IsMarked ? "Drop mark" : "Add mark");
-
-            wordsWindow.SetActionButtons(new[] { switchLearnStateButton, switchIsHardButton });
         }
 
         await wordsWindow.SendAsync(replyData, ct);

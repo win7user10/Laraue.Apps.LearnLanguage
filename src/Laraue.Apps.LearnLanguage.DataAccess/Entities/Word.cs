@@ -45,10 +45,7 @@ public sealed class Word : BaseEntity
     
     public long PartOfSpeechId { get; set; }
     public PartOfSpeech? PartOfSpeech { get; set; }
-    
-    public ICollection<TranslationState> TranslationStates { get; set; } = null!;
+    public ICollection<LearnedTranslation> LearnedTranslations { get; set; } = null!;
     public ICollection<WordTopic> Topics { get; set; } = null!;
-    public ICollection<Meaning> Meanings { get; set; } = null!;
-    public ICollection<RepeatSessionTranslation> RepeatSessionTranslations { get; set; } = null!;
     public ICollection<Translation> Translations { get; set; } = null!;
 }

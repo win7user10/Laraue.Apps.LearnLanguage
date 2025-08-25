@@ -3,6 +3,5 @@
 public interface IWithTranslationIdentifierRequest
 {
     public long? WordId { get; }
-    public long? MeaningId { get; }
-    public long? TranslationId { get;  }
+    public long? LanguageId { get;  }
 }

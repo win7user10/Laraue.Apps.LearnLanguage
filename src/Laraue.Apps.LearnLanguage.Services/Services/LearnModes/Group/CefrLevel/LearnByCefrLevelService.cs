@@ -6,14 +6,12 @@ namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.CefrLevel
 
 public sealed class LearnByCefrLevelService(
     IUserRepository userRepository,
-    IWordsRepository wordsRepository,
     IWordsWindowFactory wordsWindowFactory,
     ITelegramBotClient client,
     ILearnByCefrLevelRepository learnByCefrLevelRepository,
     ISelectLanguageService selectLanguageService) : 
         BaseLearnByGroupService<long, DetailViewByCefrLevelRequest>(
             userRepository,
-            wordsRepository,
             wordsWindowFactory,
             client,
             learnByCefrLevelRepository,

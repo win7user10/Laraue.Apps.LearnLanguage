@@ -23,7 +23,7 @@ public class LearnByTopicRepository(DatabaseContext context)
             .GroupBy(x => new { WordTopicId = x.TopicId, x.Topic.Name })
             .Select(group => new LearningItemGroup<long>(
                 group.Key.WordTopicId,
-                _context.TranslationStates
+                _context.LearnedTranslations
                     .Learned()
                     .Count(y => y.UserId == userId
                         && y.Translation.HasLanguage(

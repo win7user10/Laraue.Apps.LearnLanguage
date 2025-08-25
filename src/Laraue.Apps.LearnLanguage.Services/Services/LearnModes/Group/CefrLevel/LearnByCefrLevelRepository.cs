@@ -23,7 +23,7 @@ public class LearnByCefrLevelRepository(DatabaseContext context)
             .OrderBy(x => x.Key.WordCefrLevelId)
             .Select((x, i) => new LearningItemGroup<long>(
                 x.Key.WordCefrLevelId.GetValueOrDefault(),
-                context.TranslationStates
+                context.LearnedTranslations
                     .Learned()
                     .Count(y => y.UserId == userId
                         && y.Translation.HasLanguage(

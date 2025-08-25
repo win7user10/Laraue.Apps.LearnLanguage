@@ -9,6 +9,8 @@ public class UserQuiz : BaseEntity
     public UserQuizStatus Status { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? FinishedAt { get; set; }
+
+    public IList<UserQuizQuestion> UserQuizQuestions { get; set; } = null!;
 }
 
 public enum UserQuizStatus

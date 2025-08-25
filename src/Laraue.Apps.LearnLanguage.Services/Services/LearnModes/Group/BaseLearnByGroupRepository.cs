@@ -25,20 +25,18 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
             .Where(t => t.HasLanguage(selectedTranslation.LanguageToLearnId, selectedTranslation.LanguageToLearnFromId))
             .Where(GetGroupWordsFilter(groupId))
             .LeftJoin(
-                context.TranslationStates,
+                context.LearnedTranslations,
                 (translation, state) => 
                     translation.WordId == state.WordId
-                    && translation.Id == state.TranslationId
+                    && translation.LanguageId == state.LanguageId
                     && state.UserId == userId,
                 (translation, state) => new LearningItem
                 {
-                    IsMarked = state.IsMarked,
                     TranslationId = ToIdentifier(translation),
                     Translation = translation.Text,
                     Transcription = translation.Transcription,
                     Difficulty = translation.Difficulty,
                     LearnedAt = state.LearnedAt,
-                    RepeatedAt = state.RepeatedAt,
                     Word = translation.Word.Text,
                     CefrLevel = translation.Word.CefrLevel!.Name,
                     Meaning = translation.Word.Meaning,
@@ -47,12 +45,6 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
                         .Select(wmt => wmt.Topic.Name)
                         .ToList(),
                 });
-
-        if (filter.HasFlag(ShowWordsMode.Hard))
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-            dbQuery = dbQuery.Where(x => x.IsMarked);
-        }
 
         if (filter.HasFlag(ShowWordsMode.NotLearned))
         {
@@ -75,7 +67,7 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
     {
         return x => new TranslationIdentifier
         {
-            TranslationId = x.Id,
+            LanguageId = x.LanguageId,
             WordId = x.WordId
         };
     }

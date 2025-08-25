@@ -1,13 +1,12 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess;
 using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Laraue.Apps.LearnLanguage.Services.Services;
 
 public interface IQuestionsGenerator
 {
-    Task<QuestionDto[]> GenerateQuestions(
+    Task<NewQuestionDto[]> GenerateQuestions(
         Guid userId,
         long languageId,
         int questionsCount,
@@ -17,7 +16,7 @@ public interface IQuestionsGenerator
 
 public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
 {
-    public async Task<QuestionDto[]> GenerateQuestions(
+    public async Task<NewQuestionDto[]> GenerateQuestions(
         Guid userId,
         long languageId,
         int questionsCount,
@@ -34,10 +33,9 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             .Where(x => x.UserId == userId)
             .Where(x => x.LearnedAt != null)
             .Where(x => x.Translation.LanguageId == languageId)
-            .Select(x => new QuestionDto
+            .Select(x => new NewQuestionDto
             {
-                WordId = x.Translation.WordId,
-                Text = x.Translation.Text
+                WordId = x.Translation.WordId
             })
             .OrderBy(x => Guid.NewGuid())
             .Take(preferredRememberWordsCount)
@@ -49,11 +47,10 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         var repeatQuestions = await context.LearnedTranslations
             .Where(x => x.UserId == userId)
             .Where(x => x.LearnedAt == null)
-            .Where(x => x.Translation.LanguageId == languageId)
-            .Select(x => new QuestionDto
+            .Where(x => x.LanguageId == languageId)
+            .Select(x => new NewQuestionDto
             {
-                WordId = x.Translation.WordId,
-                Text = x.Translation.Text
+                WordId = x.Translation.WordId
             })
             .OrderBy(x => Guid.NewGuid())
             .Take(repeatWordsCount)
@@ -63,16 +60,15 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         var newQuestions = await context.Translations
             .LeftJoin(
                 context.LearnedTranslations,
-                (translation, learnedTranslation) => translation.Id == learnedTranslation.TranslationId,
+                (translation, learnedTranslation) => translation.LanguageId == learnedTranslation.LanguageId && translation.WordId == learnedTranslation.WordId,
                 (translation, learnedTranslation) => new { translation, learnedTranslation })
             .Where(x => x.translation.LanguageId == languageId)
             .Where(x => x.learnedTranslation == null)
             .OrderBy(x => SqlFunctions.NewGuid())
             .Take(newQuestionsCount)
-            .Select(x => new QuestionDto
+            .Select(x => new NewQuestionDto
             {
-                WordId = x.translation.WordId,
-                Text = x.translation.Text
+                WordId = x.translation.WordId
             })
             .ToListAsyncEF(ct);
 
@@ -87,11 +83,11 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         return allQuestions;
     }
 
-    private async Task EnrichOptions(long languageId, int enrichCount, QuestionDto[] questions, CancellationToken ct)
+    private async Task EnrichOptions(long languageId, int enrichCount, NewQuestionDto[] questions, CancellationToken ct)
     {
         var allOptionIds = await context.Translations
             .Where(x => x.LanguageId == languageId)
-            .Select(x => x.Id)
+            .Select(x => x.WordId)
             .ToArrayAsyncLinqToDB(ct);
 
         var optionsLength = allOptionIds.Length;
@@ -120,9 +116,8 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
     }
 }
 
-public class QuestionDto
+public class NewQuestionDto
 {
     public required long WordId { get; set; }
-    public required string Text { get; set; }
     public long[] OptionIds { get; set; } = [];
 }

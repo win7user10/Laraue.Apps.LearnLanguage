@@ -20,19 +20,11 @@ public class DatabaseContext : DbContext
     
     public DbSet<Topic> Topics { get; init; }
     
-    public DbSet<Meaning> Meanings { get; init; }
-    
     public DbSet<WordTopic> WordTopics { get; init; }
     
     public DbSet<Translation> Translations { get; init; }
     
     public DbSet<User> Users { get; init; }
-    
-    public DbSet<RepeatSession> RepeatSessions { get; init; }
-    
-    public DbSet<RepeatSessionTranslation> RepeatSessionTranslations { get; init; }
-    
-    public DbSet<TranslationState> TranslationStates { get; init; }
     
     public DbSet<LearnedTranslation> LearnedTranslations { get; init; }
 
@@ -44,39 +36,24 @@ public class DatabaseContext : DbContext
     {
         modelBuilder.HasPostgresExtension("uuid-ossp");
 
-        modelBuilder.Entity<Meaning>()
-            .HasKey(x => new { x.WordId, x.Id });
-        
         modelBuilder.Entity<WordTopic>()
             .HasKey(x => new { x.WordId, x.TopicId });
-
-        modelBuilder.Entity<RepeatSession>()
-            .HasIndex(x => new { x.UserId })
-            .HasFilter($"state <> {RepeatState.Finished:D}")
-            .IsUnique();
-        
-        modelBuilder.Entity<RepeatSessionTranslation>()
-            .HasKey(x => new { x.WordId, x.MeaningId, x.TranslationId, x.RepeatSessionId });
-
-        modelBuilder.Entity<RepeatSessionTranslation>()
-            .HasForeignKeyToTranslation(x => x.RepeatSessionTranslations)
-            .HasForeignKeyToWord(x => x.RepeatSessionTranslations);
         
         modelBuilder.Entity<Word>()
             .HasIndex(x => x.Text);
 
         modelBuilder.Entity<Translation>()
-            .HasKey(x => new { x.WordId, x.Id, x.LanguageId });
+            .HasKey(x => new { x.WordId, x.LanguageId });
         
         modelBuilder.Entity<Translation>()
             .HasForeignKeyToWord(x => x.Translations);
+
+        modelBuilder.Entity<LearnedTranslation>()
+            .HasKey(x => new { x.WordId, x.LanguageId, x.UserId });
         
-        modelBuilder.Entity<TranslationState>()
-            .HasKey(x => new { x.WordId, x.TranslationId, x.UserId });
-        
-        modelBuilder.Entity<TranslationState>()
-            .HasForeignKeyToTranslation(x => x.TranslationStates)
-            .HasForeignKeyToWord(x => x.TranslationStates);
+        modelBuilder.Entity<LearnedTranslation>()
+            .HasForeignKeyToTranslation(x => x.LearnedTranslations)
+            .HasForeignKeyToWord(x => x.LearnedTranslations);
         
         modelBuilder.Entity<WordLanguage>().HasData(DefaultContextData.WordLanguages.Items);
         modelBuilder.Entity<CefrLevel>().HasData(DefaultContextData.CefrLevels.Items);
@@ -96,7 +73,7 @@ public class DatabaseContext : DbContext
             .HasIndex(x => x.QuizId);
         
         modelBuilder.Entity<UserQuizQuestion>()
-            .HasIndex(x => x.TranslationId);
+            .HasIndex(x => x.WordId);
         
         foreach (var word in DefaultContextData.Words)
         {
@@ -126,7 +103,6 @@ public class DatabaseContext : DbContext
                 modelBuilder.Entity<Translation>()
                     .HasData(new Translation
                     {
-                        Id = translation.Id,
                         Text = translation.Text,
                         LanguageId = DefaultContextData.WordLanguages.GetId(translation.Language),
                         WordId = word.Id,

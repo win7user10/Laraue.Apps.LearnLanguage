@@ -20,4 +20,25 @@
     <data name="StartButtonName" xml:space="preserve">
         <value>Начать</value>
     </data>
+    <data name="QuizFinishedTitle" xml:space="preserve">
+        <value>Викторина завершена</value>
+    </data>
+    <data name="QuizAnswer_Skipped" xml:space="preserve">
+        <value>Пропущен</value>
+    </data>
+    <data name="Correct" xml:space="preserve">
+        <value>Верно</value>
+    </data>
+    <data name="Incorrect" xml:space="preserve">
+        <value>Неверно</value>
+    </data>
+    <data name="TranslateWord" xml:space="preserve">
+        <value>Выберите перевод слова</value>
+    </data>
+    <data name="SkipButtonName" xml:space="preserve">
+        <value>Пропустить</value>
+    </data>
+    <data name="Question" xml:space="preserve">
+        <value>Вопрос</value>
+    </data>
 </root>

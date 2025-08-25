@@ -44,8 +44,8 @@ public static class QueryExtensions
                && (languageToLearnFromId == null || x.LanguageId == languageToLearnFromId);
     }
     
-    public static IQueryable<TranslationState> Learned(
-        this IQueryable<TranslationState> wordTranslations)
+    public static IQueryable<LearnedTranslation> Learned(
+        this IQueryable<LearnedTranslation> wordTranslations)
     {
         return wordTranslations.Where(x => x.LearnedAt != null);
     }

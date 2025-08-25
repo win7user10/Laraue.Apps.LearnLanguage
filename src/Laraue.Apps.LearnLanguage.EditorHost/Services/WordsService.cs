@@ -80,7 +80,7 @@ public class WordsService : IWordsService
         return newWord.Id;
     }
 
-    public async Task<long> UpsertTranslationAsync(long wordId, UpdateTranslationDto updateTranslationDto)
+    public async Task UpsertTranslationAsync(long wordId, UpdateTranslationDto updateTranslationDto)
     {
         var word = GetWord(wordId);
         
@@ -111,19 +111,14 @@ public class WordsService : IWordsService
         {
             Populate(translation, updateTranslationDto);
             await UpdateJsonFileAsync();
-            return translation.Id;
         }
         
-        var newTranslation = new ImportingTranslation
-        {
-            Id = word.Translations.Select(m => m.Id).DefaultIfEmpty().Max() + 1,
-        };
+        var newTranslation = new ImportingTranslation();
         
         Populate(newTranslation, updateTranslationDto);
         word.Translations.Add(newTranslation);
         
         await UpdateJsonFileAsync();
-        return newTranslation.Id;
     }
 
     public Task DeleteTranslationAsync(long wordId, string translationCode)

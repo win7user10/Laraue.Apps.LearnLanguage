@@ -30,7 +30,7 @@
         <value>Последняя активность:</value>
     </data>
     <data name="LastActivityRow" xml:space="preserve">
-        <value>{0} - выучено: {1}, повторено: {2} слов(а) - {3}%</value>
+        <value>{0} - выучено: {1} слов(а) - {2}%</value>
     </data>
     <data name="NA" xml:space="preserve">
         <value>Не определено</value>

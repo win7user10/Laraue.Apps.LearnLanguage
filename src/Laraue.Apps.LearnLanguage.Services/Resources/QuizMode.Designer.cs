@@ -69,6 +69,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Right.
+        /// </summary>
+        internal static string Correct {
+            get {
+                return ResourceManager.GetString("Correct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select one of the suggested word in quiz mode.
         /// </summary>
         internal static string Description {
@@ -78,11 +87,83 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wrong.
+        /// </summary>
+        internal static string Incorrect {
+            get {
+                return ResourceManager.GetString("Incorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Question.
+        /// </summary>
+        internal static string Question {
+            get {
+                return ResourceManager.GetString("Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to +.
+        /// </summary>
+        internal static string QuizAnswer_Correct {
+            get {
+                return ResourceManager.GetString("QuizAnswer_Correct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to -.
+        /// </summary>
+        internal static string QuizAnswer_Incorrect {
+            get {
+                return ResourceManager.GetString("QuizAnswer_Incorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skipped.
+        /// </summary>
+        internal static string QuizAnswer_Skipped {
+            get {
+                return ResourceManager.GetString("QuizAnswer_Skipped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quiz finished.
+        /// </summary>
+        internal static string QuizFinishedTitle {
+            get {
+                return ResourceManager.GetString("QuizFinishedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip.
+        /// </summary>
+        internal static string SkipButtonName {
+            get {
+                return ResourceManager.GetString("SkipButtonName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start.
         /// </summary>
         internal static string StartButtonName {
             get {
                 return ResourceManager.GetString("StartButtonName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the translation for.
+        /// </summary>
+        internal static string TranslateWord {
+            get {
+                return ResourceManager.GetString("TranslateWord", resourceCulture);
             }
         }
     }

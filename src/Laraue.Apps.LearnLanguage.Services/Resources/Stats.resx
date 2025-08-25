@@ -37,7 +37,7 @@
         <value>Last activity:</value>
     </data>
     <data name="LastActivityRow" xml:space="preserve">
-        <value>{0} - learned: {1}, repeated: {2} word(s) - {3}%</value>
+        <value>{0} - learned: {1} word(s) - {2}%</value>
     </data>
     <data name="NA" xml:space="preserve">
         <value>N/A</value>
