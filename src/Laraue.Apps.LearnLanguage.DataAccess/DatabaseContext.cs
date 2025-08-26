@@ -85,7 +85,6 @@ public class DatabaseContext : DbContext
                     CefrLevelId = word.CefrLevel is not null ? DefaultContextData.CefrLevels.GetId(word.CefrLevel) : null,
                     Transcription = word.Transcription,
                     PartOfSpeechId = DefaultContextData.PartOfSpeeches.GetId(word.PartOfSpeech),
-                    LanguageId =  DefaultContextData.WordLanguages.GetId("en"),
                 });
             
             foreach (var topic in word.Topics)

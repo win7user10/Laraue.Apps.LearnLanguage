@@ -87,6 +87,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Finish quiz.
+        /// </summary>
+        internal static string FinishQuiz {
+            get {
+                return ResourceManager.GetString("FinishQuiz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wrong.
         /// </summary>
         internal static string Incorrect {

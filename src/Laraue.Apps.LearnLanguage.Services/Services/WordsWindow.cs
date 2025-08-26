@@ -197,11 +197,20 @@ public class WordsWindow(
                 : GetTranslationText(item.Translation, item.Transcription);
             
         var msgBuilder = new StringBuilder()
-            .Append(source);
+            .Append("<b>")
+            .Append(source)
+            .Append("</b>");
+
+        if (item.PartOfSpeech is not null)
+        {
+            msgBuilder.Append(" (")
+                .Append(item.PartOfSpeech)
+                .Append(')');
+        }
 
         if (translation is not null)
         {
-            msgBuilder.Append(" - ")
+            msgBuilder.Append("     ")
                 .Append(translation);
         }
 
@@ -210,6 +219,6 @@ public class WordsWindow(
 
     private static string GetTranslationText(string translation, string? transcription)
     {
-        return string.IsNullOrWhiteSpace(transcription) ? translation : $"{translation} [{transcription}]";
+        return string.IsNullOrWhiteSpace(transcription) ? translation : $"{translation}     [{transcription}]";
     }
 }

@@ -2,6 +2,8 @@
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+using Laraue.Core.DataAccess.Contracts;
+using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using LinqToDB.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.FirstLetter;
@@ -9,16 +11,16 @@ namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.FirstLett
 public class LearnByFirstLetterRepository(DatabaseContext context)
     : BaseLearnByGroupRepository<char>(context), ILearnByFirstLetterRepository
 {
-    public override async Task<IList<LearningItemGroup<char>>> GetGroupsAsync(
+    public override async Task<IFullPaginatedResult<LearningItemGroup<char>>> GetGroupsAsync(
         Guid userId,
         SelectedTranslation selectedTranslation,
+        IPaginatedRequest request,
         CancellationToken ct = default)
     {
         return await context.Translations
             .Where(t => t.HasLanguage(
-                selectedTranslation.LanguageToLearnId,
-                selectedTranslation.LanguageToLearnFromId))
-            .GroupBy(x => x.Word.Text.Substring(0, 1))
+                selectedTranslation.LanguageToLearnId))
+            .GroupBy(x => x.Word.Text.Substring(0, 1).ToUpper())
             .OrderBy(x => x.Key)
             .Select((x, i) => new LearningItemGroup<char>(
                 x.Key[0],
@@ -26,12 +28,11 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
                     .Learned()
                     .Count(y => y.UserId == userId
                         && y.Translation.HasLanguage(
-                            selectedTranslation.LanguageToLearnId,
-                            selectedTranslation.LanguageToLearnFromId)
+                            selectedTranslation.LanguageToLearnId)
                         && y.Translation.Word.Text.StartsWith(x.Key)),
                 x.Count(),
                 x.Key.ToUpper()))
-            .ToListAsyncLinqToDB(ct);
+            .FullPaginateLinq2DbAsync(request, ct);
     }
 
     public override Task<string> GetGroupNameAsync(char groupId, CancellationToken ct = default)
@@ -41,6 +42,8 @@ public class LearnByFirstLetterRepository(DatabaseContext context)
 
     protected override Expression<Func<Translation, bool>> GetGroupWordsFilter(char id)
     {
-        return translation => translation.Word.Text.StartsWith(id);
+        return translation => translation.Word.Text.StartsWith(
+            id.ToString(),
+            StringComparison.InvariantCultureIgnoreCase);
     }
 }

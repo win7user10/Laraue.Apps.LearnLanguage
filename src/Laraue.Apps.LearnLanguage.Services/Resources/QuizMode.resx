@@ -54,4 +54,7 @@
     <data name="Question" xml:space="preserve">
         <value>Question</value>
     </data>
+    <data name="FinishQuiz" xml:space="preserve">
+        <value>Finish quiz</value>
+    </data>
 </root>

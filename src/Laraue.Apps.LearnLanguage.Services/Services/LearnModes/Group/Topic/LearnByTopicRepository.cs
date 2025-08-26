@@ -2,6 +2,8 @@
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+using Laraue.Core.DataAccess.Contracts;
+using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using LinqToDB.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.Topic;
@@ -11,15 +13,15 @@ public class LearnByTopicRepository(DatabaseContext context)
 {
     private readonly DatabaseContext _context = context;
 
-    public override async Task<IList<LearningItemGroup<long>>> GetGroupsAsync(
+    public override async Task<IFullPaginatedResult<LearningItemGroup<long>>> GetGroupsAsync(
         Guid userId,
         SelectedTranslation selectedTranslation,
+        IPaginatedRequest request,
         CancellationToken ct = default)
     {
         return await _context.WordTopics
             .Where(x => x.HasLanguage(
-                selectedTranslation.LanguageToLearnId,
-                selectedTranslation.LanguageToLearnFromId))
+                selectedTranslation.LanguageToLearnId))
             .GroupBy(x => new { WordTopicId = x.TopicId, x.Topic.Name })
             .Select(group => new LearningItemGroup<long>(
                 group.Key.WordTopicId,
@@ -27,12 +29,12 @@ public class LearnByTopicRepository(DatabaseContext context)
                     .Learned()
                     .Count(y => y.UserId == userId
                         && y.Translation.HasLanguage(
-                            selectedTranslation.LanguageToLearnId,
-                            selectedTranslation.LanguageToLearnFromId)
+                            selectedTranslation.LanguageToLearnId)
                         && y.Translation.Word.Topics.Any(t => t.TopicId == group.Key.WordTopicId)),
                 group.Count(),
                 group.Key.Name))
-            .ToListAsyncLinqToDB(ct);
+            .OrderByDescending(x => x.TotalCount)
+            .FullPaginateLinq2DbAsync(request, ct);
     }
 
     public override Task<string> GetGroupNameAsync(long groupId, CancellationToken ct = default)

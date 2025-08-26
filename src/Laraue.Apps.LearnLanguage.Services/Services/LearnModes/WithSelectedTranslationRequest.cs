@@ -8,12 +8,9 @@ public abstract record WithSelectedTranslationRequest
 {
     [FromQuery(ParameterNames.LanguageToLearn)]
     public long? LanguageToLearnId { get; init; }
-    
-    [FromQuery(ParameterNames.LanguageToLearnFrom)]
-    public long? LanguageToLearnFromId { get; init; }
 
     public static implicit operator SelectedTranslation(WithSelectedTranslationRequest @this)
     {
-        return new SelectedTranslation(@this.LanguageToLearnId, @this.LanguageToLearnFromId);
+        return new SelectedTranslation(@this.LanguageToLearnId);
     }
 }

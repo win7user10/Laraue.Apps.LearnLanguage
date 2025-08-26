@@ -11,4 +11,7 @@ public record QuizRequest : WithSelectedTranslationRequest
 {
     [FromQuery(ParameterNames.OpenedWordId)]
     public long? SelectedOptionId { get; init; }
+    
+    [FromQuery(ParameterNames.FinishQuiz)]
+    public bool FinishQuiz { get; init; }
 }

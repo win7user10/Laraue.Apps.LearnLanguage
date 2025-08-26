@@ -1,5 +1,13 @@
-﻿namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
+﻿using Laraue.Apps.LearnLanguage.Common;
+using Laraue.Core.DataAccess.Contracts;
+using Laraue.Telegram.NET.Abstractions.Request;
 
-public sealed record OpenModeRequest : WithSelectedTranslationRequest
+namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
+
+public sealed record OpenModeRequest : WithSelectedTranslationRequest, IPaginatedRequest
 {
+    [FromQuery(ParameterNames.Page)]
+    public int Page { get; init; }
+    
+    public int PerPage { get; init; } = 16;
 }

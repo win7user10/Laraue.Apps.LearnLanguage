@@ -22,6 +22,6 @@ public class WordsRepositoryTests : TestWithDatabase
         var dateTimeProviderMock = new Mock<IDateTimeProvider>();
         dateTimeProviderMock.Setup(x => x.UtcNow).Returns(_now);
         
-        _repository = new WordsRepository(GetDbContext(), dateTimeProviderMock.Object);
+        _repository = new WordsRepository(GetDbContext());
     }
 }

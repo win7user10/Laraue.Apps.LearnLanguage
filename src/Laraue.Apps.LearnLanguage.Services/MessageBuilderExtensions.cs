@@ -12,6 +12,14 @@ public static class MessageBuilderExtensions
     {
         return messageBuilder.AddInlineKeyboardButtons(new [] { MainMenuButton });
     }
+    
+    public static TelegramMessageBuilder AddBackMenuButton(this TelegramMessageBuilder messageBuilder, string callbackPath)
+    {
+        return messageBuilder.AddInlineKeyboardButtons(new []
+        {
+            InlineKeyboardButton.WithCallbackData(Resources.Buttons.Back, callbackPath)
+        });
+    }
 
     public static TelegramMessageBuilder AddDeleteMessageButton(
         this TelegramMessageBuilder messageBuilder,

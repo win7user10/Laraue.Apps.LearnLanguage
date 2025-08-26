@@ -35,4 +35,7 @@
     <data name="Settings_LearnLanguage" xml:space="preserve">
         <value>Язык для изучения</value>
     </data>
+    <data name="Back" xml:space="preserve">
+        <value>Назад</value>
+    </data>
 </root>

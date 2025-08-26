@@ -15,13 +15,14 @@ public class SelectLanguageService(
     ITelegramBotClient client)
     : ISelectLanguageService
 {
-    public async Task ShowLanguageWindowOrHandleRequestAsync(
-        WithSelectedTranslationRequest request,
+    public async Task ShowLanguageWindowOrHandleRequestAsync<TRequest>(
+        TRequest request,
         string languageWindowTitle,
         string nextRoute,
         ReplyData replyData,
-        Func<ReplyData, SelectedTranslation, CancellationToken, Task> handleRequestAsync,
+        Func<TRequest, ReplyData, SelectedTranslation, CancellationToken, Task> handleRequestAsync,
         CancellationToken ct = default)
+        where TRequest : WithSelectedTranslationRequest
     {
         var language = await TryGetSelectedLanguageAsync(replyData.UserId, request, ct);
         if (language is null)
@@ -34,7 +35,7 @@ public class SelectLanguageService(
         }
         else
         {
-            await handleRequestAsync(replyData, language, ct);
+            await handleRequestAsync(request, replyData, language, ct);
         }
     }
     
@@ -43,17 +44,16 @@ public class SelectLanguageService(
         WithSelectedTranslationRequest selectedTranslation,
         CancellationToken ct = default)
     {
-        if (selectedTranslation.LanguageToLearnId is not null || selectedTranslation.LanguageToLearnFromId is not null)
+        if (selectedTranslation.LanguageToLearnId is not null)
         {
             return new SelectedTranslation(
-                selectedTranslation.LanguageToLearnId,
-                selectedTranslation.LanguageToLearnFromId);
+                selectedTranslation.LanguageToLearnId);
         }
         
         var settings = await userRepository.GetSettingsAsync(userId, ct);
 
-        return settings.LanguageToLearnFromId is not null || settings.LanguageToLearnId is not null
-            ? new SelectedTranslation(settings.LanguageToLearnId, settings.LanguageToLearnFromId)
+        return settings.LanguageToLearnId is not null
+            ? new SelectedTranslation(settings.LanguageToLearnId)
             : null;
     }
 
@@ -75,9 +75,8 @@ public class SelectLanguageService(
             var button = nextRoute
                 .WithTranslationDirection(
                     new SelectedTranslation(
-                        pair.LanguageToLearn.Id,
-                        pair.LanguageToLearnFrom.Id))
-                .ToInlineKeyboardButton($"{pair.LanguageToLearnFrom.Code} -> {pair.LanguageToLearn.Code} ({pair.Count})");
+                        pair.LanguageToLearn.Id))
+                .ToInlineKeyboardButton($"en < - > {pair.LanguageToLearn.Code} ({pair.Count})");
             
             tmb.AddInlineKeyboardButtons([button]);
         }

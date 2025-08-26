@@ -24,16 +24,6 @@ public sealed class Word : BaseEntity
     public string? Meaning { get; init; }
     
     /// <summary>
-    /// The reference to <see cref="Entities.WordLanguage"/>.
-    /// </summary>
-    public long LanguageId { get; set; }
-
-    /// <summary>
-    /// The word language.
-    /// </summary>
-    public WordLanguage Language { get; set; } = null!;
-    
-    /// <summary>
     /// The reference to <see cref="CefrLevel"/>.
     /// </summary>
     public required long? CefrLevelId { get; init; }

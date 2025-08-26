@@ -53,9 +53,7 @@ public class UserRepository(DatabaseContext context) : IUserRepository
             .Select(x => new UserSettings(
                 x.TelegramLanguageCode,
                 x.LanguageToLearnId,
-                x.LanguageToLearnFromId,
-                x.LanguageToLearn.Name,
-                x.LanguageToLearnFrom.Name))
+                x.LanguageToLearn.Name))
             .FirstAsyncEF(ct);
     }
 
@@ -78,7 +76,6 @@ public class UserRepository(DatabaseContext context) : IUserRepository
             .Where(x => x.Id == userId)
             .UpdateAsync(_ => new User
             {
-                LanguageToLearnFromId = selectedTranslation.LanguageToLearnFromId,
                 LanguageToLearnId = selectedTranslation.LanguageToLearnId,
             }, ct);
     }

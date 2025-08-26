@@ -22,7 +22,7 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         CancellationToken ct = default)
     {
         var dbQuery = context.Translations
-            .Where(t => t.HasLanguage(selectedTranslation.LanguageToLearnId, selectedTranslation.LanguageToLearnFromId))
+            .Where(t => t.HasLanguage(selectedTranslation.LanguageToLearnId))
             .Where(GetGroupWordsFilter(groupId))
             .LeftJoin(
                 context.LearnedTranslations,
@@ -40,6 +40,7 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
                     Word = translation.Word.Text,
                     CefrLevel = translation.Word.CefrLevel!.Name,
                     Meaning = translation.Word.Meaning,
+                    PartOfSpeech = translation.Word.PartOfSpeech!.Name,
                     Topics = context.WordTopics
                         .Where(x => x.WordId == translation.WordId)
                         .Select(wmt => wmt.Topic.Name)
@@ -72,9 +73,10 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         };
     }
 
-    public abstract Task<IList<LearningItemGroup<TId>>> GetGroupsAsync(
+    public abstract Task<IFullPaginatedResult<LearningItemGroup<TId>>> GetGroupsAsync(
         Guid userId,
         SelectedTranslation selectedTranslation,
+        IPaginatedRequest request,
         CancellationToken ct = default);
 
     public abstract Task<string> GetGroupNameAsync(TId groupId, CancellationToken ct = default);

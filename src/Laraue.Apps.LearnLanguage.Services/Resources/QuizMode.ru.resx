@@ -41,4 +41,7 @@
     <data name="Question" xml:space="preserve">
         <value>Вопрос</value>
     </data>
+    <data name="FinishQuiz" xml:space="preserve">
+        <value>Завершить викторину</value>
+    </data>
 </root>

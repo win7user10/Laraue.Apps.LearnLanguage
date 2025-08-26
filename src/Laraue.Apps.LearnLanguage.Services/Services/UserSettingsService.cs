@@ -28,8 +28,8 @@ public class UserSettingsService(IUserRepository repository, ITelegramBotClient 
             .AppendRow(string.Format(Settings.CurrentLanguage, $"<b>{interfaceLanguage.Title}</b>"))
             .AppendRow(string.Format(
                 Settings.CurrentLearnLanguage,
-                settings.LanguageToLearnCode is not null || settings.LanguageToLearnFromCode is not null
-                    ? $"<b>{settings.LanguageToLearnFromCode} -> {settings.LanguageToLearnCode}</b>"
+                settings.LanguageToLearnCode is not null
+                    ? $"<b>en - {settings.LanguageToLearnCode}</b>"
                     : $"<b>{Settings.NotSet}</b>"))
             .AppendRow()
             .AppendRow(Settings.Edit);
@@ -104,9 +104,8 @@ public class UserSettingsService(IUserRepository repository, ITelegramBotClient 
         
         tmb.AddInlineKeyboardButtons(availableLanguagePairs
             .Select(x => path
-                .WithQueryParameter(ParameterNames.LanguageToLearnFrom, x.LanguageToLearnFrom.Id)
                 .WithQueryParameter(ParameterNames.LanguageToLearn, x.LanguageToLearn.Id)
-                .ToInlineKeyboardButton($"{x.LanguageToLearnFrom.Code} -> {x.LanguageToLearn.Code} ({x.Count})")));
+                .ToInlineKeyboardButton($"en < - > {x.LanguageToLearn.Code} ({x.Count})")));
 
         tmb.AddInlineKeyboardButtons(new[]
         {
@@ -129,7 +128,7 @@ public class UserSettingsService(IUserRepository repository, ITelegramBotClient 
     {
         return repository.UpdateLanguageSettingsAsync(
             replyData.UserId,
-            new SelectedTranslation(request.LanguageToLearnId, request.LanguageToLearnFromId),
+            new SelectedTranslation(request.LanguageToLearnId),
             ct);
     }
 }

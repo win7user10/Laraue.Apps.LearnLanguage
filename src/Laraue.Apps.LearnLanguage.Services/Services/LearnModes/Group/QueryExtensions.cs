@@ -9,39 +9,34 @@ public static class QueryExtensions
     [ExpressionMethod(nameof(TranslationHasLanguage))]
     public static bool HasLanguage(
         this Translation translation,
-        long? languageToLearnId,
-        long? languageToLearnFromId)
+        long? languageToLearnId)
     {
         throw new InvalidOperationException();
     }
     
-    public static IQueryable<Translation> HasLanguage(this IQueryable<Translation> queryable, long? languageToLearnId, long? languageToLearnFromId)
+    public static IQueryable<Translation> HasLanguage(this IQueryable<Translation> queryable, long? languageToLearnId)
     {
-        return queryable.Where(x => (languageToLearnId == null || x.Word.LanguageId == languageToLearnId)
-               && (languageToLearnFromId == null || x.Word.Translations.Any(t => t.LanguageId == languageToLearnFromId)));
+        return queryable.Where(x => (languageToLearnId == null || x.Word.Translations.Any(t => t.LanguageId == languageToLearnId)));
     }
     
     [ExpressionMethod(nameof(TopicHasLanguage))]
     public static bool HasLanguage(
         this WordTopic translation,
-        long? languageToLearnId,
-        long? languageToLearnFromId)
+        long? languageToLearnId)
     {
         throw new InvalidOperationException();
     }
     
-    public static Expression<Func<WordTopic, long?, long?, bool>> TopicHasLanguage()
+    public static Expression<Func<WordTopic, long?, bool>> TopicHasLanguage()
     {
-        return (x, languageToLearnId, languageToLearnFromId)
-            => (languageToLearnId == null || x.Word.LanguageId == languageToLearnId)
-               && (languageToLearnFromId == null || x.Word.Translations.Any(t => t.LanguageId == languageToLearnFromId));
+        return (x, languageToLearnId)
+            => (languageToLearnId == null || x.Word.Translations.Any(t => t.LanguageId == languageToLearnId));
     }
     
-    public static Expression<Func<Translation, long?, long?, bool>> TranslationHasLanguage()
+    public static Expression<Func<Translation, long?, bool>> TranslationHasLanguage()
     {
-        return (x, languageToLearnId, languageToLearnFromId)
-            => (languageToLearnId == null || x.Word.LanguageId == languageToLearnId)
-               && (languageToLearnFromId == null || x.LanguageId == languageToLearnFromId);
+        return (x, languageToLearnId)
+            => (languageToLearnId == null || x.LanguageId == languageToLearnId);
     }
     
     public static IQueryable<LearnedTranslation> Learned(

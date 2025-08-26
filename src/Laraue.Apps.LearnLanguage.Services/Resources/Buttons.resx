@@ -42,4 +42,7 @@
     <data name="Settings_BackButton" xml:space="preserve">
         <value>Settings 🔙</value>
     </data>
+    <data name="Back" xml:space="preserve">
+        <value>Back</value>
+    </data>
 </root>

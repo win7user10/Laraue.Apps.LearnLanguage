@@ -7,6 +7,7 @@ using Laraue.Apps.LearnLanguage.Services.Resources;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Utils;
+using Laraue.Telegram.NET.DataAccess.Extensions;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
@@ -92,23 +93,21 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
     }
 
     private async Task HandleListViewAsync(
+        OpenModeRequest request,
         ReplyData replyData,
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        var groups = await repository.GetGroupsAsync(
-            replyData.UserId, selectedTranslation, ct);
-        
-        var learnedCount = groups.Sum(x => x.LearnedCount);
-        var totalCount = groups.Sum(x => x.TotalCount);
-        var completedPercent = learnedCount.DivideAndReturnPercent(totalCount);
+        var groupsResult = await repository.GetGroupsAsync(
+            replyData.UserId, selectedTranslation, request, ct);
+
+        var groups = groupsResult.Data;
 
         var detailRoute = new CallbackRoutePath(DetailRoute)
             .WithTranslationDirection(selectedTranslation);
 
         var tmb = new TelegramMessageBuilder()
             .AppendRow($"<b>{ModeName}</b>")
-            .AppendRow(string.Format(GroupMode.LearnedWords, $"{learnedCount}/{totalCount} ({completedPercent:F}%)"))
             .AppendRow();
 
         var groupsWithNumber = groups
@@ -117,8 +116,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         
         tmb.AppendRows(groupsWithNumber
             .Select(group
-                => $"{group.SerialNumber}) {group.Group.Name} - {group.Group.LearnedCount}/{group.Group.TotalCount}" +
-                   $" ({group.Group.LearnedCount.DivideAndReturnPercent(group.Group.TotalCount):F}%)"));
+                => $"{group.SerialNumber}) {group.Group.Name} - {group.Group.LearnedCount}/{group.Group.TotalCount}"));
         
         tmb.AppendRow()
             .AppendRow(GroupMode.Open);
@@ -131,7 +129,12 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
                     .ToInlineKeyboardButton(group.SerialNumber.ToString())));
         }
 
-        tmb.AddMainMenuButton();
+        tmb.AddPaginationButtons(groupsResult, new CallbackRoutePath(ListRoute)
+            .WithTranslationDirection(selectedTranslation));
+        
+        tmb
+            .AddBackMenuButton(TelegramRoutes.ViewWordsListMenu)
+            .AddMainMenuButton();
 
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }

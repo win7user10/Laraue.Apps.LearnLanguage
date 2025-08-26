@@ -4,11 +4,12 @@ namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
 
 public interface ISelectLanguageService
 {
-    Task ShowLanguageWindowOrHandleRequestAsync(
-        WithSelectedTranslationRequest request,
+    Task ShowLanguageWindowOrHandleRequestAsync<TRequest>(
+        TRequest request,
         string languageWindowTitle,
         string nextRoute,
         ReplyData replyData,
-        Func<ReplyData, SelectedTranslation, CancellationToken, Task> handleRequestAsync,
-        CancellationToken ct = default);
+        Func<TRequest, ReplyData, SelectedTranslation, CancellationToken, Task> handleRequestAsync,
+        CancellationToken ct = default)
+        where TRequest : WithSelectedTranslationRequest;
 }

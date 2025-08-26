@@ -21,9 +21,10 @@ public interface ILearnByGroupRepository<TId>
     /// <summary>
     /// Returns all groups with user stats for each of them.
     /// </summary>
-    Task<IList<LearningItemGroup<TId>>> GetGroupsAsync(
+    Task<IFullPaginatedResult<LearningItemGroup<TId>>> GetGroupsAsync(
         Guid userId,
         SelectedTranslation selectedTranslation,
+        IPaginatedRequest request,
         CancellationToken ct = default);
 
     /// <summary>

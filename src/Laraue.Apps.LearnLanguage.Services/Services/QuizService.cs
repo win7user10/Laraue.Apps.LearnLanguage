@@ -11,7 +11,6 @@ using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Utils;
 using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
@@ -51,6 +50,7 @@ public class QuizService(
     }
     
     private async Task StartNewQuizAsync(
+        QuizRequest request,
         ReplyData replyData,
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
@@ -59,7 +59,7 @@ public class QuizService(
         
         var quizId = await repository.CreateQuizAsync(
             replyData.UserId,
-            selectedTranslation.LanguageToLearnFromId!.Value,
+            selectedTranslation.LanguageToLearnId!.Value,
             ct);
 
         // TODO - use settings to setup
@@ -68,7 +68,7 @@ public class QuizService(
         
         var questions = await questionsGenerator.GenerateQuestions(
             replyData.UserId,
-            selectedTranslation.LanguageToLearnFromId!.Value,
+            selectedTranslation.LanguageToLearnId!.Value,
             questionsCount,
             optionsCount,
             ct);
@@ -86,8 +86,12 @@ public class QuizService(
         CancellationToken ct = default)
     {
         var tmb = new TelegramMessageBuilder();
-        
-        if (request.SelectedOptionId.HasValue)
+
+        if (request.FinishQuiz)
+        {
+            await repository.SkipAllQuizQuestions(replyData.UserId, ct);
+        }
+        else if (request.SelectedOptionId.HasValue)
         {
             var result = await HandleSelectedOptionAsync(
                 replyData.UserId,
@@ -97,10 +101,12 @@ public class QuizService(
             tmb
                 .Append("<b>")
                 .Append(QuizMode.ResourceManager.GetString($"QuizAnswer_{result.Status}") ?? string.Empty)
-                .Append("</b> ")
+                .Append("     ")
                 .Append(result.QuestionDto.Word)
-                .Append(" - ")
-                .AppendRow(result.QuestionDto.Translation)
+                .Append("     ")
+                .Append(result.QuestionDto.Translation)
+                .AppendRow($"     [{result.QuestionDto.Transcription}]")
+                .Append("</b>")
                 .AppendRow();
         }
 
@@ -115,8 +121,7 @@ public class QuizService(
 
         tmb
             .Append(QuizMode.Question)
-            .AppendRow($" {stats.AnsweredQuestions}/{stats.TotalQuestions}")
-            .AppendRow()
+            .AppendRow($" <b>{stats.AnsweredQuestions}/{stats.TotalQuestions}</b>")
             .Append(QuizMode.TranslateWord)
             .AppendRow($" <b>{data.Word}</b>");
 
@@ -132,6 +137,11 @@ public class QuizService(
         tmb.AddInlineKeyboardButtons([
             InlineKeyboardButton.WithCallbackData(QuizMode.SkipButtonName, new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
                 .WithQueryParameter(ParameterNames.OpenedWordId, OptionIdToSkipQuestion))
+        ]);
+        
+        tmb.AddInlineKeyboardButtons([
+            InlineKeyboardButton.WithCallbackData(QuizMode.FinishQuiz, new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                .WithQueryParameter(ParameterNames.FinishQuiz, true))
         ]);
         
         tmb.AddMainMenuButton();
@@ -210,6 +220,7 @@ public class QuizService(
         Task<long> CreateQuizAsync(Guid userId, long languageId, CancellationToken ct = default);
         Task SetQuizFinished(long quizId, CancellationToken ct = default);
         Task SaveQuizQuestionsAsync(long quizId, NewQuestionDto[] questions, CancellationToken ct = default);
+        Task SkipAllQuizQuestions(Guid userId, CancellationToken ct = default);
         Task<FlashCardsDto> GetFlashCardsAsync(long quizId, long languageId, CancellationToken ct = default);
         Task<QuestionDto> GetQuestion(Guid userId, CancellationToken ct = default);
         Task SetQuizQuestionStatus(long questionId, UserQuizQuestionStatus status, CancellationToken ct = default);
@@ -251,6 +262,7 @@ public class QuizService(
         public long QuestionId { get; init; }
         public required string Word { get; init; }
         public required string Translation { get; init; }
+        public required string? Transcription { get; init; }
         public required long LanguageId { get; init; }
     }
     
@@ -312,6 +324,19 @@ public class QuizService(
             await context.SaveChangesAsync(ct);
         }
 
+        public Task SkipAllQuizQuestions(Guid userId, CancellationToken ct = default)
+        {
+            return context.UserQuizQuestions
+                .Where(x => x.Quiz.UserId == userId)
+                .Where(x => x.Quiz.Status == UserQuizStatus.Active)
+                .Where(x => x.Status == UserQuizQuestionStatus.New)
+                .UpdateAsync(question => new UserQuizQuestion
+                {
+                    Status = UserQuizQuestionStatus.Skipped,
+                    AnsweredAt = dateTimeProvider.UtcNow,
+                }, ct);
+        }
+
         public async Task<FlashCardsDto> GetFlashCardsAsync(long quizId, long languageId, CancellationToken ct = default)
         {
             var nextQuizQuestion = await context.UserQuizQuestions
@@ -358,7 +383,11 @@ public class QuizService(
                     Translation = context.Translations
                         .Where(y => y.LanguageId == x.Quiz.LanguageId)
                         .First(y => y.WordId == x.WordId)
-                        .Text
+                        .Text,
+                    Transcription = context.Translations
+                        .Where(y => y.LanguageId == x.Quiz.LanguageId)
+                        .First(y => y.WordId == x.WordId)
+                        .Transcription
                 })
                 .FirstOrThrowNotFoundEFAsync(ct);
         }
