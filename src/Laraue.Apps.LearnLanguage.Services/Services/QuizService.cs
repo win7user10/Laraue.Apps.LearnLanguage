@@ -155,24 +155,45 @@ public class QuizService(
         CancellationToken ct = default)
     {
         await repository.SetQuizFinished(quizId, ct);
-
-        var lastQuizStat = await repository.GetLastQuizStatsAsync(replyData.UserId, ct);
-        var incorrectCount = lastQuizStat.TotalQuestions - lastQuizStat.CorrectAnswersCount - lastQuizStat.SkippedAnswersCount;
+        
+        var lastQuizQuestions = await repository.GetLastQuizQuestionsAsync(replyData.UserId, ct);
+        var correctCount = lastQuizQuestions.Count(q => q.Status == UserQuizQuestionStatus.Correct);
+        var skippedCount = lastQuizQuestions.Count(q => q.Status == UserQuizQuestionStatus.Skipped);
+        
+        var incorrectCount = lastQuizQuestions.Length - correctCount - skippedCount;
 
         var tmb = new TelegramMessageBuilder()
             .AppendRow(QuizMode.QuizFinishedTitle)
             .AppendRow()
             .Append(QuizMode.Correct)
             .Append(" - ")
-            .AppendRow(lastQuizStat.CorrectAnswersCount.ToString())
+            .AppendRow(correctCount.ToString())
             .Append(QuizMode.QuizAnswer_Skipped)
             .Append(" - ")
-            .AppendRow(lastQuizStat.SkippedAnswersCount.ToString())
+            .AppendRow(skippedCount.ToString())
             .Append(QuizMode.Incorrect)
             .Append(" - ")
-            .AppendRow(incorrectCount.ToString());
+            .AppendRow(incorrectCount.ToString())
+            .AppendRow();
 
-        tmb.AddMainMenuButton();
+        for (var index = 0; index < lastQuizQuestions.Length; index++)
+        {
+            var lastQuizQuestion = lastQuizQuestions[index];
+            tmb
+                .Append($"{index + 1}")
+                .Append(") ")
+                .Append(QuizMode.ResourceManager.GetString($"QuizAnswer_{lastQuizQuestion.Status}") ?? string.Empty)
+                .Append(" ")
+                .Append(lastQuizQuestion.Word)
+                .Append("     ")
+                .Append(lastQuizQuestion.Translation)
+                .Append("     [")
+                .Append(lastQuizQuestion.Translation)
+                .AppendRow("]");
+        }
+
+        tmb
+            .AddMainMenuButton();
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
@@ -226,7 +247,7 @@ public class QuizService(
         Task SetQuizQuestionStatus(long questionId, UserQuizQuestionStatus status, CancellationToken ct = default);
         Task UpdateTranslationWinStreakAsync(long wordId, long languageId, Guid userId, bool increase, CancellationToken ct = default);
         Task<CurrentQuizStats> GetCurrentQuizStatsAsync(Guid userId, CancellationToken ct = default);
-        Task<LastQuizStats> GetLastQuizStatsAsync(Guid userId, CancellationToken ct = default);
+        Task<LastQuizStatsQuestion[]> GetLastQuizQuestionsAsync(Guid userId, CancellationToken ct = default);
     }
 
     public class FlashCard
@@ -242,12 +263,13 @@ public class QuizService(
         public int TotalQuestions { get; set; }
         public int AnsweredQuestions { get; set; }
     }
-    
-    public class LastQuizStats
+
+    public class LastQuizStatsQuestion
     {
-        public int TotalQuestions { get; set; }
-        public int CorrectAnswersCount { get; set; }
-        public int SkippedAnswersCount { get; set; }
+        public required string Word { get; init; }
+        public required string Translation { get; init; }
+        public required string? Transcription { get; init; }
+        public required UserQuizQuestionStatus Status { get; init; }
     }
     
     public class FlashCardsDto
@@ -441,19 +463,36 @@ public class QuizService(
                 .FirstOrThrowNotFoundEFAsync(ct);
         }
 
-        public Task<LastQuizStats> GetLastQuizStatsAsync(Guid userId, CancellationToken ct = default)
+        public async Task<LastQuizStatsQuestion[]> GetLastQuizQuestionsAsync(Guid userId, CancellationToken ct = default)
         {
-            return context.UserQuizzes
+            var quiz = await context.UserQuizzes
                 .Where(q => q.UserId == userId)
                 .Where(q => q.Status != UserQuizStatus.Active)
                 .OrderByDescending(x => x.FinishedAt)
-                .Select(x => new LastQuizStats
+                .Select(x => new { x.Id })
+                .FirstOrDefaultAsyncEF(ct);
+
+            if (quiz == null)
+            {
+                return [];
+            }
+            
+            return await context.UserQuizQuestions
+                .Where(x => x.QuizId == quiz.Id)
+                .Select(x => new LastQuizStatsQuestion
                 {
-                    TotalQuestions = x.UserQuizQuestions.Count,
-                    CorrectAnswersCount = x.UserQuizQuestions.Count(y => y.Status == UserQuizQuestionStatus.Correct),
-                    SkippedAnswersCount = x.UserQuizQuestions.Count(y => y.Status == UserQuizQuestionStatus.Skipped),
+                    Status = x.Status,
+                    Word = x.Word.Text,
+                    Translation = context.Translations
+                        .Where(y => y.LanguageId == x.Quiz.LanguageId)
+                        .First(y => y.WordId == x.WordId)
+                        .Text,
+                    Transcription = context.Translations
+                        .Where(y => y.LanguageId == x.Quiz.LanguageId)
+                        .First(y => y.WordId == x.WordId)
+                        .Transcription
                 })
-                .FirstOrThrowNotFoundEFAsync(ct);
+                .ToArrayAsyncEF(ct);
         }
     }
 }
