@@ -44,9 +44,7 @@ builder.Services
         opt.AvailableLanguages = InterfaceLanguage.Available.Select(x => x.Code).ToArray();
         opt.DefaultLanguage = InterfaceLanguage.Default.Code;
     })
-    .AddTelegramAuthentication<User, Guid, RequestContext>()
-    .AddEntityFrameworkStores<DatabaseContext>()
-    .AddDefaultTokenProviders();
+    .AddTelegramAuthentication<User, Guid, TelegramUserQueryService, RequestContext>();
 
 builder.Services.AddOptions<RoleUsers>();
 builder.Services.Configure<RoleUsers>(builder.Configuration.GetSection("Telegram:UserNamesByRoles"));

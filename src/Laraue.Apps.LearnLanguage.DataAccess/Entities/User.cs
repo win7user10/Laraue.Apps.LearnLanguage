@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using Laraue.Apps.LearnLanguage.DataAccess.Enums;
 using Laraue.Telegram.NET.Authentication.Models;
 
 namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
@@ -6,8 +7,25 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
 /// <summary>
 /// Application user.
 /// </summary>
-public sealed class User : TelegramIdentityUser<Guid>
+public sealed class User : ITelegramUser<Guid>
 {
+    /// <inheritdoc />
+    public Guid Id { get; init; }
+    
+    /// <inheritdoc />
+    public long TelegramId { get; init; }
+    
+    /// <inheritdoc />
+    [MaxLength(32)]
+    public string? TelegramUserName { get; init; }
+    
+    /// <inheritdoc />
+    [MaxLength(2)]
+    public string? TelegramLanguageCode { get; init; }
+    
+    /// <inheritdoc />
+    public DateTime CreatedAt { get; init; }
+    
     /// <summary>
     /// How to show word translations for this user. 
     /// </summary>
