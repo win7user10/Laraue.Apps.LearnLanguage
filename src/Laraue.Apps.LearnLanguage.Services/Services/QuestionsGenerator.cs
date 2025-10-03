@@ -35,7 +35,8 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             .Where(x => x.Translation.LanguageId == languageId)
             .Select(x => new NewQuestionDto
             {
-                WordId = x.Translation.WordId
+                WordId = x.Translation.WordId,
+                PartOfSpeechId = x.Translation.Word.PartOfSpeechId,
             })
             .OrderBy(x => Guid.NewGuid())
             .Take(preferredRememberWordsCount)
@@ -50,7 +51,8 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             .Where(x => x.LanguageId == languageId)
             .Select(x => new NewQuestionDto
             {
-                WordId = x.Translation.WordId
+                WordId = x.Translation.WordId,
+                PartOfSpeechId = x.Translation.Word.PartOfSpeechId,
             })
             .OrderBy(x => Guid.NewGuid())
             .Take(repeatWordsCount)
@@ -68,7 +70,8 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             .Take(newQuestionsCount)
             .Select(x => new NewQuestionDto
             {
-                WordId = x.translation.WordId
+                WordId = x.translation.WordId,
+                PartOfSpeechId = x.translation.Word.PartOfSpeechId,
             })
             .ToListAsyncEF(ct);
 
@@ -85,33 +88,52 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
 
     private async Task EnrichOptions(long languageId, int enrichCount, NewQuestionDto[] questions, CancellationToken ct)
     {
-        var allOptionIds = await context.Translations
+        var optionsData = await context.Translations
             .Where(x => x.LanguageId == languageId)
-            .Select(x => x.WordId)
-            .ToArrayAsyncLinqToDB(ct);
+            .Select(x => new { x.WordId, x.Word.PartOfSpeechId })
+            .ToArrayAsync(ct);
 
-        var optionsLength = allOptionIds.Length;
+        var optionIdsByPartOfSpeechId = optionsData
+            .GroupBy(x => x.PartOfSpeechId)
+            .ToDictionary(
+                x => x.Key,
+                x => x
+                    .Select(y => y.WordId)
+                    .ToArray());
+        
+        var allOptionIds = optionsData
+            .Select(x => x.WordId)
+            .ToArray();
         
         foreach (var question in questions)
         {
-            var generatedOptions = new HashSet<long>()
+            var generatedOptions = new HashSet<long>
             {
-                question.WordId, // first option is the correct value
+                question.WordId, // the first option is the correct value
             };
+            
+            // As default tries to generate options with the same part of speech
+            var partOfSpeechId = question.PartOfSpeechId;
+            var optionsLength = optionIdsByPartOfSpeechId[partOfSpeechId].Length;
+            var availableOptionIds = enrichCount > optionsLength
+                ? allOptionIds
+                : optionIdsByPartOfSpeechId[partOfSpeechId];
             
             for (var i = 0; i < enrichCount - 1; i++)
             {
                 while (true)
                 {
-                    var nextOptionId = Random.Shared.Next(0, optionsLength);
-                    if (generatedOptions.Add(nextOptionId))
+                    var nextOptionIndex = Random.Shared.Next(0, availableOptionIds.Length);
+                    var optionId = availableOptionIds[nextOptionIndex];
+                    
+                    if (generatedOptions.Add(optionId))
                     {
                         break;
                     }
                 }
             }
 
-            question.OptionIds = generatedOptions.OrderBy(_ => Guid.NewGuid()).ToArray();
+            question.OptionIds = generatedOptions.ToArray();
         }
     }
 }
@@ -119,5 +141,6 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
 public class NewQuestionDto
 {
     public required long WordId { get; set; }
+    public required long PartOfSpeechId { get; set; }
     public long[] OptionIds { get; set; } = [];
 }
