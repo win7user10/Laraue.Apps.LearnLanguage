@@ -27,6 +27,7 @@ public class QuizService(
     : IQuizService
 {
     private const long OptionIdToSkipQuestion = 0;
+    private const long WinStreakToLearn = 3;
     
     public async Task HandleQuizWindowAsync(ReplyData replyData, QuizRequest request, CancellationToken ct = default)
     {
@@ -113,7 +114,7 @@ public class QuizService(
         var stats = await repository.GetCurrentQuizStatsAsync(replyData.UserId, ct);
         if (stats.AnsweredQuestions == stats.TotalQuestions)
         {
-            await HandleFinishQuizAsync(replyData, stats.Id, ct);
+            await HandleFinishQuizAsync(replyData, stats.Id, stats.LanguageId, replyData.UserId, ct);
             return;
         }
         
@@ -123,7 +124,7 @@ public class QuizService(
             .Append(QuizMode.Question)
             .AppendRow($" <b>{stats.AnsweredQuestions}/{stats.TotalQuestions}</b>")
             .Append(QuizMode.TranslateWord)
-            .AppendRow($" <b>{data.Word}</b>");
+            .AppendRow($" <b>{data.Word}</b> ({data.PartOfSpeech})");
 
         foreach (var flashCardsChunk in data.FlashCards.Chunk(2))
         {
@@ -152,28 +153,20 @@ public class QuizService(
     private async Task HandleFinishQuizAsync(
         ReplyData replyData,
         long quizId,
+        long languageId,
+        Guid userId,
         CancellationToken ct = default)
     {
         await repository.SetQuizFinished(quizId, ct);
+        var learnStat = await repository.GetLearnStatAsync(userId, languageId, ct);
         
         var lastQuizQuestions = await repository.GetLastQuizQuestionsAsync(replyData.UserId, ct);
         var correctCount = lastQuizQuestions.Count(q => q.Status == UserQuizQuestionStatus.Correct);
         var skippedCount = lastQuizQuestions.Count(q => q.Status == UserQuizQuestionStatus.Skipped);
-        
         var incorrectCount = lastQuizQuestions.Length - correctCount - skippedCount;
 
         var tmb = new TelegramMessageBuilder()
             .AppendRow(QuizMode.QuizFinishedTitle)
-            .AppendRow()
-            .Append(QuizMode.Correct)
-            .Append(" - ")
-            .AppendRow(correctCount.ToString())
-            .Append(QuizMode.QuizAnswer_Skipped)
-            .Append(" - ")
-            .AppendRow(skippedCount.ToString())
-            .Append(QuizMode.Incorrect)
-            .Append(" - ")
-            .AppendRow(incorrectCount.ToString())
             .AppendRow();
 
         for (var index = 0; index < lastQuizQuestions.Length; index++)
@@ -192,6 +185,29 @@ public class QuizService(
                 .AppendRow("]");
         }
 
+        tmb
+            .AppendRow()
+            .Append(QuizMode.Correct)
+            .Append(" - ")
+            .AppendRow(correctCount.ToString())
+            .Append(QuizMode.QuizAnswer_Skipped)
+            .Append(" - ")
+            .AppendRow(skippedCount.ToString())
+            .Append(QuizMode.Incorrect)
+            .Append(" - ")
+            .AppendRow(incorrectCount.ToString());
+
+        tmb
+            .AppendRow()
+            .AppendRow("<b>Current stat</b>:")
+            .AppendRow($"Learned: {learnStat.Learned} / {learnStat.Total}");
+
+        foreach (var winStreak in learnStat.WinStreaks)
+        {
+            tmb
+                .AppendRow($"Win streak ({winStreak.Key}): {winStreak.Value}");
+        }
+        
         tmb
             .AddMainMenuButton();
         
@@ -248,6 +264,7 @@ public class QuizService(
         Task UpdateTranslationWinStreakAsync(long wordId, long languageId, Guid userId, bool increase, CancellationToken ct = default);
         Task<CurrentQuizStats> GetCurrentQuizStatsAsync(Guid userId, CancellationToken ct = default);
         Task<LastQuizStatsQuestion[]> GetLastQuizQuestionsAsync(Guid userId, CancellationToken ct = default);
+        Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, CancellationToken ct = default);
     }
 
     public class FlashCard
@@ -272,9 +289,17 @@ public class QuizService(
         public required UserQuizQuestionStatus Status { get; init; }
     }
     
+    public class LearnStat
+    {
+        public required int Learned { get; init; }
+        public required Dictionary<int, int> WinStreaks { get; init; }
+        public required int Total { get; init; }
+    }
+    
     public class FlashCardsDto
     {
         public required string Word { get; set; }
+        public required string PartOfSpeech { get; set; }
         public required FlashCard[] FlashCards { get; set; }
     }
 
@@ -368,7 +393,8 @@ public class QuizService(
                 .Select(x => new
                 {
                     x.OptionIds,
-                    x.Word.Text
+                    x.Word.Text,
+                    PartOfSpeech = x.Word.PartOfSpeech!.Name,
                 })
                 .FirstOrThrowNotFoundEFAsync(ct);
 
@@ -385,7 +411,8 @@ public class QuizService(
             return new FlashCardsDto
             {
                 Word = nextQuizQuestion.Text,
-                FlashCards = flashCards
+                FlashCards = flashCards,
+                PartOfSpeech = nextQuizQuestion.PartOfSpeech,
             };
         }
 
@@ -438,12 +465,12 @@ public class QuizService(
                     WordId = x.WordId,
                     UserId = x.UserId,
                     WinStreakCount = increase ? 1 : 0,
-                    LearnedAt =  increase ? x.WinStreakCount == 3 ? dateTimeProvider.UtcNow : null : null,
+                    LearnedAt =  increase ? x.WinStreakCount == WinStreakToLearn ? dateTimeProvider.UtcNow : null : null,
                 })
                 .UpdateWhenMatched((o, n) => new LearnedTranslation
                 {
                     WinStreakCount = increase ? o.WinStreakCount + 1 : 0,
-                    LearnedAt = increase ? o.WinStreakCount == 3 ? dateTimeProvider.UtcNow : null : null,
+                    LearnedAt = increase ? o.WinStreakCount == WinStreakToLearn ? dateTimeProvider.UtcNow : null : null,
                 })
                 .MergeAsync(ct);
         }
@@ -493,6 +520,32 @@ public class QuizService(
                         .Transcription
                 })
                 .ToArrayAsyncEF(ct);
+        }
+
+        public async Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, CancellationToken ct = default)
+        {
+            var query = context.LearnedTranslations
+                .Where(q => q.UserId == userId)
+                .Where(q => q.LanguageId == languageId);
+            
+            var learnedCount = await query
+                .CountAsyncEF(x => x.LearnedAt != null, ct);
+            
+            var winStreaks = await query
+                .Where(x => x.WinStreakCount < WinStreakToLearn)
+                .GroupBy(x => x.WinStreakCount)
+                .ToDictionaryAsyncEF(x => x.Key, x => x.Count(), ct);
+            
+            var totalCount = await context.Translations
+                .Where(x => x.LanguageId == languageId)
+                .CountAsyncEF(ct);
+
+            return new LearnStat
+            {
+                Learned = learnedCount,
+                Total = totalCount,
+                WinStreaks = winStreaks
+            };
         }
     }
 }
