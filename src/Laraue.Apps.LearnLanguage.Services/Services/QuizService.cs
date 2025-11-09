@@ -465,12 +465,12 @@ public class QuizService(
                     WordId = x.WordId,
                     UserId = x.UserId,
                     WinStreakCount = increase ? 1 : 0,
-                    LearnedAt =  increase ? x.WinStreakCount == WinStreakToLearn ? dateTimeProvider.UtcNow : null : null,
+                    LearnedAt =  increase ? x.WinStreakCount + 1 >= WinStreakToLearn ? dateTimeProvider.UtcNow : null : null,
                 })
                 .UpdateWhenMatched((o, n) => new LearnedTranslation
                 {
                     WinStreakCount = increase ? o.WinStreakCount + 1 : 0,
-                    LearnedAt = increase ? o.WinStreakCount == WinStreakToLearn ? dateTimeProvider.UtcNow : null : null,
+                    LearnedAt = increase ? o.WinStreakCount + 1 >= WinStreakToLearn ? dateTimeProvider.UtcNow : null : null,
                 })
                 .MergeAsync(ct);
         }
