@@ -100,14 +100,12 @@ public class QuizService(
                 ct);
             
             tmb
-                .Append("<b>")
                 .Append(QuizMode.ResourceManager.GetString($"QuizAnswer_{result.Status}") ?? string.Empty)
-                .Append("     ")
+                .Append(" ")
                 .Append(result.QuestionDto.Word)
-                .Append("     ")
+                .Append(" ")
                 .Append(result.QuestionDto.Translation)
-                .AppendRow($"     [{result.QuestionDto.Transcription}]")
-                .Append("</b>")
+                .AppendRow($" [{result.QuestionDto.Transcription}]")
                 .AppendRow();
         }
 
@@ -173,39 +171,60 @@ public class QuizService(
         {
             var lastQuizQuestion = lastQuizQuestions[index];
             tmb
-                .Append($"{index + 1}")
-                .Append(") ")
+                .Append($"{index + 1:00}")
+                .Append(". ")
+                .Append("<b>")
                 .Append(QuizMode.ResourceManager.GetString($"QuizAnswer_{lastQuizQuestion.Status}") ?? string.Empty)
                 .Append(" ")
                 .Append(lastQuizQuestion.Word)
-                .Append("     ")
-                .Append(lastQuizQuestion.Translation)
-                .Append("     [")
-                .Append(lastQuizQuestion.Translation)
-                .AppendRow("]");
+                .Append("</b>")
+                .Append(" ")
+                .Append(lastQuizQuestion.Translation);
+
+            if (lastQuizQuestion.Transcription is not null)
+            {
+                tmb.Append(" [")
+                    .Append(lastQuizQuestion.Transcription)
+                    .Append("]");
+            }
+
+            tmb.AppendRow();
         }
 
+        tmb.AppendRow();
+
+        if (correctCount == lastQuizQuestions.Length)
+        {
+            tmb.AppendRow(QuizMode.Perfect);
+        }
+        
         tmb
-            .AppendRow()
             .Append(QuizMode.Correct)
             .Append(" - ")
             .AppendRow(correctCount.ToString())
-            .Append(QuizMode.QuizAnswer_Skipped)
+            .Append(QuizMode.Skipped)
             .Append(" - ")
             .AppendRow(skippedCount.ToString())
             .Append(QuizMode.Incorrect)
             .Append(" - ")
             .AppendRow(incorrectCount.ToString());
 
+        var learnedInSessionCount = lastQuizQuestions
+            .Where(q => q.Status == UserQuizQuestionStatus.Correct)
+            .Count(q => q.LearnedAttempts == WinStreakToLearn);
+        
         tmb
             .AppendRow()
             .AppendRow($"<b>{QuizMode.CurrentStat}</b>:")
-            .AppendRow($"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total}");
+            .AppendRow($"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]");
 
         foreach (var winStreak in learnStat.WinStreaks)
         {
-            tmb
-                .AppendRow($"{QuizMode.WinStreak} ({winStreak.Key}): {winStreak.Value}");
+            var newWinStrikesCount = lastQuizQuestions
+                .Where(q => q.Status == UserQuizQuestionStatus.Correct)
+                .Count(q => q.LearnedAttempts == winStreak.Key);
+            
+            tmb.AppendRow($"{QuizMode.WinStreak} ({winStreak.Key}): {winStreak.Value} [+{newWinStrikesCount}]");
         }
         
         tmb
@@ -293,6 +312,7 @@ public class QuizService(
         public required string Translation { get; init; }
         public required string? Transcription { get; init; }
         public required UserQuizQuestionStatus Status { get; init; }
+        public required int LearnedAttempts { get; init; }
     }
     
     public class LearnStat
@@ -523,7 +543,13 @@ public class QuizService(
                     Transcription = context.Translations
                         .Where(y => y.LanguageId == x.Quiz.LanguageId)
                         .First(y => y.WordId == x.WordId)
-                        .Transcription
+                        .Transcription,
+                    LearnedAttempts = context.LearnedTranslations
+                        .Where(t => t.LanguageId == x.Quiz.LanguageId)
+                        .Where(t => t.UserId == x.Quiz.UserId)
+                        .Where(t => t.WordId == x.WordId)
+                        .Select(t => t.WinStreakCount)
+                        .FirstOrDefault()
                 })
                 .ToArrayAsyncEF(ct);
         }

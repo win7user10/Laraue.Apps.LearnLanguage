@@ -23,9 +23,6 @@
     <data name="QuizFinishedTitle" xml:space="preserve">
         <value>Викторина завершена</value>
     </data>
-    <data name="QuizAnswer_Skipped" xml:space="preserve">
-        <value>Пропущен</value>
-    </data>
     <data name="Correct" xml:space="preserve">
         <value>Верно</value>
     </data>
@@ -52,5 +49,11 @@
     </data>
     <data name="Learned" xml:space="preserve">
         <value>Выучено</value>
+    </data>
+    <data name="Perfect" xml:space="preserve">
+        <value>Великолепно!</value>
+    </data>
+    <data name="Skipped" xml:space="preserve">
+        <value>Пропущено</value>
     </data>
 </root>

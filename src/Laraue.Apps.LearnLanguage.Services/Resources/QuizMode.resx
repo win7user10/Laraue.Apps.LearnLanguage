@@ -28,19 +28,25 @@
         <value>Start</value>
     </data>
     <data name="QuizAnswer_Correct" xml:space="preserve">
-        <value>+</value>
+        <value>[+]</value>
     </data>
     <data name="QuizAnswer_Incorrect" xml:space="preserve">
-        <value>-</value>
+        <value>[-]</value>
     </data>
     <data name="QuizFinishedTitle" xml:space="preserve">
         <value>Quiz finished</value>
     </data>
     <data name="QuizAnswer_Skipped" xml:space="preserve">
-        <value>Skipped</value>
+        <value>[s]</value>
     </data>
     <data name="Correct" xml:space="preserve">
         <value>Right</value>
+    </data>
+    <data name="Skipped" xml:space="preserve">
+        <value>Skipped</value>
+    </data>
+    <data name="Perfect" xml:space="preserve">
+        <value>Perfect!</value>
     </data>
     <data name="Incorrect" xml:space="preserve">
         <value>Wrong</value>

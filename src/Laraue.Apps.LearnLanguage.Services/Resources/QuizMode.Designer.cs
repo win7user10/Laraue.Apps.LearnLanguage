@@ -123,6 +123,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Perfect!.
+        /// </summary>
+        internal static string Perfect {
+            get {
+                return ResourceManager.GetString("Perfect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Question.
         /// </summary>
         internal static string Question {
@@ -132,7 +141,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to +.
+        ///   Looks up a localized string similar to [+].
         /// </summary>
         internal static string QuizAnswer_Correct {
             get {
@@ -141,7 +150,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to -.
+        ///   Looks up a localized string similar to [-].
         /// </summary>
         internal static string QuizAnswer_Incorrect {
             get {
@@ -150,7 +159,7 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Skipped.
+        ///   Looks up a localized string similar to [s].
         /// </summary>
         internal static string QuizAnswer_Skipped {
             get {
@@ -173,6 +182,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         internal static string SkipButtonName {
             get {
                 return ResourceManager.GetString("SkipButtonName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skipped.
+        /// </summary>
+        internal static string Skipped {
+            get {
+                return ResourceManager.GetString("Skipped", resourceCulture);
             }
         }
         
