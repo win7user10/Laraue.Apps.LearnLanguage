@@ -78,6 +78,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current stat.
+        /// </summary>
+        internal static string CurrentStat {
+            get {
+                return ResourceManager.GetString("CurrentStat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select one of the suggested word in quiz mode.
         /// </summary>
         internal static string Description {
@@ -101,6 +110,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         internal static string Incorrect {
             get {
                 return ResourceManager.GetString("Incorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Learned.
+        /// </summary>
+        internal static string Learned {
+            get {
+                return ResourceManager.GetString("Learned", resourceCulture);
             }
         }
         
@@ -173,6 +191,15 @@ namespace Laraue.Apps.LearnLanguage.Services.Resources {
         internal static string TranslateWord {
             get {
                 return ResourceManager.GetString("TranslateWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Win streak.
+        /// </summary>
+        internal static string WinStreak {
+            get {
+                return ResourceManager.GetString("WinStreak", resourceCulture);
             }
         }
     }

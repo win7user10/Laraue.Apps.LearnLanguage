@@ -21,6 +21,9 @@
     <data name="Menu" xml:space="preserve">
         <value>Menu</value>
     </data>
+    <data name="RepeatQuiz" xml:space="preserve">
+        <value>Repeat Quiz</value>
+    </data>
     <data name="Stat" xml:space="preserve">
         <value>Open stat</value>
     </data>

@@ -199,16 +199,22 @@ public class QuizService(
 
         tmb
             .AppendRow()
-            .AppendRow("<b>Current stat</b>:")
-            .AppendRow($"Learned: {learnStat.Learned} / {learnStat.Total}");
+            .AppendRow($"<b>{QuizMode.CurrentStat}</b>:")
+            .AppendRow($"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total}");
 
         foreach (var winStreak in learnStat.WinStreaks)
         {
             tmb
-                .AppendRow($"Win streak ({winStreak.Key}): {winStreak.Value}");
+                .AppendRow($"{QuizMode.WinStreak} ({winStreak.Key}): {winStreak.Value}");
         }
         
         tmb
+            .AddInlineKeyboardButtons([
+                InlineKeyboardButton.WithCallbackData(
+                    Buttons.RepeatQuiz,
+                    new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                        .WithTranslationDirection(new SelectedTranslation(languageId)))
+            ])
             .AddMainMenuButton();
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
@@ -532,7 +538,7 @@ public class QuizService(
                 .CountAsyncEF(x => x.LearnedAt != null, ct);
             
             var winStreaks = await query
-                .Where(x => x.WinStreakCount < WinStreakToLearn)
+                .Where(x => x.WinStreakCount > 0 && x.WinStreakCount < WinStreakToLearn)
                 .GroupBy(x => x.WinStreakCount)
                 .ToDictionaryAsyncEF(x => x.Key, x => x.Count(), ct);
             

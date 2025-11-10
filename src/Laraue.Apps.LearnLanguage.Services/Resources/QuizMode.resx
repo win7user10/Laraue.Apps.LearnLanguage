@@ -45,6 +45,9 @@
     <data name="Incorrect" xml:space="preserve">
         <value>Wrong</value>
     </data>
+    <data name="CurrentStat" xml:space="preserve">
+        <value>Current stat</value>
+    </data>
     <data name="TranslateWord" xml:space="preserve">
         <value>Select the translation for</value>
     </data>
@@ -56,5 +59,11 @@
     </data>
     <data name="FinishQuiz" xml:space="preserve">
         <value>Finish quiz</value>
+    </data>
+    <data name="WinStreak" xml:space="preserve">
+        <value>Win streak</value>
+    </data>
+    <data name="Learned" xml:space="preserve">
+        <value>Learned</value>
     </data>
 </root>

@@ -38,4 +38,7 @@
     <data name="Back" xml:space="preserve">
         <value>Назад</value>
     </data>
+    <data name="RepeatQuiz" xml:space="preserve">
+        <value>Повторить</value>
+    </data>
 </root>

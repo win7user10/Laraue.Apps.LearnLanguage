@@ -44,4 +44,13 @@
     <data name="FinishQuiz" xml:space="preserve">
         <value>Завершить викторину</value>
     </data>
+    <data name="CurrentStat" xml:space="preserve">
+        <value>Текущая статистика</value>
+    </data>
+    <data name="WinStreak" xml:space="preserve">
+        <value>Серия правильных ответов</value>
+    </data>
+    <data name="Learned" xml:space="preserve">
+        <value>Выучено</value>
+    </data>
 </root>
