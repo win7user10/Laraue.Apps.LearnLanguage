@@ -195,7 +195,7 @@ public class QuizService(
 
         if (correctCount == lastQuizQuestions.Length)
         {
-            tmb.AppendRow(QuizMode.Perfect);
+            tmb.AppendRow($"<b>{QuizMode.Perfect}</b>");
         }
         
         tmb

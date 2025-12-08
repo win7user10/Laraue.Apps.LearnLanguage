@@ -3,6 +3,7 @@
 using Laraue.Apps.LearnLanguage.Common.Contracts;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Apps.LearnLanguage.EditorHost.Services;
+using Laraue.Core.DataAccess.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,18 +33,22 @@ var autoTranslator = services.GetRequiredService<IAutoTranslator>();
 
 var result = await wordsService.GetWordsAsync(new GetWordsRequest
 {
-    PerPage = 1_000_000,
-    Page = 0
+    Pagination = new PaginationData
+    {
+        PerPage = 1_000_000,
+        Page = 0
+    }
 });
 
-foreach (var word in result.Data)
+for (var index = 0; index < result.Data.Count; index++)
 {
+    var word = result.Data[index];
     logger.LogInformation("See '{Word}'", word.Word);
 
     var existsTranslationLanguages = word.Translations
         .Where(t => !string.IsNullOrEmpty(t.Text))
         .Select(t => t.Language);
-    
+
     var allTranslationLanguages = DefaultContextData.WordLanguages
         .Items
         .Select(t => t.Name)
@@ -54,10 +59,12 @@ foreach (var word in result.Data)
     if (missingTranslationLanguages.Length > 0)
     {
         logger.LogInformation(
-            "Try to translate '{Word}' to '[{Languages}]'",
+            "Try to translate '{Word}' to '[{Languages}]' {Current}/{Total}",
             word.Word,
-            string.Join(", ", missingTranslationLanguages));
-        
+            string.Join(", ", missingTranslationLanguages),
+            index + 1,
+            result.Data.Count);
+
         var translationResult = await autoTranslator.TranslateAsync(new TranslationData
         {
             FromLanguage = "en",
@@ -77,17 +84,17 @@ foreach (var word in result.Data)
             Topics = translationResult.Topics,
             Frequency = translationResult.Frequency,
         };
-        
+
         logger.LogInformation("Update word {Word}", newWord);
-        
+
         await wordsService.UpsertWordAsync(newWord);
 
         foreach (var translationResultItem in translationResult.Items)
         {
             logger.LogInformation(
-                "Update translation '{Translation}'", 
+                "Update translation '{Translation}'",
                 translationResultItem);
-            
+
             await wordsService.UpsertTranslationAsync(
                 word.Id,
                 new UpdateTranslationDto(
