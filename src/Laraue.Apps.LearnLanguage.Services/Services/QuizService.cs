@@ -459,10 +459,7 @@ public class QuizService(
                         .Where(y => y.LanguageId == x.Quiz.LanguageId)
                         .First(y => y.WordId == x.WordId)
                         .Text,
-                    Transcription = context.Translations
-                        .Where(y => y.LanguageId == x.Quiz.LanguageId)
-                        .First(y => y.WordId == x.WordId)
-                        .Transcription
+                    Transcription = x.Word.Transcription,
                 })
                 .FirstOrThrowNotFoundEFAsync(ct);
         }

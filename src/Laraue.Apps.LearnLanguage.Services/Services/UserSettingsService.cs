@@ -75,16 +75,19 @@ public class UserSettingsService(IUserRepository repository, ITelegramBotClient 
             .AppendRow()
             .AppendRow(Settings.SelectLanguage);
 
-        tmb.AddInlineKeyboardButtons(InterfaceLanguage.Available
-            .Select(x => path
-                .WithQueryParameter(nameof(UpdateInterfaceLanguageSettingsRequest.LanguageCode), x.Code)
-                .ToInlineKeyboardButton(x.Title)));
-
-        tmb.AddInlineKeyboardButtons(new[]
+        foreach (var language in InterfaceLanguage.Available)
         {
+            var button = path
+                .WithQueryParameter(nameof(UpdateInterfaceLanguageSettingsRequest.LanguageCode), language.Code)
+                .ToInlineKeyboardButton(language.Title);
+        
+            tmb.AddInlineKeyboardButtons([button]);
+        }
+
+        tmb.AddInlineKeyboardButtons([
             InlineKeyboardButton.WithCallbackData(
                 Buttons.Settings_BackButton, TelegramRoutes.Settings)
-        });
+        ]);
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
@@ -101,22 +104,23 @@ public class UserSettingsService(IUserRepository repository, ITelegramBotClient 
             .AppendRow($"<b>{Settings.UpdateTitle}</b>")
             .AppendRow()
             .AppendRow(Settings.SelectLearnLanguage);
-        
-        tmb.AddInlineKeyboardButtons(availableLanguagePairs
-            .Select(x => path
-                .WithQueryParameter(ParameterNames.LanguageToLearn, x.LanguageToLearn.Id)
-                .ToInlineKeyboardButton($"en < - > {x.LanguageToLearn.Code} ({x.Count})")));
 
-        tmb.AddInlineKeyboardButtons(new[]
+
+        foreach (var pair in availableLanguagePairs)
         {
+            tmb.AddInlineKeyboardButtons([path
+                .WithQueryParameter(ParameterNames.LanguageToLearn, pair.LanguageToLearn.Id)
+                .ToInlineKeyboardButton($"en < - > {pair.LanguageToLearn.Code} ({pair.Count})")]);
+        }
+
+        tmb.AddInlineKeyboardButtons([
             path.ToInlineKeyboardButton(Settings.NotSet)
-        });
+        ]);
         
-        tmb.AddInlineKeyboardButtons(new[]
-        {
+        tmb.AddInlineKeyboardButtons([
             InlineKeyboardButton.WithCallbackData(
                 Buttons.Settings_BackButton, TelegramRoutes.Settings)
-        });
+        ]);
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
