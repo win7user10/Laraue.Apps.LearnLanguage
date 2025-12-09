@@ -25,4 +25,8 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Laraue.Core.Ollama" Version="2.1.4" />
+    </ItemGroup>
+
 </Project>
