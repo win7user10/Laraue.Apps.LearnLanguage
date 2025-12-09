@@ -20,7 +20,7 @@ public class WordsService : IWordsService
     {
         get
         {
-            _wordsCache ??= DefaultContextData.Words.ToList() ?? [];
+            _wordsCache ??= DefaultContextData.GetWords().ToList() ?? [];
             return _wordsCache;
         }
     }
@@ -91,7 +91,7 @@ public class WordsService : IWordsService
                 "Translation should be not null or empty");
         }
 
-        DefaultContextData.WordLanguages.EnsureExists(updateTranslationDto.Language);
+        DefaultContextData.GetWordLanguages().EnsureExists(updateTranslationDto.Language);
         if (word.Translations.Any(
             m => m.Language == updateTranslationDto.Language && m.Text == updateTranslationDto.Text))
         {

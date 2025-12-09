@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="SelectMode" xml:space="preserve">
+        <value>कृपया दृश्य मोड चुनें</value>
+    </data>
+    <data name="ShowTranslations" xml:space="preserve">
+        <value>अनुवाद दिखाएं 👁</value>
+    </data>
+    <data name="HideTranslations" xml:space="preserve">
+        <value>अनुवाद छिपाएं 🙈</value>
+    </data>
+    <data name="Topic" xml:space="preserve">
+        <value>विषय: {0}</value>
+    </data>
+    <data name="Page" xml:space="preserve">
+        <value>पृष्ठ</value>
+    </data>
+    <data name="Filter_Marked" xml:space="preserve">
+        <value>फ़िल्टर: चिह्नित 🔍</value>
+    </data>
+    <data name="Filter_NotLearned" xml:space="preserve">
+        <value>फ़िल्टर: नहीं सीखा 🔍</value>
+    </data>
+    <data name="Filter_None" xml:space="preserve">
+        <value>फ़िल्टर: कोई नहीं 🔍</value>
+    </data>
+    <data name="OpenWord" xml:space="preserve">
+        <value>शब्द खोलें:</value>
+    </data>
+    <data name="OpenedWord" xml:space="preserve">
+        <value>खोल गया शब्द:</value>
+    </data>
+    <data name="Difficulty" xml:space="preserve">
+        <value>कठिनाई: {0}</value>
+    </data>
+    <data name="Learned" xml:space="preserve">
+        <value>सीखा: {0} दिन(s) पहले</value>
+    </data>
+    <data name="Repeated" xml:space="preserve">
+        <value>दोहराया: {0} दिन(s) पहले</value>
+    </data>
+    <data name="Difficulty_Easy" xml:space="preserve">
+        <value>आसान</value>
+    </data>
+    <data name="Difficulty_Medium" xml:space="preserve">
+        <value>बहुत मुश्किल</value>
+    </data>
+    <data name="Difficulty_Hard" xml:space="preserve">
+        <value>मध्यम</value>
+    </data>
+    <data name="Difficulty_Impossible" xml:space="preserve">
+        <value>मुश्किल</value>
+    </data>
+    <data name="Difficulty_VeryHard" xml:space="preserve">
+        <value>असंभव</value>
+    </data>
+    <data name="ViewMode_TranslationToWord" xml:space="preserve">
+        <value>अनुवाद -&gt; शब्द</value>
+    </data>
+    <data name="ViewMode_WordToTranslation" xml:space="preserve">
+        <value>शब्द -&gt; अनुवाद</value>
+    </data>
+    <data name="Navigation_Previous" xml:space="preserve">
+        <value>पिछला ⬅</value>
+    </data>
+    <data name="Navigation_Next" xml:space="preserve">
+        <value>अगला ➡</value>
+    </data>
+    <data name="SelectLanguage" xml:space="preserve">
+        <value>भाषा युग्म चुनें। आप हमेशा समान युग्म चुनने के लिए सेटिंग्स में पसंदीदा भाषा युग्म भी सेट कर सकते हैं।</value>
+    </data>
+    <data name="ListMode" xml:space="preserve">
+        <value>शब्द सूचियाँ</value>
+    </data>
+    <data name="ListModeDescription" xml:space="preserve">
+        <value>शब्द समूहों को देखें</value>
+    </data>
+</root>

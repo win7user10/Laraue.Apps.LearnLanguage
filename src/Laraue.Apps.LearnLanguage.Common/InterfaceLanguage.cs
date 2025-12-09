@@ -8,8 +8,13 @@ public class InterfaceLanguage
 
     public static InterfaceLanguage[] Available { get; } =
     [
-        new InterfaceLanguage { Code = "en", Title = "English" },
-        new InterfaceLanguage { Code = "ru", Title = "Русский" },
+        new() { Code = "en", Title = "English" },
+        new() { Code = "ru", Title = "Russian" },
+        new() { Code = "es", Title = "Spanish" },
+        new() { Code = "ja", Title = "Japanese" },
+        new() { Code = "de", Title = "Deutsch" },
+        new() { Code = "hi", Title = "Hindi" },
+        new() { Code = "fr", Title = "French" },
     ];
 
     public static InterfaceLanguage Default => Available[0];

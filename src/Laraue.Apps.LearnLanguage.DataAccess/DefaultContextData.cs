@@ -33,10 +33,25 @@ public class DefaultContextData
         new () { Id = 7, Name = "C2" }
     ]);
 
-    public static DictionaryMap<PartOfSpeech> PartOfSpeeches = new (GetJsonData<PartOfSpeech>("partsOfSpeech.json"));
-    public static DictionaryMap<WordLanguage> WordLanguages = new (GetJsonData<WordLanguage>("languages.json"));
-    public static DictionaryMap<Topic> WordTopics = new (GetJsonData<Topic>("topics.json"));
-    public static ImportingWord[] Words = GetJsonData<ImportingWord>("translations.json");
+    public static DictionaryMap<PartOfSpeech> GetPartOfSpeeches()
+    {
+        return new(GetJsonData<PartOfSpeech>("partsOfSpeech.json"));
+    }
+    
+    public static DictionaryMap<WordLanguage> GetWordLanguages()
+    {
+        return new (GetJsonData<WordLanguage>("languages.json"));
+    }
+    
+    public static DictionaryMap<Topic> GetWordTopics()
+    {
+        return new (GetJsonData<Topic>("topics.json"));
+    }
+    
+    public static ImportingWord[] GetWords()
+    {
+        return GetJsonData<ImportingWord>("translations.json");
+    }
 
     public sealed class DictionaryMap<TEntity> where TEntity : IDictionaryEntity
     {

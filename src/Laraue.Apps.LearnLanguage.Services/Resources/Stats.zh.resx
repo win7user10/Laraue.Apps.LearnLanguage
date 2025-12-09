@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="YesterdayWereLearned" xml:space="preserve">
+        <value>昨天您学习了 {0} 个单词！</value>
+    </data>
+    <data name="TotalStatIs" xml:space="preserve">
+        <value>总统计为 {0}</value>
+    </data>
+    <data name="Title" xml:space="preserve">
+        <value>学习统计</value>
+    </data>
+    <data name="TotalLearned" xml:space="preserve">
+        <value>总共学习了 {0}</value>
+    </data>
+    <data name="LearnedByCefrLevel" xml:space="preserve">
+        <value>根据 CEFR 等级学习：</value>
+    </data>
+    <data name="LastActivity" xml:space="preserve">
+        <value>上次活动：</value>
+    </data>
+    <data name="LastActivityRow" xml:space="preserve">
+        <value>{0} - 学习：{1} 个单词 - {2}%</value>
+    </data>
+    <data name="NA" xml:space="preserve">
+        <value>不适用</value>
+    </data>
+    <data name="AdminStats_Title" xml:space="preserve">
+        <value>过去 7 天的管理统计</value>
+    </data>
+    <data name="AdminStats_TotalUsers" xml:space="preserve">
+        <value>总用户：{0}</value>
+    </data>
+    <data name="AdminStats_ActiveUsers" xml:space="preserve">
+        <value>活跃用户：每天 {0}</value>
+    </data>
+</root>

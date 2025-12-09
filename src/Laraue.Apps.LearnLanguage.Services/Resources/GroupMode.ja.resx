@@ -1,0 +1,55 @@
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="CefrLevel_Title" xml:space="preserve">
+        <value>モード: CEFRレベル別</value>
+    </data>
+    <data name="CefrLevel_ButtonName" xml:space="preserve">
+        <value>CEFRレベル</value>
+    </data>
+    <data name="CefrLevel_Description" xml:space="preserve">
+        <value>Common European Framework of Reference for Languages (CEFR) に従って単語を学習します。例: A1、A2、B1など。</value>
+    </data>
+    <data name="Sequential_Description" xml:space="preserve">
+        <value>AからZまで、アルファベット順に単語を学習します。</value>
+    </data>
+    <data name="Topics_Description" xml:space="preserve">
+        <value>指定されたカテゴリ（家族、身体など）で単語を学習します。</value>
+    </data>
+    <data name="LearnedWords" xml:space="preserve">
+        <value>学習済み単語: {0}</value>
+    </data>
+    <data name="Open" xml:space="preserve">
+        <value>開く:</value>
+    </data>
+    <data name="Sequential_Title" xml:space="preserve">
+        <value>モード: アルファベット</value>
+    </data>
+    <data name="Topics_Title" xml:space="preserve">
+        <value>モード: トピック</value>
+    </data>
+    <data name="Topics_ButtonName" xml:space="preserve">
+        <value>トピック別</value>
+    </data>
+    <data name="Sequential_ButtonName" xml:space="preserve">
+        <value>順次学習</value>
+    </data>
+    <data name="BackButton" xml:space="preserve">
+        <value>リストに戻る 🔙</value>
+    </data>
+</root>
