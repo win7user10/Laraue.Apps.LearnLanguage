@@ -28,6 +28,7 @@ jobs:
       run: dotnet build --no-restore -c Release
     
     - name: Upload
+      if: github.ref == 'refs/heads/main'
       uses: marcodallasanta/ssh-scp-deploy@v1.2.0
       with:
        host: ${{ secrets.SSH_HOST }} # "example.com"
