@@ -6,19 +6,19 @@ public class DictionariesService : IDictionariesService
 {
     public Task<ICollection<DictionaryItemDto>> GetLanguagesAsync()
     {
-        return Task.FromResult((ICollection<DictionaryItemDto>)DefaultContextData.WordLanguages.Items
+        return Task.FromResult((ICollection<DictionaryItemDto>)DefaultContextData.GetWordLanguages().Items
             .Select(DictionaryItemDto.Create).ToList());
     }
 
     public Task<ICollection<DictionaryItemDto>> GetPartsOfSpeechesAsync()
     {
-        return Task.FromResult((ICollection<DictionaryItemDto>)DefaultContextData.PartOfSpeeches.Items
+        return Task.FromResult((ICollection<DictionaryItemDto>)DefaultContextData.GetPartOfSpeeches().Items
             .Select(DictionaryItemDto.Create).ToList());
     }
     
     public Task<ICollection<DictionaryItemDto>> GetTopicsAsync()
     {
-        return Task.FromResult((ICollection<DictionaryItemDto>)DefaultContextData.WordTopics.Items
+        return Task.FromResult((ICollection<DictionaryItemDto>)DefaultContextData.GetWordTopics().Items
             .Select(DictionaryItemDto.Create).ToList());
     }
     

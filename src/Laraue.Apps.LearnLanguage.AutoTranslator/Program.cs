@@ -18,6 +18,7 @@ Console.OutputEncoding = System.Text.Encoding.UTF8;
 var serviceCollection = new ServiceCollection()
     .AddLogging(x => x.AddConsole())
     .AddSingleton<IWordsService, WordsService>()
+    .AddSingleton<IWordsAutoTranslator, WordsAutoTranslator>()
     .AddScoped<IResxFilesTranslator, ResxFilesTranslator>()
     .AddSingleton<IConfiguration>(configuration);
 

@@ -73904,8 +73904,7 @@
     "frequency": 7,
     "topics": [
       "damage",
-      "loss",
-      "damage"
+      "loss"
     ],
     "translations": [
       {
@@ -99885,8 +99884,7 @@
     "frequency": 7,
     "topics": [
       "reveal",
-      "uncover",
-      "reveal"
+      "uncover"
     ],
     "translations": [
       {
@@ -217259,8 +217257,7 @@
     "frequency": 7,
     "topics": [
       "memory",
-      "revocation",
-      "memory"
+      "revocation"
     ],
     "translations": [
       {

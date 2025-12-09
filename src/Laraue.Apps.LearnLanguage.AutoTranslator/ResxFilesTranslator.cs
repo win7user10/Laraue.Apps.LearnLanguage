@@ -25,7 +25,7 @@ public class ResxFilesTranslator(IOllamaPredictor ollamaPredictor, ILogger<ResxF
             .Select(i => i!.Split('.')[1])
             .ToArray();
         
-        var allTranslationLanguages = DefaultContextData.WordLanguages
+        var allTranslationLanguages = DefaultContextData.GetWordLanguages()
             .Items
             .Select(t => t.Name)
             .Except(["en"]);

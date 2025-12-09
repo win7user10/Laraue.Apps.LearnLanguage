@@ -35,7 +35,7 @@ public class WordsAutoTranslator(
                 .Where(t => !string.IsNullOrEmpty(t.Text))
                 .Select(t => t.Language);
 
-            var allTranslationLanguages = DefaultContextData.WordLanguages
+            var allTranslationLanguages = DefaultContextData.GetWordLanguages()
                 .Items
                 .Select(t => t.Name)
                 .Except(["en"]);
