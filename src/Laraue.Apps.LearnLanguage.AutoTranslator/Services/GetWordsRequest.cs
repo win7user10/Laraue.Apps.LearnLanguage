@@ -1,6 +1,6 @@
 ﻿using Laraue.Core.DataAccess.Contracts;
 
-namespace Laraue.Apps.LearnLanguage.EditorHost.Services;
+namespace Laraue.Apps.LearnLanguage.AutoTranslator.Services;
 
 public class GetWordsRequest : IPaginatedRequest
 {

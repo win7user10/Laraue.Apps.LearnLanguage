@@ -6,8 +6,10 @@ using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DataAccess.Extensions;
 using Laraue.Core.Exceptions.Web;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
-namespace Laraue.Apps.LearnLanguage.EditorHost.Services;
+namespace Laraue.Apps.LearnLanguage.AutoTranslator.Services;
 
 public class WordsService : IWordsService
 {

@@ -1,6 +1,8 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http.Json;
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
-namespace Laraue.Apps.LearnLanguage.EditorHost.Services;
+namespace Laraue.Apps.LearnLanguage.AutoTranslator.Services;
 
 public class OllamaAutoTranslator(HttpClient httpClient, ILogger<OllamaAutoTranslator> logger) : IAutoTranslator
 {
