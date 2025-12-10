@@ -1,5 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.Services.Repositories;
-using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
+﻿using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Telegram.NET.Core.Routing;

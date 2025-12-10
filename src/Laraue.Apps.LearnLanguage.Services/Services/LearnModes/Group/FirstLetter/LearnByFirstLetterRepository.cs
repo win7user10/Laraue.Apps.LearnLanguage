@@ -4,7 +4,6 @@ using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.Services.Repositories.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
-using LinqToDB.EntityFrameworkCore;
 
 namespace Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.FirstLetter;
 

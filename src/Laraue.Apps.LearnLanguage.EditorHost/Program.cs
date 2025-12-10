@@ -1,7 +1,5 @@
 using Laraue.Apps.LearnLanguage.EditorHost.Services;
 using Laraue.Core.Exceptions;
-using Laraue.Crawling.Dynamic.PuppeterSharp.Utils;
-using PuppeteerSharp;
 
 var builder = WebApplication.CreateBuilder(args);
 
