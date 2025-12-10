@@ -9,9 +9,9 @@
     <PackageReference Include="Hangfire.PostgreSql" Version="1.20.12" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.22" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\Laraue.Apps.LearnLanguage.Services\Laraue.Apps.LearnLanguage.Services.csproj" />
+    <ProjectReference Include="..\Laraue.Apps.LearnLanguage.AppServices\Laraue.Apps.LearnLanguage.AppServices.csproj" />
   </ItemGroup>
 
 </Project>

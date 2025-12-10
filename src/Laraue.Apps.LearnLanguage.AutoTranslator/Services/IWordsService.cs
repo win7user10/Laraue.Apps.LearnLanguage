@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.Common.Contracts;
+﻿using Laraue.Apps.LearnLanguage.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 
 namespace Laraue.Apps.LearnLanguage.AutoTranslator.Services;

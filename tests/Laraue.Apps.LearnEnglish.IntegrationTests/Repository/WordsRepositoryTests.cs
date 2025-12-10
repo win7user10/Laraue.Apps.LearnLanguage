@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.Services.Repositories;
+﻿using Laraue.Apps.LearnLanguage.AppServices.Repositories;
 using Laraue.Core.DateTime.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Moq;

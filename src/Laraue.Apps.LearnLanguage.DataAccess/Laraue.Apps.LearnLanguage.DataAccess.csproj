@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="$(LaraueTelegramNetVersion)" />
     <PackageReference Include="linq2db" Version="$(Linq2DbVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(EfCoreVersion)">
       <PrivateAssets>all</PrivateAssets>
@@ -26,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Laraue.Apps.LearnLanguage.Common\Laraue.Apps.LearnLanguage.Common.csproj" />
+    <ProjectReference Include="..\Laraue.Apps.LearnLanguage.Contracts\Laraue.Apps.LearnLanguage.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

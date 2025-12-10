@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Laraue.Apps.LearnLanguage.DataAccess.Enums;
+using Laraue.Apps.LearnLanguage.Contracts.Enums;
 using Laraue.Telegram.NET.Authentication.Models;
 
 namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;

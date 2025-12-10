@@ -6,16 +6,14 @@ using Laraue.Telegram.NET.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Hangfire;
 using Hangfire.PostgreSql;
-using Laraue.Apps.LearnLanguage.Common;
+using Laraue.Apps.LearnLanguage.AppServices;
+using Laraue.Apps.LearnLanguage.AppServices.Repositories;
+using Laraue.Apps.LearnLanguage.AppServices.Services;
+using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes;
+using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes.Group.CefrLevel;
+using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes.Group.FirstLetter;
+using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes.Group.Topic;
 using Laraue.Apps.LearnLanguage.Host;
-using Laraue.Apps.LearnLanguage.Services;
-using Laraue.Apps.LearnLanguage.Services.Jobs;
-using Laraue.Apps.LearnLanguage.Services.Repositories;
-using Laraue.Apps.LearnLanguage.Services.Services;
-using Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
-using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.CefrLevel;
-using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.FirstLetter;
-using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.Topic;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Telegram.NET.Authentication.Services;
@@ -106,13 +104,6 @@ using (var scope = app.Services.CreateScope())
     await db.Database.MigrateAsync();
     
     app.MapTelegramRequests();
-
-    var jobClient = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
-    
-    jobClient.AddOrUpdate<UpdateTranslationsComplexityJob>(
-        nameof(UpdateTranslationsComplexityJob),
-        x => x.ExecuteAsync(),
-        Cron.Hourly);
 }
 
 app.Run();

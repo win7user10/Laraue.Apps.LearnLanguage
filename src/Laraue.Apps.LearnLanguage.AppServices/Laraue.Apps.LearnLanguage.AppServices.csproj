@@ -1,0 +1,90 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Laraue.Core.DataAccess.Linq2DB" Version="$(LaraueCoreDataAccessVersion)" />
+    <PackageReference Include="Laraue.Core.DataAccess.EFCore" Version="$(LaraueCoreDataAccessVersion)" />
+    <PackageReference Include="Laraue.Core.DateTime" Version="$(LaraueCoreDateTimeVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.Core" Version="$(LaraueTelegramNetVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.DataAccess" Version="$(LaraueTelegramNetVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.Localization" Version="$(LaraueTelegramNetVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Buttons.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Buttons.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\GroupMode.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GroupMode.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Menu.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Menu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Mode.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Mode.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\QuizMode.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>QuizMode.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Settings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Stats.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Stats.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\TimeSpanExtensions.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TimeSpanExtensions.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Buttons.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Buttons.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Mode.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Mode.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\GroupMode.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GroupMode.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Stats.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Stats.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Menu.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Menu.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Settings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\QuizMode.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>QuizMode.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Laraue.Apps.LearnLanguage.Contracts\Laraue.Apps.LearnLanguage.Contracts.csproj" />
+    <ProjectReference Include="..\Laraue.Apps.LearnLanguage.DataAccess\Laraue.Apps.LearnLanguage.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>
