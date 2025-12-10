@@ -5,25 +5,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Update="appsettings.json">
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <None Update="appsettings.Development.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        </Content>
+        </None>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="appsettings.Development.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+        <PackageReference Include="Laraue.Core.Ollama" Version="$(LaraueCoreOllamaVersion)" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Laraue.Core.Ollama" Version="$(LaraueCoreOllamaVersion)" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Laraue.Apps.LearnLanguage.DataAccess\Laraue.Apps.LearnLanguage.DataAccess.csproj" />
+        <ProjectReference Include="..\Laraue.Apps.LearnLanguage.DataAccess\Laraue.Apps.LearnLanguage.DataAccess.csproj" />
     </ItemGroup>
 
 </Project>
