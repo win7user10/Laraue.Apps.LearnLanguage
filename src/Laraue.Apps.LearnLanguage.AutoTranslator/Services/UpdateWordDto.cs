@@ -1,4 +1,4 @@
-﻿namespace Laraue.Apps.LearnLanguage.EditorHost.Services;
+﻿namespace Laraue.Apps.LearnLanguage.AutoTranslator.Services;
 
 public record UpdateWordDto
 {

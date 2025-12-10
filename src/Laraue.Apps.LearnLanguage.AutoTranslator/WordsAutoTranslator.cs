@@ -1,5 +1,5 @@
-﻿using Laraue.Apps.LearnLanguage.DataAccess;
-using Laraue.Apps.LearnLanguage.EditorHost.Services;
+﻿using Laraue.Apps.LearnLanguage.AutoTranslator.Services;
+using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Core.DataAccess.Contracts;
 using Microsoft.Extensions.Logging;
 

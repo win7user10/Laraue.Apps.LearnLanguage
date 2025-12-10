@@ -91,7 +91,7 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         var optionsData = await context.Translations
             .Where(x => x.LanguageId == languageId)
             .Select(x => new { x.WordId, x.Word.PartOfSpeechId })
-            .ToArrayAsync(ct);
+            .ToArrayAsyncEF(ct);
 
         var optionIdsByPartOfSpeechId = optionsData
             .GroupBy(x => x.PartOfSpeechId)

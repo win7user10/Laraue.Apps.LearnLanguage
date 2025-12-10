@@ -1,17 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-  
   <ItemGroup>
-    <PackageReference Include="Laraue.Core.DateTime" Version="9.0.0" />
-    <PackageReference Include="Laraue.Telegram.NET.Core" Version="2.6.3" />
-    <PackageReference Include="Laraue.Telegram.NET.DataAccess" Version="2.6.3" />
-    <PackageReference Include="Laraue.Telegram.NET.Localization" Version="2.6.3" />
-    <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="2.6.3" />
+    <PackageReference Include="Laraue.Core.DateTime" Version="$(LaraueCoreDateTimeVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.Core" Version="$(LaraueTelegramNetVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.DataAccess" Version="$(LaraueTelegramNetVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.Localization" Version="$(LaraueTelegramNetVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="$(LaraueTelegramNetVersion)" />
   </ItemGroup>
   
   <ItemGroup>

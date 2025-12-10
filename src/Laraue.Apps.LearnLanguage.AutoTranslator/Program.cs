@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Laraue.Apps.LearnLanguage.AutoTranslator;
-using Laraue.Apps.LearnLanguage.EditorHost.Services;
+using Laraue.Apps.LearnLanguage.AutoTranslator.Services;
 using Laraue.Core.Ollama;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
