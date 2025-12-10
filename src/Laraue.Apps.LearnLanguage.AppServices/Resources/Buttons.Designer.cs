@@ -8,6 +8,9 @@
 //------------------------------------------------------------------------------
 
 namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -18,7 +21,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Buttons {
+    public class Buttons {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -32,10 +35,10 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.Buttons", typeof(Buttons).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.AppServices.Resources.Buttons", typeof(Buttons).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -47,7 +50,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -59,7 +62,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Back.
         /// </summary>
-        internal static string Back {
+        public static string Back {
             get {
                 return ResourceManager.GetString("Back", resourceCulture);
             }
@@ -68,7 +71,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Menu.
         /// </summary>
-        internal static string Menu {
+        public static string Menu {
             get {
                 return ResourceManager.GetString("Menu", resourceCulture);
             }
@@ -77,7 +80,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Okay.
         /// </summary>
-        internal static string Okay {
+        public static string Okay {
             get {
                 return ResourceManager.GetString("Okay", resourceCulture);
             }
@@ -86,7 +89,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Repeat Quiz.
         /// </summary>
-        internal static string RepeatQuiz {
+        public static string RepeatQuiz {
             get {
                 return ResourceManager.GetString("RepeatQuiz", resourceCulture);
             }
@@ -95,7 +98,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to See translation 👁.
         /// </summary>
-        internal static string SeeTranslation {
+        public static string SeeTranslation {
             get {
                 return ResourceManager.GetString("SeeTranslation", resourceCulture);
             }
@@ -104,7 +107,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
-        internal static string Settings {
+        public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
             }
@@ -113,7 +116,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Settings 🔙.
         /// </summary>
-        internal static string Settings_BackButton {
+        public static string Settings_BackButton {
             get {
                 return ResourceManager.GetString("Settings_BackButton", resourceCulture);
             }
@@ -122,7 +125,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
-        internal static string Settings_Language {
+        public static string Settings_Language {
             get {
                 return ResourceManager.GetString("Settings_Language", resourceCulture);
             }
@@ -131,7 +134,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Language to learn.
         /// </summary>
-        internal static string Settings_LearnLanguage {
+        public static string Settings_LearnLanguage {
             get {
                 return ResourceManager.GetString("Settings_LearnLanguage", resourceCulture);
             }
@@ -140,7 +143,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Open stat.
         /// </summary>
-        internal static string Stat {
+        public static string Stat {
             get {
                 return ResourceManager.GetString("Stat", resourceCulture);
             }

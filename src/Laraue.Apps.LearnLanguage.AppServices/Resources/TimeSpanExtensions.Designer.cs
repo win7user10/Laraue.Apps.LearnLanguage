@@ -8,6 +8,9 @@
 //------------------------------------------------------------------------------
 
 namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -18,7 +21,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class TimeSpanExtensions {
+    public class TimeSpanExtensions {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -32,10 +35,10 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Common.Resources.TimeSpanExtensions", typeof(TimeSpanExtensions).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.AppServices.Resources.TimeSpanExtensions", typeof(TimeSpanExtensions).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -47,7 +50,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -59,7 +62,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to day(s).
         /// </summary>
-        internal static string days {
+        public static string days {
             get {
                 return ResourceManager.GetString("days", resourceCulture);
             }
@@ -68,7 +71,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to hour(s).
         /// </summary>
-        internal static string hours {
+        public static string hours {
             get {
                 return ResourceManager.GetString("hours", resourceCulture);
             }
@@ -77,7 +80,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to minute(s).
         /// </summary>
-        internal static string minutes {
+        public static string minutes {
             get {
                 return ResourceManager.GetString("minutes", resourceCulture);
             }
@@ -86,7 +89,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to second(s).
         /// </summary>
-        internal static string seconds {
+        public static string seconds {
             get {
                 return ResourceManager.GetString("seconds", resourceCulture);
             }

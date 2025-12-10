@@ -12,7 +12,7 @@ public class InterfaceLanguage
         new() { Code = "ru", Title = "Russian" },
         new() { Code = "es", Title = "Spanish" },
         new() { Code = "ja", Title = "Japanese" },
-        new() { Code = "de", Title = "Deutsch" },
+        new() { Code = "de", Title = "German" },
         new() { Code = "hi", Title = "Hindi" },
         new() { Code = "fr", Title = "French" },
     ];

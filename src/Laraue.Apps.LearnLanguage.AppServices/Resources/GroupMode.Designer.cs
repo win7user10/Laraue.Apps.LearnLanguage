@@ -35,7 +35,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.GroupMode", typeof(GroupMode).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.AppServices.Resources.GroupMode", typeof(GroupMode).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

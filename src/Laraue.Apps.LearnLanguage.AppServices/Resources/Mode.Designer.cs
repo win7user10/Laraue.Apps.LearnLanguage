@@ -8,6 +8,9 @@
 //------------------------------------------------------------------------------
 
 namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -18,7 +21,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Mode {
+    public class Mode {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -32,10 +35,10 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.Services.Resources.Mode", typeof(Mode).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.AppServices.Resources.Mode", typeof(Mode).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -47,7 +50,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -59,7 +62,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Difficulty: {0}.
         /// </summary>
-        internal static string Difficulty {
+        public static string Difficulty {
             get {
                 return ResourceManager.GetString("Difficulty", resourceCulture);
             }
@@ -68,7 +71,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to easy.
         /// </summary>
-        internal static string Difficulty_Easy {
+        public static string Difficulty_Easy {
             get {
                 return ResourceManager.GetString("Difficulty_Easy", resourceCulture);
             }
@@ -77,7 +80,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to medium.
         /// </summary>
-        internal static string Difficulty_Hard {
+        public static string Difficulty_Hard {
             get {
                 return ResourceManager.GetString("Difficulty_Hard", resourceCulture);
             }
@@ -86,7 +89,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to hard.
         /// </summary>
-        internal static string Difficulty_Impossible {
+        public static string Difficulty_Impossible {
             get {
                 return ResourceManager.GetString("Difficulty_Impossible", resourceCulture);
             }
@@ -95,7 +98,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to very hard.
         /// </summary>
-        internal static string Difficulty_Medium {
+        public static string Difficulty_Medium {
             get {
                 return ResourceManager.GetString("Difficulty_Medium", resourceCulture);
             }
@@ -104,7 +107,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to impossible.
         /// </summary>
-        internal static string Difficulty_VeryHard {
+        public static string Difficulty_VeryHard {
             get {
                 return ResourceManager.GetString("Difficulty_VeryHard", resourceCulture);
             }
@@ -113,7 +116,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Filter: Marked 🔍.
         /// </summary>
-        internal static string Filter_Marked {
+        public static string Filter_Marked {
             get {
                 return ResourceManager.GetString("Filter_Marked", resourceCulture);
             }
@@ -122,7 +125,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Filter: None 🔍.
         /// </summary>
-        internal static string Filter_None {
+        public static string Filter_None {
             get {
                 return ResourceManager.GetString("Filter_None", resourceCulture);
             }
@@ -131,7 +134,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Filter: Not Learned 🔍.
         /// </summary>
-        internal static string Filter_NotLearned {
+        public static string Filter_NotLearned {
             get {
                 return ResourceManager.GetString("Filter_NotLearned", resourceCulture);
             }
@@ -140,7 +143,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Hide translations 🙈.
         /// </summary>
-        internal static string HideTranslations {
+        public static string HideTranslations {
             get {
                 return ResourceManager.GetString("HideTranslations", resourceCulture);
             }
@@ -149,7 +152,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Learned: {0} day(s) ago.
         /// </summary>
-        internal static string Learned {
+        public static string Learned {
             get {
                 return ResourceManager.GetString("Learned", resourceCulture);
             }
@@ -158,7 +161,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Words lists.
         /// </summary>
-        internal static string ListMode {
+        public static string ListMode {
             get {
                 return ResourceManager.GetString("ListMode", resourceCulture);
             }
@@ -167,7 +170,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to View words groups.
         /// </summary>
-        internal static string ListModeDescription {
+        public static string ListModeDescription {
             get {
                 return ResourceManager.GetString("ListModeDescription", resourceCulture);
             }
@@ -176,7 +179,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Next ➡.
         /// </summary>
-        internal static string Navigation_Next {
+        public static string Navigation_Next {
             get {
                 return ResourceManager.GetString("Navigation_Next", resourceCulture);
             }
@@ -185,7 +188,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Previous ⬅.
         /// </summary>
-        internal static string Navigation_Previous {
+        public static string Navigation_Previous {
             get {
                 return ResourceManager.GetString("Navigation_Previous", resourceCulture);
             }
@@ -194,7 +197,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Opened word:.
         /// </summary>
-        internal static string OpenedWord {
+        public static string OpenedWord {
             get {
                 return ResourceManager.GetString("OpenedWord", resourceCulture);
             }
@@ -203,7 +206,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Open word:.
         /// </summary>
-        internal static string OpenWord {
+        public static string OpenWord {
             get {
                 return ResourceManager.GetString("OpenWord", resourceCulture);
             }
@@ -212,7 +215,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Page.
         /// </summary>
-        internal static string Page {
+        public static string Page {
             get {
                 return ResourceManager.GetString("Page", resourceCulture);
             }
@@ -221,7 +224,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Repeated: {0} day(s) ago.
         /// </summary>
-        internal static string Repeated {
+        public static string Repeated {
             get {
                 return ResourceManager.GetString("Repeated", resourceCulture);
             }
@@ -230,7 +233,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Select the language pair. You also can set the preferred language pair in settings to select the same pair always..
         /// </summary>
-        internal static string SelectLanguage {
+        public static string SelectLanguage {
             get {
                 return ResourceManager.GetString("SelectLanguage", resourceCulture);
             }
@@ -239,7 +242,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Please select view mode.
         /// </summary>
-        internal static string SelectMode {
+        public static string SelectMode {
             get {
                 return ResourceManager.GetString("SelectMode", resourceCulture);
             }
@@ -248,7 +251,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Show translations 👁.
         /// </summary>
-        internal static string ShowTranslations {
+        public static string ShowTranslations {
             get {
                 return ResourceManager.GetString("ShowTranslations", resourceCulture);
             }
@@ -257,7 +260,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Topic: {0}.
         /// </summary>
-        internal static string Topic {
+        public static string Topic {
             get {
                 return ResourceManager.GetString("Topic", resourceCulture);
             }
@@ -266,7 +269,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Translation -&gt; Word.
         /// </summary>
-        internal static string ViewMode_TranslationToWord {
+        public static string ViewMode_TranslationToWord {
             get {
                 return ResourceManager.GetString("ViewMode_TranslationToWord", resourceCulture);
             }
@@ -275,7 +278,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Word -&gt; Translation.
         /// </summary>
-        internal static string ViewMode_WordToTranslation {
+        public static string ViewMode_WordToTranslation {
             get {
                 return ResourceManager.GetString("ViewMode_WordToTranslation", resourceCulture);
             }
