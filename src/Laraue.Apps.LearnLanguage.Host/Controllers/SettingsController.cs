@@ -1,6 +1,6 @@
-﻿using Laraue.Apps.LearnLanguage.Services;
-using Laraue.Apps.LearnLanguage.Services.Services;
-using Laraue.Apps.LearnLanguage.Services.Services.Contracts;
+﻿using Laraue.Apps.LearnLanguage.AppServices;
+using Laraue.Apps.LearnLanguage.AppServices.Services;
+using Laraue.Apps.LearnLanguage.AppServices.Services.Contracts;
 using Laraue.Telegram.NET.Abstractions.Request;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Routing.Attributes;

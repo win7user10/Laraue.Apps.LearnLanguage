@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text.Json;
-using Laraue.Apps.LearnLanguage.Common;
-using Laraue.Apps.LearnLanguage.Common.Contracts;
+using Laraue.Apps.LearnLanguage.Contracts;
 using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Core.Exceptions.Web;
 
@@ -19,7 +18,7 @@ public class DefaultContextData
     public static T[] GetJsonData<T>(string fileName)
     {
         using var stream = File.OpenRead(GetJsonFilePath(fileName));
-        return  JsonSerializer.Deserialize<T[]>(stream, Constants.JsonWebOptions)!;
+        return JsonSerializer.Deserialize<T[]>(stream, Constants.TranslationFileJsonOptions)!;
     }
     
     public static DictionaryMap<CefrLevel> CefrLevels = new (

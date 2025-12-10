@@ -1,6 +1,6 @@
-﻿using Laraue.Apps.LearnLanguage.Services;
-using Laraue.Apps.LearnLanguage.Services.Services.LearnModes;
-using Laraue.Apps.LearnLanguage.Services.Services.LearnModes.Group.FirstLetter;
+﻿using Laraue.Apps.LearnLanguage.AppServices;
+using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes;
+using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes.Group.FirstLetter;
 using Laraue.Telegram.NET.Abstractions.Request;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Routing.Attributes;

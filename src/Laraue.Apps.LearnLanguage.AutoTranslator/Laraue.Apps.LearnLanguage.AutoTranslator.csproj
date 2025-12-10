@@ -14,6 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Laraue.Core.DataAccess" Version="$(LaraueCoreDataAccessVersion)" />
         <PackageReference Include="Laraue.Core.Ollama" Version="$(LaraueCoreOllamaVersion)" />
     </ItemGroup>
 

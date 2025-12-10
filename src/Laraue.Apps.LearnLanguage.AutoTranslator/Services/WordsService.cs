@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using Laraue.Apps.LearnLanguage.Common;
-using Laraue.Apps.LearnLanguage.Common.Contracts;
+using Laraue.Apps.LearnLanguage.Contracts;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DataAccess.Extensions;
@@ -74,7 +73,7 @@ public class WordsService : IWordsService
         {
             Id = ++MaxWordId,
         };
-            
+        
         Populate(newWord, wordDto);
         Words.Add(newWord);
         
@@ -191,6 +190,6 @@ public class WordsService : IWordsService
 
     private Task UpdateJsonFileAsync()
     {
-        return File.WriteAllTextAsync(_wordsJsonPath, JsonSerializer.Serialize(Words, Constants.JsonWebOptions));
+        return File.WriteAllTextAsync(_wordsJsonPath, JsonSerializer.Serialize(Words, Constants.TranslationFileJsonOptions));
     }
 }

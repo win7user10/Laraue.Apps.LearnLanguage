@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.Common;
+﻿using Laraue.Apps.LearnLanguage.Contracts;
 
 namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
 

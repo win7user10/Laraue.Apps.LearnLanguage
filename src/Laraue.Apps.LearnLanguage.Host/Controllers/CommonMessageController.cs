@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.LearnLanguage.Services;
+﻿using Laraue.Apps.LearnLanguage.AppServices;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Routing.Attributes;
