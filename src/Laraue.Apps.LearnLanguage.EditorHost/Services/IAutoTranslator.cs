@@ -1,6 +1,4 @@
-﻿using Laraue.Crawling.Abstractions;
-
-namespace Laraue.Apps.LearnLanguage.EditorHost.Services;
+﻿namespace Laraue.Apps.LearnLanguage.EditorHost.Services;
 
 public interface IAutoTranslator
 {
@@ -15,7 +13,7 @@ public record TranslationData
     public required string[] ToLanguages { get; set; }
 }
 
-public record TranslationResult : ICrawlingModel
+public record TranslationResult
 {
     public required int Frequency { get; set; }
     public required string Transcription { get; set; }
@@ -25,7 +23,7 @@ public record TranslationResult : ICrawlingModel
     public required string[] Topics { get; set; }
 }
 
-public record TranslationResultItem : ICrawlingModel
+public record TranslationResultItem
 {
     public required string? Translation { get; set; }
     public required string? Transcription { get; set; }
