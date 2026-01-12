@@ -85,14 +85,20 @@ public class QuizService(
     {
         var tmb = new TelegramMessageBuilder();
 
+        var languageCode = await repository.GetLanguageCodeAsync(
+            request.LanguageToLearnId.GetValueOrDefault(),
+            ct);
+
         tmb
             .AppendRow("Quiz is ready to start. Topic: <b>XXX</b>.")
-            .AppendRow($"The <b>{QuestionsCount}</b> of the <b>XXX</b> questions of language pair <b>XXX->XXX</b> will be asked with {OptionsCount} options for each question.")
+            .AppendRow($"The <b>{QuestionsCount}</b> of the <b>XXX</b> questions of language pair <b>en -> {languageCode}</b> will be asked with {OptionsCount} options for each question.")
             .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
                 "Start",
                 new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
                     .WithTranslationDirection(selectedTranslation)
-                    .WithQueryParameter(ParameterNames.StartQuiz, true))]);
+                    .WithQueryParameter(ParameterNames.StartQuiz, true))])
+            .AddBackMenuButton(TelegramRoutes.CurrentQuiz) // TODO - add back button only when settings are not set
+            .AddMainMenuButton();
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
@@ -336,6 +342,7 @@ public class QuizService(
         Task<CurrentQuizStats> GetCurrentQuizStatsAsync(Guid userId, CancellationToken ct = default);
         Task<LastQuizStatsQuestion[]> GetLastQuizQuestionsAsync(Guid userId, CancellationToken ct = default);
         Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, CancellationToken ct = default);
+        Task<string?> GetLanguageCodeAsync(long languageId, CancellationToken ct = default);
     }
 
     public class FlashCard
@@ -621,6 +628,14 @@ public class QuizService(
                 Total = totalCount,
                 WinStreaks = winStreaks
             };
+        }
+
+        public Task<string?> GetLanguageCodeAsync(long languageId, CancellationToken ct = default)
+        {
+            return context.Languages
+                .Where(x => x.Id == languageId)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsyncEF(ct);
         }
     }
 }
