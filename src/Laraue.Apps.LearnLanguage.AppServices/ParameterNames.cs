@@ -4,8 +4,7 @@ public static class ParameterNames
 {
     public const string Page = "p";
     
-    public const string FinishQuiz = "fq";
-    public const string StartQuiz = "sq";
+    public const string ActionId = "a";
     public const string OpenedWordId = "ow";
     public const string OpenedLanguageId = "om";
     public const string TopicId = "ti";

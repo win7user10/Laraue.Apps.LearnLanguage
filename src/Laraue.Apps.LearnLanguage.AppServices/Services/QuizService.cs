@@ -69,9 +69,12 @@ public class QuizService(
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        return request.StartQuiz
-            ? StartNewQuizAsync(request, replyData, selectedTranslation, ct)
-            : DrawBeforeQuizStartWindowAsync(request, replyData, selectedTranslation, ct);
+        return request.RequestAction switch
+        {
+            RequestAction.StartQuiz => StartNewQuizAsync(request, replyData, selectedTranslation, ct),
+            RequestAction.SelectTopic => HandleSelectTopicWindow(request, replyData, selectedTranslation, ct),
+            _ => DrawBeforeQuizStartWindowAsync(request, replyData, selectedTranslation, ct)
+        };
     }
 
     /// <summary>
@@ -94,18 +97,40 @@ public class QuizService(
             request.TopicId,
             ct);
 
+        var topicName = "Not Set";
+        if (request.TopicId.HasValue)
+        {
+            topicName = await repository.GetTopicNameAsync(
+                request.TopicId.Value,
+                ct);
+        }
+
         tmb
-            .AppendRow("Quiz is ready to start. Topic: <b>XXX</b>.")
+            .AppendRow($"Quiz is ready to start. Topic: <b>{topicName}</b>.")
             .AppendRow($"The <b>{QuestionsCount}</b> of the <b>{questionsCount}</b> questions of language pair <b>en -> {languageCode}</b> will be asked with <b>{OptionsCount}</b> options for each question.")
             .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
                 "Start",
                 new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
                     .WithTranslationDirection(selectedTranslation)
-                    .WithQueryParameter(ParameterNames.StartQuiz, true))])
+                    .WithQueryParameter(ParameterNames.ActionId, RequestAction.StartQuiz))])
+            .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
+                "Select topic",
+                new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                    .WithTranslationDirection(selectedTranslation)
+                    .WithQueryParameter(ParameterNames.ActionId, RequestAction.SelectTopic))])
             .AddBackMenuButton(TelegramRoutes.CurrentQuiz) // TODO - the button is not need, just add change language button
             .AddMainMenuButton();
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
+    }
+
+    private async Task HandleSelectTopicWindow(
+        QuizRequest request,
+        ReplyData replyData,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
+    {
+        // TODO - select topic logic
     }
 
     /// <summary>
@@ -145,7 +170,7 @@ public class QuizService(
     {
         var tmb = new TelegramMessageBuilder();
 
-        if (request.FinishQuiz)
+        if (request.RequestAction == RequestAction.FinishQuiz)
         {
             await repository.SkipAllQuizQuestions(replyData.UserId, ct);
         }
@@ -197,7 +222,7 @@ public class QuizService(
         
         tmb.AddInlineKeyboardButtons([
             InlineKeyboardButton.WithCallbackData(QuizMode.FinishQuiz, new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
-                .WithQueryParameter(ParameterNames.FinishQuiz, true))
+                .WithQueryParameter(ParameterNames.ActionId, RequestAction.FinishQuiz))
         ]);
         
         tmb.AddMainMenuButton();
@@ -348,6 +373,7 @@ public class QuizService(
         Task<LastQuizStatsQuestion[]> GetLastQuizQuestionsAsync(Guid userId, CancellationToken ct = default);
         Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, CancellationToken ct = default);
         Task<string?> GetLanguageCodeAsync(long languageId, CancellationToken ct = default);
+        Task<string?> GetTopicNameAsync(long topicId, CancellationToken ct = default);
         Task<int> GetQuestionsCountByFilter(long languageId, long? topicId, CancellationToken ct = default);
     }
 
@@ -640,6 +666,14 @@ public class QuizService(
         {
             return context.Languages
                 .Where(x => x.Id == languageId)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsyncEF(ct);
+        }
+
+        public Task<string?> GetTopicNameAsync(long topicId, CancellationToken ct = default)
+        {
+            return context.Topics
+                .Where(x => x.Id == topicId)
                 .Select(x => x.Name)
                 .FirstOrDefaultAsyncEF(ct);
         }
