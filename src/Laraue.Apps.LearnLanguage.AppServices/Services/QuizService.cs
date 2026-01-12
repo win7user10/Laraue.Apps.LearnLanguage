@@ -89,15 +89,20 @@ public class QuizService(
             request.LanguageToLearnId.GetValueOrDefault(),
             ct);
 
+        var questionsCount = await repository.GetQuestionsCountByFilter(
+            request.LanguageToLearnId.GetValueOrDefault(),
+            request.TopicId,
+            ct);
+
         tmb
             .AppendRow("Quiz is ready to start. Topic: <b>XXX</b>.")
-            .AppendRow($"The <b>{QuestionsCount}</b> of the <b>XXX</b> questions of language pair <b>en -> {languageCode}</b> will be asked with {OptionsCount} options for each question.")
+            .AppendRow($"The <b>{QuestionsCount}</b> of the <b>{questionsCount}</b> questions of language pair <b>en -> {languageCode}</b> will be asked with <b>{OptionsCount}</b> options for each question.")
             .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
                 "Start",
                 new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
                     .WithTranslationDirection(selectedTranslation)
                     .WithQueryParameter(ParameterNames.StartQuiz, true))])
-            .AddBackMenuButton(TelegramRoutes.CurrentQuiz) // TODO - add back button only when settings are not set
+            .AddBackMenuButton(TelegramRoutes.CurrentQuiz) // TODO - the button is not need, just add change language button
             .AddMainMenuButton();
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
@@ -343,6 +348,7 @@ public class QuizService(
         Task<LastQuizStatsQuestion[]> GetLastQuizQuestionsAsync(Guid userId, CancellationToken ct = default);
         Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, CancellationToken ct = default);
         Task<string?> GetLanguageCodeAsync(long languageId, CancellationToken ct = default);
+        Task<int> GetQuestionsCountByFilter(long languageId, long? topicId, CancellationToken ct = default);
     }
 
     public class FlashCard
@@ -636,6 +642,19 @@ public class QuizService(
                 .Where(x => x.Id == languageId)
                 .Select(x => x.Name)
                 .FirstOrDefaultAsyncEF(ct);
+        }
+
+        public Task<int> GetQuestionsCountByFilter(long languageId, long? topicId, CancellationToken ct = default)
+        {
+            var query = context.Translations
+                .Where(x => x.LanguageId == languageId);
+
+            if (topicId.HasValue)
+            {
+                query = query.Where(x => x.Word.Topics.Any(t => t.TopicId == topicId));
+            }
+            
+            return query.CountAsyncEF(ct);
         }
     }
 }

@@ -16,4 +16,7 @@ public record QuizRequest : WithSelectedTranslationRequest
     
     [FromQuery(ParameterNames.StartQuiz)]
     public bool StartQuiz { get; init; }
+    
+    [FromQuery(ParameterNames.TopicId)]
+    public long? TopicId { get; init; }
 }
