@@ -120,7 +120,7 @@ public class QuizService(
 
         tmb
             .Append(QuizMode.Question)
-            .AppendRow($" <b>{stats.AnsweredQuestions}/{stats.TotalQuestions}</b>")
+            .AppendRow($" <b>{stats.AnsweredQuestions + 1}/{stats.TotalQuestions}</b>")
             .Append(QuizMode.TranslateWord)
             .AppendRow($" <b>{data.Word}</b> ({data.PartOfSpeech})");
 
