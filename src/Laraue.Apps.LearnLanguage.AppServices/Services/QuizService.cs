@@ -29,6 +29,13 @@ public class QuizService(
     private const long OptionIdToSkipQuestion = 0;
     private const long WinStreakToLearn = 3;
     
+    // TODO - use settings to setup
+    private const int QuestionsCount = 20;
+    private const int OptionsCount = 8;
+    
+    /// <summary>
+    /// Handle any request related to quiz. If quiz is started handle answers, otherwise handle new quiz window.
+    /// </summary>
     public async Task HandleQuizWindowAsync(ReplyData replyData, QuizRequest request, CancellationToken ct = default)
     {
         var hasActiveQuiz = await repository.HasActiveQuizAsync(replyData.UserId, ct);
@@ -39,17 +46,60 @@ public class QuizService(
         await task;
     }
 
-    private async Task HandleNewQuizWindowAsync(ReplyData replyData, QuizRequest request, CancellationToken ct = default)
+    /// <summary>
+    /// Before start a new quiz ask user to select language pair for this quiz (or take it from settings if set).
+    /// </summary>
+    private Task HandleNewQuizWindowAsync(ReplyData replyData, QuizRequest request, CancellationToken ct = default)
     {
-        await selectLanguageService.ShowLanguageWindowOrHandleRequestAsync(
+        return selectLanguageService.ShowLanguageWindowOrHandleRequestAsync(
             request,
             QuizMode.ButtonName,
             TelegramRoutes.CurrentQuiz,
             replyData,
-            StartNewQuizAsync,
+            HandleBeforeQuizStartWindowAsync,
             ct);
     }
-    
+
+    /// <summary>
+    /// If the user pressed the start button, run the start quiz logic.
+    /// </summary>
+    private Task HandleBeforeQuizStartWindowAsync(
+        QuizRequest request,
+        ReplyData replyData,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
+    {
+        return request.StartQuiz
+            ? StartNewQuizAsync(request, replyData, selectedTranslation, ct)
+            : DrawBeforeQuizStartWindowAsync(request, replyData, selectedTranslation, ct);
+    }
+
+    /// <summary>
+    /// Draw a window from which the quiz can be launched or options can be changed.
+    /// </summary>
+    private async Task DrawBeforeQuizStartWindowAsync(
+        QuizRequest request,
+        ReplyData replyData,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
+    {
+        var tmb = new TelegramMessageBuilder();
+
+        tmb
+            .AppendRow("Quiz is ready to start. Topic: <b>XXX</b>.")
+            .AppendRow($"The <b>{QuestionsCount}</b> of the <b>XXX</b> questions of language pair <b>XXX->XXX</b> will be asked with {OptionsCount} options for each question.")
+            .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
+                "Start",
+                new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                    .WithTranslationDirection(selectedTranslation)
+                    .WithQueryParameter(ParameterNames.StartQuiz, true))]);
+        
+        await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
+    }
+
+    /// <summary>
+    /// The start quiz logic.
+    /// </summary>
     private async Task StartNewQuizAsync(
         QuizRequest request,
         ReplyData replyData,
@@ -62,16 +112,12 @@ public class QuizService(
             replyData.UserId,
             selectedTranslation.LanguageToLearnId!.Value,
             ct);
-
-        // TODO - use settings to setup
-        const int questionsCount = 20;
-        const int optionsCount = 8;
         
         var questions = await questionsGenerator.GenerateQuestions(
             replyData.UserId,
             selectedTranslation.LanguageToLearnId!.Value,
-            questionsCount,
-            optionsCount,
+            QuestionsCount,
+            OptionsCount,
             ct);
 
         await repository.SaveQuizQuestionsAsync(quizId, questions, ct);
@@ -215,8 +261,7 @@ public class QuizService(
         
         tmb
             .AppendRow()
-            .AppendRow($"<b>{QuizMode.CurrentStat}</b>:")
-            .AppendRow($"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]");
+            .AppendRow($"<b>{QuizMode.CurrentStat}</b>:");
 
         foreach (var winStreak in learnStat.WinStreaks)
         {
@@ -228,6 +273,7 @@ public class QuizService(
         }
         
         tmb
+            .AppendRow($"{QuizMode.Learned} / {QuizMode.WinStreak} ({WinStreakToLearn}): {learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]")
             .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.RepeatQuiz,

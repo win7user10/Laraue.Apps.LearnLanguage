@@ -13,4 +13,7 @@ public record QuizRequest : WithSelectedTranslationRequest
     
     [FromQuery(ParameterNames.FinishQuiz)]
     public bool FinishQuiz { get; init; }
+    
+    [FromQuery(ParameterNames.StartQuiz)]
+    public bool StartQuiz { get; init; }
 }
