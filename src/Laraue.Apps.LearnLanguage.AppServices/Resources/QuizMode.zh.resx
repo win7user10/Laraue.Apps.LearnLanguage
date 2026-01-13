@@ -50,8 +50,8 @@
     <data name="Incorrect" xml:space="preserve">
         <value>错误</value>
     </data>
-    <data name="CurrentStat" xml:space="preserve">
-        <value>当前状态</value>
+    <data name="TotalStat" xml:space="preserve">
+        <value>总统计数据</value>
     </data>
     <data name="TranslateWord" xml:space="preserve">
         <value>为...选择翻译</value>

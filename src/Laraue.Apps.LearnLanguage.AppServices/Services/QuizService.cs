@@ -27,7 +27,7 @@ public class QuizService(
     : IQuizService
 {
     private const long NullOptionId = 0;
-    private const long WinStreakToLearn = 3;
+    private const int WinStreakToLearn = 3;
     private const int MaxTopicsCount = 30;
     
     // TODO - use settings to setup
@@ -118,13 +118,13 @@ public class QuizService(
         tmb
             .AppendRow("<b>Quiz is ready to start</b>")
             .AppendRow()
-            .AppendRow($"Topic: {topicName}")
-            .AppendRow($"Questions will be asked: {QuestionsCount}")
-            .AppendRow($"Questions total: {questionsCount}")
-            .AppendRow($"Language pair: en -> {languageCode}")
-            .AppendRow($"Question options count: {OptionsCount}")
+            .AppendRow($"Topic: <b>{topicName}</b>")
+            .AppendRow($"Questions will be asked: <b>{QuestionsCount}</b>")
+            .AppendRow($"Total questions by current criteria: <b>{questionsCount}</b>")
+            .AppendRow($"Language pair: <b>en -> {languageCode}</b>")
+            .AppendRow($"Question options count: <b>{OptionsCount}</b>")
             .AppendRow()
-            .AppendRow("<b>Stats of the quiz:</b>");
+            .AppendRow("<b>Stats for the selected criteria:</b>");
         
         foreach (var winStreak in learnStat.WinStreaks)
         {
@@ -136,7 +136,7 @@ public class QuizService(
             
         tmb
             .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
-                "Start",
+                QuizMode.StartButtonName,
                 new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
                     .WithTranslationDirection(selectedTranslation)
                     .WithQueryParameter(ParameterNames.ActionId, RequestAction.StartQuiz))])
@@ -144,9 +144,20 @@ public class QuizService(
                 "Change topic",
                 new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
                     .WithTranslationDirection(selectedTranslation)
-                    .WithQueryParameter(ParameterNames.ActionId, RequestAction.SelectTopic))])
-            .AddBackMenuButton(TelegramRoutes.CurrentQuiz) // TODO - the button is not need, just add change language button
-            .AddMainMenuButton();
+                    .WithQueryParameter(ParameterNames.ActionId, RequestAction.SelectTopic))]);
+        
+        // Add back button only when language pair setup is available
+        var isDefaultLanguagePairSet = await repository.DoesUserSetDefaultLanguagePairAsync(replyData.UserId, ct);
+        if (!isDefaultLanguagePairSet)
+        {
+            tmb.AddInlineKeyboardButtons([
+                InlineKeyboardButton.WithCallbackData(
+                    "Change language pair",
+                    TelegramRoutes.CurrentQuiz)
+            ]);
+        }
+        
+        tmb.AddMainMenuButton();
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
@@ -347,7 +358,7 @@ public class QuizService(
         
         tmb
             .AppendRow()
-            .AppendRow($"<b>{QuizMode.CurrentStat}</b>:");
+            .AppendRow($"<b>{QuizMode.TotalStat}</b>:");
 
         foreach (var winStreak in learnStat.WinStreaks)
         {
@@ -359,7 +370,7 @@ public class QuizService(
         }
         
         tmb
-            .AppendRow($"{QuizMode.Learned} / {QuizMode.WinStreak} ({WinStreakToLearn}): {learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]")
+            .AppendRow($"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]")
             .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.RepeatQuiz,
@@ -428,6 +439,7 @@ public class QuizService(
         Task<int> GetQuestionsCountByFilterAsync(long languageId, long? topicId, CancellationToken ct = default);
         Task<TopicItemDto[]> GetTopicsAsync(int count, CancellationToken ct = default);
         Task UpdateTopicAsync(Guid userId, long? topicId, CancellationToken ct = default);
+        Task<bool> DoesUserSetDefaultLanguagePairAsync(Guid userId, CancellationToken ct = default);
     }
 
     public class FlashCard
@@ -708,11 +720,15 @@ public class QuizService(
             
             var learnedCount = await query
                 .CountAsyncEF(x => x.LearnedAt != null, ct);
-            
-            var winStreaks = await query
+
+            var allWinStreaksRows = Enumerable.Range(1, WinStreakToLearn - 1);
+            var winStreaksInDb = await query
                 .Where(x => x.WinStreakCount > 0 && x.WinStreakCount < WinStreakToLearn)
                 .GroupBy(x => x.WinStreakCount)
                 .ToDictionaryAsyncEF(x => x.Key, x => x.Count(), ct);
+
+            var winStreaks = allWinStreaksRows
+                .ToDictionary(x => x, x => winStreaksInDb.GetValueOrDefault(0));
             
             var totalCountQuery = context.Translations
                 .Where(x => x.LanguageId == languageId);
@@ -792,6 +808,13 @@ public class QuizService(
                     u => u
                         .SetProperty(p => p.QuizTopicId, topicId),
                     ct);
+        }
+
+        public Task<bool> DoesUserSetDefaultLanguagePairAsync(Guid userId, CancellationToken ct = default)
+        {
+            return context.Users
+                .Where(u => u.Id == userId)
+                .AnyAsyncEF(u => u.LanguageToLearnId != null, ct);
         }
     }
 }

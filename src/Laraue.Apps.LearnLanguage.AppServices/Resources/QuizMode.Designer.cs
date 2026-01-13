@@ -8,6 +8,9 @@
 //------------------------------------------------------------------------------
 
 namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -18,7 +21,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class QuizMode {
+    public class QuizMode {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -32,7 +35,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Laraue.Apps.LearnLanguage.AppServices.Resources.QuizMode", typeof(QuizMode).Assembly);
@@ -47,7 +50,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -59,7 +62,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Quiz Mode.
         /// </summary>
-        internal static string ButtonName {
+        public static string ButtonName {
             get {
                 return ResourceManager.GetString("ButtonName", resourceCulture);
             }
@@ -68,25 +71,16 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Right.
         /// </summary>
-        internal static string Correct {
+        public static string Correct {
             get {
                 return ResourceManager.GetString("Correct", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current stat.
-        /// </summary>
-        internal static string CurrentStat {
-            get {
-                return ResourceManager.GetString("CurrentStat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Select one of the suggested word in quiz mode.
         /// </summary>
-        internal static string Description {
+        public static string Description {
             get {
                 return ResourceManager.GetString("Description", resourceCulture);
             }
@@ -95,7 +89,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Finish quiz.
         /// </summary>
-        internal static string FinishQuiz {
+        public static string FinishQuiz {
             get {
                 return ResourceManager.GetString("FinishQuiz", resourceCulture);
             }
@@ -104,7 +98,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Wrong.
         /// </summary>
-        internal static string Incorrect {
+        public static string Incorrect {
             get {
                 return ResourceManager.GetString("Incorrect", resourceCulture);
             }
@@ -113,7 +107,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Learned.
         /// </summary>
-        internal static string Learned {
+        public static string Learned {
             get {
                 return ResourceManager.GetString("Learned", resourceCulture);
             }
@@ -122,7 +116,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Perfect!.
         /// </summary>
-        internal static string Perfect {
+        public static string Perfect {
             get {
                 return ResourceManager.GetString("Perfect", resourceCulture);
             }
@@ -131,7 +125,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Question.
         /// </summary>
-        internal static string Question {
+        public static string Question {
             get {
                 return ResourceManager.GetString("Question", resourceCulture);
             }
@@ -140,7 +134,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to [+].
         /// </summary>
-        internal static string QuizAnswer_Correct {
+        public static string QuizAnswer_Correct {
             get {
                 return ResourceManager.GetString("QuizAnswer_Correct", resourceCulture);
             }
@@ -149,7 +143,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to [-].
         /// </summary>
-        internal static string QuizAnswer_Incorrect {
+        public static string QuizAnswer_Incorrect {
             get {
                 return ResourceManager.GetString("QuizAnswer_Incorrect", resourceCulture);
             }
@@ -158,7 +152,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to [s].
         /// </summary>
-        internal static string QuizAnswer_Skipped {
+        public static string QuizAnswer_Skipped {
             get {
                 return ResourceManager.GetString("QuizAnswer_Skipped", resourceCulture);
             }
@@ -167,7 +161,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Quiz finished.
         /// </summary>
-        internal static string QuizFinishedTitle {
+        public static string QuizFinishedTitle {
             get {
                 return ResourceManager.GetString("QuizFinishedTitle", resourceCulture);
             }
@@ -176,7 +170,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Skip.
         /// </summary>
-        internal static string SkipButtonName {
+        public static string SkipButtonName {
             get {
                 return ResourceManager.GetString("SkipButtonName", resourceCulture);
             }
@@ -185,7 +179,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Skipped.
         /// </summary>
-        internal static string Skipped {
+        public static string Skipped {
             get {
                 return ResourceManager.GetString("Skipped", resourceCulture);
             }
@@ -194,16 +188,25 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Start.
         /// </summary>
-        internal static string StartButtonName {
+        public static string StartButtonName {
             get {
                 return ResourceManager.GetString("StartButtonName", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total stat.
+        /// </summary>
+        public static string TotalStat {
+            get {
+                return ResourceManager.GetString("TotalStat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select the translation for.
         /// </summary>
-        internal static string TranslateWord {
+        public static string TranslateWord {
             get {
                 return ResourceManager.GetString("TranslateWord", resourceCulture);
             }
@@ -212,7 +215,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Win streak.
         /// </summary>
-        internal static string WinStreak {
+        public static string WinStreak {
             get {
                 return ResourceManager.GetString("WinStreak", resourceCulture);
             }

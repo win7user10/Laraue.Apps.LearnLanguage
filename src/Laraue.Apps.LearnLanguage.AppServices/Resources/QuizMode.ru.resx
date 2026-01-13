@@ -41,8 +41,8 @@
     <data name="FinishQuiz" xml:space="preserve">
         <value>Завершить викторину</value>
     </data>
-    <data name="CurrentStat" xml:space="preserve">
-        <value>Текущая статистика</value>
+    <data name="TotalStat" xml:space="preserve">
+        <value>Общая статистика</value>
     </data>
     <data name="WinStreak" xml:space="preserve">
         <value>Серия правильных ответов</value>

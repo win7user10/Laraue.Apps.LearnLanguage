@@ -51,8 +51,8 @@
     <data name="Incorrect" xml:space="preserve">
         <value>Faux</value>
     </data>
-    <data name="CurrentStat" xml:space="preserve">
-        <value>Statut actuel</value>
+    <data name="TotalStat" xml:space="preserve">
+        <value>Statistique totale</value>
     </data>
     <data name="TranslateWord" xml:space="preserve">
         <value>Sélectionnez la traduction de</value>

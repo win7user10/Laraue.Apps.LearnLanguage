@@ -50,8 +50,8 @@
     <data name="Incorrect" xml:space="preserve">
         <value>不正解</value>
     </data>
-    <data name="CurrentStat" xml:space="preserve">
-        <value>現在の統計</value>
+    <data name="TotalStat" xml:space="preserve">
+        <value>合計ステータス</value>
     </data>
     <data name="TranslateWord" xml:space="preserve">
         <value>～の翻訳を選択</value>
