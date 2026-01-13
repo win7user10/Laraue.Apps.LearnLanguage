@@ -33,7 +33,6 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
 
         var metWordsQuery = context.LearnedTranslations
             .Where(x => x.UserId == userId)
-            .Where(x => x.LearnedAt != null)
             .Where(x => x.Translation.LanguageId == languageId);
 
         if (topicId.HasValue)
@@ -43,6 +42,7 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         }
 
         var oldQuestions = await metWordsQuery
+            .Where(x => x.LearnedAt != null)
             .Select(x => new NewQuestionDto
             {
                 WordId = x.Translation.WordId,
@@ -56,6 +56,7 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         var repeatWordsCount = preferredRepeatWordsCount + preferredRememberWordsCount - oldQuestions.Count;
         
         var repeatQuestions = await metWordsQuery
+            .Where(x => x.LearnedAt == null)
             .Select(x => new NewQuestionDto
             {
                 WordId = x.Translation.WordId,
