@@ -78,8 +78,8 @@ public class QuizService(
         
         var task = request.RequestAction switch
         {
-            RequestAction.StartQuiz => StartNewQuizAsync(request, replyData, selectedTranslation, ct),
-            RequestAction.SelectTopic => HandleSelectTopicWindow(request, replyData, selectedTranslation, ct),
+            RequestAction.StartQuiz => StartNewQuizAsync(replyData, selectedTranslation, ct),
+            RequestAction.SelectTopic => HandleSelectTopicWindow(replyData, selectedTranslation, ct),
             _ => DrawBeforeQuizStartWindowAsync(request, replyData, selectedTranslation, ct)
         };
 
@@ -141,7 +141,7 @@ public class QuizService(
                     .WithTranslationDirection(selectedTranslation)
                     .WithQueryParameter(ParameterNames.ActionId, RequestAction.StartQuiz))])
             .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
-                "Change topic",
+                QuizMode.ChangeTopic,
                 new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
                     .WithTranslationDirection(selectedTranslation)
                     .WithQueryParameter(ParameterNames.ActionId, RequestAction.SelectTopic))]);
@@ -152,7 +152,7 @@ public class QuizService(
         {
             tmb.AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
-                    "Change language pair",
+                    QuizMode.ChangeLanguagePair,
                     TelegramRoutes.CurrentQuiz)
             ]);
         }
@@ -163,13 +163,12 @@ public class QuizService(
     }
 
     private async Task HandleSelectTopicWindow(
-        QuizRequest request,
         ReplyData replyData,
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
         var tmb = new TelegramMessageBuilder()
-            .AppendRow("Select the topic for quiz");
+            .AppendRow(QuizMode.SelectQuizTopic);
         
         var topics = await repository.GetTopicsAsync(MaxTopicsCount, ct);
         foreach (var chunkedTopics in topics.Chunk(2))
@@ -185,7 +184,7 @@ public class QuizService(
             .AddInlineKeyboardButtons([new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
                 .WithQueryParameter(ParameterNames.TopicId, NullOptionId)
                 .WithTranslationDirection(selectedTranslation)
-                .ToInlineKeyboardButton("Not Set")])
+                .ToInlineKeyboardButton(Settings.NotSet)])
             .AddMainMenuButton();
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
@@ -195,7 +194,6 @@ public class QuizService(
     /// The start quiz logic.
     /// </summary>
     private async Task StartNewQuizAsync(
-        QuizRequest request,
         ReplyData replyData,
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)

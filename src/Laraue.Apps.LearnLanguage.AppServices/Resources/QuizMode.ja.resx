@@ -92,4 +92,13 @@
     <data name="StatsForTheCurrentCriteria" xml:space="preserve">
         <value>選択された基準の統計</value>
     </data>
+    <data name="ChangeTopic" xml:space="preserve">
+        <value>トピックを変更</value>
+    </data>
+    <data name="ChangeLanguagePair" xml:space="preserve">
+        <value>言語ペアを変更</value>
+    </data>
+    <data name="SelectQuizTopic" xml:space="preserve">
+        <value>クイズのトピックを選択</value>
+    </data>
 </root>

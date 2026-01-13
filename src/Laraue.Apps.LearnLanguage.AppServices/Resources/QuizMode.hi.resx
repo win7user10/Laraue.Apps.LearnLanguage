@@ -93,4 +93,13 @@
     <data name="StatsForTheCurrentCriteria" xml:space="preserve">
         <value>चयनित मानदंडों के लिए आँकड़े</value>
     </data>
+    <data name="ChangeTopic" xml:space="preserve">
+        <value>विषय बदलें</value>
+    </data>
+    <data name="ChangeLanguagePair" xml:space="preserve">
+        <value>भाषा जोड़ी बदलें</value>
+    </data>
+    <data name="SelectQuizTopic" xml:space="preserve">
+        <value>क्विज़ के लिए विषय चुनें</value>
+    </data>
 </root>

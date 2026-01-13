@@ -92,4 +92,13 @@
     <data name="StatsForTheCurrentCriteria" xml:space="preserve">
         <value>Statistiken für die ausgewählten Kriterien</value>
     </data>
+    <data name="ChangeTopic" xml:space="preserve">
+        <value>Thema ändern</value>
+    </data>
+    <data name="ChangeLanguagePair" xml:space="preserve">
+        <value>Sprachpaar ändern</value>
+    </data>
+    <data name="SelectQuizTopic" xml:space="preserve">
+        <value>Thema für das Quiz auswählen</value>
+    </data>
 </root>

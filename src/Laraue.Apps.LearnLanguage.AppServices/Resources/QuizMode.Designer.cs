@@ -69,6 +69,24 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change language pair.
+        /// </summary>
+        public static string ChangeLanguagePair {
+            get {
+                return ResourceManager.GetString("ChangeLanguagePair", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change topic.
+        /// </summary>
+        public static string ChangeTopic {
+            get {
+                return ResourceManager.GetString("ChangeTopic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Right.
         /// </summary>
         public static string Correct {
@@ -200,6 +218,15 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         public static string QuizReady {
             get {
                 return ResourceManager.GetString("QuizReady", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select topic for the quiz.
+        /// </summary>
+        public static string SelectQuizTopic {
+            get {
+                return ResourceManager.GetString("SelectQuizTopic", resourceCulture);
             }
         }
         

@@ -92,4 +92,13 @@
     <data name="StatsForTheCurrentCriteria" xml:space="preserve">
         <value>所选标准的统计信息</value>
     </data>
+    <data name="ChangeTopic" xml:space="preserve">
+        <value>更改主题</value>
+    </data>
+    <data name="ChangeLanguagePair" xml:space="preserve">
+        <value>更改语言对</value>
+    </data>
+    <data name="SelectQuizTopic" xml:space="preserve">
+        <value>选择测验主题</value>
+    </data>
 </root>
