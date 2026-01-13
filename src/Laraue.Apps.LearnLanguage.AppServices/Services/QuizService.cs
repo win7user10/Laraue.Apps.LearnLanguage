@@ -99,17 +99,17 @@ public class QuizService(
         
         var topic = await repository.GetUserQuizTopicAsync(replyData.UserId, ct);
         var languageCode = await repository.GetLanguageCodeAsync(
-            request.LanguageToLearnId.GetValueOrDefault(),
+            selectedTranslation.LanguageToLearnId!.Value,
             ct);
 
         var questionsCount = topic?.WordsCount ?? await repository.GetQuestionsCountByFilterAsync(
-            request.LanguageToLearnId.GetValueOrDefault(),
+            selectedTranslation.LanguageToLearnId!.Value,
             topic?.Id,
             ct);
 
         var learnStat = await repository.GetLearnStatAsync(
             replyData.UserId,
-            request.LanguageToLearnId.GetValueOrDefault(),
+            selectedTranslation.LanguageToLearnId!.Value,
             topic?.Id,
             ct);
 
@@ -685,6 +685,7 @@ public class QuizService(
             
             return await context.UserQuizQuestions
                 .Where(x => x.QuizId == quiz.Id)
+                .OrderBy(x => x.Id)
                 .Select(x => new LastQuizStatsQuestion
                 {
                     Status = x.Status,
