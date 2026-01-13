@@ -116,15 +116,15 @@ public class QuizService(
         var topicName = topic?.Name ?? "Not Set";
 
         tmb
-            .AppendRow("<b>Quiz is ready to start</b>")
+            .AppendRow($"<b>{QuizMode.QuizReady}</b>")
             .AppendRow()
-            .AppendRow($"Topic: <b>{topicName}</b>")
-            .AppendRow($"Questions will be asked: <b>{QuestionsCount}</b>")
-            .AppendRow($"Total questions by current criteria: <b>{questionsCount}</b>")
-            .AppendRow($"Language pair: <b>en -> {languageCode}</b>")
-            .AppendRow($"Question options count: <b>{OptionsCount}</b>")
+            .AppendRow($"{QuizMode.Topic}: <b>{topicName}</b>")
+            .AppendRow($"{QuizMode.QuestionsWillBeAsked}: <b>{QuestionsCount}</b>")
+            .AppendRow($"{QuizMode.TotalQuestionsByCriteria}: <b>{questionsCount}</b>")
+            .AppendRow($"{QuizMode.LanguagePair}: <b>en -> {languageCode}</b>")
+            .AppendRow($"{QuizMode.QuestionOptionsCount}: <b>{OptionsCount}</b>")
             .AppendRow()
-            .AppendRow("<b>Stats for the selected criteria:</b>");
+            .AppendRow($"<b>{QuizMode.StatsForTheCurrentCriteria}:</b>");
         
         foreach (var winStreak in learnStat.WinStreaks)
         {
@@ -728,7 +728,7 @@ public class QuizService(
                 .ToDictionaryAsyncEF(x => x.Key, x => x.Count(), ct);
 
             var winStreaks = allWinStreaksRows
-                .ToDictionary(x => x, x => winStreaksInDb.GetValueOrDefault(0));
+                .ToDictionary(x => x, x => winStreaksInDb.GetValueOrDefault(x));
             
             var totalCountQuery = context.Translations
                 .Where(x => x.LanguageId == languageId);

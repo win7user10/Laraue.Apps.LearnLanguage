@@ -105,6 +105,15 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language pair.
+        /// </summary>
+        public static string LanguagePair {
+            get {
+                return ResourceManager.GetString("LanguagePair", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Learned.
         /// </summary>
         public static string Learned {
@@ -128,6 +137,24 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         public static string Question {
             get {
                 return ResourceManager.GetString("Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Question options count.
+        /// </summary>
+        public static string QuestionOptionsCount {
+            get {
+                return ResourceManager.GetString("QuestionOptionsCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Questions will be asked.
+        /// </summary>
+        public static string QuestionsWillBeAsked {
+            get {
+                return ResourceManager.GetString("QuestionsWillBeAsked", resourceCulture);
             }
         }
         
@@ -168,6 +195,15 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Quiz is ready to start.
+        /// </summary>
+        public static string QuizReady {
+            get {
+                return ResourceManager.GetString("QuizReady", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Skip.
         /// </summary>
         public static string SkipButtonName {
@@ -191,6 +227,33 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         public static string StartButtonName {
             get {
                 return ResourceManager.GetString("StartButtonName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stats for the selected criteria.
+        /// </summary>
+        public static string StatsForTheCurrentCriteria {
+            get {
+                return ResourceManager.GetString("StatsForTheCurrentCriteria", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Topic.
+        /// </summary>
+        public static string Topic {
+            get {
+                return ResourceManager.GetString("Topic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total questions by current criteria.
+        /// </summary>
+        public static string TotalQuestionsByCriteria {
+            get {
+                return ResourceManager.GetString("TotalQuestionsByCriteria", resourceCulture);
             }
         }
         
