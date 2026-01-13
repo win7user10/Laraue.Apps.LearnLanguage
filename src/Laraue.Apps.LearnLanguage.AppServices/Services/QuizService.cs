@@ -26,7 +26,7 @@ public class QuizService(
     IQuestionsGenerator questionsGenerator)
     : IQuizService
 {
-    private const long OptionIdToSkipQuestion = 0;
+    private const long NullOptionId = 0;
     private const long WinStreakToLearn = 3;
     private const int MaxTopicsCount = 30;
     
@@ -64,18 +64,26 @@ public class QuizService(
     /// <summary>
     /// If the user pressed the start button, run the start quiz logic.
     /// </summary>
-    private Task HandleBeforeQuizStartWindowAsync(
+    private async Task HandleBeforeQuizStartWindowAsync(
         QuizRequest request,
         ReplyData replyData,
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        return request.RequestAction switch
+        if (request.TopicId.HasValue)
+        {
+            long? optionId = request.TopicId == NullOptionId ? null : request.TopicId.Value;
+            await repository.UpdateTopicAsync(replyData.UserId, optionId, ct);
+        }
+        
+        var task = request.RequestAction switch
         {
             RequestAction.StartQuiz => StartNewQuizAsync(request, replyData, selectedTranslation, ct),
             RequestAction.SelectTopic => HandleSelectTopicWindow(request, replyData, selectedTranslation, ct),
             _ => DrawBeforeQuizStartWindowAsync(request, replyData, selectedTranslation, ct)
         };
+
+        await task;
     }
 
     /// <summary>
@@ -98,13 +106,8 @@ public class QuizService(
             request.TopicId,
             ct);
 
-        var topicName = "Not Set";
-        if (request.TopicId.HasValue)
-        {
-            topicName = await repository.GetUserQuizTopicNameAsync(
-                replyData.UserId,
-                ct);
-        }
+        var topicName = await repository.GetUserQuizTopicNameAsync(replyData.UserId, ct)
+            ?? "Not Set";
 
         tmb
             .AppendRow($"Quiz is ready to start. Topic: <b>{topicName}</b>.")
@@ -115,7 +118,7 @@ public class QuizService(
                     .WithTranslationDirection(selectedTranslation)
                     .WithQueryParameter(ParameterNames.ActionId, RequestAction.StartQuiz))])
             .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
-                "Select topic",
+                "Change topic",
                 new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
                     .WithTranslationDirection(selectedTranslation)
                     .WithQueryParameter(ParameterNames.ActionId, RequestAction.SelectTopic))])
@@ -138,13 +141,19 @@ public class QuizService(
         foreach (var chunkedTopics in topics.Chunk(2))
         {
             tmb.AddInlineKeyboardButtons(chunkedTopics
-                .Select(topic => InlineKeyboardButton
-                    .WithCallbackData(
-                        $"{topic.Name} ({topic.WordsCount})",
-                        "callbackData")));
+                .Select(topic => new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                    .WithQueryParameter(ParameterNames.TopicId, topic.Id)
+                    .WithTranslationDirection(selectedTranslation)
+                    .ToInlineKeyboardButton($"{topic.Name} ({topic.WordsCount})")));
         }
 
-        tmb.AddMainMenuButton();
+        tmb
+            .AddInlineKeyboardButtons([new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                .WithQueryParameter(ParameterNames.TopicId, NullOptionId)
+                .WithTranslationDirection(selectedTranslation)
+                .ToInlineKeyboardButton("Not Set")])
+            .AddMainMenuButton();
+        
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
 
@@ -233,7 +242,7 @@ public class QuizService(
 
         tmb.AddInlineKeyboardButtons([
             InlineKeyboardButton.WithCallbackData(QuizMode.SkipButtonName, new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
-                .WithQueryParameter(ParameterNames.OpenedWordId, OptionIdToSkipQuestion))
+                .WithQueryParameter(ParameterNames.OpenedWordId, NullOptionId))
         ]);
         
         tmb.AddInlineKeyboardButtons([
@@ -345,7 +354,7 @@ public class QuizService(
     {
         var question = await repository.GetQuestion(userId, ct);
 
-        var status = selectedOptionId == OptionIdToSkipQuestion
+        var status = selectedOptionId == NullOptionId
             ? UserQuizQuestionStatus.Skipped
             : selectedOptionId == question.CorrectWordId
                 ? UserQuizQuestionStatus.Correct
@@ -392,6 +401,7 @@ public class QuizService(
         Task<string?> GetUserQuizTopicNameAsync(Guid userId, CancellationToken ct = default);
         Task<int> GetQuestionsCountByFilterAsync(long languageId, long? topicId, CancellationToken ct = default);
         Task<TopicItemDto[]> GetTopicsAsync(int count, CancellationToken ct = default);
+        Task UpdateTopicAsync(Guid userId, long? topicId, CancellationToken ct = default);
     }
 
     public class FlashCard
@@ -731,6 +741,16 @@ public class QuizService(
             return topics
                 .OrderBy(x => x.Name)
                 .ToArray();
+        }
+
+        public Task UpdateTopicAsync(Guid userId, long? topicId, CancellationToken ct = default)
+        {
+            return context.Users
+                .Where(u => u.Id == userId)
+                .ExecuteUpdateAsync(
+                    u => u
+                        .SetProperty(p => p.QuizTopicId, topicId),
+                    ct);
         }
     }
 }
