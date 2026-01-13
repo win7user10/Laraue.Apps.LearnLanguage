@@ -107,11 +107,34 @@ public class QuizService(
             topic?.Id,
             ct);
 
+        var learnStat = await repository.GetLearnStatAsync(
+            replyData.UserId,
+            request.LanguageToLearnId.GetValueOrDefault(),
+            topic?.Id,
+            ct);
+
         var topicName = topic?.Name ?? "Not Set";
 
         tmb
-            .AppendRow($"Quiz is ready to start. Topic: <b>{topicName}</b>.")
-            .AppendRow($"The <b>{QuestionsCount}</b> of the <b>{questionsCount}</b> questions of language pair <b>en -> {languageCode}</b> will be asked with <b>{OptionsCount}</b> options for each question.")
+            .AppendRow("<b>Quiz is ready to start</b>")
+            .AppendRow()
+            .AppendRow($"Topic: {topicName}")
+            .AppendRow($"Questions will be asked: {QuestionsCount}")
+            .AppendRow($"Questions total: {questionsCount}")
+            .AppendRow($"Language pair: en -> {languageCode}")
+            .AppendRow($"Question options count: {OptionsCount}")
+            .AppendRow()
+            .AppendRow("<b>Stats of the quiz:</b>");
+        
+        foreach (var winStreak in learnStat.WinStreaks)
+        {
+            tmb.AppendRow($"{QuizMode.WinStreak} ({winStreak.Key}): {winStreak.Value}");
+        }
+
+        tmb.AppendRow(
+            $"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total}");
+            
+        tmb
             .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
                 "Start",
                 new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
@@ -265,7 +288,7 @@ public class QuizService(
         CancellationToken ct = default)
     {
         await repository.SetQuizFinished(quizId, ct);
-        var learnStat = await repository.GetLearnStatAsync(userId, languageId, ct);
+        var learnStat = await repository.GetLearnStatAsync(userId, languageId, null, ct);
         
         var lastQuizQuestions = await repository.GetLastQuizQuestionsAsync(replyData.UserId, ct);
         var correctCount = lastQuizQuestions.Count(q => q.Status == UserQuizQuestionStatus.Correct);
@@ -399,7 +422,7 @@ public class QuizService(
         Task UpdateTranslationWinStreakAsync(long wordId, long languageId, Guid userId, bool increase, CancellationToken ct = default);
         Task<CurrentQuizStats> GetCurrentQuizStatsAsync(Guid userId, CancellationToken ct = default);
         Task<LastQuizStatsQuestion[]> GetLastQuizQuestionsAsync(Guid userId, CancellationToken ct = default);
-        Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, CancellationToken ct = default);
+        Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, long? topicId, CancellationToken ct = default);
         Task<string?> GetLanguageCodeAsync(long languageId, CancellationToken ct = default);
         Task<TopicItemDto?> GetUserQuizTopicAsync(Guid userId, CancellationToken ct = default);
         Task<int> GetQuestionsCountByFilterAsync(long languageId, long? topicId, CancellationToken ct = default);
@@ -674,11 +697,14 @@ public class QuizService(
                 .ToArrayAsyncEF(ct);
         }
 
-        public async Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, CancellationToken ct = default)
+        public async Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, long? topicId, CancellationToken ct = default)
         {
             var query = context.LearnedTranslations
                 .Where(q => q.UserId == userId)
                 .Where(q => q.LanguageId == languageId);
+            
+            if (topicId.HasValue)
+                query = query.Where(tr => tr.Word.Topics.Any(t => t.TopicId == topicId.Value));
             
             var learnedCount = await query
                 .CountAsyncEF(x => x.LearnedAt != null, ct);
@@ -688,9 +714,14 @@ public class QuizService(
                 .GroupBy(x => x.WinStreakCount)
                 .ToDictionaryAsyncEF(x => x.Key, x => x.Count(), ct);
             
-            var totalCount = await context.Translations
-                .Where(x => x.LanguageId == languageId)
-                .CountAsyncEF(ct);
+            var totalCountQuery = context.Translations
+                .Where(x => x.LanguageId == languageId);
+            
+            if (topicId.HasValue)
+                totalCountQuery = totalCountQuery
+                    .Where(tr => tr.Word.Topics.Any(t => t.TopicId == topicId.Value));
+
+            var totalCount = await totalCountQuery.CountAsyncEF(ct);
 
             return new LearnStat
             {
