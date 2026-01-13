@@ -71,4 +71,25 @@
     <data name="Learned" xml:space="preserve">
         <value>学过的</value>
     </data>
+    <data name="QuizReady" xml:space="preserve">
+        <value>测验准备就绪，可以开始</value>
+    </data>
+    <data name="Topic" xml:space="preserve">
+        <value>主题</value>
+    </data>
+    <data name="QuestionsWillBeAsked" xml:space="preserve">
+        <value>将提问的问题数</value>
+    </data>
+    <data name="TotalQuestionsByCriteria" xml:space="preserve">
+        <value>按当前标准的总问题数</value>
+    </data>
+    <data name="LanguagePair" xml:space="preserve">
+        <value>语言对</value>
+    </data>
+    <data name="QuestionOptionsCount" xml:space="preserve">
+        <value>问题选项数量</value>
+    </data>
+    <data name="StatsForTheCurrentCriteria" xml:space="preserve">
+        <value>所选标准的统计信息</value>
+    </data>
 </root>

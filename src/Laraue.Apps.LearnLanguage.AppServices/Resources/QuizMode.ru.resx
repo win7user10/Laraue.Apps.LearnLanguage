@@ -1,4 +1,11 @@
-﻿<root>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
     </resheader>
@@ -12,25 +19,43 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="ButtonName" xml:space="preserve">
-        <value>Викторина</value>
+        <value>Режим викторины</value>
     </data>
     <data name="Description" xml:space="preserve">
-        <value>Выберите одно из предложенных слов в режиме викторины</value>
+        <value>Выберите один из предложенных вариантов в режиме викторины</value>
     </data>
     <data name="StartButtonName" xml:space="preserve">
         <value>Начать</value>
     </data>
+    <data name="QuizAnswer_Correct" xml:space="preserve">
+        <value>[+]</value>
+    </data>
+    <data name="QuizAnswer_Incorrect" xml:space="preserve">
+        <value>[-]</value>
+    </data>
     <data name="QuizFinishedTitle" xml:space="preserve">
         <value>Викторина завершена</value>
+    </data>
+    <data name="QuizAnswer_Skipped" xml:space="preserve">
+        <value>[s]</value>
     </data>
     <data name="Correct" xml:space="preserve">
         <value>Верно</value>
     </data>
+    <data name="Skipped" xml:space="preserve">
+        <value>Пропущено</value>
+    </data>
+    <data name="Perfect" xml:space="preserve">
+        <value>Идеально!</value>
+    </data>
     <data name="Incorrect" xml:space="preserve">
         <value>Неверно</value>
     </data>
+    <data name="TotalStat" xml:space="preserve">
+        <value>Общая статистика</value>
+    </data>
     <data name="TranslateWord" xml:space="preserve">
-        <value>Выберите перевод слова</value>
+        <value>Выберите перевод для</value>
     </data>
     <data name="SkipButtonName" xml:space="preserve">
         <value>Пропустить</value>
@@ -41,19 +66,31 @@
     <data name="FinishQuiz" xml:space="preserve">
         <value>Завершить викторину</value>
     </data>
-    <data name="TotalStat" xml:space="preserve">
-        <value>Общая статистика</value>
-    </data>
     <data name="WinStreak" xml:space="preserve">
-        <value>Серия правильных ответов</value>
+        <value>Серия побед</value>
     </data>
     <data name="Learned" xml:space="preserve">
-        <value>Выучено</value>
+        <value>Изучено</value>
     </data>
-    <data name="Perfect" xml:space="preserve">
-        <value>Великолепно!</value>
+    <data name="QuizReady" xml:space="preserve">
+        <value>Викторина готова к началу</value>
     </data>
-    <data name="Skipped" xml:space="preserve">
-        <value>Пропущено</value>
+    <data name="Topic" xml:space="preserve">
+        <value>Тема</value>
+    </data>
+    <data name="QuestionsWillBeAsked" xml:space="preserve">
+        <value>Будет задано вопросов</value>
+    </data>
+    <data name="TotalQuestionsByCriteria" xml:space="preserve">
+        <value>Всего вопросов по текущим критериям</value>
+    </data>
+    <data name="LanguagePair" xml:space="preserve">
+        <value>Языковая пара</value>
+    </data>
+    <data name="QuestionOptionsCount" xml:space="preserve">
+        <value>Количество вариантов ответа</value>
+    </data>
+    <data name="StatsForTheCurrentCriteria" xml:space="preserve">
+        <value>Статистика по выбранным критериям</value>
     </data>
 </root>

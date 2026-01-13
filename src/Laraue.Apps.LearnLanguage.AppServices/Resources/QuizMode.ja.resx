@@ -71,4 +71,25 @@
     <data name="Learned" xml:space="preserve">
         <value>学習済み</value>
     </data>
+    <data name="QuizReady" xml:space="preserve">
+        <value>クイズは開始準備ができています</value>
+    </data>
+    <data name="Topic" xml:space="preserve">
+        <value>トピック</value>
+    </data>
+    <data name="QuestionsWillBeAsked" xml:space="preserve">
+        <value>質問されます</value>
+    </data>
+    <data name="TotalQuestionsByCriteria" xml:space="preserve">
+        <value>現在の基準による総質問数</value>
+    </data>
+    <data name="LanguagePair" xml:space="preserve">
+        <value>言語ペア</value>
+    </data>
+    <data name="QuestionOptionsCount" xml:space="preserve">
+        <value>回答選択肢の数</value>
+    </data>
+    <data name="StatsForTheCurrentCriteria" xml:space="preserve">
+        <value>選択された基準の統計</value>
+    </data>
 </root>

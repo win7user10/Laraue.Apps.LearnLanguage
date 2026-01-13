@@ -3,7 +3,7 @@
 <root>
     <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
         <xsd:element name="root" msdata:IsDataSet="true">
-            
+
         </xsd:element>
     </xsd:schema>
     <resheader name="resmimetype">
@@ -71,5 +71,26 @@
     </data>
     <data name="Learned" xml:space="preserve">
         <value>Aprendido</value>
+    </data>
+    <data name="QuizReady" xml:space="preserve">
+        <value>El cuestionario está listo para comenzar</value>
+    </data>
+    <data name="Topic" xml:space="preserve">
+        <value>Tema</value>
+    </data>
+    <data name="QuestionsWillBeAsked" xml:space="preserve">
+        <value>Se harán preguntas</value>
+    </data>
+    <data name="TotalQuestionsByCriteria" xml:space="preserve">
+        <value>Total de preguntas según los criterios actuales</value>
+    </data>
+    <data name="LanguagePair" xml:space="preserve">
+        <value>Par de idiomas</value>
+    </data>
+    <data name="QuestionOptionsCount" xml:space="preserve">
+        <value>Cantidad de opciones de respuesta</value>
+    </data>
+    <data name="StatsForTheCurrentCriteria" xml:space="preserve">
+        <value>Estadísticas para los criterios seleccionados</value>
     </data>
 </root>

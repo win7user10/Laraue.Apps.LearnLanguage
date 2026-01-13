@@ -72,4 +72,25 @@
     <data name="Learned" xml:space="preserve">
         <value>Appris</value>
     </data>
+    <data name="QuizReady" xml:space="preserve">
+        <value>Le quiz est prêt à commencer</value>
+    </data>
+    <data name="Topic" xml:space="preserve">
+        <value>Sujet</value>
+    </data>
+    <data name="QuestionsWillBeAsked" xml:space="preserve">
+        <value>Des questions seront posées</value>
+    </data>
+    <data name="TotalQuestionsByCriteria" xml:space="preserve">
+        <value>Total de questions selon les critères actuels</value>
+    </data>
+    <data name="LanguagePair" xml:space="preserve">
+        <value>Paire de langues</value>
+    </data>
+    <data name="QuestionOptionsCount" xml:space="preserve">
+        <value>Nombre d'options de réponse</value>
+    </data>
+    <data name="StatsForTheCurrentCriteria" xml:space="preserve">
+        <value>Statistiques pour les critères sélectionnés</value>
+    </data>
 </root>

@@ -28,11 +28,13 @@ serviceCollection.Configure<ServiceOptions>(configuration.GetRequiredSection("Se
 serviceCollection.AddHttpClient<IOllamaPredictor, OllamaPredictor>(x =>
 {
     x.BaseAddress = new Uri("http://localhost:11434/");
+    x.Timeout = TimeSpan.FromSeconds(300);
 });
 
 serviceCollection.AddHttpClient<IAutoTranslator, OllamaAutoTranslator>(x =>
 {
     x.BaseAddress = new Uri("http://localhost:11434/");
+    x.Timeout = TimeSpan.FromSeconds(300);
 });
 
 var services = serviceCollection.BuildServiceProvider();
