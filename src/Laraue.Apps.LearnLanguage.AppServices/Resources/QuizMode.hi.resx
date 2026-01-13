@@ -51,8 +51,8 @@
     <data name="Incorrect" xml:space="preserve">
         <value>गलत</value>
     </data>
-    <data name="CurrentStat" xml:space="preserve">
-        <value>वर्तमान स्थिति</value>
+    <data name="TotalStat" xml:space="preserve">
+        <value>कुल आँकड़ा</value>
     </data>
     <data name="TranslateWord" xml:space="preserve">
         <value>के लिए अनुवाद चुनें</value>
@@ -71,5 +71,35 @@
     </data>
     <data name="Learned" xml:space="preserve">
         <value>सीखा</value>
+    </data>
+    <data name="QuizReady" xml:space="preserve">
+        <value>क्विज़ शुरू करने के लिए तैयार है</value>
+    </data>
+    <data name="Topic" xml:space="preserve">
+        <value>विषय</value>
+    </data>
+    <data name="QuestionsWillBeAsked" xml:space="preserve">
+        <value>प्रश्न पूछे जाएंगे</value>
+    </data>
+    <data name="TotalQuestionsByCriteria" xml:space="preserve">
+        <value>वर्तमान मानदंडों के अनुसार कुल प्रश्न</value>
+    </data>
+    <data name="LanguagePair" xml:space="preserve">
+        <value>भाषा जोड़ी</value>
+    </data>
+    <data name="QuestionOptionsCount" xml:space="preserve">
+        <value>प्रश्न विकल्पों की संख्या</value>
+    </data>
+    <data name="StatsForTheCurrentCriteria" xml:space="preserve">
+        <value>चयनित मानदंडों के लिए आँकड़े</value>
+    </data>
+    <data name="ChangeTopic" xml:space="preserve">
+        <value>विषय बदलें</value>
+    </data>
+    <data name="ChangeLanguagePair" xml:space="preserve">
+        <value>भाषा जोड़ी बदलें</value>
+    </data>
+    <data name="SelectQuizTopic" xml:space="preserve">
+        <value>क्विज़ के लिए विषय चुनें</value>
     </data>
 </root>

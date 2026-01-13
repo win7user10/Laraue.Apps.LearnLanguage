@@ -51,8 +51,8 @@
     <data name="Incorrect" xml:space="preserve">
         <value>Faux</value>
     </data>
-    <data name="CurrentStat" xml:space="preserve">
-        <value>Statut actuel</value>
+    <data name="TotalStat" xml:space="preserve">
+        <value>Statistique totale</value>
     </data>
     <data name="TranslateWord" xml:space="preserve">
         <value>Sélectionnez la traduction de</value>
@@ -71,5 +71,35 @@
     </data>
     <data name="Learned" xml:space="preserve">
         <value>Appris</value>
+    </data>
+    <data name="QuizReady" xml:space="preserve">
+        <value>Le quiz est prêt à commencer</value>
+    </data>
+    <data name="Topic" xml:space="preserve">
+        <value>Sujet</value>
+    </data>
+    <data name="QuestionsWillBeAsked" xml:space="preserve">
+        <value>Des questions seront posées</value>
+    </data>
+    <data name="TotalQuestionsByCriteria" xml:space="preserve">
+        <value>Total de questions selon les critères actuels</value>
+    </data>
+    <data name="LanguagePair" xml:space="preserve">
+        <value>Paire de langues</value>
+    </data>
+    <data name="QuestionOptionsCount" xml:space="preserve">
+        <value>Nombre d'options de réponse</value>
+    </data>
+    <data name="StatsForTheCurrentCriteria" xml:space="preserve">
+        <value>Statistiques pour les critères sélectionnés</value>
+    </data>
+    <data name="ChangeTopic" xml:space="preserve">
+        <value>Changer de sujet</value>
+    </data>
+    <data name="ChangeLanguagePair" xml:space="preserve">
+        <value>Changer la paire de langues</value>
+    </data>
+    <data name="SelectQuizTopic" xml:space="preserve">
+        <value>Sélectionner un sujet pour le quiz</value>
     </data>
 </root>

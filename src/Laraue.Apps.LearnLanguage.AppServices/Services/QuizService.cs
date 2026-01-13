@@ -26,9 +26,17 @@ public class QuizService(
     IQuestionsGenerator questionsGenerator)
     : IQuizService
 {
-    private const long OptionIdToSkipQuestion = 0;
-    private const long WinStreakToLearn = 3;
+    private const long NullOptionId = 0;
+    private const int WinStreakToLearn = 3;
+    private const int MaxTopicsCount = 30;
     
+    // TODO - use settings to setup
+    private const int QuestionsCount = 20;
+    private const int OptionsCount = 8;
+    
+    /// <summary>
+    /// Handle any request related to quiz. If quiz is started handle answers, otherwise handle new quiz window.
+    /// </summary>
     public async Task HandleQuizWindowAsync(ReplyData replyData, QuizRequest request, CancellationToken ct = default)
     {
         var hasActiveQuiz = await repository.HasActiveQuizAsync(replyData.UserId, ct);
@@ -39,39 +47,172 @@ public class QuizService(
         await task;
     }
 
-    private async Task HandleNewQuizWindowAsync(ReplyData replyData, QuizRequest request, CancellationToken ct = default)
+    /// <summary>
+    /// Before start a new quiz ask user to select language pair for this quiz (or take it from settings if set).
+    /// </summary>
+    private Task HandleNewQuizWindowAsync(ReplyData replyData, QuizRequest request, CancellationToken ct = default)
     {
-        await selectLanguageService.ShowLanguageWindowOrHandleRequestAsync(
+        return selectLanguageService.ShowLanguageWindowOrHandleRequestAsync(
             request,
             QuizMode.ButtonName,
             TelegramRoutes.CurrentQuiz,
             replyData,
-            StartNewQuizAsync,
+            HandleBeforeQuizStartWindowAsync,
             ct);
     }
-    
-    private async Task StartNewQuizAsync(
+
+    /// <summary>
+    /// If the user pressed the start button, run the start quiz logic.
+    /// </summary>
+    private async Task HandleBeforeQuizStartWindowAsync(
         QuizRequest request,
         ReplyData replyData,
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
-        await using var transaction = await context.Database.BeginTransactionAsync(ct);
+        if (request.TopicId.HasValue)
+        {
+            long? optionId = request.TopicId == NullOptionId ? null : request.TopicId.Value;
+            await repository.UpdateTopicAsync(replyData.UserId, optionId, ct);
+        }
         
+        var task = request.RequestAction switch
+        {
+            RequestAction.StartQuiz => StartNewQuizAsync(replyData, selectedTranslation, ct),
+            RequestAction.SelectTopic => HandleSelectTopicWindow(replyData, selectedTranslation, ct),
+            _ => DrawBeforeQuizStartWindowAsync(request, replyData, selectedTranslation, ct)
+        };
+
+        await task;
+    }
+
+    /// <summary>
+    /// Draw a window from which the quiz can be launched or options can be changed.
+    /// </summary>
+    private async Task DrawBeforeQuizStartWindowAsync(
+        QuizRequest request,
+        ReplyData replyData,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
+    {
+        var tmb = new TelegramMessageBuilder();
+        
+        var topic = await repository.GetUserQuizTopicAsync(replyData.UserId, ct);
+        var languageCode = await repository.GetLanguageCodeAsync(
+            request.LanguageToLearnId.GetValueOrDefault(),
+            ct);
+
+        var questionsCount = topic?.WordsCount ?? await repository.GetQuestionsCountByFilterAsync(
+            request.LanguageToLearnId.GetValueOrDefault(),
+            topic?.Id,
+            ct);
+
+        var learnStat = await repository.GetLearnStatAsync(
+            replyData.UserId,
+            request.LanguageToLearnId.GetValueOrDefault(),
+            topic?.Id,
+            ct);
+
+        var topicName = topic?.Name ?? "Not Set";
+
+        tmb
+            .AppendRow($"<b>{QuizMode.QuizReady}</b>")
+            .AppendRow()
+            .AppendRow($"{QuizMode.Topic}: <b>{topicName}</b>")
+            .AppendRow($"{QuizMode.QuestionsWillBeAsked}: <b>{QuestionsCount}</b>")
+            .AppendRow($"{QuizMode.TotalQuestionsByCriteria}: <b>{questionsCount}</b>")
+            .AppendRow($"{QuizMode.LanguagePair}: <b>en -> {languageCode}</b>")
+            .AppendRow($"{QuizMode.QuestionOptionsCount}: <b>{OptionsCount}</b>")
+            .AppendRow()
+            .AppendRow($"<b>{QuizMode.StatsForTheCurrentCriteria}:</b>");
+        
+        foreach (var winStreak in learnStat.WinStreaks)
+        {
+            tmb.AppendRow($"{QuizMode.WinStreak} ({winStreak.Key}): {winStreak.Value}");
+        }
+
+        tmb.AppendRow(
+            $"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total}");
+            
+        tmb
+            .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
+                QuizMode.StartButtonName,
+                new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                    .WithTranslationDirection(selectedTranslation)
+                    .WithQueryParameter(ParameterNames.ActionId, RequestAction.StartQuiz))])
+            .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
+                QuizMode.ChangeTopic,
+                new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                    .WithTranslationDirection(selectedTranslation)
+                    .WithQueryParameter(ParameterNames.ActionId, RequestAction.SelectTopic))]);
+        
+        // Add back button only when language pair setup is available
+        var isDefaultLanguagePairSet = await repository.DoesUserSetDefaultLanguagePairAsync(replyData.UserId, ct);
+        if (!isDefaultLanguagePairSet)
+        {
+            tmb.AddInlineKeyboardButtons([
+                InlineKeyboardButton.WithCallbackData(
+                    QuizMode.ChangeLanguagePair,
+                    TelegramRoutes.CurrentQuiz)
+            ]);
+        }
+        
+        tmb.AddMainMenuButton();
+        
+        await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
+    }
+
+    private async Task HandleSelectTopicWindow(
+        ReplyData replyData,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
+    {
+        var tmb = new TelegramMessageBuilder()
+            .AppendRow(QuizMode.SelectQuizTopic);
+        
+        var topics = await repository.GetTopicsAsync(MaxTopicsCount, ct);
+        foreach (var chunkedTopics in topics.Chunk(2))
+        {
+            tmb.AddInlineKeyboardButtons(chunkedTopics
+                .Select(topic => new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                    .WithQueryParameter(ParameterNames.TopicId, topic.Id)
+                    .WithTranslationDirection(selectedTranslation)
+                    .ToInlineKeyboardButton($"{topic.Name} ({topic.WordsCount})")));
+        }
+
+        tmb
+            .AddInlineKeyboardButtons([new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                .WithQueryParameter(ParameterNames.TopicId, NullOptionId)
+                .WithTranslationDirection(selectedTranslation)
+                .ToInlineKeyboardButton(Settings.NotSet)])
+            .AddMainMenuButton();
+        
+        await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
+    }
+
+    /// <summary>
+    /// The start quiz logic.
+    /// </summary>
+    private async Task StartNewQuizAsync(
+        ReplyData replyData,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
+    {
+        await using var transaction = await context.Database.BeginTransactionAsync(ct);
+
+        var topicData = await repository.GetUserQuizTopicAsync(replyData.UserId, ct);
         var quizId = await repository.CreateQuizAsync(
             replyData.UserId,
             selectedTranslation.LanguageToLearnId!.Value,
+            topicData?.Id,
             ct);
-
-        // TODO - use settings to setup
-        const int questionsCount = 20;
-        const int optionsCount = 8;
         
         var questions = await questionsGenerator.GenerateQuestions(
             replyData.UserId,
             selectedTranslation.LanguageToLearnId!.Value,
-            questionsCount,
-            optionsCount,
+            topicData?.Id,
+            QuestionsCount,
+            OptionsCount,
             ct);
 
         await repository.SaveQuizQuestionsAsync(quizId, questions, ct);
@@ -88,7 +229,7 @@ public class QuizService(
     {
         var tmb = new TelegramMessageBuilder();
 
-        if (request.FinishQuiz)
+        if (request.RequestAction == RequestAction.FinishQuiz)
         {
             await repository.SkipAllQuizQuestions(replyData.UserId, ct);
         }
@@ -135,12 +276,12 @@ public class QuizService(
 
         tmb.AddInlineKeyboardButtons([
             InlineKeyboardButton.WithCallbackData(QuizMode.SkipButtonName, new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
-                .WithQueryParameter(ParameterNames.OpenedWordId, OptionIdToSkipQuestion))
+                .WithQueryParameter(ParameterNames.OpenedWordId, NullOptionId))
         ]);
         
         tmb.AddInlineKeyboardButtons([
             InlineKeyboardButton.WithCallbackData(QuizMode.FinishQuiz, new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
-                .WithQueryParameter(ParameterNames.FinishQuiz, true))
+                .WithQueryParameter(ParameterNames.ActionId, RequestAction.FinishQuiz))
         ]);
         
         tmb.AddMainMenuButton();
@@ -156,7 +297,7 @@ public class QuizService(
         CancellationToken ct = default)
     {
         await repository.SetQuizFinished(quizId, ct);
-        var learnStat = await repository.GetLearnStatAsync(userId, languageId, ct);
+        var learnStat = await repository.GetLearnStatAsync(userId, languageId, null, ct);
         
         var lastQuizQuestions = await repository.GetLastQuizQuestionsAsync(replyData.UserId, ct);
         var correctCount = lastQuizQuestions.Count(q => q.Status == UserQuizQuestionStatus.Correct);
@@ -215,8 +356,7 @@ public class QuizService(
         
         tmb
             .AppendRow()
-            .AppendRow($"<b>{QuizMode.CurrentStat}</b>:")
-            .AppendRow($"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]");
+            .AppendRow($"<b>{QuizMode.TotalStat}</b>:");
 
         foreach (var winStreak in learnStat.WinStreaks)
         {
@@ -228,11 +368,13 @@ public class QuizService(
         }
         
         tmb
+            .AppendRow($"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]")
             .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.RepeatQuiz,
                     new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
-                        .WithTranslationDirection(new SelectedTranslation(languageId)))
+                        .WithTranslationDirection(new SelectedTranslation(languageId))
+                        .WithQueryParameter(ParameterNames.ActionId, RequestAction.StartQuiz))
             ])
             .AddMainMenuButton();
         
@@ -247,7 +389,7 @@ public class QuizService(
     {
         var question = await repository.GetQuestion(userId, ct);
 
-        var status = selectedOptionId == OptionIdToSkipQuestion
+        var status = selectedOptionId == NullOptionId
             ? UserQuizQuestionStatus.Skipped
             : selectedOptionId == question.CorrectWordId
                 ? UserQuizQuestionStatus.Correct
@@ -279,7 +421,7 @@ public class QuizService(
     public interface IRepository
     {
         Task<bool> HasActiveQuizAsync(Guid userId, CancellationToken ct = default);
-        Task<long> CreateQuizAsync(Guid userId, long languageId, CancellationToken ct = default);
+        Task<long> CreateQuizAsync(Guid userId, long languageId, long? topicId, CancellationToken ct = default);
         Task SetQuizFinished(long quizId, CancellationToken ct = default);
         Task SaveQuizQuestionsAsync(long quizId, NewQuestionDto[] questions, CancellationToken ct = default);
         Task SkipAllQuizQuestions(Guid userId, CancellationToken ct = default);
@@ -289,7 +431,13 @@ public class QuizService(
         Task UpdateTranslationWinStreakAsync(long wordId, long languageId, Guid userId, bool increase, CancellationToken ct = default);
         Task<CurrentQuizStats> GetCurrentQuizStatsAsync(Guid userId, CancellationToken ct = default);
         Task<LastQuizStatsQuestion[]> GetLastQuizQuestionsAsync(Guid userId, CancellationToken ct = default);
-        Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, CancellationToken ct = default);
+        Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, long? topicId, CancellationToken ct = default);
+        Task<string?> GetLanguageCodeAsync(long languageId, CancellationToken ct = default);
+        Task<TopicItemDto?> GetUserQuizTopicAsync(Guid userId, CancellationToken ct = default);
+        Task<int> GetQuestionsCountByFilterAsync(long languageId, long? topicId, CancellationToken ct = default);
+        Task<TopicItemDto[]> GetTopicsAsync(int count, CancellationToken ct = default);
+        Task UpdateTopicAsync(Guid userId, long? topicId, CancellationToken ct = default);
+        Task<bool> DoesUserSetDefaultLanguagePairAsync(Guid userId, CancellationToken ct = default);
     }
 
     public class FlashCard
@@ -338,6 +486,13 @@ public class QuizService(
         public required string? Transcription { get; init; }
         public required long LanguageId { get; init; }
     }
+
+    public class TopicItemDto
+    {
+        public long Id { get; init; }
+        public int WordsCount { get; init; }
+        public required string Name { get; init; }
+    }
     
     public class Repository(DatabaseContext context, IDateTimeProvider dateTimeProvider) : IRepository
     {
@@ -349,7 +504,7 @@ public class QuizService(
                 .AnyAsyncLinqToDB(ct);
         }
 
-        public async Task<long> CreateQuizAsync(Guid userId, long languageId, CancellationToken ct = default)
+        public async Task<long> CreateQuizAsync(Guid userId, long languageId, long? topicId, CancellationToken ct = default)
         {
             var quiz = new UserQuiz
             {
@@ -357,6 +512,7 @@ public class QuizService(
                 Status = UserQuizStatus.Active,
                 CreatedAt = dateTimeProvider.UtcNow,
                 LanguageId = languageId,
+                TopicId = topicId,
             };
             
             context.Add(quiz);
@@ -551,23 +707,35 @@ public class QuizService(
                 .ToArrayAsyncEF(ct);
         }
 
-        public async Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, CancellationToken ct = default)
+        public async Task<LearnStat> GetLearnStatAsync(Guid userId, long languageId, long? topicId, CancellationToken ct = default)
         {
             var query = context.LearnedTranslations
                 .Where(q => q.UserId == userId)
                 .Where(q => q.LanguageId == languageId);
             
+            if (topicId.HasValue)
+                query = query.Where(tr => tr.Word.Topics.Any(t => t.TopicId == topicId.Value));
+            
             var learnedCount = await query
                 .CountAsyncEF(x => x.LearnedAt != null, ct);
-            
-            var winStreaks = await query
+
+            var allWinStreaksRows = Enumerable.Range(1, WinStreakToLearn - 1);
+            var winStreaksInDb = await query
                 .Where(x => x.WinStreakCount > 0 && x.WinStreakCount < WinStreakToLearn)
                 .GroupBy(x => x.WinStreakCount)
                 .ToDictionaryAsyncEF(x => x.Key, x => x.Count(), ct);
+
+            var winStreaks = allWinStreaksRows
+                .ToDictionary(x => x, x => winStreaksInDb.GetValueOrDefault(x));
             
-            var totalCount = await context.Translations
-                .Where(x => x.LanguageId == languageId)
-                .CountAsyncEF(ct);
+            var totalCountQuery = context.Translations
+                .Where(x => x.LanguageId == languageId);
+            
+            if (topicId.HasValue)
+                totalCountQuery = totalCountQuery
+                    .Where(tr => tr.Word.Topics.Any(t => t.TopicId == topicId.Value));
+
+            var totalCount = await totalCountQuery.CountAsyncEF(ct);
 
             return new LearnStat
             {
@@ -575,6 +743,76 @@ public class QuizService(
                 Total = totalCount,
                 WinStreaks = winStreaks
             };
+        }
+
+        public Task<string?> GetLanguageCodeAsync(long languageId, CancellationToken ct = default)
+        {
+            return context.Languages
+                .Where(x => x.Id == languageId)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsyncEF(ct);
+        }
+
+        public Task<TopicItemDto?> GetUserQuizTopicAsync(Guid userId, CancellationToken ct = default)
+        {
+            return context.Users
+                .Where(u => u.Id == userId)
+                .Where(u => u.QuizTopicId.HasValue)
+                .Select(u => new TopicItemDto
+                {
+                    Name = u.QuizTopic.Name,
+                    Id = u.QuizTopicId!.Value,
+                    WordsCount = u.QuizTopic.WordTopics.Count
+                })
+                .FirstOrDefaultAsyncEF(ct);
+        }
+
+        public Task<int> GetQuestionsCountByFilterAsync(long languageId, long? topicId, CancellationToken ct = default)
+        {
+            var query = context.Translations
+                .Where(x => x.LanguageId == languageId);
+
+            if (topicId.HasValue)
+            {
+                query = query.Where(x => x.Word.Topics.Any(t => t.TopicId == topicId));
+            }
+            
+            return query.CountAsyncEF(ct);
+        }
+
+        public async Task<TopicItemDto[]> GetTopicsAsync(int count, CancellationToken ct = default)
+        {
+            var topics = await context.Topics
+                .Select(topic => new TopicItemDto
+                {
+                    Id = topic.Id,
+                    WordsCount = topic.WordTopics.Count,
+                    Name = topic.Name
+                })
+                .OrderByDescending(x => x.WordsCount)
+                .Take(count)
+                .ToArrayAsyncEF(ct);
+
+            return topics
+                .OrderBy(x => x.Name)
+                .ToArray();
+        }
+
+        public Task UpdateTopicAsync(Guid userId, long? topicId, CancellationToken ct = default)
+        {
+            return context.Users
+                .Where(u => u.Id == userId)
+                .ExecuteUpdateAsync(
+                    u => u
+                        .SetProperty(p => p.QuizTopicId, topicId),
+                    ct);
+        }
+
+        public Task<bool> DoesUserSetDefaultLanguagePairAsync(Guid userId, CancellationToken ct = default)
+        {
+            return context.Users
+                .Where(u => u.Id == userId)
+                .AnyAsyncEF(u => u.LanguageToLearnId != null, ct);
         }
     }
 }

@@ -11,6 +11,16 @@ public record QuizRequest : WithSelectedTranslationRequest
     [FromQuery(ParameterNames.OpenedWordId)]
     public long? SelectedOptionId { get; init; }
     
-    [FromQuery(ParameterNames.FinishQuiz)]
-    public bool FinishQuiz { get; init; }
+    [FromQuery(ParameterNames.ActionId)]
+    public RequestAction? RequestAction { get; init; }
+    
+    [FromQuery(ParameterNames.TopicId)]
+    public long? TopicId { get; init; }
+}
+
+public enum RequestAction
+{
+    StartQuiz,
+    FinishQuiz,
+    SelectTopic,
 }
