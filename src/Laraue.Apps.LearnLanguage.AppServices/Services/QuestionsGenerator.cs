@@ -9,6 +9,7 @@ public interface IQuestionsGenerator
     Task<NewQuestionDto[]> GenerateQuestions(
         Guid userId,
         long languageId,
+        long? topicId,
         int questionsCount,
         int optionsCount,
         CancellationToken ct);
@@ -19,6 +20,7 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
     public async Task<NewQuestionDto[]> GenerateQuestions(
         Guid userId,
         long languageId,
+        long? topicId,
         int questionsCount,
         int optionsCount,
         CancellationToken ct)
@@ -29,10 +31,18 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         var preferredRememberWordsCount = (int)(questionsCount * rememberWordsRatio);
         var preferredRepeatWordsCount = (int)(questionsCount * repeatWordsRatio);
 
-        var oldQuestions = await context.LearnedTranslations
+        var metWordsQuery = context.LearnedTranslations
             .Where(x => x.UserId == userId)
             .Where(x => x.LearnedAt != null)
-            .Where(x => x.Translation.LanguageId == languageId)
+            .Where(x => x.Translation.LanguageId == languageId);
+
+        if (topicId.HasValue)
+        {
+            metWordsQuery = metWordsQuery
+                .Where(x => x.Word.Topics.Any(t => t.TopicId == topicId.Value));
+        }
+
+        var oldQuestions = await metWordsQuery
             .Select(x => new NewQuestionDto
             {
                 WordId = x.Translation.WordId,
@@ -45,10 +55,7 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         // If remember words are less than excepted, request more words to repeat
         var repeatWordsCount = preferredRepeatWordsCount + preferredRememberWordsCount - oldQuestions.Count;
         
-        var repeatQuestions = await context.LearnedTranslations
-            .Where(x => x.UserId == userId)
-            .Where(x => x.LearnedAt == null)
-            .Where(x => x.LanguageId == languageId)
+        var repeatQuestions = await metWordsQuery
             .Select(x => new NewQuestionDto
             {
                 WordId = x.Translation.WordId,
@@ -59,13 +66,24 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             .ToListAsyncEF(ct);
         
         var newQuestionsCount = questionsCount - oldQuestions.Count - repeatQuestions.Count;
-        var newQuestions = await context.Translations
+        var newQuestionsQuery = context.Translations
             .LeftJoin(
                 context.LearnedTranslations,
-                (translation, learnedTranslation) => translation.LanguageId == learnedTranslation.LanguageId && translation.WordId == learnedTranslation.WordId,
+                (translation, learnedTranslation) => 
+                    translation.LanguageId == learnedTranslation.LanguageId 
+                    && translation.WordId == learnedTranslation.WordId,
                 (translation, learnedTranslation) => new { translation, learnedTranslation })
             .Where(x => x.translation.LanguageId == languageId)
-            .Where(x => x.learnedTranslation == null)
+            .Where(x => x.learnedTranslation == null);
+
+        if (topicId.HasValue)
+        {
+            newQuestionsQuery = newQuestionsQuery
+                .Where(q => q.translation.Word.Topics.Any(t => t.TopicId == topicId.Value));
+        }
+        
+        
+        var newQuestions = await newQuestionsQuery
             .OrderBy(x => SqlFunctions.NewGuid())
             .Take(newQuestionsCount)
             .Select(x => new NewQuestionDto
