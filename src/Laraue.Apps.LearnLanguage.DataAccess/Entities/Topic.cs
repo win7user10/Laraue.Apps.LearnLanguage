@@ -6,4 +6,6 @@ public sealed class Topic : BaseEntity, IDictionaryEntity
 {
     [MaxLength(100)]
     public required string Name { get; init; }
+    
+    public ICollection<WordTopic> WordTopics { get; set; } = null!;
 }

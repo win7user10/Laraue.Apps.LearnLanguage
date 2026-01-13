@@ -45,4 +45,14 @@ public sealed class User : ITelegramUser<Guid>
     /// Default language to learn for the user.
     /// </summary>
     public WordLanguage LanguageToLearn { get; set; } = null!;
+
+    /// <summary>
+    /// The topic selected for quiz's. All quiz questions will be related to this topic if set.
+    /// </summary>
+    public long? QuizTopicId { get; set; }
+
+    /// <summary>
+    /// The <see cref="Topic"/> reference for selected <see cref="QuizTopicId"/>.
+    /// </summary>
+    public Topic QuizTopic { get; set; } = null!;
 }
