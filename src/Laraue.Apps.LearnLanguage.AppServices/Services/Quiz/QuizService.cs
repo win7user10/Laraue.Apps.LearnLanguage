@@ -107,26 +107,29 @@ public class QuizService(
         StartQuizRequest startQuizRequest,
         CancellationToken ct = default)
     {
-        await using var transaction = await context.Database.BeginTransactionAsync(ct);
+        if (!await HasActiveQuizAsync(replyData.UserId, ct))
+        {
+            await using var transaction = await context.Database.BeginTransactionAsync(ct);
 
-        var topicData = await repository.GetUserQuizTopicAsync(replyData.UserId, ct);
-        var quizId = await repository.CreateQuizAsync(
-            replyData.UserId,
-            startQuizRequest.LanguageToLearnId!.Value,
-            topicData?.Id,
-            ct);
+            var topicData = await repository.GetUserQuizTopicAsync(replyData.UserId, ct);
+            var quizId = await repository.CreateQuizAsync(
+                replyData.UserId,
+                startQuizRequest.LanguageToLearnId!.Value,
+                topicData?.Id,
+                ct);
         
-        var questions = await questionsGenerator.GenerateQuestions(
-            replyData.UserId,
-            startQuizRequest.LanguageToLearnId!.Value,
-            topicData?.Id,
-            QuestionsCount,
-            OptionsCount,
-            ct);
+            var questions = await questionsGenerator.GenerateQuestions(
+                replyData.UserId,
+                startQuizRequest.LanguageToLearnId!.Value,
+                topicData?.Id,
+                QuestionsCount,
+                OptionsCount,
+                ct);
 
-        await repository.SaveQuizQuestionsAsync(quizId, questions, ct);
+            await repository.SaveQuizQuestionsAsync(quizId, questions, ct);
         
-        await transaction.CommitAsync(ct);
+            await transaction.CommitAsync(ct);
+        }
         
         await OpenNextQuizQuestionWindowAsync(
             replyData,
@@ -136,8 +139,12 @@ public class QuizService(
 
     public async Task FinishQuizAsync(ReplyData replyData, CancellationToken ct = default)
     {
+        if (!await HasActiveQuizAsync(replyData.UserId, ct))
+        {
+            return;
+        }
+        
         await repository.SkipAllQuizQuestions(replyData.UserId, ct);
-
         await OpenNextQuizQuestionWindowAsync(
             replyData,
             previousAnswerResult: null,
@@ -149,6 +156,11 @@ public class QuizService(
         SelectQuizAnswerRequest request,
         CancellationToken ct = default)
     {
+        if (!await HasActiveQuizAsync(replyData.UserId, ct))
+        {
+            return;
+        }
+        
         var result = await HandleSelectedOptionAsync(
             replyData.UserId,
             request.SelectedOptionId,
