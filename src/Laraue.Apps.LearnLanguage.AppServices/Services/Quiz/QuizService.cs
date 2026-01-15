@@ -57,102 +57,6 @@ public class QuizService(
         await task;
     }
 
-    private Task<bool> HasActiveQuizAsync(Guid userId, CancellationToken ct)
-    {
-        return repository.HasActiveQuizAsync(userId, ct);
-    }
-
-    /// <summary>
-    /// Before start a new quiz ask user to select language pair for this quiz (or take it from settings if set).
-    /// </summary>
-    private Task OpenNewQuizWindowAsync(
-        ReplyData replyData,
-        QuizRequest request,
-        CancellationToken ct = default)
-    {
-        return selectLanguageService.ShowLanguageWindowOrHandleRequestAsync(
-            request,
-            QuizMode.ButtonName,
-            TelegramRoutes.CurrentQuiz,
-            replyData,
-            OpenBeforeQuizStartWindowAsync,
-            ct);
-    }
-
-    /// <summary>
-    /// Draw a window from which the quiz can be launched or options can be changed.
-    /// </summary>
-    private async Task OpenBeforeQuizStartWindowAsync(
-        QuizRequest request,
-        ReplyData replyData,
-        SelectedTranslation selectedTranslation,
-        CancellationToken ct = default)
-    {
-        var tmb = new TelegramMessageBuilder();
-        
-        var topic = await repository.GetUserQuizTopicAsync(replyData.UserId, ct);
-        var languageCode = await repository.GetLanguageCodeAsync(
-            selectedTranslation.LanguageToLearnId!.Value,
-            ct);
-
-        var questionsCount = topic?.WordsCount ?? await repository.GetQuestionsCountByFilterAsync(
-            selectedTranslation.LanguageToLearnId!.Value,
-            topic?.Id,
-            ct);
-
-        var learnStat = await repository.GetLearnStatAsync(
-            replyData.UserId,
-            selectedTranslation.LanguageToLearnId!.Value,
-            topic?.Id,
-            ct);
-
-        var topicName = topic?.Name ?? "Not Set";
-
-        tmb
-            .AppendRow($"<b>{QuizMode.QuizReady}</b>")
-            .AppendRow()
-            .AppendRow($"{QuizMode.Topic}: <b>{topicName}</b>")
-            .AppendRow($"{QuizMode.QuestionsWillBeAsked}: <b>{QuestionsCount}</b>")
-            .AppendRow($"{QuizMode.TotalQuestionsByCriteria}: <b>{questionsCount}</b>")
-            .AppendRow($"{QuizMode.LanguagePair}: <b>en -> {languageCode}</b>")
-            .AppendRow($"{QuizMode.QuestionOptionsCount}: <b>{OptionsCount}</b>")
-            .AppendRow()
-            .AppendRow($"<b>{QuizMode.StatsForTheCurrentCriteria}:</b>");
-        
-        foreach (var winStreak in learnStat.WinStreaks)
-        {
-            tmb.AppendRow($"{QuizMode.WinStreak} ({winStreak.Key}): {winStreak.Value}");
-        }
-
-        tmb.AppendRow(
-            $"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total}");
-            
-        tmb
-            .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
-                QuizMode.StartButtonName,
-                new CallbackRoutePath(TelegramRoutes.StartQuiz, RouteMethod.Post)
-                    .WithTranslationDirection(selectedTranslation))])
-            .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
-                QuizMode.ChangeTopic,
-                new CallbackRoutePath(TelegramRoutes.TopicSelection)
-                    .WithTranslationDirection(selectedTranslation))]);
-        
-        // Add back button only when language pair setup is available
-        var isDefaultLanguagePairSet = await repository.DoesUserSetDefaultLanguagePairAsync(replyData.UserId, ct);
-        if (!isDefaultLanguagePairSet)
-        {
-            tmb.AddInlineKeyboardButtons([
-                InlineKeyboardButton.WithCallbackData(
-                    QuizMode.ChangeLanguagePair,
-                    TelegramRoutes.CurrentQuiz)
-            ]);
-        }
-        
-        tmb.AddMainMenuButton();
-        
-        await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
-    }
-
     public async Task ChangeTopicAsync(
         ReplyData replyData,
         ChangeTopicRequest request,
@@ -254,6 +158,102 @@ public class QuizService(
             replyData,
             result,
             ct);
+    }
+
+    private Task<bool> HasActiveQuizAsync(Guid userId, CancellationToken ct)
+    {
+        return repository.HasActiveQuizAsync(userId, ct);
+    }
+
+    /// <summary>
+    /// Before start a new quiz ask user to select language pair for this quiz (or take it from settings if set).
+    /// </summary>
+    private Task OpenNewQuizWindowAsync(
+        ReplyData replyData,
+        QuizRequest request,
+        CancellationToken ct = default)
+    {
+        return selectLanguageService.ShowLanguageWindowOrHandleRequestAsync(
+            request,
+            QuizMode.ButtonName,
+            TelegramRoutes.CurrentQuiz,
+            replyData,
+            OpenBeforeQuizStartWindowAsync,
+            ct);
+    }
+
+    /// <summary>
+    /// Draw a window from which the quiz can be launched or options can be changed.
+    /// </summary>
+    private async Task OpenBeforeQuizStartWindowAsync(
+        QuizRequest request,
+        ReplyData replyData,
+        SelectedTranslation selectedTranslation,
+        CancellationToken ct = default)
+    {
+        var tmb = new TelegramMessageBuilder();
+        
+        var topic = await repository.GetUserQuizTopicAsync(replyData.UserId, ct);
+        var languageCode = await repository.GetLanguageCodeAsync(
+            selectedTranslation.LanguageToLearnId!.Value,
+            ct);
+
+        var questionsCount = topic?.WordsCount ?? await repository.GetQuestionsCountByFilterAsync(
+            selectedTranslation.LanguageToLearnId!.Value,
+            topic?.Id,
+            ct);
+
+        var learnStat = await repository.GetLearnStatAsync(
+            replyData.UserId,
+            selectedTranslation.LanguageToLearnId!.Value,
+            topic?.Id,
+            ct);
+
+        var topicName = topic?.Name ?? "Not Set";
+
+        tmb
+            .AppendRow($"<b>{QuizMode.QuizReady}</b>")
+            .AppendRow()
+            .AppendRow($"{QuizMode.Topic}: <b>{topicName}</b>")
+            .AppendRow($"{QuizMode.QuestionsWillBeAsked}: <b>{QuestionsCount}</b>")
+            .AppendRow($"{QuizMode.TotalQuestionsByCriteria}: <b>{questionsCount}</b>")
+            .AppendRow($"{QuizMode.LanguagePair}: <b>en -> {languageCode}</b>")
+            .AppendRow($"{QuizMode.QuestionOptionsCount}: <b>{OptionsCount}</b>")
+            .AppendRow()
+            .AppendRow($"<b>{QuizMode.StatsForTheCurrentCriteria}:</b>");
+        
+        foreach (var winStreak in learnStat.WinStreaks)
+        {
+            tmb.AppendRow($"{QuizMode.WinStreak} ({winStreak.Key}): {winStreak.Value}");
+        }
+
+        tmb.AppendRow(
+            $"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total}");
+            
+        tmb
+            .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
+                QuizMode.StartButtonName,
+                new CallbackRoutePath(TelegramRoutes.StartQuiz, RouteMethod.Post)
+                    .WithTranslationDirection(selectedTranslation))])
+            .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
+                QuizMode.ChangeTopic,
+                new CallbackRoutePath(TelegramRoutes.TopicSelection)
+                    .WithTranslationDirection(selectedTranslation))]);
+        
+        // Add back button only when language pair setup is available
+        var isDefaultLanguagePairSet = await repository.DoesUserSetDefaultLanguagePairAsync(replyData.UserId, ct);
+        if (!isDefaultLanguagePairSet)
+        {
+            tmb.AddInlineKeyboardButtons([
+                InlineKeyboardButton.WithCallbackData(
+                    QuizMode.ChangeLanguagePair,
+                    TelegramRoutes.CurrentQuiz)
+            ]);
+        }
+        
+        tmb.AddMainMenuButton();
+        
+        await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
 
     private async Task OpenNextQuizQuestionWindowAsync(
