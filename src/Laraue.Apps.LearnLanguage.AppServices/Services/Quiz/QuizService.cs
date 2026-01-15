@@ -160,6 +160,11 @@ public class QuizService(
     {
         long? optionId = request.TopicId == NullOptionId ? null : request.TopicId;
         await repository.UpdateTopicAsync(replyData.UserId, optionId, ct);
+
+        await OpenNewQuizWindowAsync(
+            replyData,
+            new QuizRequest { LanguageToLearnId = request.LanguageToLearnId },
+            ct);
     }
 
     public async Task OpenSelectTopicWindowAsync(
@@ -174,14 +179,14 @@ public class QuizService(
         foreach (var chunkedTopics in topics.Chunk(2))
         {
             tmb.AddInlineKeyboardButtons(chunkedTopics
-                .Select(topic => new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                .Select(topic => new CallbackRoutePath(TelegramRoutes.TopicSelection, RouteMethod.Post)
                     .WithQueryParameter(ParameterNames.TopicId, topic.Id)
                     .WithTranslationDirection(request)
                     .ToInlineKeyboardButton($"{topic.Name} ({topic.WordsCount})")));
         }
 
         tmb
-            .AddInlineKeyboardButtons([new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+            .AddInlineKeyboardButtons([new CallbackRoutePath(TelegramRoutes.TopicSelection, RouteMethod.Post)
                 .WithQueryParameter(ParameterNames.TopicId, NullOptionId)
                 .WithTranslationDirection(request)
                 .ToInlineKeyboardButton(Settings.NotSet)])
@@ -225,9 +230,14 @@ public class QuizService(
             ct);
     }
 
-    public Task FinishQuizAsync(Guid userId, CancellationToken ct = default)
+    public async Task FinishQuizAsync(ReplyData replyData, CancellationToken ct = default)
     {
-        return repository.SkipAllQuizQuestions(userId, ct);
+        await repository.SkipAllQuizQuestions(replyData.UserId, ct);
+
+        await OpenNextQuizQuestionWindowAsync(
+            replyData,
+            previousAnswerResult: null,
+            ct);
     }
     
     public async Task SelectQuizAnswerAsync(
@@ -269,7 +279,7 @@ public class QuizService(
         var stats = await repository.GetCurrentQuizStatsAsync(replyData.UserId, ct);
         if (stats.AnsweredQuestions == stats.TotalQuestions)
         {
-            await HandleFinishQuizAsync(replyData, stats.Id, stats.LanguageId, replyData.UserId, ct);
+            await HandleFinishQuizAsync(replyData, stats.Id, stats.LanguageId, ct);
             return;
         }
         
@@ -286,14 +296,14 @@ public class QuizService(
             tmb.AddInlineKeyboardButtons(flashCardsChunk
                 .Select(x => InlineKeyboardButton.WithCallbackData(
                     System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Text),
-                    new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                    new CallbackRoutePath(TelegramRoutes.SelectQuizAnswer, RouteMethod.Post)
                         .WithQueryParameter(ParameterNames.OpenedWordId, x.WordId))));
         }
 
         tmb.AddInlineKeyboardButtons([
             InlineKeyboardButton.WithCallbackData(
                 QuizMode.SkipButtonName,
-                new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                new CallbackRoutePath(TelegramRoutes.SelectQuizAnswer, RouteMethod.Post)
                     .WithQueryParameter(ParameterNames.OpenedWordId, NullOptionId))
         ]);
         
@@ -312,11 +322,10 @@ public class QuizService(
         ReplyData replyData,
         long quizId,
         long languageId,
-        Guid userId,
         CancellationToken ct = default)
     {
         await repository.SetQuizFinished(quizId, ct);
-        var learnStat = await repository.GetLearnStatAsync(userId, languageId, null, ct);
+        var learnStat = await repository.GetLearnStatAsync(replyData.UserId, languageId, null, ct);
         
         var lastQuizQuestions = await repository.GetLastQuizQuestionsAsync(replyData.UserId, ct);
         var correctCount = lastQuizQuestions.Count(q => q.Status == UserQuizQuestionStatus.Correct);
@@ -391,7 +400,7 @@ public class QuizService(
             .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.RepeatQuiz,
-                    new CallbackRoutePath(TelegramRoutes.StartQuiz)
+                    new CallbackRoutePath(TelegramRoutes.StartQuiz, RouteMethod.Post)
                         .WithTranslationDirection(new SelectedTranslation(languageId)))
             ])
             .AddMainMenuButton();

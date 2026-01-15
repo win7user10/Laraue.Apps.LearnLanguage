@@ -58,6 +58,6 @@ public class QuizController(IQuizService service) : TelegramController
         RequestContext context,
         CancellationToken ct)
     {
-        return service.FinishQuizAsync(context.UserId, ct);
+        return service.FinishQuizAsync(ReplyData.FromRequest(context), ct);
     }
 }

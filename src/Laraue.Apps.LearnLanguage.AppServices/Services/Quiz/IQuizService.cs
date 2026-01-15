@@ -28,6 +28,6 @@ public interface IQuizService
         CancellationToken ct = default);
 
     Task FinishQuizAsync(
-        Guid userId,
+        ReplyData replyData,
         CancellationToken ct = default);
 }
