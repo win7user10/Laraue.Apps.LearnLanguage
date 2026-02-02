@@ -38,7 +38,8 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         if (topicId.HasValue)
         {
             metWordsQuery = metWordsQuery
-                .Where(x => x.Word.Topics.Any(t => t.TopicId == topicId.Value));
+                .Where(x => x.Word.Topics
+                    .Any(t => t.TopicId == topicId.Value));
         }
 
         var oldQuestions = await metWordsQuery
@@ -47,6 +48,7 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             {
                 WordId = x.Translation.WordId,
                 PartOfSpeechId = x.Translation.Word.PartOfSpeechId,
+                TranslationHashCode = x.Translation.Text.GetHashCode(),
             })
             .OrderBy(x => Guid.NewGuid())
             .Take(preferredRememberWordsCount)
@@ -61,6 +63,7 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             {
                 WordId = x.Translation.WordId,
                 PartOfSpeechId = x.Translation.Word.PartOfSpeechId,
+                TranslationHashCode = x.Translation.Text.GetHashCode(),
             })
             .OrderBy(x => Guid.NewGuid())
             .Take(repeatWordsCount)
@@ -80,7 +83,8 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         if (topicId.HasValue)
         {
             newQuestionsQuery = newQuestionsQuery
-                .Where(q => q.translation.Word.Topics.Any(t => t.TopicId == topicId.Value));
+                .Where(q => q.translation.Word.Topics
+                    .Any(t => t.TopicId == topicId.Value));
         }
         
         
@@ -91,6 +95,7 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             {
                 WordId = x.translation.WordId,
                 PartOfSpeechId = x.translation.Word.PartOfSpeechId,
+                TranslationHashCode = x.translation.Text.GetHashCode(),
             })
             .ToListAsyncEF(ct);
 
@@ -105,11 +110,20 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         return allQuestions;
     }
 
-    private async Task EnrichOptions(long languageId, int enrichCount, NewQuestionDto[] questions, CancellationToken ct)
+    private async Task EnrichOptions(
+        long languageId,
+        int enrichCount,
+        NewQuestionDto[] questions,
+        CancellationToken ct)
     {
         var optionsData = await context.Translations
             .Where(x => x.LanguageId == languageId)
-            .Select(x => new { x.WordId, x.Word.PartOfSpeechId })
+            .Select(x => new
+            {
+                x.WordId,
+                x.Word.PartOfSpeechId,
+                HashCode = x.Text.GetHashCode()
+            })
             .ToArrayAsyncEF(ct);
 
         var optionIdsByPartOfSpeechId = optionsData
@@ -117,11 +131,11 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             .ToDictionary(
                 x => x.Key,
                 x => x
-                    .Select(y => y.WordId)
+                    .Select(y => new { y.WordId, y.HashCode })
                     .ToArray());
         
         var allOptionIds = optionsData
-            .Select(x => x.WordId)
+            .Select(x => new { x.WordId, x.HashCode })
             .ToArray();
         
         foreach (var question in questions)
@@ -129,6 +143,11 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             var generatedOptions = new HashSet<long>
             {
                 question.WordId, // the first option is the correct value
+            };
+
+            var usedTranslationHashes = new HashSet<int>
+            {
+                question.TranslationHashCode,
             };
             
             // As default tries to generate options with the same part of speech
@@ -143,12 +162,15 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
                 while (true)
                 {
                     var nextOptionIndex = Random.Shared.Next(0, availableOptionIds.Length);
-                    var optionId = availableOptionIds[nextOptionIndex];
+                    var option = availableOptionIds[nextOptionIndex];
+
+                    if (generatedOptions.Contains(option.WordId) || usedTranslationHashes.Contains(option.HashCode))
+                        continue;
                     
-                    if (generatedOptions.Add(optionId))
-                    {
-                        break;
-                    }
+                    generatedOptions.Add(option.WordId);
+                    usedTranslationHashes.Add(option.HashCode);
+                        
+                    break;
                 }
             }
 
@@ -162,4 +184,5 @@ public class NewQuestionDto
     public required long WordId { get; set; }
     public required long PartOfSpeechId { get; set; }
     public long[] OptionIds { get; set; } = [];
+    public int TranslationHashCode { get; set; }
 }
