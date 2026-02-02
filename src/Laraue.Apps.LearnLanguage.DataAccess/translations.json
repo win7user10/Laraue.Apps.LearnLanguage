@@ -274119,7 +274119,7 @@
   {
     "id": 5405,
     "word": "time",
-    "transcription": "tahm",
+    "transcription": "tai:m",
     "cefrLevel": "B2",
     "meaning": "To measure duration; to schedule.",
     "partOfSpeech": "verb",
@@ -274132,8 +274132,8 @@
     "translations": [
       {
         "language": "ru",
-        "text": "тратить (tratit')",
-        "transcription": "tratit'"
+        "text": "приурочить",
+        "transcription": "priurochit'"
       },
       {
         "language": "fr",

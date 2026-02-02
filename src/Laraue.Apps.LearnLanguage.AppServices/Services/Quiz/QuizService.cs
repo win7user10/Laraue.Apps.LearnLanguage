@@ -279,9 +279,11 @@ public class QuizService(
         {
             tmb
                 .Append(QuizMode.ResourceManager.GetString($"QuizAnswer_{previousAnswerResult.Status}") ?? string.Empty)
-                .Append(" ")
+                .Append(" <b>")
                 .Append(previousAnswerResult.QuestionDto.Word)
-                .Append(" ")
+                .Append("</b> (")
+                .Append(previousAnswerResult.QuestionDto.PartOfSpeech)
+                .Append(") - ")
                 .Append(previousAnswerResult.QuestionDto.Translation)
                 .AppendRow($" [{previousAnswerResult.QuestionDto.Transcription}]")
                 .AppendRow();
@@ -524,6 +526,7 @@ public class QuizService(
         public required string Translation { get; init; }
         public required string? Transcription { get; init; }
         public required long LanguageId { get; init; }
+        public required string PartOfSpeech { get; init; }
     }
 
     public class TopicItemDto
@@ -655,6 +658,7 @@ public class QuizService(
                         .First(y => y.WordId == x.WordId)
                         .Text,
                     Transcription = x.Word.Transcription,
+                    PartOfSpeech = x.Word.PartOfSpeech!.Name,
                 })
                 .FirstOrThrowNotFoundEFAsync(ct);
         }
@@ -733,10 +737,7 @@ public class QuizService(
                         .Where(y => y.LanguageId == x.Quiz.LanguageId)
                         .First(y => y.WordId == x.WordId)
                         .Text,
-                    Transcription = context.Translations
-                        .Where(y => y.LanguageId == x.Quiz.LanguageId)
-                        .First(y => y.WordId == x.WordId)
-                        .Transcription,
+                    Transcription = x.Word.Transcription,
                     LearnedAttempts = context.LearnedTranslations
                         .Where(t => t.LanguageId == x.Quiz.LanguageId)
                         .Where(t => t.UserId == x.Quiz.UserId)
