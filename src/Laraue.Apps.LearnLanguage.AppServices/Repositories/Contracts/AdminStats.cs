@@ -2,7 +2,8 @@
 
 public sealed record AdminStats(
     int TotalUsersCount,
-    int ActiveUsersCount,
+    int ActiveWeekUsersCount,
+    int UsersHaveAnyQuizCount,
     IList<RegisteredUsers> RegisteredUsers);
 
 public sealed record RegisteredUsers(DateTime Date, int Count);

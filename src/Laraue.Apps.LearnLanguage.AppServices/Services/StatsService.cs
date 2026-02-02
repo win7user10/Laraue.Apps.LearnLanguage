@@ -3,7 +3,6 @@ using Laraue.Apps.LearnLanguage.AppServices.Repositories;
 using Laraue.Apps.LearnLanguage.AppServices.Resources;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Utils;
-using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -13,8 +12,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Services;
 public class StatsService(
     ITelegramBotClient client,
     IStatsRepository statsRepository,
-    IAdminRepository adminRepository,
-    ILogger<StatsService> logger) : IStatsService
+    IAdminRepository adminRepository) : IStatsService
 {
     public async Task SendStatsAsync(ReplyData replyData, CancellationToken ct = default)
     {
@@ -73,6 +71,11 @@ public class StatsService(
         {
             tmb.AppendRow($"{registeredUsers.Date:d} (+{registeredUsers.Count})");
         }
+        
+        tmb
+            .AppendRow()
+            .AppendRow($"<b>Total users started quiz: {stats.UsersHaveAnyQuizCount}</b>")
+            .AppendRow($"<b>Total users started quiz this week: {stats.ActiveWeekUsersCount}</b>");
         
         await client.SendTextMessageAsync(telegramId, tmb, parseMode: ParseMode.Html, cancellationToken: ct);
     }

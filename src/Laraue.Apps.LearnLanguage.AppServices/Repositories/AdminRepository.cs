@@ -29,8 +29,13 @@ public class AdminRepository : IAdminRepository
         
         var totalUserCount = await _context.Users
             .CountAsyncEF(ct);
+        
+        var usersHaveAnyQuizCount = await _context.UserQuizzes
+            .Select(x => x.UserId)
+            .Distinct()
+            .CountAsyncEF(ct);
 
-        var activeUsersCount = await _context.UserQuizzes
+        var activeWeekUsers = await _context.UserQuizzes
             .Where(x => x.CreatedAt >= weekBeforeDate)
             .Select(x => x.UserId)
             .Distinct()
@@ -38,7 +43,8 @@ public class AdminRepository : IAdminRepository
 
         return new AdminStats(
             totalUserCount,
-            activeUsersCount,
+            activeWeekUsers,
+            usersHaveAnyQuizCount,
             registeredUsers);
     }
 }
