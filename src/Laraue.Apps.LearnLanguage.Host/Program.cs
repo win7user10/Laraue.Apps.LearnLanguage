@@ -22,6 +22,8 @@ using Laraue.Telegram.NET.Core;
 using Laraue.Telegram.NET.Core.Middleware;
 using Laraue.Telegram.NET.Localization;
 using Laraue.Telegram.NET.Localization.Extensions;
+using Laraue.Telegram.NET.UpdatesQueue.EFCore;
+using Laraue.Telegram.NET.UpdatesQueue.EFCore.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,7 @@ builder.Services.Configure<TelegramNetOptions>(builder.Configuration.GetSection(
 builder.Services
     .AddSingleton<IDateTimeProvider, DateTimeProvider>()
     .AddTelegramCore()
+    .AddEfCoreUpdatesQueue<DatabaseContext>()
     .AddTelegramMiddleware<HandleExceptionsMiddleware>()
     .AddTelegramMiddleware<AutoCallbackResponseMiddleware>()
     .AddTelegramRequestLocalization<LocalizationProvider>()

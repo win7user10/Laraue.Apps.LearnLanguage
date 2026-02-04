@@ -9,6 +9,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(EfCoreVersion)" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlEfCoreVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.UpdatesQueue.EFCore" Version="$(LaraueTelegramNetVersion)" />
   </ItemGroup>
 
   <ItemGroup>

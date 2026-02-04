@@ -1,5 +1,7 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Apps.LearnLanguage.DataAccess.Extensions;
+using Laraue.Telegram.NET.UpdatesQueue.EFCore;
+using Laraue.Telegram.NET.UpdatesQueue.EFCore.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -8,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Laraue.Apps.LearnLanguage.DataAccess;
 
-public class DatabaseContext : DbContext
+public class DatabaseContext : DbContext, IUpdatesQueueDbContext
 {
     public DatabaseContext(DbContextOptions options) 
         : base(options)
@@ -34,6 +36,10 @@ public class DatabaseContext : DbContext
     public DbSet<UserQuiz> UserQuizzes { get; init; }
 
     public DbSet<UserQuizQuestion> UserQuizQuestions { get; init; }
+
+    public DbSet<Update> Updates { get; set; }
+    
+    public DbSet<FailedUpdate> FailedUpdates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
