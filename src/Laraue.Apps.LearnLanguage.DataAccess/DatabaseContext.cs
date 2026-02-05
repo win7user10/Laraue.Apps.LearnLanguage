@@ -40,6 +40,8 @@ public class DatabaseContext : DbContext, IUpdatesQueueDbContext
     public DbSet<Update> Updates { get; set; }
     
     public DbSet<FailedUpdate> FailedUpdates { get; set; }
+    
+    public DbSet<UtmLabel> UtmLabels { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -78,6 +80,9 @@ public class DatabaseContext : DbContext, IUpdatesQueueDbContext
         
         modelBuilder.Entity<UserQuizQuestion>()
             .HasIndex(x => x.WordId);
+        
+        modelBuilder.Entity<UtmLabel>()
+            .HasKey(x => new { x.UserId, x.Name });
 
         // Do not use memory on prod
         if (!IsMigrationRun())

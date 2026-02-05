@@ -17,5 +17,9 @@ public interface IMenuService
     /// <summary>
     /// Send start messages to the user.
     /// </summary>
-    Task SendStartAsync(Guid userId, ChatId telegramId, CancellationToken ct = default);
+    Task StartAsync(
+        string rawCommand,
+        Guid userId,
+        ChatId telegramId,
+        CancellationToken ct = default);
 }

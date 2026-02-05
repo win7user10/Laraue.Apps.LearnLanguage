@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Laraue.Apps.LearnLanguage.AppServices;
+using Laraue.Apps.LearnLanguage.AppServices.Options;
 using Laraue.Apps.LearnLanguage.AppServices.Repositories;
 using Laraue.Apps.LearnLanguage.AppServices.Services;
 using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes;

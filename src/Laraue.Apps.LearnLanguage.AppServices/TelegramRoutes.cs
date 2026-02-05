@@ -28,5 +28,5 @@ public static class TelegramRoutes
     public const string LearnLanguageSettings = "s/lls";
     
     // Commands section
-    public const string Start = "/start";
+    public const string Start = "/start(.*)";
 }

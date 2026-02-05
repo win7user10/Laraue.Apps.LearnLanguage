@@ -9,10 +9,12 @@ namespace Laraue.Apps.LearnLanguage.Host.Controllers;
 public class StartController(IMenuService service) : TelegramController
 {
     [TelegramMessageRoute(TelegramRoutes.Start)]
-    public Task StartAsync(RequestContext request)
+    public Task StartAsync(RequestContext request, CancellationToken cancellationToken)
     {
-        return service.SendStartAsync(
+        return service.StartAsync(
+            request.Update.Message!.Text!,
             request.UserId,
-            request.Update.GetUserId());
+            request.Update.GetUserId(),
+            cancellationToken);
     }
 }
