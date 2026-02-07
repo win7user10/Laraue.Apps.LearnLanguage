@@ -96,7 +96,16 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select one of the suggested word in quiz mode.
+        ///   Looks up a localized string similar to Total correct answers.
+        /// </summary>
+        public static string CorrectAnswers {
+            get {
+                return ResourceManager.GetString("CorrectAnswers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The game where the correct translation for the suggested word should be selected.
         /// </summary>
         public static string Description {
             get {
@@ -123,6 +132,15 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total incorrect answers.
+        /// </summary>
+        public static string IncorrectAnswers {
+            get {
+                return ResourceManager.GetString("IncorrectAnswers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language pair.
         /// </summary>
         public static string LanguagePair {
@@ -132,7 +150,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Learned.
+        ///   Looks up a localized string similar to Total learned.
         /// </summary>
         public static string Learned {
             get {
@@ -249,6 +267,15 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total skipped answers.
+        /// </summary>
+        public static string SkippedAnswers {
+            get {
+                return ResourceManager.GetString("SkippedAnswers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start.
         /// </summary>
         public static string StartButtonName {
@@ -276,7 +303,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Total questions by current criteria.
+        ///   Looks up a localized string similar to Total possible questions by current criteria.
         /// </summary>
         public static string TotalQuestionsByCriteria {
             get {

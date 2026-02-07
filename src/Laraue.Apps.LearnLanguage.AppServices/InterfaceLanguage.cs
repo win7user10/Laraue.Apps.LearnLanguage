@@ -10,11 +10,6 @@ public class InterfaceLanguage
     [
         new() { Code = "en", Title = "English" },
         new() { Code = "ru", Title = "Russian" },
-        new() { Code = "es", Title = "Spanish" },
-        new() { Code = "ja", Title = "Japanese" },
-        new() { Code = "de", Title = "German" },
-        new() { Code = "hi", Title = "Hindi" },
-        new() { Code = "fr", Title = "French" },
     ];
 
     public static InterfaceLanguage Default => Available[0];

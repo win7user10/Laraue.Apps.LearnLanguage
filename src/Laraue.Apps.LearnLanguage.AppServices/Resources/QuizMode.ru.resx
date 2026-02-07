@@ -19,10 +19,10 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="ButtonName" xml:space="preserve">
-        <value>Режим викторины</value>
+        <value>Квиз</value>
     </data>
     <data name="Description" xml:space="preserve">
-        <value>Выберите один из предложенных вариантов в режиме викторины</value>
+        <value>Игра, в которой нужно выбирать правильный перевод для предложенного слова</value>
     </data>
     <data name="StartButtonName" xml:space="preserve">
         <value>Начать</value>
@@ -34,7 +34,7 @@
         <value>[-]</value>
     </data>
     <data name="QuizFinishedTitle" xml:space="preserve">
-        <value>Викторина завершена</value>
+        <value>Квиз завершен</value>
     </data>
     <data name="QuizAnswer_Skipped" xml:space="preserve">
         <value>[s]</value>
@@ -58,31 +58,31 @@
         <value>Выберите перевод для</value>
     </data>
     <data name="SkipButtonName" xml:space="preserve">
-        <value>Пропустить</value>
+        <value>Пропустить вопрос</value>
     </data>
     <data name="Question" xml:space="preserve">
         <value>Вопрос</value>
     </data>
     <data name="FinishQuiz" xml:space="preserve">
-        <value>Завершить викторину</value>
+        <value>Завершить квиз</value>
     </data>
     <data name="WinStreak" xml:space="preserve">
         <value>Серия побед</value>
     </data>
     <data name="Learned" xml:space="preserve">
-        <value>Изучено</value>
+        <value>Выучено слов (3+ правильных ответа подряд)</value>
     </data>
     <data name="QuizReady" xml:space="preserve">
-        <value>Викторина готова к началу</value>
+        <value>Квиз готов к запуску</value>
     </data>
     <data name="Topic" xml:space="preserve">
-        <value>Тема</value>
+        <value>Топик</value>
     </data>
     <data name="QuestionsWillBeAsked" xml:space="preserve">
         <value>Будет задано вопросов</value>
     </data>
     <data name="TotalQuestionsByCriteria" xml:space="preserve">
-        <value>Всего вопросов по текущим критериям</value>
+        <value>Всего вопросов по заданным фильтрам</value>
     </data>
     <data name="LanguagePair" xml:space="preserve">
         <value>Языковая пара</value>
@@ -91,7 +91,7 @@
         <value>Количество вариантов ответа</value>
     </data>
     <data name="StatsForTheCurrentCriteria" xml:space="preserve">
-        <value>Статистика по выбранным критериям</value>
+        <value>Статистика по заданным фильтрам</value>
     </data>
     <data name="ChangeTopic" xml:space="preserve">
         <value>Изменить топик</value>
@@ -101,5 +101,14 @@
     </data>
     <data name="SelectQuizTopic" xml:space="preserve">
         <value>Выберите топик для викторины</value>
+    </data>
+    <data name="SkippedAnswers" xml:space="preserve">
+        <value>Пропущено вопросов</value>
+    </data>
+    <data name="IncorrectAnswers" xml:space="preserve">
+        <value>Неправильных ответов</value>
+    </data>
+    <data name="CorrectAnswers" xml:space="preserve">
+        <value>Правильных ответов</value>
     </data>
 </root>

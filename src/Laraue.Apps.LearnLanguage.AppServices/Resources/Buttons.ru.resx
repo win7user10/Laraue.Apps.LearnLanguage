@@ -39,6 +39,6 @@
         <value>Назад</value>
     </data>
     <data name="RepeatQuiz" xml:space="preserve">
-        <value>Повторить</value>
+        <value>Повторить квиз</value>
     </data>
 </root>

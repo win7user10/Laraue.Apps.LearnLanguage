@@ -168,7 +168,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to View words groups.
+        ///   Looks up a localized string similar to View all words.
         /// </summary>
         public static string ListModeDescription {
             get {
@@ -240,7 +240,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select view mode.
+        ///   Looks up a localized string similar to Please select the mode.
         /// </summary>
         public static string SelectMode {
             get {

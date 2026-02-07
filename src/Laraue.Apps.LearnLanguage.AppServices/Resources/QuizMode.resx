@@ -22,7 +22,7 @@
         <value>Quiz Mode</value>
     </data>
     <data name="Description" xml:space="preserve">
-        <value>Select one of the suggested word in quiz mode</value>
+        <value>The game where the correct translation for the suggested word should be selected</value>
     </data>
     <data name="StartButtonName" xml:space="preserve">
         <value>Start</value>
@@ -70,7 +70,16 @@
         <value>Win streak</value>
     </data>
     <data name="Learned" xml:space="preserve">
-        <value>Learned</value>
+        <value>Total learned</value>
+    </data>
+    <data name="CorrectAnswers" xml:space="preserve">
+        <value>Total correct answers</value>
+    </data>
+    <data name="IncorrectAnswers" xml:space="preserve">
+        <value>Total incorrect answers</value>
+    </data>
+    <data name="SkippedAnswers" xml:space="preserve">
+        <value>Total skipped answers</value>
     </data>
     <data name="QuizReady" xml:space="preserve">
         <value>Quiz is ready to start</value>
@@ -82,7 +91,7 @@
         <value>Questions will be asked</value>
     </data>
     <data name="TotalQuestionsByCriteria" xml:space="preserve">
-        <value>Total questions by current criteria</value>
+        <value>Total possible questions by current criteria</value>
     </data>
     <data name="LanguagePair" xml:space="preserve">
         <value>Language pair</value>

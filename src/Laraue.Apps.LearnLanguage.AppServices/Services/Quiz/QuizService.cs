@@ -232,15 +232,13 @@ public class QuizService(
             .AppendRow($"{QuizMode.LanguagePair}: <b>en -> {languageCode}</b>")
             .AppendRow($"{QuizMode.QuestionOptionsCount}: <b>{OptionsCount}</b>")
             .AppendRow()
-            .AppendRow($"<b>{QuizMode.StatsForTheCurrentCriteria}:</b>");
-        
-        foreach (var winStreak in learnStat.WinStreaks)
-        {
-            tmb.AppendRow($"{QuizMode.WinStreak} ({winStreak.Key}): {winStreak.Value}");
-        }
+            .AppendRow($"<b>{QuizMode.StatsForTheCurrentCriteria}</b>");
 
-        tmb.AppendRow(
-            $"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total}");
+        tmb
+            .AppendRow($"{QuizMode.CorrectAnswers}: <b>{learnStat.TotalAnswersCorrect}</b>")
+            .AppendRow($"{QuizMode.IncorrectAnswers}: <b>{learnStat.TotalAnswersIncorrect}</b>")
+            .AppendRow($"{QuizMode.SkippedAnswers}: <b>{learnStat.TotalAnswersSkipped}</b>")
+            .AppendRow($"{QuizMode.Learned}: <b>{learnStat.Learned} / {learnStat.Total}</b>");
             
         tmb
             .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
@@ -399,18 +397,12 @@ public class QuizService(
         tmb
             .AppendRow()
             .AppendRow($"<b>{QuizMode.TotalStat}</b>:");
-
-        foreach (var winStreak in learnStat.WinStreaks)
-        {
-            var newWinStrikesCount = lastQuizQuestions
-                .Where(q => q.Status == UserQuizQuestionStatus.Correct)
-                .Count(q => q.LearnedAttempts == winStreak.Key);
-            
-            tmb.AppendRow($"{QuizMode.WinStreak} ({winStreak.Key}): {winStreak.Value} [+{newWinStrikesCount}]");
-        }
         
         tmb
-            .AppendRow($"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]")
+            .AppendRow($"{QuizMode.CorrectAnswers}: <b>{learnStat.TotalAnswersCorrect}</b>")
+            .AppendRow($"{QuizMode.IncorrectAnswers}: <b>{learnStat.TotalAnswersIncorrect}</b>")
+            .AppendRow($"{QuizMode.SkippedAnswers}: <b>{learnStat.TotalAnswersSkipped}</b>")
+            .AppendRow($"{QuizMode.Learned}: <b>{learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]</b>")
             .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.RepeatQuiz,
@@ -507,8 +499,10 @@ public class QuizService(
     public class LearnStat
     {
         public required int Learned { get; init; }
-        public required Dictionary<int, int> WinStreaks { get; init; }
         public required int Total { get; init; }
+        public required int TotalAnswersSkipped { get; init; }
+        public required int TotalAnswersCorrect { get; init; }
+        public required int TotalAnswersIncorrect { get; init; }
     }
     
     public class FlashCardsDto
@@ -759,15 +753,6 @@ public class QuizService(
             
             var learnedCount = await query
                 .CountAsyncEF(x => x.LearnedAt != null, ct);
-
-            var allWinStreaksRows = Enumerable.Range(1, WinStreakToLearn - 1);
-            var winStreaksInDb = await query
-                .Where(x => x.WinStreakCount > 0 && x.WinStreakCount < WinStreakToLearn)
-                .GroupBy(x => x.WinStreakCount)
-                .ToDictionaryAsyncEF(x => x.Key, x => x.Count(), ct);
-
-            var winStreaks = allWinStreaksRows
-                .ToDictionary(x => x, x => winStreaksInDb.GetValueOrDefault(x));
             
             var totalCountQuery = context.Translations
                 .Where(x => x.LanguageId == languageId);
@@ -776,13 +761,36 @@ public class QuizService(
                 totalCountQuery = totalCountQuery
                     .Where(tr => tr.Word.Topics.Any(t => t.TopicId == topicId.Value));
 
+            var answersStatQuery = context.UserQuizQuestions
+                .Where(q => q.Quiz.UserId == userId)
+                .Where(q => q.Status != UserQuizQuestionStatus.New);
+            
+            if (topicId.HasValue)
+                answersStatQuery = answersStatQuery
+                    .Where(q => q.Word
+                        .Topics.Any(t => t.TopicId == topicId.Value));
+
+            var answersStat = await answersStatQuery
+                .GroupBy(q => q.Status)
+                .Select(q => new
+                {
+                    q.Key,
+                    Count = q.Count(),
+                })
+                .ToDictionaryAsyncEF(x => x.Key, x => x.Count, ct);
+            
             var totalCount = await totalCountQuery.CountAsyncEF(ct);
 
             return new LearnStat
             {
                 Learned = learnedCount,
                 Total = totalCount,
-                WinStreaks = winStreaks
+                TotalAnswersCorrect = answersStat
+                    .GetValueOrDefault(UserQuizQuestionStatus.Correct),
+                TotalAnswersIncorrect = answersStat
+                    .GetValueOrDefault(UserQuizQuestionStatus.Incorrect),
+                TotalAnswersSkipped = answersStat
+                    .GetValueOrDefault(UserQuizQuestionStatus.Skipped),
             };
         }
 

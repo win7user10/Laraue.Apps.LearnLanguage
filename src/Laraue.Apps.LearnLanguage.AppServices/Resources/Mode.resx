@@ -19,7 +19,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="SelectMode" xml:space="preserve">
-        <value>Please select view mode</value>
+        <value>Please select the mode</value>
     </data>
     <data name="ShowTranslations" xml:space="preserve">
         <value>Show translations 👁</value>
@@ -91,6 +91,6 @@
         <value>Words lists</value>
     </data>
     <data name="ListModeDescription" xml:space="preserve">
-        <value>View words groups</value>
+        <value>View all words</value>
     </data>
 </root>
