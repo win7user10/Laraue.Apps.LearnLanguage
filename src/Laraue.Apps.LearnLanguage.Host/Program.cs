@@ -1,103 +1,18 @@
 using Laraue.Apps.LearnLanguage.DataAccess;
-using Laraue.Apps.LearnLanguage.DataAccess.Entities;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
-using Laraue.Telegram.NET.Authentication.Extensions;
 using Laraue.Telegram.NET.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Hangfire;
-using Hangfire.PostgreSql;
-using Laraue.Apps.LearnLanguage.AppServices;
-using Laraue.Apps.LearnLanguage.AppServices.Options;
-using Laraue.Apps.LearnLanguage.AppServices.Repositories;
-using Laraue.Apps.LearnLanguage.AppServices.Services;
-using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes;
-using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes.Group.CefrLevel;
-using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes.Group.FirstLetter;
-using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes.Group.Topic;
-using Laraue.Apps.LearnLanguage.AppServices.Services.Quiz;
 using Laraue.Apps.LearnLanguage.Host;
-using Laraue.Core.DateTime.Services.Abstractions;
-using Laraue.Core.DateTime.Services.Impl;
-using Laraue.Telegram.NET.Authentication.Services;
-using Laraue.Telegram.NET.Core;
-using Laraue.Telegram.NET.Core.Middleware;
-using Laraue.Telegram.NET.Localization;
-using Laraue.Telegram.NET.Localization.Extensions;
-using Laraue.Telegram.NET.UpdatesQueue.EFCore;
-using Laraue.Telegram.NET.UpdatesQueue.EFCore.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOptions<TelegramOptions>();
-builder.Services.Configure<TelegramOptions>(builder.Configuration.GetSection("Telegram"));
+const string dbConnectionStringName = "Postgre";
 
-builder.Services.AddOptions<TelegramNetOptions>();
-builder.Services.Configure<TelegramNetOptions>(builder.Configuration.GetSection("Telegram"));
-
-builder.Services
-    .AddSingleton<IDateTimeProvider, DateTimeProvider>()
-    .AddTelegramCore()
-    .AddEfCoreUpdatesQueue<DatabaseContext>()
-    .AddTelegramMiddleware<HandleExceptionsMiddleware>()
-    .AddTelegramMiddleware<AutoCallbackResponseMiddleware>()
-    .AddTelegramRequestLocalization<LocalizationProvider>()
-    .Configure<TelegramRequestLocalizationOptions>(opt =>
-    {
-        opt.AvailableLanguages = InterfaceLanguage.Available.Select(x => x.Code).ToArray();
-        opt.DefaultLanguage = InterfaceLanguage.Default.Code;
-    })
-    .AddTelegramAuthentication<User, Guid, TelegramUserQueryService, RequestContext>();
-
-builder.Services.AddOptions<RoleUsers>();
-builder.Services.Configure<RoleUsers>(builder.Configuration.GetSection("Telegram:UserNamesByRoles"));
-builder.Services.UseUserRolesProvider<StaticUserRoleProvider>();
-
-builder.Services
-    .AddScoped<IMenuService, MenuService>()
-
-    .AddScoped<IWordsRepository, WordsRepository>()
-    .AddScoped<IWordsWindowFactory, WordsWindowFactory>()
-
-    .AddScoped<IStatsRepository, StatsRepository>()
-    .AddScoped<IAdminRepository, AdminRepository>()
-
-    .AddScoped<IUserSettingsService, UserSettingsService>()
-    .AddScoped<IUserRepository, UserRepository>()
-
-    .AddScoped<ISelectLanguageService, SelectLanguageService>()
-
-    .AddScoped<IStatsService, StatsService>()
-
-    .AddScoped<ILearnByCefrLevelService, LearnByCefrLevelService>()
-    .AddScoped<ILearnByFirstLetterService, LearnByFirstLetterService>()
-    .AddScoped<ILearnByTopicService, LearnByTopicService>()
-    .AddScoped<ILearnByCefrLevelRepository, LearnByCefrLevelRepository>()
-    .AddScoped<ILearnByTopicRepository, LearnByTopicRepository>()
-    .AddScoped<ILearnByFirstLetterRepository, LearnByFirstLetterRepository>()
-
-    .AddScoped<IQuizService, QuizService>()
-    .AddScoped<QuizService.IRepository, QuizService.Repository>()
-    .AddScoped<IQuestionsGenerator, QuestionsGenerator>();
-
-builder.Services.AddControllers();
-
-var connection = builder.Configuration.GetConnectionString("Postgre");
-
-builder.Services
-    .AddDbContext<DatabaseContext>(opt =>
-    {
-        opt.UseNpgsql(connection)
-            .UseSnakeCaseNamingConvention();
-    })
-    .AddLinq2Db();
-
-builder.Services
-    .AddHangfire(configuration => configuration
-    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-    .UseSimpleAssemblyNameTypeSerializer()
-    .UseRecommendedSerializerSettings()
-    .UsePostgreSqlStorage(o => o.UseNpgsqlConnection(connection)))
-    .AddHangfireServer();
+builder
+    .AddTelegramOptions("Telegram")
+    .AddApplicationServices()
+    .AddDatabaseServices(dbConnectionStringName)
+    .AddHangfireServices(dbConnectionStringName);
 
 var app = builder.Build();
 

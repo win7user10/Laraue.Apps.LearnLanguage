@@ -116,6 +116,11 @@ public class MenuService(
         }
         
         var queryRaw = match.Groups[1].Value;
+        if (string.IsNullOrEmpty(queryRaw))
+        {
+            return;
+        }
+        
         var queryParts =  queryRaw.Split('_');
         var dbUtmLabels = queryParts
             .Select(part => part.Split('-'))

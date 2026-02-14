@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="10.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="EFCore.NamingConventions" Version="$(EfCoreNamingConventionsVersion)" />
     <PackageReference Include="Moq" Version="4.20.70" />
@@ -21,6 +22,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Laraue.Apps.LearnLanguage.AppServices\Laraue.Apps.LearnLanguage.AppServices.csproj" />
+    <ProjectReference Include="..\..\src\Laraue.Apps.LearnLanguage.Host\Laraue.Apps.LearnLanguage.Host.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
