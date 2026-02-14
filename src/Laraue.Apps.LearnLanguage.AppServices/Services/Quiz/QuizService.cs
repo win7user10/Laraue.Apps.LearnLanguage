@@ -378,30 +378,18 @@ public class QuizService(
         {
             tmb.AppendRow($"<b>{QuizMode.Perfect}</b>");
         }
-        
-        tmb
-            .Append(QuizMode.Correct)
-            .Append(" - ")
-            .AppendRow(correctCount.ToString())
-            .Append(QuizMode.Skipped)
-            .Append(" - ")
-            .AppendRow(skippedCount.ToString())
-            .Append(QuizMode.Incorrect)
-            .Append(" - ")
-            .AppendRow(incorrectCount.ToString());
 
         var learnedInSessionCount = lastQuizQuestions
             .Where(q => q.Status == UserQuizQuestionStatus.Correct)
             .Count(q => q.LearnedAttempts == WinStreakToLearn);
         
         tmb
-            .AppendRow()
             .AppendRow($"<b>{QuizMode.TotalStat}</b>:");
         
         tmb
-            .AppendRow($"{QuizMode.CorrectAnswers}: <b>{learnStat.TotalAnswersCorrect}</b>")
-            .AppendRow($"{QuizMode.IncorrectAnswers}: <b>{learnStat.TotalAnswersIncorrect}</b>")
-            .AppendRow($"{QuizMode.SkippedAnswers}: <b>{learnStat.TotalAnswersSkipped}</b>")
+            .AppendRow($"{QuizMode.CorrectAnswers}: <b>{learnStat.TotalAnswersCorrect} [+{correctCount}]</b>")
+            .AppendRow($"{QuizMode.IncorrectAnswers}: <b>{learnStat.TotalAnswersIncorrect} [+{incorrectCount}]</b>")
+            .AppendRow($"{QuizMode.SkippedAnswers}: <b>{learnStat.TotalAnswersSkipped} [+{skippedCount}]</b>")
             .AppendRow($"{QuizMode.Learned}: <b>{learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]</b>")
             .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(

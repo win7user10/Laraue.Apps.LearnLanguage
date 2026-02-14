@@ -87,15 +87,6 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Right.
-        /// </summary>
-        public static string Correct {
-            get {
-                return ResourceManager.GetString("Correct", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Total correct answers.
         /// </summary>
         public static string CorrectAnswers {
@@ -119,15 +110,6 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         public static string FinishQuiz {
             get {
                 return ResourceManager.GetString("FinishQuiz", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Wrong.
-        /// </summary>
-        public static string Incorrect {
-            get {
-                return ResourceManager.GetString("Incorrect", resourceCulture);
             }
         }
         
@@ -254,15 +236,6 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         public static string SkipButtonName {
             get {
                 return ResourceManager.GetString("SkipButtonName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Skipped.
-        /// </summary>
-        public static string Skipped {
-            get {
-                return ResourceManager.GetString("Skipped", resourceCulture);
             }
         }
         

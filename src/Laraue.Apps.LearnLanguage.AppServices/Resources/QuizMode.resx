@@ -39,17 +39,8 @@
     <data name="QuizAnswer_Skipped" xml:space="preserve">
         <value>[s]</value>
     </data>
-    <data name="Correct" xml:space="preserve">
-        <value>Right</value>
-    </data>
-    <data name="Skipped" xml:space="preserve">
-        <value>Skipped</value>
-    </data>
     <data name="Perfect" xml:space="preserve">
         <value>Perfect!</value>
-    </data>
-    <data name="Incorrect" xml:space="preserve">
-        <value>Wrong</value>
     </data>
     <data name="TotalStat" xml:space="preserve">
         <value>Total stat</value>
