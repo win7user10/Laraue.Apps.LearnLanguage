@@ -1,7 +1,7 @@
 # Laraue.Apps.LearnLanguage
 
 The repository contains the backend of Telegram bot allows to learn translations of the top 5000+ most used english words
-passing quizes. Deployed bot can be found in [Telegram](https://t.me/learn_lang_bot).
+passing quizes. Deployed bot can be found in [Telegram](https://t.me/learn_lang_bot?start=source-github).
 
 Each word has it's own CEFR level and related topics. That allows to setup quizes 
 to learn preffered words first of all.
