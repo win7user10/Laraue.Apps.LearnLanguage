@@ -3,6 +3,7 @@ using System;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260215131422_AddSelectedCefrLevelToUserSettings")]
+    partial class AddSelectedCefrLevelToUserSettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -304450,9 +304453,6 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
                     b.HasIndex("LanguageToLearnId")
                         .HasDatabaseName("ix_users_language_to_learn_id");
 
-                    b.HasIndex("QuizCefrLevelId")
-                        .HasDatabaseName("ix_users_quiz_cefr_level_id");
-
                     b.HasIndex("QuizTopicId")
                         .HasDatabaseName("ix_users_quiz_topic_id");
 
@@ -304467,10 +304467,6 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("CefrLevelId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("cefr_level_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -433288,19 +433284,12 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
                         .HasForeignKey("LanguageToLearnId")
                         .HasConstraintName("fk_users_languages_language_to_learn_id");
 
-                    b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.CefrLevel", "QuizCefrLevel")
-                        .WithMany()
-                        .HasForeignKey("QuizCefrLevelId")
-                        .HasConstraintName("fk_users_cefr_levels_quiz_cefr_level_id");
-
                     b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.Topic", "QuizTopic")
                         .WithMany()
                         .HasForeignKey("QuizTopicId")
                         .HasConstraintName("fk_users_topics_quiz_topic_id");
 
                     b.Navigation("LanguageToLearn");
-
-                    b.Navigation("QuizCefrLevel");
 
                     b.Navigation("QuizTopic");
                 });

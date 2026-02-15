@@ -10,6 +10,7 @@ public interface IQuestionsGenerator
         Guid userId,
         long languageId,
         long? topicId,
+        long? cefrLevelId,
         int questionsCount,
         int optionsCount,
         CancellationToken ct);
@@ -21,6 +22,7 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
         Guid userId,
         long languageId,
         long? topicId,
+        long? cefrLevelId,
         int questionsCount,
         int optionsCount,
         CancellationToken ct)
@@ -36,11 +38,13 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             .Where(x => x.Translation.LanguageId == languageId);
 
         if (topicId.HasValue)
-        {
             metWordsQuery = metWordsQuery
                 .Where(x => x.Word.Topics
                     .Any(t => t.TopicId == topicId.Value));
-        }
+        
+        if (cefrLevelId.HasValue)
+            metWordsQuery = metWordsQuery
+                .Where(x => x.Word.CefrLevelId == cefrLevelId);
 
         var oldQuestions = await metWordsQuery
             .Where(x => x.LearnedAt != null)
@@ -81,12 +85,13 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             .Where(x => x.learnedTranslation == null);
 
         if (topicId.HasValue)
-        {
             newQuestionsQuery = newQuestionsQuery
                 .Where(q => q.translation.Word.Topics
                     .Any(t => t.TopicId == topicId.Value));
-        }
         
+        if (cefrLevelId.HasValue)
+            newQuestionsQuery = newQuestionsQuery
+                .Where(q => q.translation.Word.CefrLevelId == cefrLevelId);
         
         var newQuestions = await newQuestionsQuery
             .OrderBy(x => SqlFunctions.NewGuid())

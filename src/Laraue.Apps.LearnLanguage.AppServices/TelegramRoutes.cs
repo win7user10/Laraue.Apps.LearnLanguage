@@ -18,6 +18,7 @@ public static class TelegramRoutes
     public const string FinishQuiz = "fq";
     public const string SelectQuizAnswer = "sa";
     public const string TopicSelection = "ts";
+    public const string CefrLevelSelection = "cs";
     
     public const string Stat = "stat";
     public const string Menu = "m";

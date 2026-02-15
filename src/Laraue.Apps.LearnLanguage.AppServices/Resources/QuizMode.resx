@@ -78,6 +78,9 @@
     <data name="Topic" xml:space="preserve">
         <value>Topic</value>
     </data>
+    <data name="CefrLevel" xml:space="preserve">
+        <value>CEFR Level</value>
+    </data>
     <data name="QuestionsWillBeAsked" xml:space="preserve">
         <value>Questions will be asked</value>
     </data>
@@ -96,10 +99,16 @@
     <data name="ChangeTopic" xml:space="preserve">
         <value>Change topic</value>
     </data>
+    <data name="ChangeCefrLevel" xml:space="preserve">
+        <value>Change CEFR level</value>
+    </data>
     <data name="ChangeLanguagePair" xml:space="preserve">
         <value>Change language pair</value>
     </data>
     <data name="SelectQuizTopic" xml:space="preserve">
         <value>Select topic for the quiz</value>
+    </data>
+    <data name="SelectQuizCefrLevel" xml:space="preserve">
+        <value>Select CEFR level for the quiz</value>
     </data>
 </root>

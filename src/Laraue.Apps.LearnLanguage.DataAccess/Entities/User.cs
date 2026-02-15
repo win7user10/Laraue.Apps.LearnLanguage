@@ -55,4 +55,14 @@ public sealed class User : ITelegramUser<Guid>
     /// The <see cref="Topic"/> reference for selected <see cref="QuizTopicId"/>.
     /// </summary>
     public Topic QuizTopic { get; set; } = null!;
+    
+    /// <summary>
+    /// The CEFR level selected for quiz's. All quiz questions will be related to this CEFR level is set.
+    /// </summary>
+    public long? QuizCefrLevelId { get; set; }
+    
+    /// <summary>
+    /// The <see cref="CefrLevel"/> reference for selected <see cref="QuizCefrLevelId"/>.
+    /// </summary>
+    public CefrLevel QuizCefrLevel { get; set; } = null!;
 }

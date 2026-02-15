@@ -69,6 +69,24 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CEFR Level.
+        /// </summary>
+        public static string CefrLevel {
+            get {
+                return ResourceManager.GetString("CefrLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change CEFR level.
+        /// </summary>
+        public static string ChangeCefrLevel {
+            get {
+                return ResourceManager.GetString("ChangeCefrLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change language pair.
         /// </summary>
         public static string ChangeLanguagePair {
@@ -218,6 +236,15 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         public static string QuizReady {
             get {
                 return ResourceManager.GetString("QuizReady", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select CEFR level for the quiz.
+        /// </summary>
+        public static string SelectQuizCefrLevel {
+            get {
+                return ResourceManager.GetString("SelectQuizCefrLevel", resourceCulture);
             }
         }
         

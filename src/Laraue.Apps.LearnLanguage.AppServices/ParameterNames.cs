@@ -8,6 +8,7 @@ public static class ParameterNames
     public const string OpenedWordId = "ow";
     public const string OpenedLanguageId = "om";
     public const string TopicId = "ti";
+    public const string CefrLevelId = "ci";
     public const string ToggleTranslations = "t";
     public const string RevertTranslations = "r";
     public const string ShowMode = "m";

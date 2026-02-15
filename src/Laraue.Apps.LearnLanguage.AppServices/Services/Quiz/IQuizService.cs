@@ -16,6 +16,16 @@ public interface IQuizService
         ReplyData replyData,
         ChangeTopicRequest request,
         CancellationToken ct = default);
+    
+    Task OpenSelectCefrLevelWindowAsync(
+        ReplyData replyData,
+        SelectCefrLevelRequest request,
+        CancellationToken ct = default);
+
+    Task ChangeCefrLevelAsync(
+        ReplyData replyData,
+        ChangeCefrLevelRequest request,
+        CancellationToken ct = default);
 
     Task StartNewQuizAsync(
         ReplyData replyData,

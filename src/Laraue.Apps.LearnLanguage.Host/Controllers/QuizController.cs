@@ -34,6 +34,24 @@ public class QuizController(IQuizService service) : TelegramController
     {
         return service.ChangeTopicAsync(ReplyData.FromRequest(context), request, ct);
     }
+    
+    [TelegramCallbackRoute(TelegramRoutes.CefrLevelSelection)]
+    public Task OpenSelectCefrLevelSelectionWindowAsync(
+        RequestContext context,
+        [FromQuery] SelectCefrLevelRequest request,
+        CancellationToken ct)
+    {
+        return service.OpenSelectCefrLevelWindowAsync(ReplyData.FromRequest(context), request, ct);
+    }
+    
+    [TelegramCallbackRoute(TelegramRoutes.CefrLevelSelection, RouteMethod.Post)]
+    public Task SelectCefrLevelAsync(
+        RequestContext context,
+        [FromQuery] ChangeCefrLevelRequest request,
+        CancellationToken ct)
+    {
+        return service.ChangeCefrLevelAsync(ReplyData.FromRequest(context), request, ct);
+    }
 
     [TelegramCallbackRoute(TelegramRoutes.StartQuiz, RouteMethod.Post)]
     public Task StartQuizAsync(

@@ -84,7 +84,8 @@ Select the language pair. You also can set the preferred language pair in settin
 """
 <b>Quiz is ready to start</b>
 
-Topic: <b>Not Set</b>
+Topic: <b>Not set</b>
+CEFR Level: <b>Not set</b>
 Questions will be asked: <b>20</b>
 Total possible questions by current criteria: <b>5948</b>
 Language pair: <b>en -> ru</b>

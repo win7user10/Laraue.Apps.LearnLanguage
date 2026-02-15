@@ -6,4 +6,6 @@ public sealed class CefrLevel : BaseEntity, IDictionaryEntity
 {
     [MaxLength(2)]
     public required string Name { get; init; }
+    
+    public ICollection<Word> Words { get; set; } = null!;
 }

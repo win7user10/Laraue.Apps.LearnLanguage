@@ -91,7 +91,7 @@
         <value>Изменить языковую пару</value>
     </data>
     <data name="SelectQuizTopic" xml:space="preserve">
-        <value>Выберите топик для викторины</value>
+        <value>Выберите топик квиза</value>
     </data>
     <data name="SkippedAnswers" xml:space="preserve">
         <value>Пропущено вопросов</value>
@@ -101,5 +101,14 @@
     </data>
     <data name="CorrectAnswers" xml:space="preserve">
         <value>Правильных ответов</value>
+    </data>
+    <data name="SelectQuizCefrLevel" xml:space="preserve">
+        <value>Выберите уровень CEFR квиза</value>
+    </data>
+    <data name="CefrLevel" xml:space="preserve">
+        <value>Уровень CEFR</value>
+    </data>
+    <data name="ChangeCefrLevel" xml:space="preserve">
+        <value>Изменить уровень CEFR</value>
     </data>
 </root>
