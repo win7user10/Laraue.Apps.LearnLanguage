@@ -1,5 +1,5 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Laraue.Apps.LearnEnglish.IntegrationTests;
 
@@ -7,10 +7,24 @@ public static class TelegramTestHostExtensions
 {
     extension(AppTelegramTestHost telegramTestHost)
     {
-        public IQueryable<T> GetDbSet<T>(Func<DatabaseContext, DbSet<T>> setSelector) where T : class
+        public T Get<T>(Func<DatabaseContext, T> getData) where T : class
         {
-            var dbContext = telegramTestHost.GetRequiredService<DatabaseContext>();
-            return setSelector(dbContext).AsNoTracking();
+            using var scope = telegramTestHost.CreateScope();
+            
+            var dbContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            
+            return getData(dbContext);
+        }
+        
+        public async Task InsertIntoDbAsync<T>(T entity) where T : class
+        {
+            using var scope = telegramTestHost.CreateScope();
+            
+            var dbContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            
+            dbContext.Add(entity);
+            
+            await dbContext.SaveChangesAsync();
         }
     }
 }

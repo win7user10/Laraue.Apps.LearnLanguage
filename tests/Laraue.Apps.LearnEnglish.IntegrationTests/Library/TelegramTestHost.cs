@@ -9,11 +9,9 @@ using Telegram.Bot.Types;
 
 namespace Laraue.Apps.LearnEnglish.IntegrationTests.Library;
 
-public abstract class TelegramTestHost<TUserKey> : IAsyncDisposable where TUserKey : IEquatable<TUserKey>
+public abstract class TelegramTestHost<TUserKey> : IDisposable where TUserKey : IEquatable<TUserKey>
 {
     protected readonly TestServer TestServer;
-    private readonly IServiceScope _serviceScope;
-    private int _initialized;
     private readonly List<IRequest> _requests = new();
 
     public TelegramTestHost(IServiceCollection serviceCollection)
@@ -36,18 +34,14 @@ public abstract class TelegramTestHost<TUserKey> : IAsyncDisposable where TUserK
             .BuildServiceProvider();
         
         TestServer = new TestServer(services);
-        _serviceScope = TestServer.Services.CreateScope();
+        
+        BeforeFirstRequest();
     }
 
-    protected abstract Task BeforeFirstRequestAsync();
+    protected abstract void BeforeFirstRequest();
     
     public async Task SendUpdateAsync(Update update)
     {
-        if (Interlocked.CompareExchange(ref _initialized, 1, 0) == 0)
-        {
-            await BeforeFirstRequestAsync();
-        }
-        
         using var requestScope = TestServer.Services.CreateScope();
 
         var router = requestScope.ServiceProvider.GetRequiredService<ITelegramRouter>();
@@ -60,26 +54,22 @@ public abstract class TelegramTestHost<TUserKey> : IAsyncDisposable where TUserK
         return new TelegramRequests(_requests);
     }
     
-    public T GetRequiredService<T>()
-        where T : class
+    public IServiceScope CreateScope()
     {
-        return _serviceScope.ServiceProvider.GetRequiredService<T>();
+        return TestServer.Services.CreateScope();
     }
 
-    protected virtual ValueTask DisposeAsync(bool disposing)
+    protected virtual void Dispose(bool disposing)
     {
         if (disposing)
         {
             TestServer.Dispose();
-            _serviceScope.Dispose();
         }
-        
-        return ValueTask.CompletedTask;
     }
 
-    public async ValueTask DisposeAsync()
+    public void Dispose()
     {
-        await DisposeAsync(true);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 }

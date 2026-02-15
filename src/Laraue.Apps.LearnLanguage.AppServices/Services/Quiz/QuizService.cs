@@ -238,7 +238,7 @@ public class QuizService(
             .AppendRow($"{QuizMode.CorrectAnswers}: <b>{learnStat.TotalAnswersCorrect}</b>")
             .AppendRow($"{QuizMode.IncorrectAnswers}: <b>{learnStat.TotalAnswersIncorrect}</b>")
             .AppendRow($"{QuizMode.SkippedAnswers}: <b>{learnStat.TotalAnswersSkipped}</b>")
-            .AppendRow($"{QuizMode.Learned}: <b>{learnStat.Learned} / {learnStat.Total}</b>");
+            .Append($"{QuizMode.Learned}: <b>{learnStat.Learned} / {learnStat.Total}</b>");
             
         tmb
             .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
@@ -390,7 +390,7 @@ public class QuizService(
             .AppendRow($"{QuizMode.CorrectAnswers}: <b>{learnStat.TotalAnswersCorrect} [+{correctCount}]</b>")
             .AppendRow($"{QuizMode.IncorrectAnswers}: <b>{learnStat.TotalAnswersIncorrect} [+{incorrectCount}]</b>")
             .AppendRow($"{QuizMode.SkippedAnswers}: <b>{learnStat.TotalAnswersSkipped} [+{skippedCount}]</b>")
-            .AppendRow($"{QuizMode.Learned}: <b>{learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]</b>")
+            .Append($"{QuizMode.Learned}: <b>{learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]</b>")
             .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.RepeatQuiz,

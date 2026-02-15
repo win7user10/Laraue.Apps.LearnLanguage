@@ -9,24 +9,20 @@ namespace Laraue.Apps.LearnEnglish.IntegrationTests;
 public class AppTelegramTestHost(IServiceCollection serviceCollection)
     : TelegramTestHost<Guid>(serviceCollection)
 {
-    protected override async Task BeforeFirstRequestAsync()
+    protected override void BeforeFirstRequest()
     {
         TestServer.Services.UseLinq2Db();
-
-        var dbContext = GetRequiredService<DatabaseContext>();
         
-        await dbContext.Database.MigrateAsync();
-
-        await CleanDataAsync();
+        using var scope = CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+        dbContext.Database.Migrate();
+        dbContext.Users.ExecuteDelete();
     }
 
-    protected override async ValueTask DisposeAsync(bool disposing)
+    protected override void Dispose(bool disposing)
     {
-        await CleanDataAsync();
-    }
-
-    private async Task CleanDataAsync()
-    {
-        await this.GetDbSet(db => db.Users).ExecuteDeleteAsync();
+        using var scope = CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+        dbContext.Users.ExecuteDelete();
     }
 }

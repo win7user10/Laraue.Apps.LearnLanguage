@@ -8,7 +8,7 @@ public class StartControllerTests : IntegrationTest
     [Fact]
     public async Task Start_ShouldNotAddUtmLabel_WhenNoUtmLabelPassedInQuery()
     {
-        await using var telegramTestHost = GetTelegramTestHost();
+        using var telegramTestHost = GetTelegramTestHost();
 
         await telegramTestHost.SendUpdateAsync(new Update
         {
@@ -19,14 +19,14 @@ public class StartControllerTests : IntegrationTest
             }
         });
 
-        Assert.Single(telegramTestHost.GetDbSet(db => db.Users));
-        Assert.Empty(telegramTestHost.GetDbSet(db => db.UtmLabels));
+        Assert.Single(telegramTestHost.Get(db => db.Users.ToList()));
+        Assert.Empty(telegramTestHost.Get(db => db.UtmLabels.ToArray()));
     }
     
     [Fact]
     public async Task Start_ShouldAddUtmLabel_WhenUtmLabelIsPassedInQuery()
     {
-        await using var telegramTestHost = GetTelegramTestHost();
+        using var telegramTestHost = GetTelegramTestHost();
 
         await telegramTestHost.SendUpdateAsync(new Update
         {
@@ -37,9 +37,9 @@ public class StartControllerTests : IntegrationTest
             }
         });
 
-        var user = Assert.Single(telegramTestHost.GetDbSet(db => db.Users));
+        var user = Assert.Single(telegramTestHost.Get(db => db.Users.ToArray()));
         
-        var dbLabels = telegramTestHost.GetDbSet(db => db.UtmLabels).ToList();
+        var dbLabels = telegramTestHost.Get(db => db.UtmLabels.ToList());
         Assert.Equal(2, dbLabels.Count);
         Assert.All(dbLabels, label => Assert.Equal(user.Id, label.UserId));
         Assert.Contains(dbLabels, l => l is { Name: "source", Value: "city1" });
