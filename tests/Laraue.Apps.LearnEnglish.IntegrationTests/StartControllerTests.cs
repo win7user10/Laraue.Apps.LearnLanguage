@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Laraue.Apps.LearnEnglish.IntegrationTests;
 
-public class MenuServiceTests : IntegrationTest
+public class StartControllerTests : IntegrationTest
 {
     [Fact]
     public async Task Start_ShouldNotAddUtmLabel_WhenNoUtmLabelPassedInQuery()

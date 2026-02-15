@@ -69,7 +69,7 @@ public class SelectLanguageService(
         var tmb = new TelegramMessageBuilder()
             .AppendRow($"<b>{windowTitle}</b>")
             .AppendRow()
-            .AppendRow(Mode.SelectLanguage);
+            .Append(Mode.SelectLanguage);
 
         foreach (var pair in availablePairs)
         {
