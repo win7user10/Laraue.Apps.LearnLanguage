@@ -76,10 +76,10 @@
         <value>Quiz is ready to start</value>
     </data>
     <data name="Topic" xml:space="preserve">
-        <value>Topic</value>
+        <value>Topics</value>
     </data>
     <data name="CefrLevel" xml:space="preserve">
-        <value>CEFR Level</value>
+        <value>CEFR Levels</value>
     </data>
     <data name="QuestionsWillBeAsked" xml:space="preserve">
         <value>Questions will be asked</value>
@@ -100,15 +100,18 @@
         <value>Change topic</value>
     </data>
     <data name="ChangeCefrLevel" xml:space="preserve">
-        <value>Change CEFR level</value>
+        <value>Change CEFR levels</value>
     </data>
     <data name="ChangeLanguagePair" xml:space="preserve">
         <value>Change language pair</value>
     </data>
     <data name="SelectQuizTopic" xml:space="preserve">
-        <value>Select topic for the quiz</value>
+        <value>Select topic for the quiz. Current selected: {0}</value>
+    </data>
+    <data name="AndMore" xml:space="preserve">
+        <value>and {0} more</value>
     </data>
     <data name="SelectQuizCefrLevel" xml:space="preserve">
-        <value>Select CEFR level for the quiz</value>
+        <value>Select CEFR levels for the quiz. Current selected: {0}</value>
     </data>
 </root>

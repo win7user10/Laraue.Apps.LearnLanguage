@@ -23,6 +23,10 @@ public class DatabaseContext : DbContext, IUpdatesQueueDbContext
     
     public DbSet<CefrLevel> CefrLevels { get; init; }
     
+    public DbSet<UserQuizCefrLevel> UserQuizCefrLevels { get; init; }
+    
+    public DbSet<UserQuizTopic> UserQuizTopics { get; init; }
+    
     public DbSet<Topic> Topics { get; init; }
     
     public DbSet<WordTopic> WordTopics { get; init; }
@@ -55,6 +59,12 @@ public class DatabaseContext : DbContext, IUpdatesQueueDbContext
 
         modelBuilder.Entity<Translation>()
             .HasKey(x => new { x.WordId, x.LanguageId });
+
+        modelBuilder.Entity<UserQuizCefrLevel>()
+            .HasKey(x => new { x.UserId, x.CefrLevelId });
+
+        modelBuilder.Entity<UserQuizTopic>()
+            .HasKey(x => new { x.UserId, x.TopicId });
         
         modelBuilder.Entity<Translation>()
             .HasForeignKeyToWord(x => x.Translations);

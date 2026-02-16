@@ -3,6 +3,7 @@ using System;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260216095449_AllowToSetMultipleCefrLevels")]
+    partial class AllowToSetMultipleCefrLevels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -304414,6 +304417,10 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("language_to_learn_id");
 
+                    b.Property<long?>("QuizTopicId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("quiz_topic_id");
+
                     b.Property<byte>("ShowWordsMode")
                         .HasColumnType("smallint")
                         .HasColumnName("show_words_mode");
@@ -304441,6 +304448,9 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
 
                     b.HasIndex("LanguageToLearnId")
                         .HasDatabaseName("ix_users_language_to_learn_id");
+
+                    b.HasIndex("QuizTopicId")
+                        .HasDatabaseName("ix_users_quiz_topic_id");
 
                     b.ToTable("users", (string)null);
                 });
@@ -304545,25 +304555,6 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
                         .HasDatabaseName("ix_user_quiz_questions_word_id");
 
                     b.ToTable("user_quiz_questions", (string)null);
-                });
-
-            modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.UserQuizTopic", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.Property<long>("TopicId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("topic_id");
-
-                    b.HasKey("UserId", "TopicId")
-                        .HasName("pk_user_quiz_topics");
-
-                    b.HasIndex("TopicId")
-                        .HasDatabaseName("ix_user_quiz_topics_topic_id");
-
-                    b.ToTable("user_quiz_topics", (string)null);
                 });
 
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.UtmLabel", b =>
@@ -433304,7 +433295,14 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
                         .HasForeignKey("LanguageToLearnId")
                         .HasConstraintName("fk_users_languages_language_to_learn_id");
 
+                    b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.Topic", "QuizTopic")
+                        .WithMany()
+                        .HasForeignKey("QuizTopicId")
+                        .HasConstraintName("fk_users_topics_quiz_topic_id");
+
                     b.Navigation("LanguageToLearn");
+
+                    b.Navigation("QuizTopic");
                 });
 
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.UserQuiz", b =>
@@ -433331,14 +433329,14 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.UserQuizCefrLevel", b =>
                 {
                     b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.CefrLevel", "CefrLevel")
-                        .WithMany("UserQuizCefrLevels")
+                        .WithMany()
                         .HasForeignKey("CefrLevelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_quiz_cefr_levels_cefr_levels_cefr_level_id");
 
                     b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.User", "User")
-                        .WithMany("QuizCefrLevels")
+                        .WithMany("QuizCefrLevel")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -433368,27 +433366,6 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
                     b.Navigation("Quiz");
 
                     b.Navigation("Word");
-                });
-
-            modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.UserQuizTopic", b =>
-                {
-                    b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.Topic", "Topic")
-                        .WithMany()
-                        .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_quiz_topics_topics_topic_id");
-
-                    b.HasOne("Laraue.Apps.LearnLanguage.DataAccess.Entities.User", "User")
-                        .WithMany("UserQuizTopics")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_quiz_topics_users_user_id");
-
-                    b.Navigation("Topic");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.UtmLabel", b =>
@@ -433445,8 +433422,6 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
 
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.CefrLevel", b =>
                 {
-                    b.Navigation("UserQuizCefrLevels");
-
                     b.Navigation("Words");
                 });
 
@@ -433462,9 +433437,7 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Migrations
 
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.User", b =>
                 {
-                    b.Navigation("QuizCefrLevels");
-
-                    b.Navigation("UserQuizTopics");
+                    b.Navigation("QuizCefrLevel");
                 });
 
             modelBuilder.Entity("Laraue.Apps.LearnLanguage.DataAccess.Entities.UserQuiz", b =>

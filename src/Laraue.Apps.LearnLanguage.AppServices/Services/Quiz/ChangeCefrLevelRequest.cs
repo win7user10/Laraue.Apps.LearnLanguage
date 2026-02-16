@@ -7,4 +7,7 @@ public record ChangeCefrLevelRequest : WithSelectedTranslationRequest
 {
     [FromQuery(ParameterNames.CefrLevelId)]
     public long CefrLevelId { get; init; }
+
+    [FromQuery(ParameterNames.Enable)]
+    public bool Enable { get; init; }
 }

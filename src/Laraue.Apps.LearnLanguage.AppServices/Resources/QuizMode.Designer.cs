@@ -60,6 +60,15 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to and {0} more.
+        /// </summary>
+        public static string AndMore {
+            get {
+                return ResourceManager.GetString("AndMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quiz Mode.
         /// </summary>
         public static string ButtonName {
@@ -69,7 +78,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CEFR Level.
+        ///   Looks up a localized string similar to CEFR Levels.
         /// </summary>
         public static string CefrLevel {
             get {
@@ -78,7 +87,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Change CEFR level.
+        ///   Looks up a localized string similar to Change CEFR levels.
         /// </summary>
         public static string ChangeCefrLevel {
             get {
@@ -240,7 +249,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select CEFR level for the quiz.
+        ///   Looks up a localized string similar to Select CEFR levels for the quiz. Current selected: {0}.
         /// </summary>
         public static string SelectQuizCefrLevel {
             get {
@@ -249,7 +258,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select topic for the quiz.
+        ///   Looks up a localized string similar to Select topic for the quiz. Current selected: {0}.
         /// </summary>
         public static string SelectQuizTopic {
             get {
@@ -294,7 +303,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Topic.
+        ///   Looks up a localized string similar to Topics.
         /// </summary>
         public static string Topic {
             get {

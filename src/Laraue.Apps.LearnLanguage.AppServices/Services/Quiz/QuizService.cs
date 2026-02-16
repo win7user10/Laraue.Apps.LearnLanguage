@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.LearnLanguage.AppServices.Extensions;
+﻿using System.Text;
+using Laraue.Apps.LearnLanguage.AppServices.Extensions;
 using Laraue.Apps.LearnLanguage.AppServices.Repositories.Contracts;
 using Laraue.Apps.LearnLanguage.AppServices.Resources;
 using Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes;
@@ -62,12 +63,15 @@ public class QuizService(
         ChangeTopicRequest request,
         CancellationToken ct = default)
     {
-        long? optionId = request.TopicId == NullOptionId ? null : request.TopicId;
-        await repository.UpdateTopicAsync(replyData.UserId, optionId, ct);
+        await repository.UpdateTopicAsync(
+            replyData.UserId,
+            request.TopicId,
+            request.Enable,
+            ct);
 
-        await OpenNewQuizWindowAsync(
+        await OpenSelectTopicWindowAsync(
             replyData,
-            new QuizRequest { LanguageToLearnId = request.LanguageToLearnId },
+            new SelectTopicRequest { LanguageToLearnId = request.LanguageToLearnId },
             ct);
     }
 
@@ -76,26 +80,48 @@ public class QuizService(
         SelectCefrLevelRequest request,
         CancellationToken ct = default)
     {
-        var tmb = new TelegramMessageBuilder()
-            .AppendRow(QuizMode.SelectQuizCefrLevel);
+        var topics = await repository.GetUserQuizTopicsAsync(replyData.UserId, ct);
+        var cefrLevels = await repository.GetUserSelectedCefrLevelsAsync(
+            replyData.UserId,
+            topics.Select(x => x.Id).ToArray(),
+            ct);
+
+        var activeCefrLevels = cefrLevels
+            .Where(x => x.IsSelected)
+            .ToArray();
+
+        var cefrLevelNames = activeCefrLevels.Length > 0
+            ? string.Join(", ", activeCefrLevels.Select(x => x.Name))
+            : Settings.NotSet;
         
-        var topic = await repository.GetUserQuizTopicAsync(replyData.UserId, ct);
-        var cefrLevels = await repository.GetCefrLevelsAsync(topic?.Id, ct);
+        var tmb = new TelegramMessageBuilder()
+            .AppendRow(string.Format(QuizMode.SelectQuizCefrLevel, $"<b>{cefrLevelNames}</b>"));
+        
+        var buttons = new List<InlineKeyboardButton>();
+        
         foreach (var cefrLevel in cefrLevels)
         {
+            var buttonTextBuilder = new StringBuilder();
+            if (cefrLevel.IsSelected)
+                buttonTextBuilder.Append("✅ ");
+
+            buttonTextBuilder.Append($"{cefrLevel.Name} ({cefrLevel.WordsCount})");
+            
             var button = new CallbackRoutePath(TelegramRoutes.CefrLevelSelection, RouteMethod.Post)
                 .WithQueryParameter(ParameterNames.CefrLevelId, cefrLevel.Id)
+                .WithQueryParameter(ParameterNames.Enable, !cefrLevel.IsSelected)
                 .WithTranslationDirection(request)
-                .ToInlineKeyboardButton($"{cefrLevel.Name} ({cefrLevel.WordsCount})");
-            
-            tmb.AddInlineKeyboardButtons([button]);
+                .ToInlineKeyboardButton(buttonTextBuilder.ToString());
+                
+            buttons.Add(button);
         }
-
+        
+        foreach (var buttonsRow in buttons.Chunk(2))
+            tmb.AddInlineKeyboardButtons(buttonsRow);
+        
         tmb
-            .AddInlineKeyboardButtons([new CallbackRoutePath(TelegramRoutes.CefrLevelSelection, RouteMethod.Post)
-                .WithQueryParameter(ParameterNames.CefrLevelId, NullOptionId)
-                .WithTranslationDirection(request)
-                .ToInlineKeyboardButton(Settings.NotSet)])
+            .AddBackMenuButton(new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                .WithTranslationDirection(request))
             .AddMainMenuButton();
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
@@ -106,12 +132,15 @@ public class QuizService(
         ChangeCefrLevelRequest request,
         CancellationToken ct = default)
     {
-        long? optionId = request.CefrLevelId == NullOptionId ? null : request.CefrLevelId;
-        await repository.UpdateCefrLevelAsync(replyData.UserId, optionId, ct);
+        await repository.UpdateCefrLevelAsync(
+            replyData.UserId,
+            request.CefrLevelId,
+            request.Enable,
+            ct);
 
-        await OpenNewQuizWindowAsync(
+        await OpenSelectCefrLevelWindowAsync(
             replyData,
-            new QuizRequest { LanguageToLearnId = request.LanguageToLearnId },
+            new SelectCefrLevelRequest { LanguageToLearnId = request.LanguageToLearnId },
             ct);
     }
 
@@ -120,26 +149,61 @@ public class QuizService(
         SelectTopicRequest request,
         CancellationToken ct = default)
     {
-        var tmb = new TelegramMessageBuilder()
-            .AppendRow(QuizMode.SelectQuizTopic);
-
-        var cefrLevel = await repository.GetUserCefrLevelAsync(replyData.UserId, ct);
+        var cefrLevels = await repository
+            .GetUserCefrLevelsAsync(replyData.UserId, ct);
         
-        var topics = await repository.GetTopicsAsync(MaxTopicsCount, cefrLevel?.Id, ct);
-        foreach (var chunkedTopics in topics.Chunk(2))
+        var topics = await repository.GetTopicsAsync(
+            MaxTopicsCount,
+            replyData.UserId,
+            cefrLevels.Select(x => x.Id).ToArray(),
+            ct);
+
+        var activeTopics = topics
+            .Where(t => t.IsSelected)
+            .ToArray();
+
+        var topicNames = Settings.NotSet;
+        if (activeTopics.Length > 0)
         {
-            tmb.AddInlineKeyboardButtons(chunkedTopics
-                .Select(topic => new CallbackRoutePath(TelegramRoutes.TopicSelection, RouteMethod.Post)
-                    .WithQueryParameter(ParameterNames.TopicId, topic.Id)
-                    .WithTranslationDirection(request)
-                    .ToInlineKeyboardButton($"{topic.Name} ({topic.WordsCount})")));
+            const int maxTopicsInTitle = 5;
+            var topicsCountMoreThanAllowed = activeTopics.Length > maxTopicsInTitle;
+            var topicsForMessage = activeTopics.Take(maxTopicsInTitle).ToArray();
+
+            var topicNamesBuilder = new StringBuilder();
+            topicNamesBuilder.AppendJoin(", ", topicsForMessage.Select(x => x.Name));
+            if (topicsCountMoreThanAllowed)
+                topicNamesBuilder
+                    .Append(' ')
+                    .Append(string.Format(QuizMode.AndMore, activeTopics.Length - maxTopicsInTitle));
+
+            topicNames = topicNamesBuilder.ToString();
+        }
+        
+        var tmb = new TelegramMessageBuilder()
+            .AppendRow(string.Format(QuizMode.SelectQuizTopic, $"<b>{topicNames}</b>"));
+
+        var buttons = new List<InlineKeyboardButton>();
+        foreach (var topic in topics)
+        {
+            var buttonTextBuilder = new StringBuilder();
+            if (topic.IsSelected)
+                buttonTextBuilder.Append("✅ ");
+
+            buttonTextBuilder.Append($"{topic.Name} ({topic.WordsCount})");
+            
+            buttons.Add(new CallbackRoutePath(TelegramRoutes.TopicSelection, RouteMethod.Post)
+                .WithQueryParameter(ParameterNames.TopicId, topic.Id)
+                .WithQueryParameter(ParameterNames.Enable, !topic.IsSelected)
+                .WithTranslationDirection(request)
+                .ToInlineKeyboardButton(buttonTextBuilder.ToString()));
         }
 
+        foreach (var buttonsRow in buttons.Chunk(2))
+            tmb.AddInlineKeyboardButtons(buttonsRow);
+        
         tmb
-            .AddInlineKeyboardButtons([new CallbackRoutePath(TelegramRoutes.TopicSelection, RouteMethod.Post)
-                .WithQueryParameter(ParameterNames.TopicId, NullOptionId)
-                .WithTranslationDirection(request)
-                .ToInlineKeyboardButton(Settings.NotSet)])
+            .AddBackMenuButton(new CallbackRoutePath(TelegramRoutes.CurrentQuiz)
+                .WithTranslationDirection(request))
             .AddMainMenuButton();
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
@@ -157,21 +221,19 @@ public class QuizService(
         {
             await using var transaction = await context.Database.BeginTransactionAsync(ct);
 
-            var topicData = await repository.GetUserQuizTopicAsync(replyData.UserId, ct);
-            var cefrLevelData = await repository.GetUserCefrLevelAsync(replyData.UserId, ct);
+            var topicData = await repository.GetUserQuizTopicsAsync(replyData.UserId, ct);
+            var cefrLevelData = await repository.GetUserCefrLevelsAsync(replyData.UserId, ct);
             
             var quizId = await repository.CreateQuizAsync(
                 replyData.UserId,
                 startQuizRequest.LanguageToLearnId!.Value,
-                topicData?.Id,
-                cefrLevelData?.Id,
                 ct);
         
             var questions = await questionsGenerator.GenerateQuestions(
                 replyData.UserId,
                 startQuizRequest.LanguageToLearnId!.Value,
-                topicData?.Id,
-                cefrLevelData?.Id,
+                topicData.Select(x => x.Id).ToArray(),
+                cefrLevelData.Select(x => x.Id).ToArray(),
                 QuestionsCount,
                 OptionsCount,
                 ct);
@@ -191,6 +253,12 @@ public class QuizService(
     {
         if (!await HasActiveQuizAsync(replyData.UserId, ct))
         {
+            // The case when the quiz finished but something went wrong
+            await OpenNewQuizWindowAsync(
+                replyData,
+                new QuizRequest(),
+                ct);
+            
             return;
         }
         
@@ -255,8 +323,10 @@ public class QuizService(
     {
         var tmb = new TelegramMessageBuilder();
         
-        var topic = await repository.GetUserQuizTopicAsync(replyData.UserId, ct);
-        var cefrLevel = await repository.GetUserCefrLevelAsync(replyData.UserId, ct);
+        var topics = await repository.GetUserQuizTopicsAsync(replyData.UserId, ct);
+        var topicIds = topics.Select(x => x.Id).ToArray();
+        var cefrLevels = await repository.GetUserCefrLevelsAsync(replyData.UserId, ct);
+        var cefrLevelIds = cefrLevels.Select(x => x.Id).ToArray();
         
         var languageCode = await repository.GetLanguageCodeAsync(
             selectedTranslation.LanguageToLearnId!.Value,
@@ -264,19 +334,25 @@ public class QuizService(
 
         var dbQuestionsCount = await repository.GetQuestionsCountByFilterAsync(
             selectedTranslation.LanguageToLearnId!.Value,
-            topic?.Id,
-            cefrLevel?.Id,
+            topicIds,
+            cefrLevelIds,
             ct);
 
         var learnStat = await repository.GetLearnStatAsync(
             replyData.UserId,
             selectedTranslation.LanguageToLearnId!.Value,
-            topic?.Id,
-            cefrLevel?.Id,
+            topicIds,
+            cefrLevelIds,
             ct);
 
-        var topicName = topic?.Name ?? Settings.NotSet;
-        var cefrLevelName = cefrLevel?.Name ?? Settings.NotSet;
+        var topicNames = topics.Length > 0
+            ? string.Join(", ", topics.Select(x => x.Name))
+            : Settings.NotSet;
+        
+        var cefrLevelNames = cefrLevels.Length > 0
+            ? string.Join(", ", cefrLevels.Select(x => x.Name))
+            : Settings.NotSet;
+        
         var questionsToAsk = dbQuestionsCount > QuestionsCount
             ? QuestionsCount
             : dbQuestionsCount;
@@ -284,8 +360,8 @@ public class QuizService(
         tmb
             .AppendRow($"<b>{QuizMode.QuizReady}</b>")
             .AppendRow()
-            .AppendRow($"{QuizMode.Topic}: <b>{topicName}</b>")
-            .AppendRow($"{QuizMode.CefrLevel}: <b>{cefrLevelName}</b>")
+            .AppendRow($"{QuizMode.Topic}: <b>{topicNames}</b>")
+            .AppendRow($"{QuizMode.CefrLevel}: <b>{cefrLevelNames}</b>")
             .AppendRow($"{QuizMode.QuestionsWillBeAsked}: <b>{questionsToAsk}</b>")
             .AppendRow($"{QuizMode.TotalQuestionsByCriteria}: <b>{dbQuestionsCount}</b>")
             .AppendRow($"{QuizMode.LanguagePair}: <b>en -> {languageCode}</b>")
@@ -408,8 +484,8 @@ public class QuizService(
         var learnStat = await repository.GetLearnStatAsync(
             replyData.UserId,
             languageId,
-            null,
-            null,
+            [],
+            [],
             ct);
         
         var lastQuizQuestions = await repository.GetLastQuizQuestionsAsync(replyData.UserId, ct);
@@ -515,12 +591,12 @@ public class QuizService(
     public interface IRepository
     {
         Task<bool> HasActiveQuizAsync(Guid userId, CancellationToken ct = default);
+        
         Task<long> CreateQuizAsync(
             Guid userId,
             long languageId,
-            long? topicId,
-            long? cefrLevelId,
             CancellationToken ct = default);
+        
         Task SetQuizFinished(long quizId, CancellationToken ct = default);
         Task SaveQuizQuestionsAsync(long quizId, NewQuestionDto[] questions, CancellationToken ct = default);
         Task SkipAllQuizQuestions(Guid userId, CancellationToken ct = default);
@@ -530,32 +606,51 @@ public class QuizService(
         Task UpdateTranslationWinStreakAsync(long wordId, long languageId, Guid userId, bool increase, CancellationToken ct = default);
         Task<CurrentQuizStats> GetCurrentQuizStatsAsync(Guid userId, CancellationToken ct = default);
         Task<LastQuizStatsQuestion[]> GetLastQuizQuestionsAsync(Guid userId, CancellationToken ct = default);
+        
         Task<LearnStat> GetLearnStatAsync(
             Guid userId,
             long languageId,
-            long? topicId,
-            long? cefrLevelId,
+            long[] topicIds,
+            long[] cefrLevelIds,
             CancellationToken ct = default);
+        
         Task<string?> GetLanguageCodeAsync(long languageId, CancellationToken ct = default);
-        Task<TopicItemDto?> GetUserQuizTopicAsync(Guid userId, CancellationToken ct = default);
-        Task<CefrLevelItemDto?> GetUserCefrLevelAsync(Guid userId, CancellationToken ct = default);
+        Task<TopicItemDto[]> GetUserQuizTopicsAsync(
+            Guid userId,
+            CancellationToken ct = default);
+        Task<CefrLevelItemDto[]> GetUserCefrLevelsAsync(
+            Guid userId,
+            CancellationToken ct = default);
+        
         Task<int> GetQuestionsCountByFilterAsync(
             long languageId,
-            long? topicId,
-            long? cefrLevelId,
+            long[] topicIds,
+            long[] cefrLevelIds,
             CancellationToken ct = default);
         
-        Task<TopicItemDto[]> GetTopicsAsync(
+        Task<UserTopicItemDto[]> GetTopicsAsync(
             int count,
-            long? cefrLevelId,
+            Guid userId,
+            long[] cefrLevelIds,
             CancellationToken ct = default);
         
-        Task<CefrLevelItemDto[]> GetCefrLevelsAsync(
-            long? topicId,
+        Task<UserCefrLevelItemDto[]> GetUserSelectedCefrLevelsAsync(
+            Guid userId,
+            long[] topicIds,
             CancellationToken ct = default);
         
-        Task UpdateTopicAsync(Guid userId, long? topicId, CancellationToken ct = default);
-        Task UpdateCefrLevelAsync(Guid userId, long? cefrLevelId, CancellationToken ct = default);
+        Task UpdateTopicAsync(
+            Guid userId,
+            long topicId,
+            bool enable,
+            CancellationToken ct = default);
+        
+        Task UpdateCefrLevelAsync(
+            Guid userId,
+            long cefrLevelId,
+            bool enable,
+            CancellationToken ct = default);
+        
         Task<bool> DoesUserSetDefaultLanguagePairAsync(Guid userId, CancellationToken ct = default);
     }
 
@@ -616,12 +711,22 @@ public class QuizService(
         public int WordsCount { get; init; }
         public required string Name { get; init; }
     }
+    
+    public class UserTopicItemDto : TopicItemDto
+    {
+        public required bool IsSelected { get; init; }
+    }
 
     public class CefrLevelItemDto
     {
         public long Id { get; init; }
         public int WordsCount { get; init; }
         public required string Name { get; init; }
+    }
+
+    public class UserCefrLevelItemDto : CefrLevelItemDto
+    {
+        public required bool IsSelected { get; init; }
     }
     
     public class Repository(DatabaseContext context, IDateTimeProvider dateTimeProvider) : IRepository
@@ -637,8 +742,6 @@ public class QuizService(
         public async Task<long> CreateQuizAsync(
             Guid userId,
             long languageId,
-            long? topicId,
-            long? cefrLevelId,
             CancellationToken ct = default)
         {
             var quiz = new UserQuiz
@@ -647,8 +750,6 @@ public class QuizService(
                 Status = UserQuizStatus.Active,
                 CreatedAt = dateTimeProvider.UtcNow,
                 LanguageId = languageId,
-                TopicId = topicId,
-                CefrLevelId = cefrLevelId,
             };
             
             context.Add(quiz);
@@ -847,19 +948,22 @@ public class QuizService(
         public async Task<LearnStat> GetLearnStatAsync(
             Guid userId,
             long languageId,
-            long? topicId,
-            long? cefrLevelId,
+            long[] topicIds,
+            long[] cefrLevelIds,
             CancellationToken ct = default)
         {
             var query = context.LearnedTranslations
                 .Where(q => q.UserId == userId)
                 .Where(q => q.LanguageId == languageId);
             
-            if (topicId.HasValue)
-                query = query.Where(tr => tr.Word.Topics.Any(t => t.TopicId == topicId.Value));
+            if (topicIds.Length > 0)
+                query = query.Where(tr => tr.Word.Topics
+                    .Any(t => topicIds.Any(topicId => t.TopicId == topicId)));
             
-            if (cefrLevelId.HasValue)
-                query = query.Where(tr => tr.Word.CefrLevelId == cefrLevelId);
+            if (cefrLevelIds.Length > 0)
+                query = query
+                    .Where(tr => cefrLevelIds
+                        .Any(cefrLevelId => tr.Word.CefrLevelId == cefrLevelId));
             
             var learnedCount = await query
                 .CountAsyncEF(x => x.LearnedAt != null, ct);
@@ -867,26 +971,29 @@ public class QuizService(
             var totalCountQuery = context.Translations
                 .Where(x => x.LanguageId == languageId);
             
-            if (topicId.HasValue)
+            if (topicIds.Length > 0)
                 totalCountQuery = totalCountQuery
-                    .Where(tr => tr.Word.Topics.Any(t => t.TopicId == topicId.Value));
+                    .Where(tr => tr.Word.Topics
+                        .Any(t => topicIds.Any(topicId => t.TopicId == topicId)));
             
-            if (cefrLevelId.HasValue)
+            if (cefrLevelIds.Length > 0)
                 totalCountQuery = totalCountQuery
-                    .Where(tr => tr.Word.CefrLevelId == cefrLevelId);
+                    .Where(tr => cefrLevelIds
+                        .Any(cefrLevelId => tr.Word.CefrLevelId == cefrLevelId));
 
             var answersStatQuery = context.UserQuizQuestions
                 .Where(q => q.Quiz.UserId == userId)
                 .Where(q => q.Status != UserQuizQuestionStatus.New);
             
-            if (topicId.HasValue)
+            if (topicIds.Length > 0)
                 answersStatQuery = answersStatQuery
-                    .Where(q => q.Word
-                        .Topics.Any(t => t.TopicId == topicId.Value));
+                    .Where(q => q.Word.Topics
+                        .Any(t => topicIds.Any(topicId => t.TopicId == topicId)));
             
-            if (cefrLevelId.HasValue)
+            if (cefrLevelIds.Length > 0)
                 answersStatQuery = answersStatQuery
-                    .Where(q => q.Word.CefrLevelId == cefrLevelId);
+                    .Where(q => cefrLevelIds
+                        .Any(cefrLevelId => q.Word.CefrLevelId == cefrLevelId));
 
             var answersStat = await answersStatQuery
                 .GroupBy(q => q.Status)
@@ -920,66 +1027,74 @@ public class QuizService(
                 .FirstOrDefaultAsyncEF(ct);
         }
 
-        public Task<TopicItemDto?> GetUserQuizTopicAsync(Guid userId, CancellationToken ct = default)
+        public Task<TopicItemDto[]> GetUserQuizTopicsAsync(Guid userId, CancellationToken ct = default)
         {
-            return context.Users
-                .Where(u => u.Id == userId)
-                .Where(u => u.QuizTopicId.HasValue)
+            return context.UserQuizTopics
+                .Where(u => u.UserId == userId)
                 .Select(u => new TopicItemDto
                 {
-                    Name = u.QuizTopic.Name,
-                    Id = u.QuizTopicId!.Value,
-                    WordsCount = u.QuizTopic.WordTopics.Count
+                    Name = u.Topic.Name,
+                    Id = u.Topic.Id,
+                    WordsCount = u.Topic.WordTopics.Count
                 })
-                .FirstOrDefaultAsyncEF(ct);
+                .ToArrayAsyncEF(ct);
         }
 
-        public Task<CefrLevelItemDto?> GetUserCefrLevelAsync(Guid userId, CancellationToken ct = default)
+        public Task<CefrLevelItemDto[]> GetUserCefrLevelsAsync(
+            Guid userId,
+            CancellationToken ct = default)
         {
-            return context.Users
-                .Where(u => u.Id == userId)
-                .Where(u => u.QuizCefrLevelId.HasValue)
+            return context.UserQuizCefrLevels
+                .Where(u => u.UserId == userId)
                 .Select(u => new CefrLevelItemDto
                 {
-                    Name = u.QuizCefrLevel.Name,
-                    Id = u.QuizCefrLevelId!.Value,
-                    WordsCount = u.QuizCefrLevel.Words.Count,
+                    Name = u.CefrLevel.Name,
+                    Id = u.CefrLevel.Id,
+                    WordsCount = u.CefrLevel.Words.Count,
                 })
-                .FirstOrDefaultAsyncEF(ct);
+                .ToArrayAsyncEF(ct);
         }
 
         public Task<int> GetQuestionsCountByFilterAsync(
             long languageId,
-            long? topicId,
-            long? cefrLevelId,
+            long[] topicIds,
+            long[] cefrLevelIds,
             CancellationToken ct = default)
         {
             var query = context.Translations
                 .Where(x => x.LanguageId == languageId);
 
-            if (topicId.HasValue)
-                query = query.Where(x => x.Word.Topics.Any(t => t.TopicId == topicId));
+            if (topicIds.Length > 0)
+                query = query.Where(x => x.Word.Topics
+                    .Any(t => topicIds
+                        .Any(topicId => t.TopicId == topicId)));
             
-            if (cefrLevelId.HasValue)
-                query = query.Where(x => x.Word.CefrLevelId == cefrLevelId);
+            if (cefrLevelIds.Length != 0)
+                query = query.Where(x => cefrLevelIds
+                    .Any(cefrLevelId => x.Word.CefrLevelId == cefrLevelId));
             
             return query.CountAsyncEF(ct);
         }
 
-        public async Task<TopicItemDto[]> GetTopicsAsync(
+        public async Task<UserTopicItemDto[]> GetTopicsAsync(
             int count,
-            long? cefrLevelId,
+            Guid userId,
+            long[] cefrLevelIds,
             CancellationToken ct = default)
         {
             var query = context.Topics.AsQueryable();
             
             var topics = await query
-                .Select(topic => new TopicItemDto
+                .Select(topic => new UserTopicItemDto
                 {
                     Id = topic.Id,
                     WordsCount = topic.WordTopics
-                        .Count(wt => !cefrLevelId.HasValue || wt.Word.CefrLevelId == cefrLevelId),
-                    Name = topic.Name
+                        .Count(
+                            wt => cefrLevelIds.Length == 0 || cefrLevelIds
+                                .Any(cefrLevelId => wt.Word.CefrLevelId == cefrLevelId)),
+                    Name = topic.Name,
+                    IsSelected = topic.UserQuizTopics
+                        .Any(q => q.UserId == userId),
                 })
                 .OrderByDescending(x => x.WordsCount)
                 .Take(count)
@@ -990,43 +1105,70 @@ public class QuizService(
                 .ToArray();
         }
 
-        public Task<CefrLevelItemDto[]> GetCefrLevelsAsync(
-            long? topicId,
+        public Task<UserCefrLevelItemDto[]> GetUserSelectedCefrLevelsAsync(
+            Guid userId,
+            long[] topicIds,
             CancellationToken ct = default)
         {
             var query = context.CefrLevels.AsQueryable();
             
             return query
-                .Select(cefrLevel => new CefrLevelItemDto
+                .Select(cefrLevel => new UserCefrLevelItemDto
                 {
                     Id = cefrLevel.Id,
                     WordsCount = cefrLevel.Words
-                        .Count(w => topicId == null || w.Topics.Any(t => t.TopicId == topicId)),
-                    Name = cefrLevel.Name
+                        .Count(w => topicIds.Length == 0 || w.Topics
+                            .Any(t => topicIds
+                                .Any(topicId => t.TopicId == topicId))),
+                    Name = cefrLevel.Name,
+                    IsSelected = cefrLevel.UserQuizCefrLevels
+                        .Any(q => q.UserId == userId),
                 })
                 .OrderBy(x => x.Id)
                 .Where(x => x.WordsCount > 0)
                 .ToArrayAsyncEF(ct);
         }
 
-        public Task UpdateTopicAsync(Guid userId, long? topicId, CancellationToken ct = default)
+        public Task UpdateTopicAsync(
+            Guid userId,
+            long topicId,
+            bool enable,
+            CancellationToken ct = default)
         {
-            return context.Users
-                .Where(u => u.Id == userId)
-                .ExecuteUpdateAsync(
-                    u => u
-                        .SetProperty(p => p.QuizTopicId, topicId),
-                    ct);
+            if (enable)
+            {
+                return context.UserQuizTopics
+                    .Merge()
+                    .Using([new UserQuizTopic { TopicId = topicId, UserId = userId }])
+                    .OnTargetKey()
+                    .InsertWhenNotMatched()
+                    .MergeAsync(ct);
+            }
+
+            return context.UserQuizTopics
+                .Where(x => x.UserId == userId && x.TopicId == topicId)
+                .ExecuteDeleteAsync(ct);
         }
 
-        public Task UpdateCefrLevelAsync(Guid userId, long? cefrLevelId, CancellationToken ct = default)
+        public Task UpdateCefrLevelAsync(
+            Guid userId,
+            long cefrLevelId,
+            bool enable,
+            CancellationToken ct = default)
         {
-            return context.Users
-                .Where(u => u.Id == userId)
-                .ExecuteUpdateAsync(
-                    u => u
-                        .SetProperty(p => p.QuizCefrLevelId, cefrLevelId),
-                    ct);
+            if (enable)
+            {
+                return context.UserQuizCefrLevels
+                    .Merge()
+                    .Using([new UserQuizCefrLevel { CefrLevelId = cefrLevelId, UserId = userId }])
+                    .OnTargetKey()
+                    .InsertWhenNotMatched()
+                    .MergeAsync(ct);
+            }
+
+            return context.UserQuizCefrLevels
+                .Where(x => x.UserId == userId && x.CefrLevelId == cefrLevelId)
+                .ExecuteDeleteAsync(ct);
         }
 
         public Task<bool> DoesUserSetDefaultLanguagePairAsync(Guid userId, CancellationToken ct = default)

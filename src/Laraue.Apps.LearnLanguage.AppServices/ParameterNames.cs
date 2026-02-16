@@ -4,11 +4,11 @@ public static class ParameterNames
 {
     public const string Page = "p";
     
-    public const string ActionId = "a";
     public const string OpenedWordId = "ow";
     public const string OpenedLanguageId = "om";
     public const string TopicId = "ti";
     public const string CefrLevelId = "ci";
+    public const string Enable = "e";
     public const string ToggleTranslations = "t";
     public const string RevertTranslations = "r";
     public const string ShowMode = "m";

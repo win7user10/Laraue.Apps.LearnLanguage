@@ -9,8 +9,8 @@ public interface IQuestionsGenerator
     Task<NewQuestionDto[]> GenerateQuestions(
         Guid userId,
         long languageId,
-        long? topicId,
-        long? cefrLevelId,
+        long[] topicIds,
+        long[] cefrLevelIds,
         int questionsCount,
         int optionsCount,
         CancellationToken ct);
@@ -21,8 +21,8 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
     public async Task<NewQuestionDto[]> GenerateQuestions(
         Guid userId,
         long languageId,
-        long? topicId,
-        long? cefrLevelId,
+        long[] topicIds,
+        long[] cefrLevelIds,
         int questionsCount,
         int optionsCount,
         CancellationToken ct)
@@ -37,14 +37,16 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             .Where(x => x.UserId == userId)
             .Where(x => x.Translation.LanguageId == languageId);
 
-        if (topicId.HasValue)
+        if (topicIds.Length > 0)
             metWordsQuery = metWordsQuery
                 .Where(x => x.Word.Topics
-                    .Any(t => t.TopicId == topicId.Value));
+                    .Any(t => topicIds
+                        .Any(topicId => t.TopicId == topicId)));
         
-        if (cefrLevelId.HasValue)
+        if (cefrLevelIds.Length != 0)
             metWordsQuery = metWordsQuery
-                .Where(x => x.Word.CefrLevelId == cefrLevelId);
+                .Where(x => cefrLevelIds
+                    .Any(cefrLevelId => x.Word.CefrLevelId == cefrLevelId));
 
         var oldQuestions = await metWordsQuery
             .Where(x => x.LearnedAt != null)
@@ -84,14 +86,16 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
             .Where(x => x.translation.LanguageId == languageId)
             .Where(x => x.learnedTranslation == null);
 
-        if (topicId.HasValue)
+        if (topicIds.Length > 0)
             newQuestionsQuery = newQuestionsQuery
                 .Where(q => q.translation.Word.Topics
-                    .Any(t => t.TopicId == topicId.Value));
+                    .Any(t => topicIds
+                        .Any(topicId => t.TopicId == topicId)));
         
-        if (cefrLevelId.HasValue)
+        if (cefrLevelIds.Length != 0)
             newQuestionsQuery = newQuestionsQuery
-                .Where(q => q.translation.Word.CefrLevelId == cefrLevelId);
+                .Where(q => cefrLevelIds
+                    .Any(cefrLevelId => q.translation.Word.CefrLevelId == cefrLevelId));
         
         var newQuestions = await newQuestionsQuery
             .OrderBy(x => SqlFunctions.NewGuid())
