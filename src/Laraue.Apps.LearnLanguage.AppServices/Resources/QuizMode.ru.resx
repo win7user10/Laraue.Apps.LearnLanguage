@@ -111,4 +111,7 @@
     <data name="ChangeCefrLevel" xml:space="preserve">
         <value>Изменить сложность слов</value>
     </data>
+    <data name="AndMore" xml:space="preserve">
+        <value>и еще {0}</value>
+    </data>
 </root>

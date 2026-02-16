@@ -144,6 +144,29 @@ public class QuizService(
             ct);
     }
 
+    private string GetTopicNamesString(TopicItemDto[] topicItems)
+    {
+        var topicNames = Settings.NotSet;
+        
+        if (topicItems.Length > 0)
+        {
+            const int maxTopicsInTitle = 5;
+            var topicsCountMoreThanAllowed = topicItems.Length > maxTopicsInTitle;
+            var topicsForMessage = topicItems.Take(maxTopicsInTitle).ToArray();
+
+            var topicNamesBuilder = new StringBuilder();
+            topicNamesBuilder.AppendJoin(", ", topicsForMessage.Select(x => x.Name));
+            if (topicsCountMoreThanAllowed)
+                topicNamesBuilder
+                    .Append(' ')
+                    .Append(string.Format(QuizMode.AndMore, topicItems.Length - maxTopicsInTitle));
+
+            topicNames = topicNamesBuilder.ToString();
+        }
+
+        return topicNames;
+    }
+
     public async Task OpenSelectTopicWindowAsync(
         ReplyData replyData,
         SelectTopicRequest request,
@@ -157,27 +180,13 @@ public class QuizService(
             replyData.UserId,
             cefrLevels.Select(x => x.Id).ToArray(),
             ct);
-
+        
         var activeTopics = topics
             .Where(t => t.IsSelected)
+            .Cast<TopicItemDto>()
             .ToArray();
 
-        var topicNames = Settings.NotSet;
-        if (activeTopics.Length > 0)
-        {
-            const int maxTopicsInTitle = 5;
-            var topicsCountMoreThanAllowed = activeTopics.Length > maxTopicsInTitle;
-            var topicsForMessage = activeTopics.Take(maxTopicsInTitle).ToArray();
-
-            var topicNamesBuilder = new StringBuilder();
-            topicNamesBuilder.AppendJoin(", ", topicsForMessage.Select(x => x.Name));
-            if (topicsCountMoreThanAllowed)
-                topicNamesBuilder
-                    .Append(' ')
-                    .Append(string.Format(QuizMode.AndMore, activeTopics.Length - maxTopicsInTitle));
-
-            topicNames = topicNamesBuilder.ToString();
-        }
+        var topicNames = GetTopicNamesString(activeTopics);
         
         var tmb = new TelegramMessageBuilder()
             .AppendRow(string.Format(QuizMode.SelectQuizTopic, $"<b>{topicNames}</b>"));
@@ -345,9 +354,7 @@ public class QuizService(
             cefrLevelIds,
             ct);
 
-        var topicNames = topics.Length > 0
-            ? string.Join(", ", topics.Select(x => x.Name))
-            : Settings.NotSet;
+        var topicNames = GetTopicNamesString(topics);
         
         var cefrLevelNames = cefrLevels.Length > 0
             ? string.Join(", ", cefrLevels.Select(x => x.Name))
