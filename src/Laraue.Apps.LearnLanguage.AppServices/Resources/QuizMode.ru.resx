@@ -67,7 +67,7 @@
         <value>Квиз готов к запуску</value>
     </data>
     <data name="Topic" xml:space="preserve">
-        <value>Топик</value>
+        <value>Топики</value>
     </data>
     <data name="QuestionsWillBeAsked" xml:space="preserve">
         <value>Будет задано вопросов</value>
@@ -91,7 +91,7 @@
         <value>Изменить языковую пару</value>
     </data>
     <data name="SelectQuizTopic" xml:space="preserve">
-        <value>Выберите топик квиза</value>
+        <value>Выберите топик для квиза. Текущие: {0}</value>
     </data>
     <data name="SkippedAnswers" xml:space="preserve">
         <value>Пропущено вопросов</value>
@@ -103,12 +103,15 @@
         <value>Правильных ответов</value>
     </data>
     <data name="SelectQuizCefrLevel" xml:space="preserve">
-        <value>Выберите уровень CEFR квиза</value>
+        <value>Выберите уровни сложности слов для квиза. Текущие: {0}</value>
     </data>
     <data name="CefrLevel" xml:space="preserve">
-        <value>Уровень CEFR</value>
+        <value>Сложность слов</value>
     </data>
     <data name="ChangeCefrLevel" xml:space="preserve">
-        <value>Изменить уровень CEFR</value>
+        <value>Изменить сложность слов</value>
+    </data>
+    <data name="AndMore" xml:space="preserve">
+        <value>и еще {0}</value>
     </data>
 </root>

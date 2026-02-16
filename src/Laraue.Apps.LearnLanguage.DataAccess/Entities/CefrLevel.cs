@@ -8,4 +8,6 @@ public sealed class CefrLevel : BaseEntity, IDictionaryEntity
     public required string Name { get; init; }
     
     public ICollection<Word> Words { get; set; } = null!;
+    
+    public ICollection<UserQuizCefrLevel> UserQuizCefrLevels { get; set; } = null!;
 }

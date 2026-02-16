@@ -8,4 +8,6 @@ public sealed class Topic : BaseEntity, IDictionaryEntity
     public required string Name { get; init; }
     
     public ICollection<WordTopic> WordTopics { get; set; } = null!;
+    
+    public ICollection<UserQuizTopic> UserQuizTopics { get; set; } = null!;
 }

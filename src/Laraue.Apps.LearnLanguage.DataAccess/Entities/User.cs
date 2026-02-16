@@ -45,24 +45,14 @@ public sealed class User : ITelegramUser<Guid>
     /// Default language to learn for the user.
     /// </summary>
     public WordLanguage LanguageToLearn { get; set; } = null!;
-
-    /// <summary>
-    /// The topic selected for quiz's. All quiz questions will be related to this topic if set.
-    /// </summary>
-    public long? QuizTopicId { get; set; }
-
-    /// <summary>
-    /// The <see cref="Topic"/> reference for selected <see cref="QuizTopicId"/>.
-    /// </summary>
-    public Topic QuizTopic { get; set; } = null!;
     
     /// <summary>
-    /// The CEFR level selected for quiz's. All quiz questions will be related to this CEFR level is set.
+    /// CEFR levels set in the settings.
     /// </summary>
-    public long? QuizCefrLevelId { get; set; }
+    public ICollection<UserQuizCefrLevel> QuizCefrLevels { get; set; } = null!;
     
     /// <summary>
-    /// The <see cref="CefrLevel"/> reference for selected <see cref="QuizCefrLevelId"/>.
+    /// Topics set in the settings.
     /// </summary>
-    public CefrLevel QuizCefrLevel { get; set; } = null!;
+    public ICollection<UserQuizTopic> UserQuizTopics { get; set; } = null!;
 }

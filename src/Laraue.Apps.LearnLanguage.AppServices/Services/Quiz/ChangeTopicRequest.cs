@@ -7,4 +7,7 @@ public record ChangeTopicRequest : WithSelectedTranslationRequest
 {
     [FromQuery(ParameterNames.TopicId)]
     public long TopicId { get; init; }
+
+    [FromQuery(ParameterNames.Enable)]
+    public bool Enable { get; init; }
 }
