@@ -27,7 +27,7 @@
         <value>Настройки</value>
     </data>
     <data name="Settings_Language" xml:space="preserve">
-        <value>Язык</value>
+        <value>Язык интерфейса</value>
     </data>
     <data name="Settings_BackButton" xml:space="preserve">
         <value>Настройки 🔙</value>
@@ -40,5 +40,8 @@
     </data>
     <data name="RepeatQuiz" xml:space="preserve">
         <value>Повторить квиз</value>
+    </data>
+    <data name="ReleaseNotes" xml:space="preserve">
+        <value>Список изменений (en)</value>
     </data>
 </root>

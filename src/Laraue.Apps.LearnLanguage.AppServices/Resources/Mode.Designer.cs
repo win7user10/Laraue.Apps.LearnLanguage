@@ -159,7 +159,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Words lists.
+        ///   Looks up a localized string similar to Words Lists.
         /// </summary>
         public static string ListMode {
             get {

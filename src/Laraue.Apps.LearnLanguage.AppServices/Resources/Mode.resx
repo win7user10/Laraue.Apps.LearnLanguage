@@ -88,7 +88,7 @@
         <value>Select the language pair. You also can set the preferred language pair in settings to select the same pair always.</value>
     </data>
     <data name="ListMode" xml:space="preserve">
-        <value>Words lists</value>
+        <value>Words Lists</value>
     </data>
     <data name="ListModeDescription" xml:space="preserve">
         <value>View all words</value>

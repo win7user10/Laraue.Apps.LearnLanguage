@@ -625,6 +625,7 @@ public class QuizService(
         Task<TopicItemDto[]> GetUserQuizTopicsAsync(
             Guid userId,
             CancellationToken ct = default);
+        
         Task<CefrLevelItemDto[]> GetUserCefrLevelsAsync(
             Guid userId,
             CancellationToken ct = default);
@@ -1038,6 +1039,7 @@ public class QuizService(
         {
             return context.UserQuizTopics
                 .Where(u => u.UserId == userId)
+                .OrderBy(u => u.Topic.Name)
                 .Select(u => new TopicItemDto
                 {
                     Name = u.Topic.Name,
@@ -1053,6 +1055,7 @@ public class QuizService(
         {
             return context.UserQuizCefrLevels
                 .Where(u => u.UserId == userId)
+                .OrderBy(u => u.CefrLevelId)
                 .Select(u => new CefrLevelItemDto
                 {
                     Name = u.CefrLevel.Name,

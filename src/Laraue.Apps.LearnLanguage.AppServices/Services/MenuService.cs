@@ -21,6 +21,8 @@ public class MenuService(
     IOptions<TelegramOptions> options)
     : IMenuService
 {
+    private const string ReleaseNotesUrl = "https://github.com/win7user10/Laraue.Apps.LearnLanguage/releases";
+    
     public Task SendMenuAsync(ReplyData replyData, CancellationToken ct = default)
     {
         var tmb = new TelegramMessageBuilder()
@@ -29,23 +31,24 @@ public class MenuService(
             .AppendRow($"<b>{QuizMode.ButtonName}</b> - {QuizMode.Description}")
             .AppendRow()
             .AppendRow($"<b>{Mode.ListMode}</b> - {Mode.ListModeDescription}")
-            .AddInlineKeyboardButtons(new[]
-            {
+            .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
                     QuizMode.ButtonName, TelegramRoutes.CurrentQuiz),
                 InlineKeyboardButton.WithCallbackData(
-                    Mode.ListMode, TelegramRoutes.ViewWordsListMenu),
-            })
-            .AddInlineKeyboardButtons(new[]
-            {
+                    Mode.ListMode, TelegramRoutes.ViewWordsListMenu)
+            ])
+            .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.Stat, TelegramRoutes.Stat)
-            })
-            .AddInlineKeyboardButtons(new[]
-            {
+            ])
+            .AddInlineKeyboardButtons([
+                InlineKeyboardButton.WithUrl(
+                    Buttons.ReleaseNotes, ReleaseNotesUrl)
+            ])
+            .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.Settings, TelegramRoutes.Settings)
-            });
+            ]);
 
         return client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }

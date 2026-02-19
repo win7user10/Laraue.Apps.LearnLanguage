@@ -25,7 +25,10 @@
         <value>Repeat Quiz</value>
     </data>
     <data name="Stat" xml:space="preserve">
-        <value>Open stat</value>
+        <value>Open Stat</value>
+    </data>
+    <data name="ReleaseNotes" xml:space="preserve">
+        <value>Release Notes</value>
     </data>
     <data name="SeeTranslation" xml:space="preserve">
         <value>See translation 👁</value>
@@ -37,7 +40,7 @@
         <value>Settings</value>
     </data>
     <data name="Settings_Language" xml:space="preserve">
-        <value>Language</value>
+        <value>Interface language</value>
     </data>
     <data name="Settings_LearnLanguage" xml:space="preserve">
         <value>Language to learn</value>
