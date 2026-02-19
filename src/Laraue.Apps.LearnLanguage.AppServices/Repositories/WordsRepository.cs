@@ -15,6 +15,7 @@ public class WordsRepository(DatabaseContext context)
                 LanguageIdToLearn = x.LanguageId,
                 LanguageCodeToLearn = x.Language.Name,
             })
+            .OrderBy(x => x.Key.LanguageCodeToLearn)
             .Select(x => new LearningLanguagePair(
                 new LearningLanguagePairItem(x.Key.LanguageIdToLearn, x.Key.LanguageCodeToLearn),
                 x.Count()))

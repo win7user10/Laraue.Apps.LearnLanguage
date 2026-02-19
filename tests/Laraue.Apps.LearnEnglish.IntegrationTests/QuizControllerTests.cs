@@ -42,13 +42,13 @@ Select the language pair. You also can set the preferred language pair in settin
         request.CheckMessage(excepted);
         request.CheckButtonsSequentially(assert =>
             assert
-                .HasButtonsRow(new ButtonAssert("en < - > hi (5948)", "quiz?lt=8"))
-                .HasButtonsRow(new ButtonAssert("en < - > es (5948)", "quiz?lt=5"))
-                .HasButtonsRow(new ButtonAssert("en < - > ja (5948)", "quiz?lt=4"))
-                .HasButtonsRow(new ButtonAssert("en < - > zh (5948)", "quiz?lt=7"))
                 .HasButtonsRow(new ButtonAssert("en < - > de (5948)", "quiz?lt=6"))
-                .HasButtonsRow(new ButtonAssert("en < - > ru (5948)", "quiz?lt=2"))
+                .HasButtonsRow(new ButtonAssert("en < - > es (5948)", "quiz?lt=5"))
                 .HasButtonsRow(new ButtonAssert("en < - > fr (5948)", "quiz?lt=3"))
+                .HasButtonsRow(new ButtonAssert("en < - > hi (5948)", "quiz?lt=8"))
+                .HasButtonsRow(new ButtonAssert("en < - > ja (5948)", "quiz?lt=4"))
+                .HasButtonsRow(new ButtonAssert("en < - > ru (5948)", "quiz?lt=2"))
+                .HasButtonsRow(new ButtonAssert("en < - > zh (5948)", "quiz?lt=7"))
                 .HasButtonsRow(new ButtonAssert("Menu", "m")));
     }
     
