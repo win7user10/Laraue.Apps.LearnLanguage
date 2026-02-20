@@ -126,6 +126,7 @@ public class QuestionsGenerator(
     {
         var optionsData = await context.Translations
             .Where(x => x.LanguageId == languageId)
+            .OrderBy(x => x.WordId)
             .Select(x => new
             {
                 x.WordId,
@@ -169,7 +170,7 @@ public class QuestionsGenerator(
             {
                 while (true)
                 {
-                    var nextOptionIndex = randomizer.NextRandomValue(0, availableOptionIds.Length);
+                    var nextOptionIndex = randomizer.NextRandomValue(0, availableOptionIds.Length - 1);
                     var option = availableOptionIds[nextOptionIndex];
 
                     if (generatedOptions.Contains(option.WordId) || usedTranslationHashes.Contains(option.HashCode))
