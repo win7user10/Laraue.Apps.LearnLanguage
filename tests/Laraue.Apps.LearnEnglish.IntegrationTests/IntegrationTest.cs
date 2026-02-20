@@ -27,9 +27,9 @@ public class IntegrationTest
             .Services
             .Replace(
                 new ServiceDescriptor(
-                    typeof(IQuestionsOrderRandomizer), 
+                    typeof(IRandomizer), 
                     null,
-                    typeof(DeterminedOrderRandomizer),
+                    typeof(DeterminedRandomizer),
                     ServiceLifetime.Singleton));
         
         return new AppTelegramTestHost(appServices);
@@ -41,8 +41,10 @@ public class IntegrationTest
         Username = "user1",
     };
 
-    private class DeterminedOrderRandomizer : IQuestionsOrderRandomizer
+    private class DeterminedRandomizer : IRandomizer
     {
+        private int _nextRandomValue;
+        
         public IQueryable<NewQuestionDto> InRandomOrder(IQueryable<NewQuestionDto> queryable)
         {
             return queryable
@@ -53,6 +55,21 @@ public class IntegrationTest
         public IEnumerable<NewQuestionDto> InRandomOrder(IEnumerable<NewQuestionDto> enumerable)
         {
             return InRandomOrder(enumerable.AsQueryable());
+        }
+
+        public int NextRandomValue(int minValue, int maxValue)
+        {
+            if (_nextRandomValue < minValue)
+            {
+                _nextRandomValue = minValue;
+            }
+
+            if (_nextRandomValue > maxValue)
+            {
+                _nextRandomValue = minValue;
+            }
+            
+            return _nextRandomValue++;
         }
     }
 }

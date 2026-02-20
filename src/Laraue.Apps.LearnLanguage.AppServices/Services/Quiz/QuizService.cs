@@ -834,6 +834,7 @@ public class QuizService(
                     WordId = x.WordId,
                     Text = x.Text,
                 })
+                .OrderBy(x => x.Text)
                 .ToArrayAsyncEF(ct);
 
             return new FlashCardsDto

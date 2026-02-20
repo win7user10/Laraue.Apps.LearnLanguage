@@ -18,7 +18,7 @@ public interface IQuestionsGenerator
 
 public class QuestionsGenerator(
     DatabaseContext context,
-    IQuestionsOrderRandomizer questionsOrderRandomizer)
+    IRandomizer randomizer)
     : IQuestionsGenerator
 {
     public async Task<NewQuestionDto[]> GenerateQuestions(
@@ -51,7 +51,7 @@ public class QuestionsGenerator(
                 .Where(x => cefrLevelIds
                     .Any(cefrLevelId => x.Word.CefrLevelId == cefrLevelId));
 
-        var oldQuestions = await questionsOrderRandomizer.InRandomOrder(metWordsQuery
+        var oldQuestions = await randomizer.InRandomOrder(metWordsQuery
             .Where(x => x.LearnedAt != null)
             .Select(x => new NewQuestionDto
             {
@@ -65,7 +65,7 @@ public class QuestionsGenerator(
         // If remember words are less than excepted, request more words to repeat
         var repeatWordsCount = preferredRepeatWordsCount + preferredRememberWordsCount - oldQuestions.Count;
         
-        var repeatQuestions = await questionsOrderRandomizer.InRandomOrder(metWordsQuery
+        var repeatQuestions = await randomizer.InRandomOrder(metWordsQuery
             .Where(x => x.LearnedAt == null)
             .Select(x => new NewQuestionDto
             {
@@ -98,7 +98,7 @@ public class QuestionsGenerator(
                 .Where(q => cefrLevelIds
                     .Any(cefrLevelId => q.translation.Word.CefrLevelId == cefrLevelId));
         
-        var newQuestions = await questionsOrderRandomizer.InRandomOrder(newQuestionsQuery
+        var newQuestions = await randomizer.InRandomOrder(newQuestionsQuery
             .Select(x => new NewQuestionDto
             {
                 WordId = x.translation.WordId,
@@ -108,7 +108,7 @@ public class QuestionsGenerator(
             .Take(newQuestionsCount))
             .ToListAsyncEF(ct);
 
-        var allQuestions = questionsOrderRandomizer.InRandomOrder(oldQuestions
+        var allQuestions = randomizer.InRandomOrder(oldQuestions
             .Union(repeatQuestions)
             .Union(newQuestions))
             .ToArray();
@@ -169,7 +169,7 @@ public class QuestionsGenerator(
             {
                 while (true)
                 {
-                    var nextOptionIndex = Random.Shared.Next(0, availableOptionIds.Length);
+                    var nextOptionIndex = randomizer.NextRandomValue(0, availableOptionIds.Length);
                     var option = availableOptionIds[nextOptionIndex];
 
                     if (generatedOptions.Contains(option.WordId) || usedTranslationHashes.Contains(option.HashCode))

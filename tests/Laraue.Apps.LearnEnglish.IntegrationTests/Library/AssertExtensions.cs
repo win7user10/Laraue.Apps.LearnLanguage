@@ -97,7 +97,7 @@ public static class AssertExtensions
             catch (Exception e)
             {
                 throw new TelegramNetAssertException(
-                    $"Assert for button row #{row} failed.{Environment.NewLine}{e.Message}");
+                    $"Assert for button row #{row + 1} failed.{Environment.NewLine}{e.Message}");
             }
         }
     }

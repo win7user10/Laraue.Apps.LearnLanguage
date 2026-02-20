@@ -129,6 +129,25 @@ Total learned: <b>0 / 5948</b>
             Question <b>1/20</b>
             Select the translation for <b>a</b> (indefinite article, A1)
             """);
+        
+        request.CheckButtonsSequentially(buttons => 
+            buttons
+                .HasButtonsRow(
+                    new ButtonAssert("Аборт", "1 sa?ow=6"),
+                    new ButtonAssert("О", "1 sa?ow=8"))
+                .HasButtonsRow(
+                    new ButtonAssert("Один", "1 sa?ow=1"),
+                    new ButtonAssert("Около", "1 sa?ow=7"))
+                .HasButtonsRow(
+                    new ButtonAssert("Отменить", "1 sa?ow=5"),
+                    new ButtonAssert("Покидать", "1 sa?ow=2"))
+                .HasButtonsRow(
+                    new ButtonAssert("Способность", "1 sa?ow=3"),
+                    new ButtonAssert("Способный", "1 sa?ow=4"))
+                .HasButtonsRow(new ButtonAssert("Skip", "1 sa?ow=0"))
+                .HasButtonsRow(new ButtonAssert("Finish quiz", "1 fq"))
+                .HasButtonsRow(new ButtonAssert("Menu", "m"))
+            );
 
         var quiz = Assert.Single(telegramTestHost.GetFromDb(x => x.UserQuizzes.ToArray()));
         Assert.Equal(ruLanguageId, quiz.LanguageId);

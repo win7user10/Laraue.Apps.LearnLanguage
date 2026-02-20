@@ -1,12 +1,13 @@
 ﻿namespace Laraue.Apps.LearnLanguage.AppServices.Services;
 
-public interface IQuestionsOrderRandomizer
+public interface IRandomizer
 {
     IQueryable<NewQuestionDto> InRandomOrder(IQueryable<NewQuestionDto> queryable);
     IEnumerable<NewQuestionDto> InRandomOrder(IEnumerable<NewQuestionDto> enumerable);
+    int NextRandomValue(int minValue, int maxValue);
 }
 
-public class QuestionsOrderRandomizer : IQuestionsOrderRandomizer
+public class Randomizer : IRandomizer
 {
     public IQueryable<NewQuestionDto> InRandomOrder(IQueryable<NewQuestionDto> queryable)
     {
@@ -18,5 +19,10 @@ public class QuestionsOrderRandomizer : IQuestionsOrderRandomizer
     {
         return enumerable
             .OrderBy(x => Guid.NewGuid());
+    }
+
+    public int NextRandomValue(int minValue, int maxValue)
+    {
+        return Random.Shared.Next(minValue, maxValue);
     }
 }
