@@ -19,8 +19,8 @@ public class StartControllerTests : IntegrationTest
             }
         });
 
-        Assert.Single(telegramTestHost.Get(db => db.Users.ToList()));
-        Assert.Empty(telegramTestHost.Get(db => db.UtmLabels.ToArray()));
+        Assert.Single(telegramTestHost.GetFromDb(db => db.Users.ToList()));
+        Assert.Empty(telegramTestHost.GetFromDb(db => db.UtmLabels.ToArray()));
     }
     
     [Fact]
@@ -37,9 +37,9 @@ public class StartControllerTests : IntegrationTest
             }
         });
 
-        var user = Assert.Single(telegramTestHost.Get(db => db.Users.ToArray()));
+        var user = Assert.Single(telegramTestHost.GetFromDb(db => db.Users.ToArray()));
         
-        var dbLabels = telegramTestHost.Get(db => db.UtmLabels.ToList());
+        var dbLabels = telegramTestHost.GetFromDb(db => db.UtmLabels.ToList());
         Assert.Equal(2, dbLabels.Count);
         Assert.All(dbLabels, label => Assert.Equal(user.Id, label.UserId));
         Assert.Contains(dbLabels, l => l is { Name: "source", Value: "city1" });

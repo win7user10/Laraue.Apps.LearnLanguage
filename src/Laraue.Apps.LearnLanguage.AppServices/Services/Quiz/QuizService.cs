@@ -452,7 +452,7 @@ public class QuizService(
         if (!string.IsNullOrEmpty(data.CefrLevel))
             tmb.Append($", {data.CefrLevel}");
 
-        tmb.AppendRow(")");
+        tmb.Append(")");
 
         foreach (var flashCardsChunk in data.FlashCards.Chunk(2))
         {

@@ -16,7 +16,10 @@ public interface IQuestionsGenerator
         CancellationToken ct);
 }
 
-public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
+public class QuestionsGenerator(
+    DatabaseContext context,
+    IQuestionsOrderRandomizer questionsOrderRandomizer)
+    : IQuestionsGenerator
 {
     public async Task<NewQuestionDto[]> GenerateQuestions(
         Guid userId,
@@ -48,30 +51,28 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
                 .Where(x => cefrLevelIds
                     .Any(cefrLevelId => x.Word.CefrLevelId == cefrLevelId));
 
-        var oldQuestions = await metWordsQuery
+        var oldQuestions = await questionsOrderRandomizer.InRandomOrder(metWordsQuery
             .Where(x => x.LearnedAt != null)
             .Select(x => new NewQuestionDto
             {
                 WordId = x.Translation.WordId,
                 PartOfSpeechId = x.Translation.Word.PartOfSpeechId,
                 TranslationHashCode = x.Translation.Text.GetHashCode(),
-            })
-            .OrderBy(x => Guid.NewGuid())
+            }))
             .Take(preferredRememberWordsCount)
             .ToListAsyncEF(ct);
         
         // If remember words are less than excepted, request more words to repeat
         var repeatWordsCount = preferredRepeatWordsCount + preferredRememberWordsCount - oldQuestions.Count;
         
-        var repeatQuestions = await metWordsQuery
+        var repeatQuestions = await questionsOrderRandomizer.InRandomOrder(metWordsQuery
             .Where(x => x.LearnedAt == null)
             .Select(x => new NewQuestionDto
             {
                 WordId = x.Translation.WordId,
                 PartOfSpeechId = x.Translation.Word.PartOfSpeechId,
                 TranslationHashCode = x.Translation.Text.GetHashCode(),
-            })
-            .OrderBy(x => Guid.NewGuid())
+            }))
             .Take(repeatWordsCount)
             .ToListAsyncEF(ct);
         
@@ -97,21 +98,19 @@ public class QuestionsGenerator(DatabaseContext context) : IQuestionsGenerator
                 .Where(q => cefrLevelIds
                     .Any(cefrLevelId => q.translation.Word.CefrLevelId == cefrLevelId));
         
-        var newQuestions = await newQuestionsQuery
-            .OrderBy(x => SqlFunctions.NewGuid())
-            .Take(newQuestionsCount)
+        var newQuestions = await questionsOrderRandomizer.InRandomOrder(newQuestionsQuery
             .Select(x => new NewQuestionDto
             {
                 WordId = x.translation.WordId,
                 PartOfSpeechId = x.translation.Word.PartOfSpeechId,
                 TranslationHashCode = x.translation.Text.GetHashCode(),
             })
+            .Take(newQuestionsCount))
             .ToListAsyncEF(ct);
 
-        var allQuestions = oldQuestions
+        var allQuestions = questionsOrderRandomizer.InRandomOrder(oldQuestions
             .Union(repeatQuestions)
-            .Union(newQuestions)
-            .OrderBy(_ => Guid.NewGuid())
+            .Union(newQuestions))
             .ToArray();
         
         await EnrichOptions(languageId, optionsCount, allQuestions, ct);

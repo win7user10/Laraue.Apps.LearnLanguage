@@ -7,7 +7,7 @@ public static class TelegramTestHostExtensions
 {
     extension(AppTelegramTestHost telegramTestHost)
     {
-        public T Get<T>(Func<DatabaseContext, T> getData) where T : class
+        public T GetFromDb<T>(Func<DatabaseContext, T> getData) where T : class
         {
             using var scope = telegramTestHost.CreateScope();
             
@@ -16,7 +16,7 @@ public static class TelegramTestHostExtensions
             return getData(dbContext);
         }
         
-        public async Task InsertIntoDbAsync<T>(T entity) where T : class
+        public void InsertIntoDb<T>(T entity) where T : class
         {
             using var scope = telegramTestHost.CreateScope();
             
@@ -24,7 +24,7 @@ public static class TelegramTestHostExtensions
             
             dbContext.Add(entity);
             
-            await dbContext.SaveChangesAsync();
+            dbContext.SaveChanges();
         }
     }
 }

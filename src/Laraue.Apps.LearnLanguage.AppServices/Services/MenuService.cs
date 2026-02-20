@@ -42,12 +42,12 @@ public class MenuService(
                     Buttons.Stat, TelegramRoutes.Stat)
             ])
             .AddInlineKeyboardButtons([
-                InlineKeyboardButton.WithUrl(
-                    Buttons.ReleaseNotes, ReleaseNotesUrl)
-            ])
-            .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.Settings, TelegramRoutes.Settings)
+            ])
+            .AddInlineKeyboardButtons([
+                InlineKeyboardButton.WithUrl(
+                    Buttons.ReleaseNotes, ReleaseNotesUrl)
             ]);
 
         return client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);

@@ -66,6 +66,7 @@ public static class WebApplicationBuilderExtensions
         {
             builder.Services
                 .AddSingleton<IDateTimeProvider, DateTimeProvider>()
+                .AddSingleton<IQuestionsOrderRandomizer, QuestionsOrderRandomizer>()
                 .AddTelegramCore()
                 .AddEfCoreUpdatesQueue<DatabaseContext>()
                 .AddTelegramMiddleware<HandleExceptionsMiddleware>()

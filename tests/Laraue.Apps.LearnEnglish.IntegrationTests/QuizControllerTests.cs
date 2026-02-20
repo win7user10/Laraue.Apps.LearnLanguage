@@ -1,6 +1,8 @@
 ﻿using Laraue.Apps.LearnEnglish.IntegrationTests.Library;
 using Laraue.Apps.LearnLanguage.AppServices;
+using Laraue.Apps.LearnLanguage.AppServices.Repositories.Contracts;
 using Laraue.Apps.LearnLanguage.DataAccess;
+using Laraue.Telegram.NET.Core.Routing;
 using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Xunit;
@@ -52,12 +54,11 @@ Select the language pair. You also can set the preferred language pair in settin
                 .HasButtonsRow(new ButtonAssert("Menu", "m")));
     }
     
-    
     [Fact]
     public async Task CurrentQuiz_ShouldOpenStartWindow_WhenLanguageSetInSettings()
     {
         using var telegramTestHost = GetTelegramTestHost();
-        await telegramTestHost.InsertIntoDbAsync(new User
+        telegramTestHost.InsertIntoDb(new User
         {
             TelegramId = DefaultUser.Id,
             LanguageToLearnId = DefaultContextData.GetWordLanguages().GetId("ru")
@@ -97,5 +98,43 @@ Total incorrect answers: <b>0</b>
 Total skipped answers: <b>0</b>
 Total learned: <b>0 / 5948</b>
 """);
+    }
+    
+    [Fact]
+    public async Task StartQuiz_ShouldStartQuizAndPrintFirstQuestion_Always()
+    {
+        using var telegramTestHost = GetTelegramTestHost();
+        var ruLanguageId = DefaultContextData.GetWordLanguages().GetId("ru");
+
+        await telegramTestHost.SendUpdateAsync(new Update
+        {
+            CallbackQuery = new CallbackQuery
+            {
+                From = DefaultUser,
+                Data = new CallbackRoutePath(TelegramRoutes.StartQuiz, RouteMethod.Post)
+                    .WithTranslationDirection(new SelectedTranslation(ruLanguageId)),
+                Message = new Message
+                {
+                    Id = 1
+                }
+            }
+        });
+
+        var request = telegramTestHost
+            .Requests()
+            .Single<EditMessageTextRequest>();
+        
+        request.CheckMessage(
+            """
+            Question <b>1/20</b>
+            Select the translation for <b>a</b> (indefinite article, A1)
+            """);
+
+        var quiz = Assert.Single(telegramTestHost.GetFromDb(x => x.UserQuizzes.ToArray()));
+        Assert.Equal(ruLanguageId, quiz.LanguageId);
+        Assert.Null(quiz.FinishedAt);
+
+        var quizQuestions = telegramTestHost.GetFromDb(x => x.UserQuizQuestions.ToArray());
+        Assert.Equal(20, quizQuestions.Length);
     }
 }
