@@ -1,8 +1,8 @@
-﻿using Laraue.Apps.LearnEnglish.IntegrationTests.Library;
-using Laraue.Apps.LearnLanguage.AppServices;
+﻿using Laraue.Apps.LearnLanguage.AppServices;
 using Laraue.Apps.LearnLanguage.AppServices.Repositories.Contracts;
 using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Telegram.NET.Core.Routing;
+using Laraue.Telegram.NET.Testing;
 using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Xunit;

@@ -1,6 +1,6 @@
-﻿using Laraue.Apps.LearnEnglish.IntegrationTests.Library;
-using Laraue.Apps.LearnLanguage.DataAccess;
+﻿using Laraue.Apps.LearnLanguage.DataAccess;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
+using Laraue.Telegram.NET.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
