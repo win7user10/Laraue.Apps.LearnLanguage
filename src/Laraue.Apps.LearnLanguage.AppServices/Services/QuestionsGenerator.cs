@@ -104,8 +104,8 @@ public class QuestionsGenerator(
                 WordId = x.translation.WordId,
                 PartOfSpeechId = x.translation.Word.PartOfSpeechId,
                 TranslationHashCode = x.translation.Text.GetHashCode(),
-            })
-            .Take(newQuestionsCount))
+            }))
+            .Take(newQuestionsCount)
             .ToListAsyncEF(ct);
 
         var allQuestions = randomizer.InRandomOrder(oldQuestions
