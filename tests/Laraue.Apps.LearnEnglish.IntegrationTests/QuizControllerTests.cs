@@ -123,6 +123,13 @@ Total learned: <b>0 / 5948</b>
         var request = telegramTestHost
             .Requests()
             .Single<EditMessageTextRequest>();
+
+        var firstQuestionOfQuiz = telegramTestHost.GetFromDb(db => db
+            .UserQuizQuestions
+            .OrderBy(q => q.Id)
+            .First());
+
+        var questionId = firstQuestionOfQuiz.Id;
         
         request.CheckMessage(
             """
@@ -133,18 +140,18 @@ Total learned: <b>0 / 5948</b>
         request.CheckButtonsSequentially(buttons => 
             buttons
                 .HasButtonsRow(
-                    new ButtonAssert("Аборт", "1 sa?ow=6"),
-                    new ButtonAssert("О", "1 sa?ow=8"))
+                    new ButtonAssert("Аборт", $"1 sa?q={questionId}&a=6"),
+                    new ButtonAssert("О", $"1 sa?q={questionId}&a=8"))
                 .HasButtonsRow(
-                    new ButtonAssert("Один", "1 sa?ow=1"),
-                    new ButtonAssert("Около", "1 sa?ow=7"))
+                    new ButtonAssert("Один", $"1 sa?q={questionId}&a=1"),
+                    new ButtonAssert("Около", $"1 sa?q={questionId}&a=7"))
                 .HasButtonsRow(
-                    new ButtonAssert("Отменить", "1 sa?ow=5"),
-                    new ButtonAssert("Покидать", "1 sa?ow=2"))
+                    new ButtonAssert("Отменить", $"1 sa?q={questionId}&a=5"),
+                    new ButtonAssert("Покидать", $"1 sa?q={questionId}&a=2"))
                 .HasButtonsRow(
-                    new ButtonAssert("Способность", "1 sa?ow=3"),
-                    new ButtonAssert("Способный", "1 sa?ow=4"))
-                .HasButtonsRow(new ButtonAssert("Skip", "1 sa?ow=0"))
+                    new ButtonAssert("Способность", $"1 sa?q={questionId}&a=3"),
+                    new ButtonAssert("Способный", $"1 sa?q={questionId}&a=4"))
+                .HasButtonsRow(new ButtonAssert("Skip", $"1 sa?q={questionId}&a=0"))
                 .HasButtonsRow(new ButtonAssert("Finish quiz", "1 fq"))
                 .HasButtonsRow(new ButtonAssert("Menu", "m"))
             );
