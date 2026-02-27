@@ -290,6 +290,7 @@ public class QuizService(
         
         var result = await HandleSelectedOptionAsync(
             replyData.UserId,
+            request.QuestionId,
             request.SelectedOptionId,
             ct);
 
@@ -460,14 +461,16 @@ public class QuizService(
                 .Select(x => InlineKeyboardButton.WithCallbackData(
                     System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Text),
                     new CallbackRoutePath(TelegramRoutes.SelectQuizAnswer, RouteMethod.Post)
-                        .WithQueryParameter(ParameterNames.OpenedWordId, x.WordId))));
+                        .WithQueryParameter(ParameterNames.QuestionId, data.QuestionId)
+                        .WithQueryParameter(ParameterNames.AnswerWordId, x.WordId))));
         }
 
         tmb.AddInlineKeyboardButtons([
             InlineKeyboardButton.WithCallbackData(
                 QuizMode.SkipButtonName,
                 new CallbackRoutePath(TelegramRoutes.SelectQuizAnswer, RouteMethod.Post)
-                    .WithQueryParameter(ParameterNames.OpenedWordId, NullOptionId))
+                    .WithQueryParameter(ParameterNames.QuestionId, data.QuestionId)
+                    .WithQueryParameter(ParameterNames.AnswerWordId, NullOptionId))
         ]);
         
         tmb.AddInlineKeyboardButtons([
@@ -559,25 +562,29 @@ public class QuizService(
     }
 
     /// <returns>True if request handled and processing should be stopped.</returns>
-    private async Task<HandleSelectedOptionResponse> HandleSelectedOptionAsync(
+    private async Task<HandleSelectedOptionResponse?> HandleSelectedOptionAsync(
         Guid userId,
+        long questionId,
         long selectedOptionId,
         CancellationToken ct = default)
     {
-        var question = await repository.GetQuestion(userId, ct);
+        var currentQuestion = await repository.GetQuestion(userId, ct);
+        if (currentQuestion.QuestionId != questionId)
+            // Race condition, the answer is already processed
+            return null;
 
         var status = selectedOptionId == NullOptionId
             ? UserQuizQuestionStatus.Skipped
-            : selectedOptionId == question.CorrectWordId
+            : selectedOptionId == currentQuestion.CorrectWordId
                 ? UserQuizQuestionStatus.Correct
                 : UserQuizQuestionStatus.Incorrect;
         
-        await repository.SetQuizQuestionStatus(question.QuestionId, status, ct);
+        await repository.SetQuizQuestionStatus(currentQuestion.QuestionId, status, ct);
 
         var increaseWinStreak = status == UserQuizQuestionStatus.Correct;
         await repository.UpdateTranslationWinStreakAsync(
-            question.CorrectWordId,
-            question.LanguageId,
+            currentQuestion.CorrectWordId,
+            currentQuestion.LanguageId,
             userId,
             increaseWinStreak,
             ct);
@@ -585,7 +592,7 @@ public class QuizService(
         return new HandleSelectedOptionResponse
         {
             Status = status,
-            QuestionDto = question
+            QuestionDto = currentQuestion
         };
     }
 
@@ -700,6 +707,7 @@ public class QuizService(
         public required string PartOfSpeech { get; set; }
         public required string? CefrLevel { get; set; }
         public required FlashCard[] FlashCards { get; set; }
+        public required long QuestionId { get; set; }
     }
 
     public class QuestionDto
@@ -819,6 +827,7 @@ public class QuizService(
                 .OrderBy(x => x.Id)
                 .Select(x => new
                 {
+                    x.Id,
                     x.OptionIds,
                     x.Word.Text,
                     PartOfSpeech = x.Word.PartOfSpeech!.Name,
@@ -843,6 +852,7 @@ public class QuizService(
                 FlashCards = flashCards,
                 PartOfSpeech = nextQuizQuestion.PartOfSpeech,
                 CefrLevel = nextQuizQuestion.CefrLevel,
+                QuestionId = nextQuizQuestion.Id,
             };
         }
 
