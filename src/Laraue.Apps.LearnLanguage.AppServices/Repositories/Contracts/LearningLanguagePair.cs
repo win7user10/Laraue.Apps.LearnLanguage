@@ -2,4 +2,4 @@
 
 public sealed record LearningLanguagePair(LearningLanguagePairItem LanguageToLearn, int Count);
 
-public sealed record LearningLanguagePairItem(long Id, string Code);
+public sealed record LearningLanguagePairItem(long Id, string Code, string Title);

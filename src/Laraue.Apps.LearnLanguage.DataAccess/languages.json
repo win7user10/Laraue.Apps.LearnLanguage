@@ -1,34 +1,42 @@
 ﻿[
   {
     "name": "en",
+    "description": "English",
     "id": 1
   },
   {
     "name": "ru",
+    "description": "Russian",
     "id": 2
   },
   {
     "name": "fr",
+    "description": "French",
     "id": 3
   },
   {
     "name": "ja",
+    "description": "Japanese",
     "id": 4
   },
   {
     "name": "es",
+    "description": "Spanish",
     "id": 5
   },
   {
     "name": "de",
+    "description": "German",
     "id": 6
   },
   {
     "name": "zh",
+    "description": "Chinese",
     "id": 7
   },
   {
     "name": "hi",
+    "description": "Hindi",
     "id": 8
   }
 ]

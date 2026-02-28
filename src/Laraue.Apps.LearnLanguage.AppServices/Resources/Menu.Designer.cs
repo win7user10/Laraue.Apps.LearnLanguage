@@ -60,7 +60,10 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Welcome to learn english channel. To start learning words, please press the button below..
+        ///   Looks up a localized string similar to Welcome to the Bot!
+        ///
+        ///Select the preferable language pair for your first quiz.
+        ///        .
         /// </summary>
         public static string Start {
             get {

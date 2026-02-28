@@ -12,4 +12,10 @@ public sealed class WordLanguage : BaseEntity, IDictionaryEntity
     /// </summary>
     [MaxLength(2)]
     public string Name { get; init; } = string.Empty;
+    
+    /// <summary>
+    /// The language readable name.
+    /// </summary>
+    [MaxLength(20)]
+    public string Description { get; init; } = string.Empty;
 }

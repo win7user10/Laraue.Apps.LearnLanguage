@@ -1,4 +1,4 @@
-﻿using Telegram.Bot.Types;
+﻿using Laraue.Apps.LearnLanguage.AppServices.Services.Quiz;
 
 namespace Laraue.Apps.LearnLanguage.AppServices.Services;
 
@@ -20,6 +20,11 @@ public interface IMenuService
     Task StartAsync(
         string rawCommand,
         Guid userId,
-        ChatId telegramId,
+        long telegramId,
+        CancellationToken ct = default);
+
+    Task HandleApplyStartSettingsAsync(
+        ApplyStartSettingsRequest request,
+        ReplyData replyData,
         CancellationToken ct = default);
 }

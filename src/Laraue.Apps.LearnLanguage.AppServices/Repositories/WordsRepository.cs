@@ -14,10 +14,11 @@ public class WordsRepository(DatabaseContext context)
             {
                 LanguageIdToLearn = x.LanguageId,
                 LanguageCodeToLearn = x.Language.Name,
+                Title = x.Language.Description,
             })
             .OrderBy(x => x.Key.LanguageCodeToLearn)
             .Select(x => new LearningLanguagePair(
-                new LearningLanguagePairItem(x.Key.LanguageIdToLearn, x.Key.LanguageCodeToLearn),
+                new LearningLanguagePairItem(x.Key.LanguageIdToLearn, x.Key.LanguageCodeToLearn, x.Key.Title),
                 x.Count()))
             .ToListAsyncLinqToDB(ct);
     }

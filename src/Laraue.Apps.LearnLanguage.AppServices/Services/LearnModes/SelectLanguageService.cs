@@ -58,30 +58,41 @@ public class SelectLanguageService(
             : null;
     }
 
+    public async Task AppendLanguagePairButtonsAsync(
+        TelegramMessageBuilder messageBuilder,
+        CallbackRoutePath nextRoute,
+        CancellationToken ct)
+    {
+        var availablePairs = await wordsRepository.GetAvailableLearningPairsAsync(ct);
+
+        var immutableRoute = nextRoute.Freeze();
+        
+        foreach (var pair in availablePairs)
+        {
+            var button = immutableRoute
+                .WithTranslationDirection(
+                    new SelectedTranslation(
+                        pair.LanguageToLearn.Id))
+                .ToInlineKeyboardButton($"English < - > {pair.LanguageToLearn.Title}");
+            
+            messageBuilder.AddInlineKeyboardButtons([button]);
+        }
+    }
+    
+
     private async Task SendRequestLanguageWindowAsync(
         string windowTitle,
         TelegramMessageId replyData,
         CallbackRoutePath nextRoute,
         CancellationToken ct = default)
     {
-        var availablePairs = await wordsRepository.GetAvailableLearningPairsAsync(ct);
-        
         var tmb = new TelegramMessageBuilder()
             .AppendRow($"<b>{windowTitle}</b>")
             .AppendRow()
             .Append(Mode.SelectLanguage);
-
-        foreach (var pair in availablePairs)
-        {
-            var button = nextRoute
-                .WithTranslationDirection(
-                    new SelectedTranslation(
-                        pair.LanguageToLearn.Id))
-                .ToInlineKeyboardButton($"en < - > {pair.LanguageToLearn.Code} ({pair.Count})");
-            
-            tmb.AddInlineKeyboardButtons([button]);
-        }
-
+        
+        await AppendLanguagePairButtonsAsync(tmb, nextRoute, ct);
+        
         tmb.AddMainMenuButton();
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
