@@ -3,13 +3,13 @@
 The repository contains the backend of Telegram bot allows to learn translations of the top 5000+ most used english words
 passing quizes. Deployed bot can be found in [Telegram](https://t.me/learn_lang_bot?start=source-github).
 
+Each word has it's own CEFR level and related topics. That allows to setup quizes 
+to learn preffered words first of all.
+
+### Bot interface example
 <img width="215" height="217" alt="Quiz is ready View" src="https://github.com/user-attachments/assets/ffa94a55-ad04-4db2-8525-ec02204b019d" />
 <img width="250" height="257" alt="Select the quiz answer View" src="https://github.com/user-attachments/assets/59822e62-0328-4a35-a70b-b543856961ab" />
 <img width="236" height="451" alt="Quiz results View" src="https://github.com/user-attachments/assets/ebbe43c2-289d-481b-840c-779c3beecbb1" />
-
-
-Each word has it's own CEFR level and related topics. That allows to setup quizes 
-to learn preffered words first of all.
 
 ### How to add new or edit old words
 1. Edit [translations.json](src/Laraue.Apps.LearnLanguage.DataAccess/translations.json)
