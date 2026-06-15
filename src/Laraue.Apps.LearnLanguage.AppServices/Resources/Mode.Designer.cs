@@ -240,7 +240,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select the language pair. You also can set the preferred language pair in settings to select the same pair always..
+        ///   Looks up a localized string similar to 💡 Set a default pair in ⚙️ Settings to skip this step next time..
         /// </summary>
         public static string SelectLanguage {
             get {

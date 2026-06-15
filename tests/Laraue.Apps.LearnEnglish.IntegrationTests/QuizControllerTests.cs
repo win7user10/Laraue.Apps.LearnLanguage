@@ -32,9 +32,9 @@ public class QuizControllerTests : IntegrationTest
 
         const string excepted =
 """
-<b>Quiz Mode</b>
+<b>🎯 New Quiz</b>
 
-Select the language pair. You also can set the preferred language pair in settings to select the same pair always.
+💡 Set a default pair in ⚙️ Settings to skip this step next time.
 """;
 
         var request = telegramTestHost
@@ -44,13 +44,13 @@ Select the language pair. You also can set the preferred language pair in settin
         request.CheckMessage(excepted);
         request.CheckButtonsSequentially(assert =>
             assert
-                .HasButtonsRow(new ButtonAssert("English < - > German", "quiz?lt=6"))
-                .HasButtonsRow(new ButtonAssert("English < - > Spanish", "quiz?lt=5"))
-                .HasButtonsRow(new ButtonAssert("English < - > French", "quiz?lt=3"))
-                .HasButtonsRow(new ButtonAssert("English < - > Hindi", "quiz?lt=8"))
-                .HasButtonsRow(new ButtonAssert("English < - > Japanese", "quiz?lt=4"))
-                .HasButtonsRow(new ButtonAssert("English < - > Russian", "quiz?lt=2"))
-                .HasButtonsRow(new ButtonAssert("English < - > Chinese", "quiz?lt=7"))
+                .HasButtonsRow(new ButtonAssert("English → German", "quiz?lt=6"))
+                .HasButtonsRow(new ButtonAssert("English → Spanish", "quiz?lt=5"))
+                .HasButtonsRow(new ButtonAssert("English → French", "quiz?lt=3"))
+                .HasButtonsRow(new ButtonAssert("English → Hindi", "quiz?lt=8"))
+                .HasButtonsRow(new ButtonAssert("English → Japanese", "quiz?lt=4"))
+                .HasButtonsRow(new ButtonAssert("English → Russian", "quiz?lt=2"))
+                .HasButtonsRow(new ButtonAssert("English → Chinese", "quiz?lt=7"))
                 .HasButtonsRow(new ButtonAssert("Menu", "m")));
     }
     
@@ -83,20 +83,18 @@ Select the language pair. You also can set the preferred language pair in settin
         
         request.CheckMessage(
 """
-<b>Quiz is ready to start</b>
+<b>🎯 Quiz is ready</b>
 
-Topics: <b>Not set</b>
-CEFR Levels: <b>Not set</b>
-Questions will be asked: <b>20</b>
-Total possible questions by current criteria: <b>5948</b>
-Language pair: <b>en -> ru</b>
-Question options count: <b>8</b>
+Language: <b>English → Russian</b>
+Topics: <b>All</b>
+CEFR Levels: <b>All (A1-C1)</b>
+Questions: <b>20</b>
 
-<b>Stats for the selected criteria</b>
-Total correct answers: <b>0</b>
-Total incorrect answers: <b>0</b>
-Total skipped answers: <b>0</b>
-Total learned: <b>0 / 5948</b>
+You progress for these settings
+✅ Correct: <b>0</b>
+❌ Incorrect: <b>0</b>
+⏭ Skipped: <b>0</b>
+🔷 Learned: <b>0 / 5948</b> meanings
 """);
     }
     
@@ -133,8 +131,10 @@ Total learned: <b>0 / 5948</b>
         
         request.CheckMessage(
             """
-            Question <b>1/20</b>
-            Select the translation for <b>a</b> (indefinite article, A1)
+            Question 1/20
+            
+            <b>a</b>
+            indefinite article · A1
             """);
         
         request.CheckButtonsSequentially(buttons => 
@@ -151,9 +151,9 @@ Total learned: <b>0 / 5948</b>
                 .HasButtonsRow(
                     new ButtonAssert("Способность", $"1 sa?q={questionId}&a=3"),
                     new ButtonAssert("Способный", $"1 sa?q={questionId}&a=4"))
-                .HasButtonsRow(new ButtonAssert("Skip", $"1 sa?q={questionId}&a=0"))
-                .HasButtonsRow(new ButtonAssert("Finish quiz", "1 fq"))
-                .HasButtonsRow(new ButtonAssert("Menu", "m"))
+                .HasButtonsRow(new ButtonAssert("⏭ Skip", $"1 sa?q={questionId}&a=0"))
+                .HasButtonsRow(new ButtonAssert("❌ Finish quiz", "1 fq"))
+                .HasButtonsRow(new ButtonAssert("← Back", "m"))
             );
 
         var quiz = Assert.Single(telegramTestHost.GetFromDb(x => x.UserQuizzes.ToArray()));

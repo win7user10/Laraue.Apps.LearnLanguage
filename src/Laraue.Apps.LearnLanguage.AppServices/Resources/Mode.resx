@@ -85,7 +85,7 @@
         <value>Next ➡</value>
     </data>
     <data name="SelectLanguage" xml:space="preserve">
-        <value>Select the language pair. You also can set the preferred language pair in settings to select the same pair always.</value>
+        <value>💡 Set a default pair in ⚙️ Settings to skip this step next time.</value>
     </data>
     <data name="ListMode" xml:space="preserve">
         <value>📖 Word List</value>

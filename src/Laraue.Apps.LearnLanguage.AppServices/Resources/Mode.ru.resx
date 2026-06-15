@@ -78,7 +78,7 @@
         <value>Предыдущая ⬅</value>
     </data>
     <data name="SelectLanguage" xml:space="preserve">
-        <value>Выберите языковую пару. Ее можно задать единожды в настройках, чтобы это окно не появлялось.</value>
+        <value>💡 Выберите пару по умолчанию в ⚙️ настройках, чтобы не видеть этот шаг при следующем запуске.</value>
     </data>
     <data name="ListMode" xml:space="preserve">
         <value>📖 Список слов</value>
