@@ -15,7 +15,7 @@
         <value>Меню</value>
     </data>
     <data name="Stat" xml:space="preserve">
-        <value>Статистика</value>
+        <value>📊 Статистика</value>
     </data>
     <data name="SeeTranslation" xml:space="preserve">
         <value>Показать перевод 👁</value>
@@ -24,24 +24,24 @@
         <value>Хорошо</value>
     </data>
     <data name="Settings" xml:space="preserve">
-        <value>Настройки</value>
+        <value>⚙️ Настройки</value>
     </data>
     <data name="Settings_Language" xml:space="preserve">
-        <value>Язык интерфейса</value>
+        <value>🌐 Язык интерфейса</value>
     </data>
     <data name="Settings_BackButton" xml:space="preserve">
         <value>Настройки 🔙</value>
     </data>
     <data name="Settings_LearnLanguage" xml:space="preserve">
-        <value>Язык для изучения</value>
+        <value>📚 Язык для изучения</value>
     </data>
     <data name="Back" xml:space="preserve">
-        <value>Назад</value>
+        <value>← Назад</value>
     </data>
     <data name="RepeatQuiz" xml:space="preserve">
-        <value>Повторить квиз</value>
+        <value>🎯 Повторить квиз</value>
     </data>
     <data name="ReleaseNotes" xml:space="preserve">
-        <value>Список изменений (en)</value>
+        <value>📋 Список изменений (en)</value>
     </data>
 </root>

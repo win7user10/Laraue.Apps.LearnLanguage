@@ -23,26 +23,24 @@ public class UserSettingsService(IUserRepository repository, ITelegramBotClient 
         
         var tmb = new TelegramMessageBuilder();
 
-        tmb.AppendRow($"<b>{Settings.Title}</b>")
+        tmb.AppendRow($"<b>{Buttons.Settings}</b>")
             .AppendRow()
             .AppendRow(string.Format(Settings.CurrentLanguage, $"<b>{interfaceLanguage.Title}</b>"))
             .AppendRow(string.Format(
                 Settings.CurrentLearnLanguage,
-                settings.LanguageToLearnCode is not null
-                    ? $"<b>en - {settings.LanguageToLearnCode}</b>"
+                settings.LanguageToLearnTitle is not null
+                    ? $"<b>English → {settings.LanguageToLearnTitle}</b>"
                     : $"<b>{Settings.NotSet}</b>"))
-            .AppendRow()
-            .AppendRow(Settings.Edit);
+            .AppendRow();
 
-        tmb.AddInlineKeyboardButtons(new[]
-        {
+        tmb.AddInlineKeyboardButtons([
             InlineKeyboardButton.WithCallbackData(
                 Buttons.Settings_Language, TelegramRoutes.InterfaceLanguageSettings),
             InlineKeyboardButton.WithCallbackData(
                 Buttons.Settings_LearnLanguage, TelegramRoutes.LearnLanguageSettings)
-        });
+        ]);
 
-        tmb.AddMainMenuButton();
+        tmb.AddBackMenuButton(TelegramRoutes.Menu);
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }

@@ -15,10 +15,7 @@
         <value>Режим: Уровень CEFR</value>
     </data>
     <data name="CefrLevel_ButtonName" xml:space="preserve">
-        <value>Уровень CEFR</value>
-    </data>
-    <data name="CefrLevel_Description" xml:space="preserve">
-        <value>слова по уровню: A1, A2, B1 и т.д.</value>
+        <value>📚 Уровень CEFR</value>
     </data>
     <data name="Sequential_Description" xml:space="preserve">
         <value>слова в алфавитном порядке</value>
@@ -36,10 +33,7 @@
         <value>Режим: Алфавитный порядок</value>
     </data>
     <data name="Topics_ButtonName" xml:space="preserve">
-        <value>Топики</value>
-    </data>
-    <data name="Sequential_ButtonName" xml:space="preserve">
-        <value>Алфавит</value>
+        <value>🏷 Топики</value>
     </data>
     <data name="Topics_Title" xml:space="preserve">
         <value>Режим: Топики</value>

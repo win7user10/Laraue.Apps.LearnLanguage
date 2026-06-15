@@ -81,9 +81,12 @@
         <value>Выберите языковую пару. Ее можно задать единожды в настройках, чтобы это окно не появлялось.</value>
     </data>
     <data name="ListMode" xml:space="preserve">
-        <value>Список слов</value>
+        <value>📖 Список слов</value>
     </data>
     <data name="ListModeDescription" xml:space="preserve">
         <value>Просмотр всех слов</value>
+    </data>
+    <data name="BrowseWords" xml:space="preserve">
+        <value>Просатривайте слова по</value>
     </data>
 </root>

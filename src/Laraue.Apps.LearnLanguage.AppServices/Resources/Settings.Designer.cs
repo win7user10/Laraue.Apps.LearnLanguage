@@ -60,7 +60,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current interface language is: {0}.
+        ///   Looks up a localized string similar to 🌐 Interface language: {0}.
         /// </summary>
         public static string CurrentLanguage {
             get {
@@ -69,7 +69,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current language pair to learn is: {0}.
+        ///   Looks up a localized string similar to 📚 Language pair: {0}.
         /// </summary>
         public static string CurrentLearnLanguage {
             get {
@@ -110,15 +110,6 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         public static string SelectLearnLanguage {
             get {
                 return ResourceManager.GetString("SelectLearnLanguage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to User settings.
-        /// </summary>
-        public static string Title {
-            get {
-                return ResourceManager.GetString("Title", resourceCulture);
             }
         }
         

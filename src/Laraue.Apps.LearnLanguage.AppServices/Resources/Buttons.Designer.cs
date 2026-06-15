@@ -60,7 +60,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Back.
+        ///   Looks up a localized string similar to ← Back.
         /// </summary>
         public static string Back {
             get {
@@ -87,7 +87,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Release Notes.
+        ///   Looks up a localized string similar to 📋 What&apos;s New.
         /// </summary>
         public static string ReleaseNotes {
             get {
@@ -96,7 +96,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Repeat Quiz.
+        ///   Looks up a localized string similar to 🎯 New Quiz.
         /// </summary>
         public static string RepeatQuiz {
             get {
@@ -114,7 +114,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Settings.
+        ///   Looks up a localized string similar to ⚙️ Settings.
         /// </summary>
         public static string Settings {
             get {
@@ -132,7 +132,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Interface language.
+        ///   Looks up a localized string similar to 🌐 Interface Language.
         /// </summary>
         public static string Settings_Language {
             get {
@@ -141,7 +141,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Language to learn.
+        ///   Looks up a localized string similar to 📚 Language Pair.
         /// </summary>
         public static string Settings_LearnLanguage {
             get {
@@ -150,7 +150,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open Stat.
+        ///   Looks up a localized string similar to 📊 My Progress.
         /// </summary>
         public static string Stat {
             get {

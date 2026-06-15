@@ -3,4 +3,5 @@
 public record UserSettings(
     string? InterfaceLanguageCode,
     long? LanguageToLearnId,
-    string? LanguageToLearnCode);
+    string? LanguageToLearnCode,
+    string? LanguageToLearnTitle);

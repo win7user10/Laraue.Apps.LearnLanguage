@@ -30,4 +30,6 @@ public static class CommonStrings
             _ => Mode.Difficulty_Impossible,
         };
     }
+
+    public const string Divider = "─────────────────";
 }

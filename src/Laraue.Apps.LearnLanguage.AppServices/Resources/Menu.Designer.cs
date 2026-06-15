@@ -60,10 +60,11 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Welcome to the Bot!
+        ///   Looks up a localized string similar to 👋 Welcome to Vocabulary Bot!
         ///
-        ///Select the preferable language pair for your first quiz.
-        ///        .
+        ///Learn the most common English words 
+        ///through short daily quizzes — free, 
+        ///no signup, works on any device..
         /// </summary>
         public static string Start {
             get {

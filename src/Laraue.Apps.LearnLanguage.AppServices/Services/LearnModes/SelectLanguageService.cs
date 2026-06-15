@@ -73,7 +73,7 @@ public class SelectLanguageService(
                 .WithTranslationDirection(
                     new SelectedTranslation(
                         pair.LanguageToLearn.Id))
-                .ToInlineKeyboardButton($"English < - > {pair.LanguageToLearn.Title}");
+                .ToInlineKeyboardButton($"English → {pair.LanguageToLearn.Title}");
             
             messageBuilder.AddInlineKeyboardButtons([button]);
         }

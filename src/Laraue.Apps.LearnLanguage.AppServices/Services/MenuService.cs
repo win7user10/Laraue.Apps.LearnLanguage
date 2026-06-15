@@ -27,29 +27,9 @@ public class MenuService(
     public Task SendMenuAsync(ReplyData replyData, CancellationToken ct = default)
     {
         var tmb = new TelegramMessageBuilder()
-            .AppendRow(Mode.SelectMode)
-            .AppendRow()
-            .AppendRow($"<b>{QuizMode.ButtonName}</b> - {QuizMode.Description}")
-            .AppendRow()
-            .AppendRow($"<b>{Mode.ListMode}</b> - {Mode.ListModeDescription}")
-            .AddInlineKeyboardButtons([
-                InlineKeyboardButton.WithCallbackData(
-                    QuizMode.ButtonName, TelegramRoutes.CurrentQuiz),
-                InlineKeyboardButton.WithCallbackData(
-                    Mode.ListMode, TelegramRoutes.ViewWordsListMenu)
-            ])
-            .AddInlineKeyboardButtons([
-                InlineKeyboardButton.WithCallbackData(
-                    Buttons.Stat, TelegramRoutes.Stat)
-            ])
-            .AddInlineKeyboardButtons([
-                InlineKeyboardButton.WithCallbackData(
-                    Buttons.Settings, TelegramRoutes.Settings)
-            ])
-            .AddInlineKeyboardButtons([
-                InlineKeyboardButton.WithUrl(
-                    Buttons.ReleaseNotes, ReleaseNotesUrl)
-            ]);
+            .AppendRow(Mode.SelectMode);
+        
+        AppendMainMenuButtons(tmb);
 
         return client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
@@ -57,13 +37,8 @@ public class MenuService(
     public Task SendWordsListsMenuAsync(ReplyData replyData, CancellationToken ct = default)
     {
         var tmb = new TelegramMessageBuilder()
-            .AppendRow(Mode.SelectMode)
-            .AppendRow()
-            .AppendRow($"<b>{GroupMode.CefrLevel_ButtonName}</b> - {GroupMode.CefrLevel_Description}")
-            .AppendRow()
-            .AppendRow($"<b>{GroupMode.Sequential_ButtonName}</b> - {GroupMode.Sequential_Description}")
-            .AppendRow()
-            .AppendRow($"<b>{GroupMode.Topics_ButtonName}</b> - {GroupMode.Topics_Description}")
+            .AppendRow(Mode.ListMode)
+            .AppendRow($"{Mode.BrowseWords}:")
             .AddInlineKeyboardButtons(new[]
             {
                 InlineKeyboardButton.WithCallbackData(
@@ -73,7 +48,7 @@ public class MenuService(
                 InlineKeyboardButton.WithCallbackData(
                     GroupMode.Sequential_ButtonName, TelegramRoutes.ListGroupsByFirstLetter),
             })
-            .AddMainMenuButton();
+            .AddBackMenuButton(TelegramRoutes.Menu);
 
         return client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
@@ -89,13 +64,8 @@ public class MenuService(
         // Send welcome message
         var tmb = new TelegramMessageBuilder()
             .AppendRow(Menu.Start);
-
-        await selectLanguageService.AppendLanguagePairButtonsAsync(
-            tmb,
-            new CallbackRoutePath(TelegramRoutes.Start, RouteMethod.Post),
-            ct);
-
-        tmb.AddMainMenuButton();
+        
+        AppendMainMenuButtons(tmb);
 
         await client.SendTextMessageAsync(
             telegramId,
@@ -159,5 +129,27 @@ public class MenuService(
                 
         databaseContext.UtmLabels.AddRange(dbUtmLabels);
         await databaseContext.SaveChangesAsync(ct);
+    }
+
+    private static void AppendMainMenuButtons(TelegramMessageBuilder telegramMessageBuilder)
+    {
+        telegramMessageBuilder.AddInlineKeyboardButtons([
+                InlineKeyboardButton.WithCallbackData(
+                    QuizMode.ButtonName, TelegramRoutes.CurrentQuiz),
+                InlineKeyboardButton.WithCallbackData(
+                    Mode.ListMode, TelegramRoutes.ViewWordsListMenu)
+            ])
+            .AddInlineKeyboardButtons([
+                InlineKeyboardButton.WithCallbackData(
+                    Buttons.Stat, TelegramRoutes.Stat)
+            ])
+            .AddInlineKeyboardButtons([
+                InlineKeyboardButton.WithCallbackData(
+                    Buttons.Settings, TelegramRoutes.Settings)
+            ])
+            .AddInlineKeyboardButtons([
+                InlineKeyboardButton.WithUrl(
+                    Buttons.ReleaseNotes, ReleaseNotesUrl)
+            ]);
     }
 }

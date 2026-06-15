@@ -53,7 +53,8 @@ public class UserRepository(DatabaseContext context) : IUserRepository
             .Select(x => new UserSettings(
                 x.TelegramLanguageCode,
                 x.LanguageToLearnId,
-                x.LanguageToLearn.Name))
+                x.LanguageToLearn.Name,
+                x.LanguageToLearn.Description))
             .FirstAsyncEF(ct);
     }
 

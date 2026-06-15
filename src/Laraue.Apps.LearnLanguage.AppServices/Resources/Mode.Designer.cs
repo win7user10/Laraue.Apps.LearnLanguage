@@ -60,6 +60,15 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Browse words by.
+        /// </summary>
+        public static string BrowseWords {
+            get {
+                return ResourceManager.GetString("BrowseWords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Difficulty: {0}.
         /// </summary>
         public static string Difficulty {
@@ -159,7 +168,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Words Lists.
+        ///   Looks up a localized string similar to 📖 Word List.
         /// </summary>
         public static string ListMode {
             get {
@@ -240,7 +249,7 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select the mode.
+        ///   Looks up a localized string similar to What would you like to do?.
         /// </summary>
         public static string SelectMode {
             get {

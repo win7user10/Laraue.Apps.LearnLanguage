@@ -91,11 +91,12 @@ public class QuizService(
             .ToArray();
 
         var cefrLevelNames = activeCefrLevels.Length > 0
-            ? string.Join(", ", activeCefrLevels.Select(x => x.Name))
-            : Settings.NotSet;
+            ? string.Join(" · ", activeCefrLevels.Select(x => x.Name))
+            : QuizMode.All;
         
         var tmb = new TelegramMessageBuilder()
-            .AppendRow(string.Format(QuizMode.SelectQuizCefrLevel, $"<b>{cefrLevelNames}</b>"));
+            .AppendRow(QuizMode.CefrLevelWithIcon)
+            .AppendRow(string.Format(QuizMode.Selected, $"<b>{cefrLevelNames}</b>"));
         
         var buttons = new List<InlineKeyboardButton>();
         
@@ -146,7 +147,7 @@ public class QuizService(
 
     private string GetTopicNamesString(TopicItemDto[] topicItems)
     {
-        var topicNames = Settings.NotSet;
+        var topicNames = QuizMode.All;
         
         if (topicItems.Length > 0)
         {
@@ -155,7 +156,7 @@ public class QuizService(
             var topicsForMessage = topicItems.Take(maxTopicsInTitle).ToArray();
 
             var topicNamesBuilder = new StringBuilder();
-            topicNamesBuilder.AppendJoin(", ", topicsForMessage.Select(x => x.Name));
+            topicNamesBuilder.AppendJoin(" · ", topicsForMessage.Select(x => x.Name));
             if (topicsCountMoreThanAllowed)
                 topicNamesBuilder
                     .Append(' ')
@@ -189,7 +190,8 @@ public class QuizService(
         var topicNames = GetTopicNamesString(activeTopics);
         
         var tmb = new TelegramMessageBuilder()
-            .AppendRow(string.Format(QuizMode.SelectQuizTopic, $"<b>{topicNames}</b>"));
+            .AppendRow(QuizMode.TopicsWithIcon)
+            .AppendRow(string.Format(QuizMode.Selected, $"<b>{topicNames}</b>"));
 
         var buttons = new List<InlineKeyboardButton>();
         foreach (var topic in topics)
@@ -338,7 +340,7 @@ public class QuizService(
         var cefrLevels = await repository.GetUserCefrLevelsAsync(replyData.UserId, ct);
         var cefrLevelIds = cefrLevels.Select(x => x.Id).ToArray();
         
-        var languageCode = await repository.GetLanguageCodeAsync(
+        var languageName = await repository.GetLanguageNameAsync(
             selectedTranslation.LanguageToLearnId!.Value,
             ct);
 
@@ -359,7 +361,7 @@ public class QuizService(
         
         var cefrLevelNames = cefrLevels.Length > 0
             ? string.Join(", ", cefrLevels.Select(x => x.Name))
-            : Settings.NotSet;
+            : $"{QuizMode.All} (A1-C1)";
         
         var questionsToAsk = dbQuestionsCount > QuestionsCount
             ? QuestionsCount
@@ -368,34 +370,32 @@ public class QuizService(
         tmb
             .AppendRow($"<b>{QuizMode.QuizReady}</b>")
             .AppendRow()
-            .AppendRow($"{QuizMode.Topic}: <b>{topicNames}</b>")
+            .AppendRow($"{QuizMode.LanguagePair}: <b>English → {languageName}</b>")
+            .AppendRow($"{QuizMode.Topics}: <b>{topicNames}</b>")
             .AppendRow($"{QuizMode.CefrLevel}: <b>{cefrLevelNames}</b>")
             .AppendRow($"{QuizMode.QuestionsWillBeAsked}: <b>{questionsToAsk}</b>")
-            .AppendRow($"{QuizMode.TotalQuestionsByCriteria}: <b>{dbQuestionsCount}</b>")
-            .AppendRow($"{QuizMode.LanguagePair}: <b>en -> {languageCode}</b>")
-            .AppendRow($"{QuizMode.QuestionOptionsCount}: <b>{OptionsCount}</b>")
             .AppendRow()
-            .AppendRow($"<b>{QuizMode.StatsForTheCurrentCriteria}</b>");
-
-        tmb
+            .AppendRow($"{QuizMode.TotalQuestionsByCriteria}")
             .AppendRow($"{QuizMode.CorrectAnswers}: <b>{learnStat.TotalAnswersCorrect}</b>")
             .AppendRow($"{QuizMode.IncorrectAnswers}: <b>{learnStat.TotalAnswersIncorrect}</b>")
             .AppendRow($"{QuizMode.SkippedAnswers}: <b>{learnStat.TotalAnswersSkipped}</b>")
-            .Append($"{QuizMode.Learned}: <b>{learnStat.Learned} / {learnStat.Total}</b>");
+            .Append($"{QuizMode.Learned}: <b>{learnStat.Learned} / {learnStat.Total}</b> {QuizMode.Meanings}");
             
         tmb
             .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
                 QuizMode.StartButtonName,
                 new CallbackRoutePath(TelegramRoutes.StartQuiz, RouteMethod.Post)
                     .WithTranslationDirection(selectedTranslation))])
-            .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
-                QuizMode.ChangeTopic,
+            .AddInlineKeyboardButtons([
+                InlineKeyboardButton.WithCallbackData(
+                QuizMode.TopicsWithIcon,
                 new CallbackRoutePath(TelegramRoutes.TopicSelection)
-                    .WithTranslationDirection(selectedTranslation))])
-            .AddInlineKeyboardButtons([InlineKeyboardButton.WithCallbackData(
-                QuizMode.ChangeCefrLevel,
-                new CallbackRoutePath(TelegramRoutes.CefrLevelSelection)
-                    .WithTranslationDirection(selectedTranslation))]);
+                    .WithTranslationDirection(selectedTranslation)),
+                InlineKeyboardButton.WithCallbackData(
+                    QuizMode.CefrLevelWithIcon,
+                    new CallbackRoutePath(TelegramRoutes.CefrLevelSelection)
+                        .WithTranslationDirection(selectedTranslation))
+            ]);
         
         // Add back button only when language pair setup is available
         var isDefaultLanguagePairSet = await repository.DoesUserSetDefaultLanguagePairAsync(replyData.UserId, ct);
@@ -408,7 +408,7 @@ public class QuizService(
             ]);
         }
         
-        tmb.AddMainMenuButton();
+        tmb.AddBackMenuButton(TelegramRoutes.Menu);
         
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
@@ -424,14 +424,25 @@ public class QuizService(
         {
             tmb
                 .Append(QuizMode.ResourceManager.GetString($"QuizAnswer_{previousAnswerResult.Status}") ?? string.Empty)
-                .Append(" <b>")
+                .Append(" ")
                 .Append(previousAnswerResult.QuestionDto.Word)
-                .Append("</b> (")
-                .Append(previousAnswerResult.QuestionDto.PartOfSpeech)
-                .Append(") - ")
-                .Append(previousAnswerResult.QuestionDto.Translation)
-                .AppendRow($" [{previousAnswerResult.QuestionDto.Transcription}]")
-                .AppendRow();
+                .Append(" — ")
+                .AppendRow(previousAnswerResult.QuestionDto.Translation);
+
+            if (previousAnswerResult.Status != UserQuizQuestionStatus.Correct)
+            {
+                tmb
+                    .Append("[")
+                    .Append(previousAnswerResult.QuestionDto.Transcription!)
+                    .Append("] ")
+                    .Append(previousAnswerResult.QuestionDto.PartOfSpeech)
+                    .Append(" · ")
+                    .AppendRow(previousAnswerResult.QuestionDto.CefrLevel);
+            }
+            
+            tmb
+                .AppendRow()
+                .AppendRow(CommonStrings.Divider);
         }
         
         
@@ -445,15 +456,13 @@ public class QuizService(
         var data = await repository.GetFlashCardsAsync(stats.Id, stats.LanguageId, ct);
 
         tmb
-            .Append(QuizMode.Question)
-            .AppendRow($" <b>{stats.AnsweredQuestions + 1}/{stats.TotalQuestions}</b>")
-            .Append(QuizMode.TranslateWord)
-            .Append($" <b>{data.Word}</b> ({data.PartOfSpeech}");
+            .AppendRow($"{QuizMode.Question} {stats.AnsweredQuestions + 1}/{stats.TotalQuestions}")
+            .AppendRow()
+            .AppendRow($"<b>{data.Word}</b>")
+            .Append(data.PartOfSpeech);
         
         if (!string.IsNullOrEmpty(data.CefrLevel))
-            tmb.Append($", {data.CefrLevel}");
-
-        tmb.Append(")");
+            tmb.Append($" · {data.CefrLevel}");
 
         foreach (var flashCardsChunk in data.FlashCards.Chunk(2))
         {
@@ -479,7 +488,7 @@ public class QuizService(
                 new CallbackRoutePath(TelegramRoutes.FinishQuiz, RouteMethod.Post))
         ]);
         
-        tmb.AddMainMenuButton();
+        tmb.AddBackMenuButton(TelegramRoutes.Menu);
 
         await client.EditMessageTextAsync(replyData, tmb, ParseMode.Html, cancellationToken: ct);
     }
@@ -510,46 +519,50 @@ public class QuizService(
         for (var index = 0; index < lastQuizQuestions.Length; index++)
         {
             var lastQuizQuestion = lastQuizQuestions[index];
+            
             tmb
-                .Append($"{index + 1:00}")
-                .Append(". ")
-                .Append("<b>")
                 .Append(QuizMode.ResourceManager.GetString($"QuizAnswer_{lastQuizQuestion.Status}") ?? string.Empty)
                 .Append(" ")
                 .Append(lastQuizQuestion.Word)
-                .Append("</b>")
-                .Append(" ")
+                .Append(" - ")
                 .Append(lastQuizQuestion.Translation);
-
-            if (lastQuizQuestion.Transcription is not null)
-            {
-                tmb.Append(" [")
-                    .Append(lastQuizQuestion.Transcription)
-                    .Append("]");
-            }
 
             tmb.AppendRow();
         }
 
         tmb.AppendRow();
 
-        if (correctCount == lastQuizQuestions.Length)
-        {
-            tmb.AppendRow($"<b>{QuizMode.Perfect}</b>");
-        }
-
         var learnedInSessionCount = lastQuizQuestions
             .Where(q => q.Status == UserQuizQuestionStatus.Correct)
             .Count(q => q.LearnedAttempts == WinStreakToLearn);
         
-        tmb
-            .AppendRow($"<b>{QuizMode.TotalStat}</b>:");
         
         tmb
-            .AppendRow($"{QuizMode.CorrectAnswers}: <b>{learnStat.TotalAnswersCorrect} [+{correctCount}]</b>")
-            .AppendRow($"{QuizMode.IncorrectAnswers}: <b>{learnStat.TotalAnswersIncorrect} [+{incorrectCount}]</b>")
-            .AppendRow($"{QuizMode.SkippedAnswers}: <b>{learnStat.TotalAnswersSkipped} [+{skippedCount}]</b>")
-            .Append($"{QuizMode.Learned}: <b>{learnStat.Learned} / {learnStat.Total} [+{learnedInSessionCount}]</b>")
+            .AppendRow(CommonStrings.Divider)
+            .AppendRow(QuizMode.ThisSession);
+            
+        if (correctCount == lastQuizQuestions.Length)
+            tmb.AppendRow($"{QuizMode.Perfect}");
+        
+        tmb
+            .AppendRow($"{QuizMode.CorrectAnswers}: {correctCount}")
+            .AppendRow($"{QuizMode.IncorrectAnswers}: {incorrectCount}")
+            .AppendRow($"{QuizMode.SkippedAnswers}: {skippedCount}");
+
+        if (learnedInSessionCount > 0)
+            tmb.AppendRow($"{QuizMode.Learned}: +{learnedInSessionCount} {QuizMode.Meanings}");
+            
+        tmb
+            .AppendRow(CommonStrings.Divider)
+            .AppendRow(QuizMode.OverallProgress)
+            .AppendRow($"{QuizMode.CorrectAnswers}: {learnStat.TotalAnswersCorrect}")
+            .AppendRow($"{QuizMode.IncorrectAnswers}: {learnStat.TotalAnswersIncorrect}")
+            .AppendRow($"{QuizMode.SkippedAnswers}: {learnStat.TotalAnswersSkipped}");
+
+        if (learnStat.Learned > 0)
+            tmb.Append($"{QuizMode.Learned}: {learnStat.Learned} / {learnStat.Total} {QuizMode.Meanings}");
+            
+        tmb
             .AddInlineKeyboardButtons([
                 InlineKeyboardButton.WithCallbackData(
                     Buttons.RepeatQuiz,
@@ -628,7 +641,7 @@ public class QuizService(
             long[] cefrLevelIds,
             CancellationToken ct = default);
         
-        Task<string?> GetLanguageCodeAsync(long languageId, CancellationToken ct = default);
+        Task<string?> GetLanguageNameAsync(long languageId, CancellationToken ct = default);
         Task<TopicItemDto[]> GetUserQuizTopicsAsync(
             Guid userId,
             CancellationToken ct = default);
@@ -719,6 +732,7 @@ public class QuizService(
         public required string? Transcription { get; init; }
         public required long LanguageId { get; init; }
         public required string PartOfSpeech { get; init; }
+        public required string CefrLevel { get; init; }
     }
 
     public class TopicItemDto
@@ -875,6 +889,7 @@ public class QuizService(
                         .Text,
                     Transcription = x.Word.Transcription,
                     PartOfSpeech = x.Word.PartOfSpeech!.Name,
+                    CefrLevel = x.Word.CefrLevel!.Name,
                 })
                 .FirstOrThrowNotFoundEFAsync(ct);
         }
@@ -1038,11 +1053,11 @@ public class QuizService(
             };
         }
 
-        public Task<string?> GetLanguageCodeAsync(long languageId, CancellationToken ct = default)
+        public Task<string?> GetLanguageNameAsync(long languageId, CancellationToken ct = default)
         {
             return context.Languages
                 .Where(x => x.Id == languageId)
-                .Select(x => x.Name)
+                .Select(x => x.Description)
                 .FirstOrDefaultAsyncEF(ct);
         }
 

@@ -22,13 +22,13 @@
         <value>Menu</value>
     </data>
     <data name="RepeatQuiz" xml:space="preserve">
-        <value>Repeat Quiz</value>
+        <value>🎯 New Quiz</value>
     </data>
     <data name="Stat" xml:space="preserve">
-        <value>Open Stat</value>
+        <value>📊 My Progress</value>
     </data>
     <data name="ReleaseNotes" xml:space="preserve">
-        <value>Release Notes</value>
+        <value>📋 What's New</value>
     </data>
     <data name="SeeTranslation" xml:space="preserve">
         <value>See translation 👁</value>
@@ -37,18 +37,18 @@
         <value>Okay</value>
     </data>
     <data name="Settings" xml:space="preserve">
-        <value>Settings</value>
+        <value>⚙️ Settings</value>
     </data>
     <data name="Settings_Language" xml:space="preserve">
-        <value>Interface language</value>
+        <value>🌐 Interface Language</value>
     </data>
     <data name="Settings_LearnLanguage" xml:space="preserve">
-        <value>Language to learn</value>
+        <value>📚 Language Pair</value>
     </data>
     <data name="Settings_BackButton" xml:space="preserve">
         <value>Settings 🔙</value>
     </data>
     <data name="Back" xml:space="preserve">
-        <value>Back</value>
+        <value>← Back</value>
     </data>
 </root>
