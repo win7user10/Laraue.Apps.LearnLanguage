@@ -11,8 +11,7 @@ const string dbConnectionStringName = "Postgre";
 builder
     .AddTelegramOptions("Telegram")
     .AddApplicationServices()
-    .AddDatabaseServices(dbConnectionStringName)
-    .AddHangfireServices(dbConnectionStringName);
+    .AddDatabaseServices(dbConnectionStringName);
 
 var app = builder.Build();
 

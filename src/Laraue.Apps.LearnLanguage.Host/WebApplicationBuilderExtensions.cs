@@ -1,6 +1,4 @@
-﻿using Hangfire;
-using Hangfire.PostgreSql;
-using Laraue.Apps.LearnLanguage.AppServices;
+﻿using Laraue.Apps.LearnLanguage.AppServices;
 using Laraue.Apps.LearnLanguage.AppServices.Options;
 using Laraue.Apps.LearnLanguage.AppServices.Repositories;
 using Laraue.Apps.LearnLanguage.AppServices.Services;
@@ -109,21 +107,6 @@ public static class WebApplicationBuilderExtensions
                 .AddScoped<IQuestionsGenerator, QuestionsGenerator>();
 
             builder.Services.AddControllers();
-
-            return builder;
-        }
-
-        public WebApplicationBuilder AddHangfireServices(string connectionStringName)
-        {
-            var connection = GetConnection(builder, connectionStringName);
-            
-            builder.Services
-                .AddHangfire(configuration => configuration
-                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseRecommendedSerializerSettings()
-                    .UsePostgreSqlStorage(o => o.UseNpgsqlConnection(connection)))
-                .AddHangfireServer();
 
             return builder;
         }
