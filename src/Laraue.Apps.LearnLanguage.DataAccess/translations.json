@@ -81834,12 +81834,12 @@
     "translations": [
       {
         "language": "ru",
-        "text": "он/она/оно (double refers to a pair)",
-        "transcription": "on/ona/ono"
+        "text": "удвоение",
+        "transcription": "udvoenie"
       },
       {
         "language": "fr",
-        "text": "il/elle/on (representing a double)",
+        "text": "il/elle/on",
         "transcription": "il/el / el / on"
       },
       {
@@ -125196,7 +125196,7 @@
     "translations": [
       {
         "language": "ru",
-        "text": "должен (dolzhen) - masculine, должна (dolzhna) - feminine, должны (dolzhny) - plural",
+        "text": "должен",
         "transcription": "dol-zhen, dol-zhna, dol-zhny"
       },
       {
@@ -125206,7 +125206,7 @@
       },
       {
         "language": "ja",
-        "text": "しなければならない (shinakereba naranai)",
+        "text": "しなければならない",
         "transcription": "shee-na-keh-ruh na-rai"
       },
       {
@@ -241272,7 +241272,7 @@
     "translations": [
       {
         "language": "ru",
-        "text": "шопировать",
+        "text": "заниматься шопингом",
         "transcription": "shopirovat'"
       },
       {
@@ -241677,7 +241677,7 @@
     "translations": [
       {
         "language": "ru",
-        "text": "должен (dolzhen)",
+        "text": "должен",
         "transcription": "dɔl'ʐən"
       },
       {
@@ -254683,7 +254683,7 @@
     "translations": [
       {
         "language": "ru",
-        "text": "помечать звёздами",
+        "text": "быть звёздой",
         "transcription": "pamyetat' zvyezdami"
       },
       {
@@ -265889,7 +265889,7 @@
     "translations": [
       {
         "language": "ru",
-        "text": "останавливать (ostanavlivat')",
+        "text": "останавливать",
         "transcription": "ɐstɐˈvnɪvɐtʲ"
       },
       {
@@ -265899,7 +265899,7 @@
       },
       {
         "language": "ja",
-        "text": "タックルする (takkaru suru)",
+        "text": "タックルする",
         "transcription": "takkaɾu suru"
       },
       {
@@ -295162,8 +295162,8 @@
     "translations": [
       {
         "language": "ru",
-        "text": "которого/которой/которого/которых",
-        "transcription": "ko-to-ro-go/ko-to-ro-y/ko-to-ro-go/ko-to-ryh"
+        "text": "который",
+        "transcription": "ko-to-ryi"
       },
       {
         "language": "fr",
