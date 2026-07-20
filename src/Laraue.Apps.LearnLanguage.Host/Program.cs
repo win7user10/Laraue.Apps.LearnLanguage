@@ -13,6 +13,8 @@ builder
     .AddApplicationServices()
     .AddDatabaseServices(dbConnectionStringName);
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 app.Services.UseLinq2Db();
@@ -25,4 +27,5 @@ using (var scope = app.Services.CreateScope())
     app.MapTelegramRequests();
 }
 
+app.MapHealthChecks("/_health");
 app.Run();
