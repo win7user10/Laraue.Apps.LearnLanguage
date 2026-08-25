@@ -14,6 +14,7 @@ builder
     .AddDatabaseServices(dbConnectionStringName);
 
 builder.Services.AddHealthChecks();
+builder.Logging.ClearProviders().AddJsonConsole();
 
 var app = builder.Build();
 
