@@ -50,6 +50,4 @@ jobs:
        password: ${{ secrets.SSH_PASSWORD }} # "password"
        local: laraue.tar.gz
        remote: "/home/laraue/backend-learn-language"
-       post_upload: >
-         cd /home/laraue/backend-learn-language && find . -mindepth 1 ! -name laraue.tar.gz -delete &&
-         tar -xzf laraue.tar.gz && rm laraue.tar.gz
+       post_upload: cd /home/laraue/backend-learn-language && find . -mindepth 1 ! -name laraue.tar.gz -delete && tar -xzf laraue.tar.gz && rm laraue.tar.gz
