@@ -35,7 +35,11 @@ jobs:
       
     - name: Run all tests
       run: dotnet test -c Release --no-build
-    
+
+    - name: Pack build output
+      if: github.ref == 'refs/heads/master'
+      run: tar -czf laraue.tar.gz -C src/Laraue.Apps.LearnLanguage.Host/bin/Release/net10.0 .
+
     - name: Upload
       if: github.ref == 'refs/heads/master'
       uses: marcodallasanta/ssh-scp-deploy@v1.2.0
@@ -44,6 +48,8 @@ jobs:
        port: ${{ secrets.SSH_PORT }} # 22
        user: ${{ secrets.SSH_USER }} # "user"
        password: ${{ secrets.SSH_PASSWORD }} # "password"
-       local: src/Laraue.Apps.LearnLanguage.Host/bin/Release/net10.0/*
+       local: laraue.tar.gz
        remote: "/home/laraue/backend-learn-language"
-       post_upload: echo "Uploaded successfully"
+       post_upload: >
+         cd /home/laraue/backend-learn-language && find . -mindepth 1 ! -name laraue.tar.gz -delete &&
+         tar -xzf laraue.tar.gz && rm laraue.tar.gz
