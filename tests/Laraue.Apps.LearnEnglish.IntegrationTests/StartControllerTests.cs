@@ -1,4 +1,5 @@
 ﻿using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using Xunit;
 
 namespace Laraue.Apps.LearnEnglish.IntegrationTests;
@@ -15,7 +16,12 @@ public class StartControllerTests : IntegrationTest
             Message = new Message
             {
                 Text = "/start",
-                From = DefaultUser
+                From = DefaultUser,
+                Chat = new Chat
+                {
+                    Id = 1,
+                    Type = ChatType.Private,
+                }
             }
         });
 
@@ -33,8 +39,13 @@ public class StartControllerTests : IntegrationTest
             Message = new Message
             {
                 Text = "/start source-city1_lang-en",
-                From = DefaultUser
-            }
+                From = DefaultUser,
+                Chat = new Chat
+                {
+                    Id = 1,
+                    Type = ChatType.Private,
+                }
+            },
         });
 
         var user = Assert.Single(telegramTestHost.GetFromDb(db => db.Users.ToArray()));
