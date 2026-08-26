@@ -40,7 +40,7 @@ public class WordsService : IWordsService
         logger.LogInformation("Write translations to '{TranslationsFile}'", _wordsJsonPath);
     }
 
-    public Task<IShortPaginatedResult<ImportingWord>> GetWordsAsync(GetWordsRequest request)
+    public Task<ShortPaginatedResult<ImportingWord>> GetWordsAsync(GetWordsRequest request)
     {
         var wordsQuery = Words.AsEnumerable();
         if (!string.IsNullOrEmpty(request.Search))
@@ -50,7 +50,7 @@ public class WordsService : IWordsService
         
         return Task.FromResult(wordsQuery
             .OrderByDescending(w => w.Id)
-            .ShortPaginate(request));
+            .ShortPaginate(request.Pagination));
     }
 
     public async Task<long> UpsertWordAsync(UpdateWordDto wordDto)

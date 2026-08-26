@@ -8,18 +8,18 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Services;
 public class TelegramUserQueryService(DatabaseContext context)
     : ITelegramUserQueryService<User, Guid>
 {
-    public Task<User?> FindAsync(long telegramId)
+    public Task<User?> FindAsync(long telegramId, CancellationToken cancellationToken)
     {
         return context.Users
             .Where(u => u.TelegramId == telegramId)
-            .FirstOrDefaultAsyncEF();
+            .FirstOrDefaultAsyncEF(cancellationToken);
     }
 
-    public async Task<Guid> CreateAsync(User user)
+    public async Task<Guid> CreateAsync(User user, CancellationToken cancellationToken)
     {
         context.Users.Add(user);
         
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
         
         return user.Id;
     }

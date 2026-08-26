@@ -10,10 +10,10 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes.Group.FirstL
 public class LearnByFirstLetterRepository(DatabaseContext context)
     : BaseLearnByGroupRepository<char>(context), ILearnByFirstLetterRepository
 {
-    public override async Task<IFullPaginatedResult<LearningItemGroup<char>>> GetGroupsAsync(
+    public override async Task<FullPaginatedResult<LearningItemGroup<char>>> GetGroupsAsync(
         Guid userId,
         SelectedTranslation selectedTranslation,
-        IPaginatedRequest request,
+        IPaginationData request,
         CancellationToken ct = default)
     {
         return await context.Translations

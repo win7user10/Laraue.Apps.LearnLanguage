@@ -3,6 +3,7 @@ using Laraue.Apps.LearnLanguage.AppServices.Repositories;
 using Laraue.Apps.LearnLanguage.AppServices.Repositories.Contracts;
 using Laraue.Apps.LearnLanguage.AppServices.Resources;
 using Laraue.Apps.LearnLanguage.DataAccess;
+using Laraue.Core.DataAccess.Contracts;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;
 using Laraue.Telegram.NET.Core.Utils;
@@ -45,7 +46,11 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
             request.GroupId,
             replyData.UserId,
             userSettings.ShowWordsMode,
-            new PaginatedRequest(request.Page, Constants.PaginationCount),
+            new PaginationData
+            {
+                Page = request.Page, 
+                PerPage = Constants.PaginationCount
+            },
             request,
             ct);
 
@@ -98,7 +103,7 @@ public abstract class BaseLearnByGroupService<TId, TRequest>(
         CancellationToken ct = default)
     {
         var groupsResult = await repository.GetGroupsAsync(
-            replyData.UserId, selectedTranslation, request, ct);
+            replyData.UserId, selectedTranslation, request.Pagination, ct);
 
         var groups = groupsResult.Data;
 

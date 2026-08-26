@@ -13,11 +13,11 @@ namespace Laraue.Apps.LearnLanguage.AppServices.Services.LearnModes.Group;
 public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
     : ILearnByGroupRepository<TId> where TId : struct
 {
-    public Task<IFullPaginatedResult<LearningItem>> GetGroupWordsAsync(
+    public Task<FullPaginatedResult<LearningItem>> GetGroupWordsAsync(
         TId groupId,
         Guid userId,
         ShowWordsMode filter,
-        PaginatedRequest request,
+        IPaginationData request,
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default)
     {
@@ -73,10 +73,10 @@ public abstract class BaseLearnByGroupRepository<TId>(DatabaseContext context)
         };
     }
 
-    public abstract Task<IFullPaginatedResult<LearningItemGroup<TId>>> GetGroupsAsync(
+    public abstract Task<FullPaginatedResult<LearningItemGroup<TId>>> GetGroupsAsync(
         Guid userId,
         SelectedTranslation selectedTranslation,
-        IPaginatedRequest request,
+        IPaginationData request,
         CancellationToken ct = default);
 
     public abstract Task<string> GetGroupNameAsync(TId groupId, CancellationToken ct = default);

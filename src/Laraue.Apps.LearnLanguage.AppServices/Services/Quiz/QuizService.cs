@@ -847,7 +847,7 @@ public class QuizService(
                     PartOfSpeech = x.Word.PartOfSpeech!.Name,
                     CefrLevel = x.Word.CefrLevel!.Name,
                 })
-                .FirstOrThrowNotFoundEFAsync(ct);
+                .FirstOrThrowNotFoundEFAsync($"Active quiz: {quizId} is not found", ct);
 
             var flashCards = await context.Translations
                 .Where(x => x.LanguageId == languageId)
@@ -891,7 +891,7 @@ public class QuizService(
                     PartOfSpeech = x.Word.PartOfSpeech!.Name,
                     CefrLevel = x.Word.CefrLevel!.Name,
                 })
-                .FirstOrThrowNotFoundEFAsync(ct);
+                .FirstOrThrowNotFoundEFAsync("Active question is not found", ct);
         }
 
         public Task SetQuizQuestionStatus(long questionId, UserQuizQuestionStatus status, CancellationToken ct = default)
@@ -940,7 +940,7 @@ public class QuizService(
                     Id = x.Id,
                     LanguageId = x.LanguageId,
                 })
-                .FirstOrThrowNotFoundEFAsync(ct);
+                .FirstOrThrowNotFoundEFAsync("Active quiz is not found", ct);
         }
 
         public async Task<LastQuizStatsQuestion[]> GetLastQuizQuestionsAsync(Guid userId, CancellationToken ct = default)
