@@ -13,10 +13,10 @@ public class LearnByTopicRepository(DatabaseContext context)
 {
     private readonly DatabaseContext _context = context;
 
-    public override async Task<IFullPaginatedResult<LearningItemGroup<long>>> GetGroupsAsync(
+    public override async Task<FullPaginatedResult<LearningItemGroup<long>>> GetGroupsAsync(
         Guid userId,
         SelectedTranslation selectedTranslation,
-        IPaginatedRequest request,
+        IPaginationData request,
         CancellationToken ct = default)
     {
         return await _context.WordTopics

@@ -2,7 +2,7 @@
 
 using Laraue.Apps.LearnLanguage.AutoTranslator;
 using Laraue.Apps.LearnLanguage.AutoTranslator.Services;
-using Laraue.Core.Ollama;
+using Laraue.Ollama.NET;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

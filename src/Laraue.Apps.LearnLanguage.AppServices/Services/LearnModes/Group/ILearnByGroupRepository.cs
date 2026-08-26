@@ -10,21 +10,21 @@ public interface ILearnByGroupRepository<TId>
     /// <summary>
     /// Returns paginated words of the passed group.
     /// </summary>
-    Task<IFullPaginatedResult<LearningItem>> GetGroupWordsAsync(
+    Task<FullPaginatedResult<LearningItem>> GetGroupWordsAsync(
         TId groupId,
         Guid userId,
         ShowWordsMode filter,
-        PaginatedRequest request,
+        IPaginationData request,
         SelectedTranslation selectedTranslation,
         CancellationToken ct = default);
 
     /// <summary>
     /// Returns all groups with user stats for each of them.
     /// </summary>
-    Task<IFullPaginatedResult<LearningItemGroup<TId>>> GetGroupsAsync(
+    Task<FullPaginatedResult<LearningItemGroup<TId>>> GetGroupsAsync(
         Guid userId,
         SelectedTranslation selectedTranslation,
-        IPaginatedRequest request,
+        IPaginationData request,
         CancellationToken ct = default);
 
     /// <summary>

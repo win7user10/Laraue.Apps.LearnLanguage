@@ -10,21 +10,29 @@ namespace Laraue.Apps.LearnLanguage.DataAccess.Entities;
 public sealed class User : ITelegramUser<Guid>
 {
     /// <inheritdoc />
-    public Guid Id { get; init; }
+    public Guid Id { get; set; }
     
     /// <inheritdoc />
-    public long TelegramId { get; init; }
+    public long TelegramId { get; set; }
     
     /// <inheritdoc />
     [MaxLength(32)]
-    public string? TelegramUserName { get; init; }
+    public string? TelegramUserName { get; set; }
     
     /// <inheritdoc />
     [MaxLength(2)]
-    public string? TelegramLanguageCode { get; init; }
+    public string? TelegramLanguageCode { get; set; }
+
+    /// <inheritdoc />
+    [MaxLength(64)]
+    public string? TelegramLastName { get; set; }
     
     /// <inheritdoc />
-    public DateTime CreatedAt { get; init; }
+    [MaxLength(64)]
+    public string? TelegramFirstName { get; set; }
+
+    /// <inheritdoc />
+    public DateTime CreatedAt { get; set; }
     
     /// <summary>
     /// How to show word translations for this user. 

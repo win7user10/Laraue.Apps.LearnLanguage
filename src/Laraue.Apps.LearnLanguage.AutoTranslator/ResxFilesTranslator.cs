@@ -1,5 +1,5 @@
 ﻿using Laraue.Apps.LearnLanguage.DataAccess;
-using Laraue.Core.Ollama;
+using Laraue.Ollama.NET;
 using Microsoft.Extensions.Logging;
 
 namespace Laraue.Apps.LearnLanguage.AutoTranslator;

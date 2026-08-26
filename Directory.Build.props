@@ -16,14 +16,14 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <Linq2DbVersion>6.0.0</Linq2DbVersion>
-    <LaraueTelegramNetVersion>4.1.3</LaraueTelegramNetVersion>
-    <LaraueCoreDataAccessVersion>10.4.0</LaraueCoreDataAccessVersion>
+    <Linq2DbVersion>6.3.0</Linq2DbVersion>
+    <LaraueTelegramNetVersion>4.9.1</LaraueTelegramNetVersion>
+    <LaraueCoreDataAccessVersion>10.8.0</LaraueCoreDataAccessVersion>
     <LaraueCoreDateTimeVersion>10.0.0</LaraueCoreDateTimeVersion>
     <EfCoreVersion>10.0.0</EfCoreVersion>
     <NpgsqlEfCoreVersion>10.0.0</NpgsqlEfCoreVersion>
-    <EfCoreNamingConventionsVersion>10.0.0</EfCoreNamingConventionsVersion>
-    <LaraueCoreOllamaVersion>2.1.4</LaraueCoreOllamaVersion>
+    <EfCoreNamingConventionsVersion>10.0.1</EfCoreNamingConventionsVersion>
+    <LaraueCoreOllamaVersion>1.0.0</LaraueCoreOllamaVersion>
     <TelegramBotVersion>22.7.0</TelegramBotVersion>
   </PropertyGroup>
 </Project>
