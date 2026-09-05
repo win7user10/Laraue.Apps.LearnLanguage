@@ -8,9 +8,10 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -26,13 +27,13 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 10.x.x
-    
+
     - name: Restore dependencies
       run: dotnet restore
-    
+
     - name: Build
       run: dotnet build --no-restore -c Release
-      
+
     - name: Run all tests
       run: dotnet test -c Release --no-build
 
@@ -40,8 +41,32 @@ jobs:
       if: github.ref == 'refs/heads/master'
       run: tar -czf laraue.tar.gz -C src/Laraue.Apps.LearnLanguage.Host/bin/Release/net10.0 .
 
-    - name: Upload
+    - name: Upload artifact
       if: github.ref == 'refs/heads/master'
+      uses: actions/upload-artifact@v4
+      with:
+        name: learn-language-host
+        path: laraue.tar.gz
+        retention-days: 7
+
+  deploy:
+    needs: build-and-test
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    environment: learn-language-telegram-production
+    steps:
+    - name: Notify deploy started
+      run: |
+        curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+          -d text="🚀 Deploy started: Learn Language Host (${{ github.sha }})"
+
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: learn-language-host
+
+    - name: Upload host
       uses: marcodallasanta/ssh-scp-deploy@v1.2.0
       with:
        host: ${{ secrets.SSH_HOST }} # "example.com"
@@ -50,4 +75,32 @@ jobs:
        password: ${{ secrets.SSH_PASSWORD }} # "password"
        local: laraue.tar.gz
        remote: "/home/laraue/backend-learn-language"
-       post_upload: cd /home/laraue/backend-learn-language && find . -mindepth 1 ! -name laraue.tar.gz -delete && tar -xzf laraue.tar.gz && rm laraue.tar.gz
+       post_upload: |-
+        cd /home/laraue/backend-learn-language && find . -mindepth 1 ! -name laraue.tar.gz -delete &&
+        tar -xzf laraue.tar.gz && rm laraue.tar.gz
+
+    - name: Build container
+      uses: appleboy/ssh-action@v1
+      with:
+       host: ${{ secrets.SSH_HOST }}
+       port: ${{ secrets.SSH_PORT }}
+       username: ${{ secrets.SSH_USER }}
+       password: ${{ secrets.SSH_PASSWORD }}
+       script: |
+        set -e
+        cd /home/laraue && docker compose build backendlearnlanguage
+        docker compose up -d --force-recreate backendlearnlanguage
+
+    - name: Notify deploy finished
+      if: success()
+      run: |
+        curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+          -d text="✅ Deploy finished: Learn Language Host (${{ github.sha }})"
+
+    - name: Notify deploy failed
+      if: failure()
+      run: |
+        curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+          -d text="❌ Deploy failed: Learn Language Host (${{ github.sha }})"
